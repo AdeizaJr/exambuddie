@@ -2,10 +2,13 @@
 import express, { Request, Response, NextFunction } from 'express';
 import * as payments from '../services/payments';
 import * as db from '../db';
+import path from 'path';
 
 export default function createServer(bot: any) {
   const app = express();
-  app.use(express.json());
+  const adminPath = path.resolve(__dirname, '../../admin');
+app.use('/admin', express.static(adminPath));
+app.use(express.json());
 
   // ── Health check ────────────────────────────────────────────────────────────
   app.get('/health', (req: Request, res: Response) => {
