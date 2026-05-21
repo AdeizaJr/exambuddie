@@ -14,9 +14,9 @@ export async function handleStart(ctx: any): Promise<void> {
         reply_markup: {
           inline_keyboard: [
             [{ text: '📚 Practice', callback_data: `practice:pick` },
-             { text: '📋 Quiz Mode', callback_data: 'quiz:pick' }],
+            { text: '📋 Quiz Mode', callback_data: 'quiz:pick' }],
             [{ text: '📊 My Stats', callback_data: 'stats:show' },
-             { text: '💎 Subscribe', callback_data: 'menu:subscribe' }],
+            { text: '💎 Subscribe', callback_data: 'menu:subscribe' }],
           ],
         },
       }
@@ -53,7 +53,7 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
   let selected = session.selectedSubjects || [];
 
   if (selected.includes(subject)) {
-    selected = selected.filter(s => s !== subject);
+    selected = selected.filter((s: string) => s !== subject);
   } else {
     if (selected.length >= 9) {
       await ctx.answerCbQuery('Maximum 9 subjects!', { show_alert: true });
