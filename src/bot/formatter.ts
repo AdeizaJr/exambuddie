@@ -427,7 +427,7 @@ export function examTypeKeyboard() {
 }
 
 export const MAX_SUBJECTS = 5;    // including English
-export const SUBJECT_Q_LIMIT = 5; // questions per subject per window
+export const SUBJECT_Q_LIMIT = 10; // questions per subject per window
 export const SUBJECT_WINDOW_HRS = 6;
 
 export function subjectKeyboard(selectedSubjects: string[] = []) {
