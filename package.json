@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc && npm run build:miniapp",
     "build:miniapp": "cd miniapp && npm run build",
-    "start": "node dist/src/index.js",
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "NODE_OPTIONS='--dns-result-order=ipv4first' node dist/src/index.js",
+    "dev": "NODE_OPTIONS='--dns-result-order=ipv4first' nodemon --exec ts-node src/index.ts",
     "seed": "ts-node scripts/seed.ts",
     "generate-explanations": "ts-node scripts/generateExplanations.ts",
     "migrate": "ts-node scripts/migrate.ts"

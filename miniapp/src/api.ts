@@ -3,9 +3,20 @@ import type { User, Question, Stats, QuizResult } from './types';
 
 const BASE = '/api/miniapp';
 
+// In dev mode, send x-dev-user-id so the backend bypasses initData validation.
+// Set VITE_DEV_USER_ID in miniapp/.env.local to your Telegram user ID.
+const DEV_USER_ID = import.meta.env.VITE_DEV_USER_ID;
+
 function authHeader(): Record<string, string> {
   const initData = tg?.initData || '';
-  return { 'Authorization': `tma ${initData}`, 'Content-Type': 'application/json' };
+  const headers: Record<string, string> = {
+    'Authorization': `tma ${initData}`,
+    'Content-Type': 'application/json',
+  };
+  if (import.meta.env.DEV && DEV_USER_ID) {
+    headers['x-dev-user-id'] = String(DEV_USER_ID);
+  }
+  return headers;
 }
 
 async function req<T>(method: string, path: string, body?: unknown): Promise<T> {
