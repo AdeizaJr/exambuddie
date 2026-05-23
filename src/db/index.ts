@@ -51,35 +51,71 @@ export async function updateUser(telegramId: number | string, fields: Partial<Us
   return rows[0];
 }
 
-export async function getRandomQuestion(examType: string, subject: string, excludeIds: number[] = []): Promise<Question | null> {
-  const exclude = excludeIds.length > 0
-    ? `AND id NOT IN (${excludeIds.map((_, i) => `$${i + 3}`).join(',')})`
+function isAllExams(examType: string): boolean {
+  return examType === 'ALL' || examType === 'BOTH';
+}
+
+export async function getRandomQuestion(
+  examType: string,
+  subject: string,
+  excludeIds: number[] = [],
+  year?: number | null,
+): Promise<Question | null> {
+  const all = isAllExams(examType);
+  const params: any[] = all ? [subject] : [examType, subject];
+  const subjectIdx = all ? 1 : 2;
+  const examFilter = all ? '' : 'AND exam_type = $1';
+
+  let yearFilter = '';
+  if (year) {
+    yearFilter = `AND year = $${params.length + 1}`;
+    params.push(year);
+  }
+
+  const excludeStart = params.length + 1;
+  const excludeFilter = excludeIds.length > 0
+    ? `AND id NOT IN (${excludeIds.map((_, i) => `$${excludeStart + i}`).join(',')})`
     : '';
+  params.push(...excludeIds);
+
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
-     WHERE exam_type = $1 AND subject = $2 ${exclude}
+     WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${excludeFilter}
      ORDER BY RANDOM() LIMIT 1`,
-    [examType, subject, ...excludeIds]
+    params
   );
   return rows[0] || null;
 }
 
 export async function getQuestionsByTopic(examType: string, subject: string, topic: string, limit = 10): Promise<Question[]> {
+  const all = isAllExams(examType);
+  const params: any[] = all ? [subject, `%${topic}%`, limit] : [examType, subject, `%${topic}%`, limit];
+  const subjectIdx = all ? 1 : 2;
+  const topicIdx = subjectIdx + 1;
+  const limitIdx = topicIdx + 1;
+  const examFilter = all ? '' : 'AND exam_type = $1';
+
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
-     WHERE exam_type = $1 AND subject = $2 AND topic ILIKE $3
-     ORDER BY RANDOM() LIMIT $4`,
-    [examType, subject, `%${topic}%`, limit]
+     WHERE subject = $${subjectIdx} ${examFilter} AND topic ILIKE $${topicIdx}
+     ORDER BY RANDOM() LIMIT $${limitIdx}`,
+    params
   );
   return rows;
 }
 
 export async function getQuizQuestions(examType: string, subject: string, limit = 40): Promise<Question[]> {
+  const all = isAllExams(examType);
+  const params: any[] = all ? [subject, limit] : [examType, subject, limit];
+  const subjectIdx = all ? 1 : 2;
+  const limitIdx = subjectIdx + 1;
+  const examFilter = all ? '' : 'AND exam_type = $1';
+
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
-     WHERE exam_type = $1 AND subject = $2
-     ORDER BY RANDOM() LIMIT $3`,
-    [examType, subject, limit]
+     WHERE subject = $${subjectIdx} ${examFilter}
+     ORDER BY RANDOM() LIMIT $${limitIdx}`,
+    params
   );
   return rows;
 }

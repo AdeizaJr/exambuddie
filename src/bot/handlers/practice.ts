@@ -29,12 +29,26 @@ async function checkLimit(ctx: any, user: User): Promise<boolean> {
   return true;
 }
 
+async function checkSubjectLimit(ctx: any, user: User, subject: string): Promise<boolean> {
+  if (user.plan === 'premium') return true;
+  const usage = await redis.getSubjectUsage(ctx.from.id, subject);
+  if (usage.count >= fmt.SUBJECT_Q_LIMIT) {
+    const msLeft = usage.expiresAt - Date.now();
+    await ctx.replyWithMarkdown(
+      fmt.subjectLimitMessage(fmt.SUBJECT_MAP[subject] || subject, msLeft),
+      { reply_markup: fmt.subjectLimitKeyboard(subject) }
+    );
+    return false;
+  }
+  return true;
+}
+
 async function sendQuestion(ctx: any, question: Question, session: { qNum: number; total?: number | string; mode: string }): Promise<void> {
   const text = fmt.formatQuestion(question, session.qNum, session.total || '?', session.mode)
     + fmt.answerOptions(question);
 
   await ctx.replyWithMarkdown(text, {
-    reply_markup: fmt.answerKeyboard(),
+    reply_markup: fmt.answerKeyboard(!!question.option_e),
   });
 }
 
@@ -42,25 +56,32 @@ export async function handlePractice(ctx: any): Promise<void> {
   const user = await requireProfile(ctx);
   if (!user) return;
 
-  if (user.subjects.length === 1) {
-    // Single subject — go straight in
-    await startPractice(ctx, user, user.subjects[0]);
-  } else {
-    await ctx.replyWithMarkdown(
-      '📚 *Practice Mode*\n\nWhich subject would you like to practise?',
-      { reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
-    );
-  }
+  await ctx.replyWithMarkdown(
+    '📚 *Practice Mode*\n\nWhich subject would you like to practise?',
+    { reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+  );
 }
 
-export async function startPractice(ctx: any, user: User | null, subject: string): Promise<void> {
+export async function handleYearPick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const subject = ctx.callbackQuery.data.split(':')[2];
+  const subjectName = fmt.SUBJECT_MAP[subject] || subject;
+  await ctx.replyWithMarkdown(
+    `📅 *${subjectName}*\n\nWhich year would you like to practise?`,
+    { reply_markup: fmt.yearPickerKeyboard(subject) }
+  );
+}
+
+export async function startPractice(ctx: any, user: User | null, subject: string, year?: number | null): Promise<void> {
   if (!user) user = await requireProfile(ctx);
   if (!user) return;
   if (!(await checkLimit(ctx, user))) return;
+  if (!(await checkSubjectLimit(ctx, user, subject))) return;
 
-  const q = await db.getRandomQuestion(user.exam_type || '', subject);
+  const q = await db.getRandomQuestion(user.exam_type || '', subject, [], year);
   if (!q) {
-    await ctx.reply(`No questions found for ${subject} yet. Try another subject!`);
+    const yearStr = year ? ` for ${year}` : '';
+    await ctx.reply(`No questions found for ${subject}${yearStr}. Try a different year or subject!`);
     return;
   }
 
@@ -68,6 +89,7 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   await redis.setSession(ctx.from.id, {
     mode: 'practice',
     subject,
+    year: year || null,
     sessionId,
     qNum: 1,
     correct: 0,
@@ -107,9 +129,10 @@ export async function handleAnswer(ctx: any): Promise<void> {
     timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
   });
 
-  // Update daily count (free users)
+  // Update daily count and per-subject usage (free users)
   if (user.plan !== 'premium') {
     await db.incrementDailyCount(ctx.from.id);
+    await redis.incrementSubjectUsage(ctx.from.id, session.subject || '');
   }
 
   const newTotal = (session.total || 0) + 1;
@@ -149,14 +172,17 @@ export async function handleNext(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
 
-  // Check daily limit again
+  // Check daily and per-subject limits
   if (!(await checkLimit(ctx, user))) return;
+  if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
 
-  const q = await db.getRandomQuestion(user.exam_type || '', session.subject || '', session.usedIds || []);
+  const q = await db.getRandomQuestion(user.exam_type || '', session.subject || '', session.usedIds || [], session.year);
   if (!q) {
-    await ctx.replyWithMarkdown('🎉 You\'ve gone through all available questions for this subject! Try another subject.', {
-      reply_markup: fmt.sessionKeyboard(session.subject || ''),
-    });
+    const yearStr = session.year ? ` for ${session.year}` : '';
+    await ctx.replyWithMarkdown(
+      `🎉 You've gone through all available questions for this subject${yearStr}! Try another year or subject.`,
+      { reply_markup: fmt.sessionKeyboard(session.subject || '', session.year) }
+    );
     return;
   }
 
@@ -190,8 +216,27 @@ export async function handleStop(ctx: any): Promise<void> {
 
   await redis.clearSession(ctx.from.id);
   await ctx.replyWithMarkdown(summary, {
-    reply_markup: fmt.sessionKeyboard(session.subject || ''),
+    reply_markup: fmt.sessionKeyboard(session.subject || '', session.year),
   });
+}
+
+// Switch to a different subject — clears current session and shows subject picker
+export async function handleChangeSubject(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  await redis.clearSession(ctx.from.id);
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  if (user.subjects.length === 1) {
+    await startPractice(ctx, user, user.subjects[0]);
+    return;
+  }
+
+  await ctx.replyWithMarkdown(
+    '📚 *Change Subject*\n\nWhich subject would you like to switch to?',
+    { reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+  );
 }
 
 // /drill command or auto-drill

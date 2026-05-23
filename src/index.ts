@@ -64,14 +64,21 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Practice
   if (data === 'practice:pick')               return practice.handlePractice(ctx);
+  if (data.startsWith('practice:year:'))      return practice.handleYearPick(ctx);
   if (data.startsWith('practice:start:')) {
-    const subject = data.split(':')[2];
+    const parts = data.split(':');
+    const subject = parts[2];
+    const yearStr = parts[3];
+    const year = yearStr && yearStr !== 'any' ? parseInt(yearStr, 10) : null;
     const user = await db.getUser(ctx.from.id);
     await ctx.answerCbQuery();
-    return practice.startPractice(ctx, user, subject);
+    return practice.startPractice(ctx, user, subject, year);
   }
   if (data === 'practice:next')               return practice.handleNext(ctx);
   if (data === 'practice:stop')               return practice.handleStop(ctx);
+  if (data === 'practice:change_subject')     return practice.handleChangeSubject(ctx);
+  if (data === 'practice:add_subject')        return onboarding.handleSettingsSubjects(ctx);
+  if (data === 'practice:change_exam')        return onboarding.handleSettingsExam(ctx);
 
   // Answer (shared by practice + quiz)
   if (data.startsWith('answer:')) {
@@ -136,40 +143,45 @@ bot.catch((err: any, ctx: any) => {
 });
 
 // ── Launch ─────────────────────────────────────────────────────────────────────
+async function launchBot(attempt = 1): Promise<void> {
+  const APP_URL = process.env.APP_URL;
+  try {
+    if (APP_URL && process.env.NODE_ENV === 'production') {
+      const PORT = process.env.PORT || 3000;
+      await bot.launch({
+        webhook: { domain: APP_URL, port: Number(PORT), path: '/bot' },
+      });
+      console.log(`🤖 ExamAce Bot launched via webhook at ${APP_URL}/bot`);
+    } else {
+      await bot.launch();
+      console.log('🤖 ExamAce Bot launched via long polling (dev mode)');
+    }
+    console.log(`
+  ╔═══════════════════════════════════════╗
+  ║         ExamAce Bot is live! 🎓       ║
+  ║   WAEC & JAMB Prep — Nigeria          ║
+  ╚═══════════════════════════════════════╝
+    `);
+  } catch (err: any) {
+    const delay = Math.min(attempt * 15, 120); // 15s, 30s, 45s … cap at 120s
+    console.error(`Failed to connect to Telegram (attempt ${attempt}): ${err.message}`);
+    console.error(`Retrying in ${delay}s… (API server remains running)`);
+    setTimeout(() => launchBot(attempt + 1), delay * 1000);
+  }
+}
+
 async function launch() {
   const PORT = process.env.PORT || 3000;
-  const APP_URL = process.env.APP_URL;
 
-  // Start Express API
+  // Start Express API — runs independently of bot connectivity
   const app = createServer(bot);
   app.listen(PORT, () => console.log(`🌐 API server listening on port ${PORT}`));
 
   // Start cron jobs
   startCrons(bot);
 
-  // Launch bot
-  if (APP_URL && process.env.NODE_ENV === 'production') {
-    // Webhook mode (production)
-    await bot.launch({
-      webhook: {
-        domain: APP_URL,
-        port: Number(PORT),
-        path: '/bot',
-      },
-    });
-    console.log(`🤖 ExamAce Bot launched via webhook at ${APP_URL}/bot`);
-  } else {
-    // Long polling (development)
-    await bot.launch();
-    console.log('🤖 ExamAce Bot launched via long polling (dev mode)');
-  }
-
-  console.log(`
-  ╔═══════════════════════════════════════╗
-  ║         ExamAce Bot is live! 🎓       ║
-  ║   WAEC & JAMB Prep — Nigeria          ║
-  ╚═══════════════════════════════════════╝
-  `);
+  // Launch bot (retries automatically on network failure)
+  launchBot();
 }
 
 // Graceful shutdown
@@ -177,6 +189,6 @@ process.once('SIGINT',  () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
 launch().catch(err => {
-  console.error('Failed to launch bot:', err);
+  console.error('Fatal startup error:', err);
   process.exit(1);
 });

@@ -13,8 +13,10 @@
     "migrate": "ts-node scripts/migrate.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.20.4",
+    "@anthropic-ai/sdk": "^0.97.1",
+    "@types/cheerio": "^0.22.35",
     "axios": "^1.6.7",
+    "cheerio": "^1.2.0",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "node": "^22.22.3",

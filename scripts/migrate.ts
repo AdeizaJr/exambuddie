@@ -58,6 +58,12 @@ const migrations = [
   `CREATE INDEX IF NOT EXISTS idx_questions_subject_topic ON questions(subject, topic)`,
   `CREATE INDEX IF NOT EXISTS idx_questions_year ON questions(year)`,
 
+  // ── Scraped-data additions ───────────────────────────────────────────────────
+  `ALTER TABLE questions ADD COLUMN IF NOT EXISTS option_e TEXT`,
+  `ALTER TABLE questions ADD COLUMN IF NOT EXISTS source_id VARCHAR(30)`,
+  `DROP INDEX IF EXISTS idx_questions_source_id`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS idx_questions_source_id ON questions(source_id)`,
+
   // ── Flagged explanations ─────────────────────────────────────────────────────
   `CREATE TABLE IF NOT EXISTS flagged_explanations (
     id SERIAL PRIMARY KEY,

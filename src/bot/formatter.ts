@@ -1,28 +1,90 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
 
+// Telegram MarkdownV1 has no escape mechanism — sanitize all dynamic content
+// by replacing the four special chars that cause "can't parse entities" errors.
+function md(text: string | null | undefined): string {
+  if (!text) return '';
+  return text
+    .replace(/\*/g, '×')   // asterisk → multiplication sign
+    .replace(/_/g, '-')    // underscore → hyphen
+    .replace(/`/g, "'")    // backtick → apostrophe
+    .replace(/\[/g, '(')   // open bracket → paren
+    .replace(/\]/g, ')');  // close bracket → paren
+}
+
 export const SUBJECT_MAP: Record<string, string> = {
-  english:    '📝 English Language',
-  math:       '🔢 Mathematics',
-  biology:    '🧬 Biology',
-  chemistry:  '⚗️ Chemistry',
-  physics:    '⚡ Physics',
-  economics:  '📊 Economics',
-  government: '🏛️ Government',
-  literature: '📚 Literature',
-  geography:  '🌍 Geography',
+  english:          'English Language',
+  math:             'Mathematics',
+  biology:          'Biology',
+  chemistry:        'Chemistry',
+  physics:          'Physics',
+  economics:        'Economics',
+  government:       'Government',
+  literature:       'Literature In English',
+  geography:        'Geography',
+  accounts:         'Accounts',
+  crk:              'Christian Religious Knowledge',
+  commerce:         'Commerce',
+  agric:            'Agricultural Science',
+  irk:              'Islamic Religious Knowledge',
+  computer:         'Computer Studies',
+  history:          'History',
+  'further-math':   'Further Mathematics',
+  'civic-education':'Civic Education',
+  yoruba:           'Yoruba',
+  marketing:        'Marketing',
+  'data-processing':'Data Processing',
+  hausa:            'Hausa',
+  'home-economics': 'Home Economics',
+  catering:         'Catering Craft Practice',
+  pe:               'Physical Education',
+  'animal-husbandry':'Animal Husbandry',
+  igbo:             'Igbo',
+  french:           'French',
+  'office-practice':'Office Practice',
+  insurance:        'Insurance',
+  'fine-arts':      'Fine Arts',
+  music:            'Music',
+  arabic:           'Arabic',
+  'book-keeping':   'Book Keeping',
 };
 
 export const SUBJECT_EMOJI: Record<string, string> = {
-  english: '📝',
-  math: '🔢',
-  biology: '🧬',
-  chemistry: '⚗️',
-  physics: '⚡',
-  economics: '📊',
-  government: '🏛️',
-  literature: '📚',
-  geography: '🌍',
+  english:          '📝',
+  math:             '🔢',
+  biology:          '🧬',
+  chemistry:        '⚗️',
+  physics:          '⚡',
+  economics:        '📊',
+  government:       '🏛️',
+  literature:       '📚',
+  geography:        '🌍',
+  accounts:         '💰',
+  crk:              '✝️',
+  commerce:         '🏪',
+  agric:            '🌾',
+  irk:              '☪️',
+  computer:         '💻',
+  history:          '📜',
+  'further-math':   '📐',
+  'civic-education':'🗳️',
+  yoruba:           '🗣️',
+  marketing:        '📈',
+  'data-processing':'🖥️',
+  hausa:            '🗣️',
+  'home-economics': '🏠',
+  catering:         '🍳',
+  pe:               '⚽',
+  'animal-husbandry':'🐄',
+  igbo:             '🗣️',
+  french:           '🇫🇷',
+  'office-practice':'📋',
+  insurance:        '🛡️',
+  'fine-arts':      '🎨',
+  music:            '🎵',
+  arabic:           '🕌',
+  'book-keeping':   '📒',
 };
 
 export function welcome(firstName: string): string {
@@ -69,26 +131,28 @@ export function formatQuestion(q: Question, number: number, total: number | stri
   return `${modeTag}
 _${q.exam_type} ${q.subject.charAt(0).toUpperCase() + q.subject.slice(1)} ${q.year}_
 
-${q.question_text}`;
+${md(q.question_text)}`;
 }
 
-export function answerKeyboard() {
-  return {
-    inline_keyboard: [
-      [
-        { text: '🅰️  A', callback_data: 'answer:A' },
-        { text: '🅱️  B', callback_data: 'answer:B' },
-      ],
-      [
-        { text: '🅲  C', callback_data: 'answer:C' },
-        { text: '🅳  D', callback_data: 'answer:D' },
-      ],
+export function answerKeyboard(hasOptionE = false) {
+  const rows: any[][] = [
+    [
+      { text: '🅰️  A', callback_data: 'answer:A' },
+      { text: '🅱️  B', callback_data: 'answer:B' },
     ],
-  };
+    [
+      { text: '🅲  C', callback_data: 'answer:C' },
+      { text: '🅳  D', callback_data: 'answer:D' },
+    ],
+  ];
+  if (hasOptionE) rows.push([{ text: '🅴  E', callback_data: 'answer:E' }]);
+  return { inline_keyboard: rows };
 }
 
 export function answerOptions(q: Question): string {
-  return `\n\n*A.* ${q.option_a}\n*B.* ${q.option_b}\n*C.* ${q.option_c}\n*D.* ${q.option_d}`;
+  let text = `\n\n*A.* ${md(q.option_a)}\n*B.* ${md(q.option_b)}\n*C.* ${md(q.option_c)}\n*D.* ${md(q.option_d)}`;
+  if (q.option_e) text += `\n*E.* ${md(q.option_e)}`;
+  return text;
 }
 
 export function correctAnswer(q: Question, selected: string): string {
@@ -96,18 +160,18 @@ export function correctAnswer(q: Question, selected: string): string {
   const emoji = wasCorrect ? '✅' : '❌';
   const header = wasCorrect
     ? `${emoji} *Correct! Well done.*`
-    : `${emoji} *Not quite. The answer is ${q.correct_option}.*`;
+    : `${emoji} *Wrong. The correct answer is ${q.correct_option}.*`;
 
-  const optionText: Record<string, string> = {
-    A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d,
+  const optionText: Record<string, string | null> = {
+    A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d, E: q.option_e,
   };
 
   return `${header}
 
-✔️ *${q.correct_option}.* ${optionText[q.correct_option]}
+✔️ *${q.correct_option}.* ${md(optionText[q.correct_option])}
 
 💡 *Explanation:*
-${q.explanation || '_Explanation coming soon._'}`;
+${md(q.explanation) || '_Explanation not yet available._'}`;
 }
 
 export function afterAnswerKeyboard(mode?: string) {
@@ -120,11 +184,16 @@ export function afterAnswerKeyboard(mode?: string) {
     };
   }
   return {
-    inline_keyboard: [[
-      { text: '➡️  Next Question', callback_data: 'practice:next' },
-      { text: '🚩 Flag Explanation', callback_data: 'flag:question' },
-      { text: '⏹  Stop', callback_data: 'practice:stop' },
-    ]],
+    inline_keyboard: [
+      [
+        { text: '➡️  Next Question', callback_data: 'practice:next' },
+        { text: '🚩 Flag', callback_data: 'flag:question' },
+      ],
+      [
+        { text: '📚 Change Subject', callback_data: 'practice:change_subject' },
+        { text: '⏹  Stop', callback_data: 'practice:stop' },
+      ],
+    ],
   };
 }
 
@@ -160,12 +229,17 @@ ${accuracy >= 70 ? '🔥 Keep it up! Consistency is key.' : ''}
 What next?`;
 }
 
-export function sessionKeyboard(subject: string) {
+export function sessionKeyboard(subject: string, year?: number | null) {
+  const yearSuffix = year ? `:${year}` : ':any';
   return {
     inline_keyboard: [
       [
-        { text: '🔄 Practice Again', callback_data: `practice:start:${subject}` },
+        { text: '🔄 Practice Again', callback_data: `practice:start:${subject}${yearSuffix}` },
         { text: '🎯 Drill Weak Topics', callback_data: `drill:auto:${subject}` },
+      ],
+      [
+        { text: '📅 Change Year', callback_data: `practice:year:${subject}` },
+        { text: '📚 Change Subject', callback_data: 'practice:change_subject' },
       ],
       [
         { text: '📊 My Stats', callback_data: 'stats:show' },
@@ -286,46 +360,95 @@ export function examTypeKeyboard() {
     inline_keyboard: [
       [{ text: '📘 WAEC', callback_data: 'onboard:exam:WAEC' }],
       [{ text: '📗 JAMB (UTME)', callback_data: 'onboard:exam:JAMB' }],
-      [{ text: '📙 Both', callback_data: 'onboard:exam:BOTH' }],
+      [{ text: '📙 NECO', callback_data: 'onboard:exam:NECO' }],
+      [{ text: '📚 All (WAEC, NECO & JAMB)', callback_data: 'onboard:exam:ALL' }],
     ],
   };
 }
 
-export function subjectKeyboard(selectedSubjects: string[] = []) {
-  const subjects = [
-    { code: 'english', label: '📝 English' },
-    { code: 'math', label: '🔢 Maths' },
-    { code: 'biology', label: '🧬 Biology' },
-    { code: 'chemistry', label: '⚗️ Chemistry' },
-    { code: 'physics', label: '⚡ Physics' },
-    { code: 'economics', label: '📊 Economics' },
-    { code: 'government', label: '🏛️ Government' },
-    { code: 'literature', label: '📚 Literature' },
-    { code: 'geography', label: '🌍 Geography' },
-  ];
+export const MAX_SUBJECTS = 5;    // including English
+export const SUBJECT_Q_LIMIT = 5; // questions per subject per window
+export const SUBJECT_WINDOW_HRS = 6;
 
-  const buttons = subjects.map(s => ({
-    text: selectedSubjects.includes(s.code) ? `✅ ${s.label}` : s.label,
-    callback_data: `onboard:subject:${s.code}`,
+export function subjectKeyboard(selectedSubjects: string[] = []) {
+  const subjects = Object.entries(SUBJECT_MAP).map(([code, name]) => ({
+    code,
+    label: `${SUBJECT_EMOJI[code] || '📖'} ${name}`,
   }));
 
-  // 2 per row
+  const buttons = subjects.map(s => {
+    const isEnglish = s.code === 'english';
+    const isSelected = selectedSubjects.includes(s.code);
+    return {
+      // English shown as locked — tick + lock so user knows it can't be removed
+      text: isEnglish
+        ? `✅🔒 ${s.label}`
+        : isSelected ? `✅ ${s.label}` : s.label,
+      callback_data: `onboard:subject:${s.code}`,
+    };
+  });
+
   const rows: any[][] = [];
   for (let i = 0; i < buttons.length; i += 2) {
     rows.push(buttons.slice(i, i + 2));
   }
-  if (selectedSubjects.length > 0) {
-    rows.push([{ text: `✅ Done (${selectedSubjects.length} selected)`, callback_data: 'onboard:subjects:done' }]);
-  }
+  // Show done button as soon as english is selected (always)
+  const nonEnglish = selectedSubjects.filter(s => s !== 'english').length;
+  rows.push([{
+    text: `✅ Done (${selectedSubjects.length} selected, ${MAX_SUBJECTS - selectedSubjects.length} slots left)`,
+    callback_data: 'onboard:subjects:done',
+  }]);
   return { inline_keyboard: rows };
+}
+
+export function subjectLimitMessage(subjectName: string, msLeft: number): string {
+  const hrs = Math.floor(msLeft / 3600000);
+  const mins = Math.ceil((msLeft % 3600000) / 60000);
+  const timeStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins} min`;
+  return `⏰ *Subject limit reached!*
+
+You've used all ${SUBJECT_Q_LIMIT} free questions for *${subjectName}* in this ${SUBJECT_WINDOW_HRS}-hour window.
+
+Resets in *${timeStr}*.
+
+Switch to another subject or upgrade to Premium for unlimited access 👇`;
+}
+
+export function subjectLimitKeyboard(subject: string) {
+  return {
+    inline_keyboard: [
+      [{ text: '📚 Switch Subject', callback_data: 'practice:change_subject' }],
+      [{ text: '💎 Upgrade to Premium', callback_data: 'menu:subscribe' }],
+    ],
+  };
 }
 
 export function practiceSubjectKeyboard(subjects: string[]) {
   const buttons = subjects.map(s => ({
-    text: `${SUBJECT_EMOJI[s] || '📖'} ${s.charAt(0).toUpperCase() + s.slice(1)}`,
-    callback_data: `practice:start:${s}`,
+    text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1)}`,
+    callback_data: `practice:year:${s}`, // → year picker
   }));
   const rows: any[][] = [];
   for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
+  rows.push([
+    { text: '➕ Add / Remove Subjects', callback_data: 'practice:add_subject' },
+    { text: '🔄 Change Exam Type', callback_data: 'practice:change_exam' },
+  ]);
+  return { inline_keyboard: rows };
+}
+
+export function yearPickerKeyboard(subject: string) {
+  const rows: any[][] = [
+    [{ text: '📅 Any Year', callback_data: `practice:start:${subject}:any` }],
+  ];
+  const years: number[] = [];
+  for (let y = 2025; y >= 2010; y--) years.push(y);
+  for (let i = 0; i < years.length; i += 4) {
+    rows.push(years.slice(i, i + 4).map(y => ({
+      text: `${y}`,
+      callback_data: `practice:start:${subject}:${y}`,
+    })));
+  }
+  rows.push([{ text: '← Back to Subjects', callback_data: 'practice:pick' }]);
   return { inline_keyboard: rows };
 }

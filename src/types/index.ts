@@ -5,7 +5,7 @@ export interface User {
   telegram_id: number;
   username: string | null;
   first_name: string;
-  exam_type: 'WAEC' | 'JAMB' | 'BOTH' | null;
+  exam_type: 'WAEC' | 'JAMB' | 'NECO' | 'ALL' | 'BOTH' | null;
   subjects: string[];
   target_year: number | null;
   plan: 'free' | 'premium';
@@ -21,7 +21,7 @@ export interface User {
 
 export interface Question {
   id: number;
-  exam_type: 'WAEC' | 'JAMB';
+  exam_type: 'WAEC' | 'JAMB' | 'NECO';
   subject: string;
   year: number;
   topic: string | null;
@@ -30,10 +30,12 @@ export interface Question {
   option_b: string;
   option_c: string;
   option_d: string;
-  correct_option: 'A' | 'B' | 'C' | 'D';
+  option_e: string | null;
+  correct_option: 'A' | 'B' | 'C' | 'D' | 'E';
   explanation: string | null;
   explanation_reviewed: boolean;
   flag_count: number;
+  source_id: string | null;
   created_at: string;
 }
 
@@ -65,6 +67,7 @@ export interface SessionState {
   examType?: string;
   mode?: 'practice' | 'quiz' | 'drill';
   subject?: string;
+  year?: number | null;
   topic?: string;
   sessionId?: string;
   qNum?: number;
