@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --tg-bg: #ffffff;
+  --tg-text: #000000;
+  --tg-hint: #999999;
+  --tg-link: #2678b6;
+  --tg-button: #2678b6;
+  --tg-button-text: #ffffff;
+  --tg-secondary-bg: #f1f1f1;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--tg-bg);
+  color: var(--tg-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overscroll-behavior: none;
+}
+
+/* Prevent iOS bounce scroll on root */
+body {
+  overflow: hidden;
+}
+
+#root {
+  overflow-y: auto;
+}
+
+.page {
+  min-height: 100%;
+  padding-bottom: 80px; /* space for bottom nav */
+}
+
+/* Smooth answer button press */
+button:active {
+  transform: scale(0.97);
+  transition: transform 0.1s;
+}
+
+/* Question text LaTeX-like formatting */
+.question-text {
+  line-height: 1.6;
+}

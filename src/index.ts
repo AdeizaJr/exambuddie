@@ -36,6 +36,17 @@ bot.command('subscribe', stats.handleSubscribe);
 bot.command('practice', practice.handlePractice);
 bot.command('quiz', quiz.handleQuiz);
 bot.command('drill', (ctx) => practice.handleDrill(ctx));
+bot.command('app', async (ctx) => {
+  const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
+  await ctx.reply('Open the ExamAce app 🎓', {
+    reply_markup: {
+      inline_keyboard: [[{
+        text: '📱 Open ExamAce App',
+        web_app: { url: `${APP_URL}/app` },
+      }]],
+    },
+  });
+});
 bot.command('stop', async (ctx) => {
   const session = await redis.getSession(ctx.from.id);
   if (!session) { await ctx.reply('No active session.'); return; }

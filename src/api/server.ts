@@ -3,12 +3,18 @@ import express, { Request, Response, NextFunction } from 'express';
 import * as payments from '../services/payments';
 import * as db from '../db';
 import path from 'path';
+import miniappRouter from './miniapp';
 
 export default function createServer(bot: any) {
   const app = express();
   const adminPath = path.resolve(__dirname, '../../admin');
+  const miniappPath = path.resolve(__dirname, '../../dist/miniapp');
   app.use('/admin', express.static(adminPath));
+  app.use('/app', express.static(miniappPath));
   app.use(express.json());
+
+  // Mini App API routes
+  app.use('/api/miniapp', miniappRouter);
 
   // ── Health check ────────────────────────────────────────────────────────────
   app.get('/health', (req: Request, res: Response) => {
