@@ -74,6 +74,8 @@ bot.on('callback_query', async (ctx: any) => {
     await ctx.answerCbQuery();
     return practice.startPractice(ctx, user, subject, year);
   }
+  if (data.startsWith('practice:examtype:'))  return practice.handlePracticeExamTypePick(ctx);
+  if (data.startsWith('practice:timer:'))     return practice.handlePracticeTimerPick(ctx);
   if (data === 'practice:next')               return practice.handleNext(ctx);
   if (data === 'practice:stop')               return practice.handleStop(ctx);
   if (data === 'practice:change_subject')     return practice.handleChangeSubject(ctx);
@@ -95,6 +97,8 @@ bot.on('callback_query', async (ctx: any) => {
     await ctx.answerCbQuery();
     return quiz.startQuiz(ctx, user, subject);
   }
+  if (data.startsWith('quiz:examtype:'))       return quiz.handleQuizExamTypePick(ctx);
+  if (data.startsWith('quiz:timer:'))         return quiz.handleQuizTimerPick(ctx);
   if (data === 'quiz:next')                   return quiz.handleQuizNext(ctx);
 
   // Drill
@@ -139,7 +143,11 @@ bot.on('callback_query', async (ctx: any) => {
 
 // ── Error handler ──────────────────────────────────────────────────────────────
 bot.catch((err: any, ctx: any) => {
-  console.error(`[Bot Error] Update ${ctx.update.update_id}:`, err.message);
+  const msg: string = err.message || '';
+  // Stale callback queries and transient network blips are not actionable
+  if (msg.includes('query is too old') || msg.includes('query ID is invalid')) return;
+  if (msg.includes('request to') && msg.includes('failed, reason:')) return;
+  console.error(`[Bot Error] Update ${ctx.update.update_id}:`, msg);
   ctx.reply('Something went wrong on our end. Please try again in a moment.').catch(() => {});
 });
 

@@ -88,6 +88,12 @@ export interface SessionState {
   lastAnswer?: string;
   questions?: number[];
   questionIndex?: number;
+  questionTimerSecs?: number;
+  questionDeadline?: number;
+  pendingSubject?: string;
+  pendingYear?: number | null;
+  pendingMode?: 'practice' | 'quiz';
+  pendingExamType?: string;
 }
 
 export interface QuizAnswer {
@@ -108,4 +114,6 @@ export interface QuizState {
   startTime: number;
   deadline: number;
   answers: QuizAnswer[];
+  questionTimerSecs?: number;
+  questionDeadline?: number;
 }

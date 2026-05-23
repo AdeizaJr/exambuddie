@@ -249,6 +249,36 @@ export function sessionKeyboard(subject: string, year?: number | null) {
   };
 }
 
+export function examTypePickerKeyboard(mode: 'practice' | 'quiz') {
+  return {
+    inline_keyboard: [
+      [
+        { text: 'WAEC', callback_data: `${mode}:examtype:WAEC` },
+        { text: 'NECO', callback_data: `${mode}:examtype:NECO` },
+      ],
+      [
+        { text: 'JAMB', callback_data: `${mode}:examtype:JAMB` },
+        { text: 'All Exams', callback_data: `${mode}:examtype:ALL` },
+      ],
+    ],
+  };
+}
+
+export function timerPickerKeyboard(mode: 'practice' | 'quiz') {
+  return {
+    inline_keyboard: [
+      [
+        { text: '⏱️ 10 seconds', callback_data: `${mode}:timer:10` },
+        { text: '⏱️ 20 seconds', callback_data: `${mode}:timer:20` },
+      ],
+      [
+        { text: '⏱️ 30 seconds', callback_data: `${mode}:timer:30` },
+        { text: '▶️ No Timer',   callback_data: `${mode}:timer:0`  },
+      ],
+    ],
+  };
+}
+
 export function statsFilterKeyboard() {
   return {
     inline_keyboard: [

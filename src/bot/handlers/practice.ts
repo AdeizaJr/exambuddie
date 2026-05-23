@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
+import * as timerService from '../../services/timer';
 import { User, Question } from '../../types';
 
 async function requireProfile(ctx: any): Promise<User | null> {
@@ -43,13 +44,56 @@ async function checkSubjectLimit(ctx: any, user: User, subject: string): Promise
   return true;
 }
 
-async function sendQuestion(ctx: any, question: Question, session: { qNum: number; total?: number | string; mode: string }): Promise<void> {
-  const text = fmt.formatQuestion(question, session.qNum, session.total || '?', session.mode)
+async function sendQuestion(ctx: any, question: Question, session: { qNum: number; total?: number | string; mode: string; questionTimerSecs?: number }): Promise<void> {
+  const timerSecs = session.questionTimerSecs || 0;
+  const baseText = fmt.formatQuestion(question, session.qNum, session.total || '?', session.mode)
     + fmt.answerOptions(question);
+  const timerLine = (secs: number) => `\n\n⏱️ _${secs}s remaining_`;
+  const hasOptionE = !!question.option_e;
+  const keyboard = fmt.answerKeyboard(hasOptionE);
 
-  await ctx.replyWithMarkdown(text, {
-    reply_markup: fmt.answerKeyboard(!!question.option_e),
-  });
+  const sentMsg = await ctx.replyWithMarkdown(
+    baseText + (timerSecs > 0 ? timerLine(timerSecs) : ''),
+    { reply_markup: keyboard },
+  );
+
+  if (timerSecs > 0) {
+    const deadline = Date.now() + timerSecs * 1000;
+    await redis.updateSession(ctx.from.id, { questionDeadline: deadline });
+
+    const telegramId = ctx.from.id;
+    const chatId = ctx.chat.id;
+    const messageId = sentMsg.message_id;
+    const telegram = ctx.telegram;
+
+    timerService.setQuestionTimer(
+      telegramId,
+      timerSecs,
+      (secsLeft) => {
+        telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
+          parse_mode: 'Markdown',
+          reply_markup: keyboard,
+        }).catch(() => {});
+      },
+      async () => {
+        const sess = await redis.getSession(telegramId);
+        if (!sess?.questionDeadline || sess.questionDeadline !== deadline) return;
+
+        const q = sess.currentQuestion;
+        await redis.updateSession(telegramId, {
+          questionDeadline: undefined,
+          awaitingNext: true,
+          total: (sess.total || 0) + 1,
+        });
+
+        const explanation = q?.explanation ? `\n\n💡 ${q.explanation}` : '';
+        await telegram.sendMessage(telegramId,
+          `⏱️ *Time's up!*\n\nThe correct answer was *${q?.correct_option}*.${explanation}`,
+          { parse_mode: 'Markdown', reply_markup: fmt.afterAnswerKeyboard(sess.mode) },
+        );
+      },
+    );
+  }
 }
 
 export async function handlePractice(ctx: any): Promise<void> {
@@ -72,23 +116,48 @@ export async function handleYearPick(ctx: any): Promise<void> {
   );
 }
 
-export async function startPractice(ctx: any, user: User | null, subject: string, year?: number | null): Promise<void> {
+export async function startPractice(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string): Promise<void> {
   if (!user) user = await requireProfile(ctx);
   if (!user) return;
+
+  if (user.plan === 'premium') {
+    // Step 1: pick exam type
+    if (sessionExamType === undefined) {
+      await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'practice' });
+      await ctx.replyWithMarkdown(
+        '📋 *Which exam would you like to practise?*',
+        { reply_markup: fmt.examTypePickerKeyboard('practice') }
+      );
+      return;
+    }
+    // Step 2: pick timer
+    if (questionTimerSecs === undefined) {
+      await redis.updateSession(ctx.from.id, { pendingExamType: sessionExamType });
+      await ctx.replyWithMarkdown(
+        '⏱️ *Set a per-question timer?*\n\nPick how long you want for each question, or tap No Timer to go at your own pace.',
+        { reply_markup: fmt.timerPickerKeyboard('practice') }
+      );
+      return;
+    }
+  }
+
   if (!(await checkLimit(ctx, user))) return;
   if (!(await checkSubjectLimit(ctx, user, subject))) return;
 
-  const q = await db.getRandomQuestion(user.exam_type || '', subject, [], year);
+  const examType = sessionExamType || user.exam_type || '';
+  const q = await db.getRandomQuestion(examType, subject, [], year);
   if (!q) {
     const yearStr = year ? ` for ${year}` : '';
     await ctx.reply(`No questions found for ${subject}${yearStr}. Try a different year or subject!`);
     return;
   }
 
+  const timerSecs = questionTimerSecs ?? 0;
   const sessionId = uuidv4();
   await redis.setSession(ctx.from.id, {
     mode: 'practice',
     subject,
+    examType,
     year: year || null,
     sessionId,
     qNum: 1,
@@ -97,10 +166,36 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     currentQuestion: q,
     startTime: Date.now(),
     usedIds: [q.id],
+    questionTimerSecs: timerSecs,
   });
 
   await db.updateStreak(ctx.from.id);
-  await sendQuestion(ctx, q, { mode: 'practice', qNum: 1 });
+  await sendQuestion(ctx, q, { mode: 'practice', qNum: 1, questionTimerSecs: timerSecs });
+}
+
+export async function handlePracticeExamTypePick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const examType = ctx.callbackQuery.data.split(':')[2];
+  const session = await redis.getSession(ctx.from.id);
+  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await startPractice(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType);
+}
+
+export async function handlePracticeTimerPick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const timerSecs = parseInt(ctx.callbackQuery.data.split(':')[2], 10);
+  const session = await redis.getSession(ctx.from.id);
+  if (!session?.pendingSubject) {
+    await ctx.reply('Session expired. Please start again.');
+    return;
+  }
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  await startPractice(ctx, user, session.pendingSubject, session.pendingYear ?? null, timerSecs, session.pendingExamType);
 }
 
 // Handles answer:A/B/C/D callback
@@ -117,6 +212,14 @@ export async function handleAnswer(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
   const q = session.currentQuestion;
+
+  // Timer already fired automatically — ignore late tap
+  if (session.awaitingNext && !session.questionDeadline) return;
+
+  // Cancel the per-question timer since user answered in time
+  timerService.clearQuestionTimer(ctx.from.id);
+  await redis.updateSession(ctx.from.id, { questionDeadline: undefined });
+
   const isCorrect = selected === q.correct_option;
 
   // Log attempt
@@ -176,7 +279,15 @@ export async function handleNext(ctx: any): Promise<void> {
   if (!(await checkLimit(ctx, user))) return;
   if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
 
-  const q = await db.getRandomQuestion(user.exam_type || '', session.subject || '', session.usedIds || [], session.year);
+  // If premium was revoked mid-session, cancel the per-question timer
+  if (session.questionTimerSecs && user.plan !== 'premium') {
+    timerService.clearQuestionTimer(ctx.from.id);
+    await redis.updateSession(ctx.from.id, { questionTimerSecs: 0 });
+    session.questionTimerSecs = 0;
+    await ctx.replyWithMarkdown('⚠️ _Your premium access has been revoked. The per-question timer has been removed._');
+  }
+
+  const q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year);
   if (!q) {
     const yearStr = session.year ? ` for ${session.year}` : '';
     await ctx.replyWithMarkdown(
@@ -196,7 +307,7 @@ export async function handleNext(ctx: any): Promise<void> {
   });
 
   if (user.plan !== 'premium') await db.incrementDailyCount(ctx.from.id);
-  await sendQuestion(ctx, q, { mode: 'practice', qNum: newQNum });
+  await sendQuestion(ctx, q, { mode: 'practice', qNum: newQNum, questionTimerSecs: session.questionTimerSecs });
 }
 
 // Stop session
