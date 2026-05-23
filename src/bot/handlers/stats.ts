@@ -8,12 +8,30 @@ export async function handleStats(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
 
-  const stats = await db.getUserStats(user.id);
-  const weakTopics = user.subjects && user.subjects.length > 0
-    ? await db.getWeakTopics(user.id, user.subjects[0])
-    : [];
+  if (ctx.callbackQuery) await ctx.answerCbQuery();
 
-  await ctx.replyWithMarkdown(fmt.statsMessage(user, stats, weakTopics));
+  await ctx.replyWithMarkdown(
+    '📊 *Which exam would you like to see stats for?*',
+    { reply_markup: fmt.statsFilterKeyboard() }
+  );
+}
+
+export async function handleStatsFilter(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const examType = ctx.callbackQuery.data.split(':')[2]; // 'WAEC' | 'NECO' | 'JAMB' | 'all'
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  const [stats, subjectStats, weakTopics] = await Promise.all([
+    db.getUserStats(user.id, examType),
+    db.getSubjectStats(user.id, examType),
+    user.subjects && user.subjects.length > 0
+      ? db.getWeakTopics(user.id, user.subjects[0], examType)
+      : Promise.resolve([]),
+  ]);
+
+  await ctx.replyWithMarkdown(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats));
 }
 
 export async function handleSubscribe(ctx: any): Promise<void> {

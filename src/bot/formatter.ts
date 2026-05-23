@@ -249,7 +249,20 @@ export function sessionKeyboard(subject: string, year?: number | null) {
   };
 }
 
-export function statsMessage(user: User, stats: any, weakTopics?: any[]): string {
+export function statsFilterKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: 'WAEC', callback_data: 'stats:filter:WAEC' },
+        { text: 'NECO', callback_data: 'stats:filter:NECO' },
+        { text: 'JAMB', callback_data: 'stats:filter:JAMB' },
+      ],
+      [{ text: 'All Exams', callback_data: 'stats:filter:all' }],
+    ],
+  };
+}
+
+export function statsMessage(user: User, stats: any, weakTopics?: any[], examType?: string, subjectStats?: any[]): string {
   const plan = user.plan === 'premium'
     ? `⭐ Premium (expires ${user.plan_expires_at ? new Date(user.plan_expires_at).toLocaleDateString('en-NG') : 'N/A'})`
     : '🆓 Free (5 questions/day)';
@@ -259,20 +272,37 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[]): string
       weakTopics.map(t => `  • ${t.topic}: ${t.accuracy}% accuracy (${t.attempts} attempts)`).join('\n')
     : '';
 
-  return `📈 *Your ExamAce Stats*
+  const examLabel = examType && examType !== 'all' ? examType : 'Overall';
+
+  let subjectSection = '';
+  if (subjectStats && subjectStats.length > 0) {
+    const strong = subjectStats.filter(s => Number(s.accuracy) >= 60);
+    const weak = subjectStats.filter(s => Number(s.accuracy) < 60);
+
+    if (strong.length > 0) {
+      subjectSection += '\n✅ *Strong Subjects:*\n' +
+        strong.map(s => `  • ${s.subject}: ${s.accuracy}% (${s.attempts} attempts)`).join('\n');
+    }
+    if (weak.length > 0) {
+      subjectSection += '\n❌ *Needs Work:*\n' +
+        weak.map(s => `  • ${s.subject}: ${s.accuracy}% (${s.attempts} attempts)`).join('\n');
+    }
+  }
+
+  return `📈 *Your ${examLabel} Stats*
 
 👤 ${user.first_name}
 📋 Exam: ${user.exam_type || 'Not set'}
 🗓️ Joined: ${new Date(user.joined_at).toLocaleDateString('en-NG')}
 
-📊 *Overall Performance:*
+📊 *${examLabel} Performance:*
 • Total Attempts: ${stats.total_attempts || 0}
 • Correct Answers: ${stats.correct || 0}
 • Accuracy: ${stats.accuracy || 0}%
 • 🔥 Streak: ${user.streak || 0} days
 
 💳 *Plan:* ${plan}
-${weakSection}`;
+${subjectSection}${weakSection}`;
 }
 
 export function freeLimitMessage(remaining: number, limit: number): string | null {

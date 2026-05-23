@@ -61,6 +61,13 @@ export interface WeakTopic {
   accuracy: string | number;
 }
 
+export interface SubjectStat {
+  subject: string;
+  attempts: string | number;
+  correct: string | number;
+  accuracy: string | number;
+}
+
 export interface SessionState {
   step?: string;
   selectedSubjects?: string[];

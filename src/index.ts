@@ -103,6 +103,7 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Stats
   if (data === 'stats:show')                  return stats.handleStats(ctx);
+  if (data.startsWith('stats:filter:'))       return stats.handleStatsFilter(ctx);
 
   // Subscribe
   if (data === 'menu:subscribe')              return stats.handleSubscribe(ctx);

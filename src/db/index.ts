@@ -1,6 +1,6 @@
 // src/db/index.ts
 import { Pool } from 'pg';
-import { User, Question, AttemptLog, UserStats, WeakTopic } from '../types';
+import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -128,7 +128,20 @@ export async function logAttempt({ userId, questionId, selectedOption, isCorrect
   );
 }
 
-export async function getUserStats(userId: number): Promise<UserStats> {
+export async function getUserStats(userId: number, examType?: string): Promise<UserStats> {
+  if (examType && examType !== 'all') {
+    const { rows } = await pool.query<UserStats>(
+      `SELECT
+         COUNT(*) as total_attempts,
+         SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) as correct,
+         ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+       FROM attempts a
+       JOIN questions q ON a.question_id = q.id
+       WHERE a.user_id = $1 AND q.exam_type = $2`,
+      [userId, examType]
+    );
+    return rows[0];
+  }
   const { rows } = await pool.query<UserStats>(
     `SELECT
        COUNT(*) as total_attempts,
@@ -140,7 +153,9 @@ export async function getUserStats(userId: number): Promise<UserStats> {
   return rows[0];
 }
 
-export async function getWeakTopics(userId: number, subject: string): Promise<WeakTopic[]> {
+export async function getWeakTopics(userId: number, subject: string, examType?: string): Promise<WeakTopic[]> {
+  const filtered = examType && examType !== 'all';
+  const params: any[] = filtered ? [userId, subject, examType] : [userId, subject];
   const { rows } = await pool.query<WeakTopic>(
     `SELECT q.topic,
             COUNT(*) as attempts,
@@ -149,9 +164,28 @@ export async function getWeakTopics(userId: number, subject: string): Promise<We
      FROM attempts a
      JOIN questions q ON a.question_id = q.id
      WHERE a.user_id = $1 AND q.subject = $2 AND q.topic IS NOT NULL
+     ${filtered ? 'AND q.exam_type = $3' : ''}
      GROUP BY q.topic HAVING COUNT(*) >= 3
      ORDER BY accuracy ASC LIMIT 3`,
-    [userId, subject]
+    params
+  );
+  return rows;
+}
+
+export async function getSubjectStats(userId: number, examType?: string): Promise<SubjectStat[]> {
+  const filtered = examType && examType !== 'all';
+  const params: any[] = filtered ? [userId, examType] : [userId];
+  const { rows } = await pool.query<SubjectStat>(
+    `SELECT q.subject,
+            COUNT(*) as attempts,
+            SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) as correct,
+            ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+     FROM attempts a
+     JOIN questions q ON a.question_id = q.id
+     WHERE a.user_id = $1 ${filtered ? 'AND q.exam_type = $2' : ''}
+     GROUP BY q.subject HAVING COUNT(*) >= 3
+     ORDER BY accuracy DESC`,
+    params
   );
   return rows;
 }
