@@ -72,6 +72,7 @@ export interface SessionState {
   step?: string;
   selectedSubjects?: string[];
   examType?: string;
+  targetYear?: number | null;
   mode?: 'practice' | 'quiz' | 'drill';
   subject?: string;
   year?: number | null;

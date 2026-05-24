@@ -106,6 +106,19 @@ export async function handlePractice(ctx: any): Promise<void> {
   );
 }
 
+// Subject tapped from the subject picker
+export async function handleSubjectPick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const subject = ctx.callbackQuery.data.split(':')[2];
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  // Premium: year=undefined triggers the year picker step inside startPractice
+  // Free: use saved target_year directly (no extra steps)
+  const year = user.plan === 'premium' ? undefined : (user.target_year ?? null);
+  await startPractice(ctx, user, subject, year);
+}
+
+// Explicit year picker — only reached from "Change Year" on the session summary
 export async function handleYearPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const subject = ctx.callbackQuery.data.split(':')[2];
@@ -121,6 +134,15 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   if (!user) return;
 
   if (user.plan === 'premium') {
+    // Step 0: pick year
+    if (year === undefined) {
+      await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'practice' });
+      await ctx.replyWithMarkdown(
+        '📅 *Which exam year would you like to practise?*',
+        { reply_markup: fmt.flowYearKeyboard('practice') }
+      );
+      return;
+    }
     // Step 1: pick exam type
     if (sessionExamType === undefined) {
       await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'practice' });
@@ -145,7 +167,9 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   if (!(await checkSubjectLimit(ctx, user, subject))) return;
 
   const examType = sessionExamType || user.exam_type || '';
-  const q = await db.getRandomQuestion(examType, subject, [], year);
+  // For non-premium, year may be undefined here — fall back to their saved target_year
+  const effectiveYear = year !== undefined ? year : (user.target_year ?? null);
+  const q = await db.getRandomQuestion(examType, subject, [], effectiveYear);
   if (!q) {
     const yearStr = year ? ` for ${year}` : '';
     await ctx.reply(`No questions found for ${subject}${yearStr}. Try a different year or subject!`);
@@ -158,7 +182,7 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     mode: 'practice',
     subject,
     examType,
-    year: year || null,
+    year: effectiveYear,
     sessionId,
     qNum: 1,
     correct: 0,
@@ -171,6 +195,18 @@ export async function startPractice(ctx: any, user: User | null, subject: string
 
   await db.updateStreak(ctx.from.id);
   await sendQuestion(ctx, q, { mode: 'practice', qNum: 1, questionTimerSecs: timerSecs });
+}
+
+// Step 0 callback — year selected in premium practice flow
+export async function handlePracticeFlowYear(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const raw = ctx.callbackQuery.data.split(':')[2];
+  const year = raw === 'any' ? null : parseInt(raw, 10);
+  const session = await redis.getSession(ctx.from.id);
+  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await startPractice(ctx, user, session.pendingSubject, year, undefined, undefined);
 }
 
 export async function handlePracticeExamTypePick(ctx: any): Promise<void> {

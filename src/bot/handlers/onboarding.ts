@@ -7,35 +7,41 @@ export async function handleStart(ctx: any): Promise<void> {
   const user = await db.upsertUser(ctx);
 
   if (user.exam_type && user.subjects && user.subjects.length > 0) {
-    // Returning user
+    // Returning user — show main menu
     await ctx.replyWithMarkdown(
       `👋 *Welcome back, ${user.first_name}!*\n\nReady to practise? Choose an option:`,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '📚 Practice', callback_data: `practice:pick` },
-            { text: '📋 Quiz Mode', callback_data: 'quiz:pick' }],
-            [{ text: '📊 My Stats', callback_data: 'stats:show' },
-            { text: '💎 Subscribe', callback_data: 'menu:subscribe' }],
-          ],
-        },
-      }
+      { reply_markup: fmt.mainMenuKeyboard() }
     );
     return;
   }
 
-  // New user — start onboarding
-  await redis.setSession(ctx.from.id, { step: 'exam_type', selectedSubjects: [] });
+  // New user — start onboarding at step 1: year selection
+  await redis.setSession(ctx.from.id, { step: 'year', selectedSubjects: [] });
   await ctx.replyWithMarkdown(fmt.welcome(user.first_name), {
+    reply_markup: fmt.onboardYearKeyboard(),
+  });
+}
+
+// Step 1 — Year selected → move to exam type
+export async function handleOnboardYear(ctx: any): Promise<void> {
+  const raw = ctx.callbackQuery.data.split(':')[2]; // 'any' or '2024'
+  const year = raw === 'any' ? null : parseInt(raw, 10);
+  await ctx.answerCbQuery();
+
+  await redis.updateSession(ctx.from.id, { step: 'exam_type', targetYear: year, selectedSubjects: ['english'] });
+
+  await ctx.editMessageText(fmt.askExamType(year), {
+    parse_mode: 'Markdown',
     reply_markup: fmt.examTypeKeyboard(),
   });
 }
 
-// Handles onboard:exam:WAEC / JAMB / NECO / ALL
+// Step 2 — Exam type selected → move to subjects
 export async function handleExamType(ctx: any): Promise<void> {
   const examType = ctx.callbackQuery.data.split(':')[2];
   await ctx.answerCbQuery();
 
+  const session = await redis.getSession(ctx.from.id) || {};
   // English is always compulsory — pre-select it
   await redis.updateSession(ctx.from.id, { step: 'subjects', examType, selectedSubjects: ['english'] });
 
@@ -80,7 +86,7 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
   await ctx.editMessageReplyMarkup(fmt.subjectKeyboard(selected));
 }
 
-// Subject selection done
+// Step 3 — Subjects done → save everything, show main menu
 export async function handleSubjectsDone(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
@@ -90,23 +96,25 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
     return;
   }
 
-  const { examType, selectedSubjects } = session;
+  const { examType, selectedSubjects, targetYear } = session;
 
   // English is always compulsory
   const subjects: string[] = selectedSubjects.includes('english')
     ? selectedSubjects
     : ['english', ...selectedSubjects];
 
-  // Save to DB
+  // Save all three fields to DB
   const user = await db.updateUser(ctx.from.id, {
     exam_type: examType as any,
     subjects,
+    target_year: targetYear ?? null,
   });
 
   await redis.clearSession(ctx.from.id);
 
   await ctx.editMessageText(fmt.profileComplete(user), {
     parse_mode: 'Markdown',
+    reply_markup: fmt.mainMenuKeyboard(),
   });
 }
 

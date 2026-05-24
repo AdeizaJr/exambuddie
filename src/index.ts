@@ -64,6 +64,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (!data) return;
 
   // Onboarding
+  if (data.startsWith('onboard:year:'))       return onboarding.handleOnboardYear(ctx);
   if (data.startsWith('onboard:exam:'))       return onboarding.handleExamType(ctx);
   if (data.startsWith('onboard:subject:'))    return onboarding.handleSubjectToggle(ctx);
   if (data === 'onboard:subjects:done')       return onboarding.handleSubjectsDone(ctx);
@@ -75,6 +76,8 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Practice
   if (data === 'practice:pick')               return practice.handlePractice(ctx);
+  if (data.startsWith('practice:subject:'))   return practice.handleSubjectPick(ctx);
+  if (data.startsWith('practice:flow_year:')) return practice.handlePracticeFlowYear(ctx);
   if (data.startsWith('practice:year:'))      return practice.handleYearPick(ctx);
   if (data.startsWith('practice:start:')) {
     const parts = data.split(':');
@@ -102,6 +105,8 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Quiz
   if (data === 'quiz:pick')                   return quiz.handleQuiz(ctx);
+  if (data.startsWith('quiz:subject:'))       return quiz.handleQuizSubjectPick(ctx);
+  if (data.startsWith('quiz:flow_year:'))     return quiz.handleQuizFlowYear(ctx);
   if (data.startsWith('quiz:start:')) {
     const subject = data.split(':')[2];
     const user = await db.getUser(ctx.from.id);

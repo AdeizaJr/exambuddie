@@ -104,16 +104,24 @@ export async function getQuestionsByTopic(examType: string, subject: string, top
   return rows;
 }
 
-export async function getQuizQuestions(examType: string, subject: string, limit = 40): Promise<Question[]> {
+export async function getQuizQuestions(examType: string, subject: string, limit = 40, year?: number | null): Promise<Question[]> {
   const all = isAllExams(examType);
-  const params: any[] = all ? [subject, limit] : [examType, subject, limit];
+  const params: any[] = all ? [subject] : [examType, subject];
   const subjectIdx = all ? 1 : 2;
-  const limitIdx = subjectIdx + 1;
   const examFilter = all ? '' : 'AND exam_type = $1';
+
+  let yearFilter = '';
+  if (year) {
+    params.push(year);
+    yearFilter = `AND year = $${params.length}`;
+  }
+
+  params.push(limit);
+  const limitIdx = params.length;
 
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
-     WHERE subject = $${subjectIdx} ${examFilter}
+     WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );

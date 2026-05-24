@@ -94,31 +94,63 @@ I'm your personal WAEC & JAMB exam prep assistant. I'll give you past questions,
 
 Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
 
-👇 First, which exam are you preparing for?`;
+📅 *Step 1 of 3:* Which exam year are you preparing for?`;
+}
+
+export function onboardYearKeyboard() {
+  const rows: any[][] = [
+    [{ text: '📅 Any Year', callback_data: 'onboard:year:any' }],
+  ];
+  const years: number[] = [];
+  for (let y = 2025; y >= 2010; y--) years.push(y);
+  for (let i = 0; i < years.length; i += 4) {
+    rows.push(years.slice(i, i + 4).map(y => ({
+      text: `${y}`,
+      callback_data: `onboard:year:${y}`,
+    })));
+  }
+  return { inline_keyboard: rows };
+}
+
+export function askExamType(year: number | null): string {
+  const yearLabel = year ? `📅 Year: *${year}*` : `📅 Year: *Any*`;
+  return `✅ ${yearLabel}
+
+📋 *Step 2 of 3:* Which exam are you preparing for?`;
 }
 
 export function askSubjects(examType: string): string {
   return `✅ *${examType} selected!*
 
-Now choose your subjects. You can pick multiple — I'll prepare questions for each one.
-
-Reply with the numbers separated by commas (e.g. *1, 2, 5*) or tap individual options:`;
+📚 *Step 3 of 3:* Choose your subjects. You can pick multiple — I'll prepare questions for each one.`;
 }
 
 export function profileComplete(user: User): string {
   const subjects = user.subjects.map(s => SUBJECT_MAP[s] || s).join(', ');
-  return `🎉 *Profile set up! You're ready.*
+  const yearLabel = user.target_year ? `*${user.target_year}*` : '*Any Year*';
+  return `🎉 *You're all set, ${user.first_name}!*
 
 📋 *Your Profile:*
-• Exam: *${user.exam_type}*
-• Subjects: ${subjects}
+• 📅 Exam Year: ${yearLabel}
+• 📋 Exam: *${user.exam_type}*
+• 📚 Subjects: ${subjects}
 
-*What would you like to do?*
-• /practice — Start practising now
-• /quiz — Take a timed mock exam
-• /stats — See your progress
-• /subscribe — Get unlimited access
-• /help — All commands`;
+What would you like to do?`;
+}
+
+export function mainMenuKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '📚 Practice',   callback_data: 'practice:pick' },
+        { text: '📋 Quiz Mode',  callback_data: 'quiz:pick' },
+      ],
+      [
+        { text: '📊 My Stats',   callback_data: 'stats:show' },
+        { text: '💎 Subscribe',  callback_data: 'menu:subscribe' },
+      ],
+    ],
+  };
 }
 
 export function formatQuestion(q: Question, number: number, total: number | string, mode?: string): string {
@@ -486,7 +518,36 @@ export function subjectLimitKeyboard(subject: string) {
 export function practiceSubjectKeyboard(subjects: string[]) {
   const buttons = subjects.map(s => ({
     text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1)}`,
-    callback_data: `practice:year:${s}`, // → year picker
+    callback_data: `practice:subject:${s}`, // → uses saved target_year directly
+  }));
+  const rows: any[][] = [];
+  for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
+  rows.push([
+    { text: '➕ Add / Remove Subjects', callback_data: 'practice:add_subject' },
+    { text: '🔄 Change Exam Type', callback_data: 'practice:change_exam' },
+  ]);
+  return { inline_keyboard: rows };
+}
+
+export function flowYearKeyboard(mode: 'practice' | 'quiz') {
+  const rows: any[][] = [
+    [{ text: '📅 Any Year', callback_data: `${mode}:flow_year:any` }],
+  ];
+  const years: number[] = [];
+  for (let y = 2025; y >= 2010; y--) years.push(y);
+  for (let i = 0; i < years.length; i += 4) {
+    rows.push(years.slice(i, i + 4).map(y => ({
+      text: `${y}`,
+      callback_data: `${mode}:flow_year:${y}`,
+    })));
+  }
+  return { inline_keyboard: rows };
+}
+
+export function quizSubjectKeyboard(subjects: string[]) {
+  const buttons = subjects.map(s => ({
+    text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1)}`,
+    callback_data: `quiz:subject:${s}`, // → uses saved target_year directly
   }));
   const rows: any[][] = [];
   for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));

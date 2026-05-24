@@ -25,22 +25,54 @@ export async function handleQuiz(ctx: any): Promise<void> {
   }
 
   if (user.subjects.length === 1) {
-    await startQuiz(ctx, user, user.subjects[0]);
+    await startQuiz(ctx, user, user.subjects[0]); // year=undefined → triggers year picker
   } else {
     await ctx.replyWithMarkdown(
       '📋 *Quiz Mode*\n\nWhich subject for your mock exam?',
-      { reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+      { reply_markup: fmt.quizSubjectKeyboard(user.subjects) }
     );
   }
 }
 
-export async function startQuiz(ctx: any, user: User | null, subject: string, questionTimerSecs?: number, sessionExamType?: string): Promise<void> {
+// Subject tapped from the quiz subject picker
+export async function handleQuizSubjectPick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const subject = ctx.callbackQuery.data.split(':')[2];
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  // Premium: year=undefined triggers year picker step inside startQuiz
+  // Free: n/a (quiz is premium-only, but kept consistent)
+  await startQuiz(ctx, user, subject);
+}
+
+// Step 0 callback — year selected in premium quiz flow
+export async function handleQuizFlowYear(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const raw = ctx.callbackQuery.data.split(':')[2];
+  const year = raw === 'any' ? null : parseInt(raw, 10);
+  const session = await redis.getSession(ctx.from.id);
+  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await startQuiz(ctx, user, session.pendingSubject, year, undefined, undefined);
+}
+
+export async function startQuiz(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string): Promise<void> {
   if (!user) user = await db.getUser(ctx.from.id);
   if (!user) return;
 
+  // Step 0: pick year
+  if (year === undefined) {
+    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'quiz' });
+    await ctx.replyWithMarkdown(
+      '📅 *Which exam year would you like to be quizzed on?*',
+      { reply_markup: fmt.flowYearKeyboard('quiz') }
+    );
+    return;
+  }
   // Step 1: pick exam type
   if (sessionExamType === undefined) {
-    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'quiz' });
+    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'quiz' });
     await ctx.replyWithMarkdown(
       '📋 *Which exam would you like to be quizzed on?*',
       { reply_markup: fmt.examTypePickerKeyboard('quiz') }
@@ -58,7 +90,8 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, qu
   }
 
   const examType = sessionExamType || user.exam_type || '';
-  const questions = await db.getQuizQuestions(examType, subject, QUIZ_QUESTIONS);
+  const effectiveYear = year !== undefined ? year : (user.target_year ?? null);
+  const questions = await db.getQuizQuestions(examType, subject, QUIZ_QUESTIONS, effectiveYear);
 
   if (questions.length < 5) {
     await ctx.reply('Not enough questions available for a full quiz. Try again soon!');
@@ -101,7 +134,7 @@ export async function handleQuizExamTypePick(ctx: any): Promise<void> {
   if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
-  await startQuiz(ctx, user, session.pendingSubject, undefined, examType);
+  await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType);
 }
 
 export async function handleQuizTimerPick(ctx: any): Promise<void> {
@@ -116,22 +149,15 @@ export async function handleQuizTimerPick(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
 
-  await startQuiz(ctx, user, session.pendingSubject, timerSecs, session.pendingExamType);
+  await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, timerSecs, session.pendingExamType);
 }
 
 export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<void> {
   const q = quizState.questions[quizState.qIndex];
-  const overallLeft = () => {
-    const s = Math.max(0, Math.round((quizState.deadline - Date.now()) / 1000));
-    return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
-  };
-
   const timerSecs = quizState.questionTimerSecs && quizState.questionTimerSecs > 0 ? quizState.questionTimerSecs : 0;
   const baseText = fmt.formatQuestion(q, quizState.qIndex + 1, quizState.total, 'quiz') + fmt.answerOptions(q);
   const timerLine = (secsLeft: number) =>
-    timerSecs > 0
-      ? `\n\n⏱️ _${secsLeft}s remaining  |  Overall: ${overallLeft()} left_`
-      : `\n\n⏱️ _Overall: ${overallLeft()} left_`;
+    timerSecs > 0 ? `\n\n⏱️ _${secsLeft}s remaining_` : '';
 
   const keyboard = fmt.answerKeyboard();
   const sentMsg = await ctx.replyWithMarkdown(baseText + timerLine(timerSecs), { reply_markup: keyboard });
@@ -164,13 +190,11 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
         state.qIndex++;
         await redis.saveQuizState(telegramId, state);
 
-        await telegram.sendMessage(telegramId,
-          `⏱️ *Time's up!* _(${q.correct_option} was correct)_`,
-          {
-            parse_mode: 'Markdown',
-            reply_markup: { inline_keyboard: [[{ text: '➡️ Next', callback_data: 'quiz:next' }]] },
-          },
-        );
+        const timesUpText = `⏱️ *Time's up!*\n\n` + fmt.correctAnswer(q, '');
+        await telegram.sendMessage(telegramId, timesUpText, {
+          parse_mode: 'Markdown',
+          reply_markup: { inline_keyboard: [[{ text: '➡️ Next', callback_data: 'quiz:next' }]] },
+        });
       },
     );
   }
@@ -215,9 +239,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
   quizState.answers.push({ qId: q.id, selected, correct: q.correct_option, isCorrect });
   if (isCorrect) quizState.correct++;
 
-  const icon = isCorrect ? '✅' : `❌ _(${q.correct_option} was correct)_`;
-
-  await ctx.replyWithMarkdown(icon, {
+  await ctx.replyWithMarkdown(fmt.correctAnswer(q, selected), {
     reply_markup: {
       inline_keyboard: [[
         { text: '➡️ Next', callback_data: 'quiz:next' },
