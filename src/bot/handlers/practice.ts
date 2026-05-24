@@ -152,15 +152,8 @@ export async function startPractice(ctx: any, user: User | null, subject: string
       );
       return;
     }
-    // Step 2: pick timer
-    if (questionTimerSecs === undefined) {
-      await redis.updateSession(ctx.from.id, { pendingExamType: sessionExamType });
-      await ctx.replyWithMarkdown(
-        '⏱️ *Set a per-question timer?*\n\nPick how long you want for each question, or tap No Timer to go at your own pace.',
-        { reply_markup: fmt.timerPickerKeyboard('practice') }
-      );
-      return;
-    }
+    // No timer step for practice — go straight to questions
+    if (questionTimerSecs === undefined) questionTimerSecs = 0;
   }
 
   if (!(await checkLimit(ctx, user))) return;
