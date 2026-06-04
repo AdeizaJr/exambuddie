@@ -92,7 +92,7 @@ exambuddi/
 
 | Feature | Free | Premium (₦800/mo or ₦7,000/yr) |
 |---------|------|------|
-| Questions/day | 5 | Unlimited |
+| Questions/day | 10 | Unlimited |
 | Practice mode | ✅ | ✅ |
 | Quiz mode (timed) | ❌ | ✅ |
 | Topic drill | ❌ | ✅ |

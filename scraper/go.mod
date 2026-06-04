@@ -1,4 +1,4 @@
-module github.com/examace/scraper
+module github.com/exambuddi/scraper
 
 go 1.22
 
