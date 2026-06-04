@@ -1,0 +1,2402 @@
+[
+  {
+    "id": 124625,
+    "explanation": "Mass stays constant everywhere; weight (= mg) varies with local gravitational field. Answer C: mass constant, weight varies."
+  },
+  {
+    "id": 124652,
+    "explanation": "Kinetic theory explains change of state (molecular energy), diffusion (random molecular motion), radiation (energy transfer), and osmosis (net molecular movement). All four (I, II, III, IV). Answer D."
+  },
+  {
+    "id": 124662,
+    "explanation": "Silicon and germanium are Group IV elements. They share electron pairs → covalent bonding. Answer A."
+  },
+  {
+    "id": 124667,
+    "explanation": "Adding controlled impurity to a semiconductor is called doping (not saturation, bonding, or amplification). Answer D."
+  },
+  {
+    "id": 124678,
+    "explanation": "Parallax error eliminated by keeping eye directly above (vertically downward on) the marking. Answer C."
+  },
+  {
+    "id": 124681,
+    "explanation": "Newton's law: F = GMm/r². As rocket approaches planet, r decreases → F increases. Answer A: increase as r reduces."
+  },
+  {
+    "id": 124683,
+    "explanation": "SHM definition: acceleration directed toward equilibrium and proportional to displacement. Answer A."
+  },
+  {
+    "id": 124687,
+    "explanation": "Liquid pressure P = ρgh. Depends only on depth (h) and density (ρ). Answer A."
+  },
+  {
+    "id": 124691,
+    "explanation": "Clinical thermometers use mercury in a narrow glass tube (mercury-in-glass type). Answer D."
+  },
+  {
+    "id": 124698,
+    "explanation": "Brownian motion: rapid, constant, irregular movement of particles (I); shows molecules exist (II); occurs in liquids AND gases, not only gases — so III is false; shows molecules in constant random motion (IV). Correct: I, II and IV. Answer D."
+  },
+  {
+    "id": 124699,
+    "explanation": "Concave mirror gives enlarged virtual image when object is between pole and principal focus. For shaving, man places face between F and the pole. Answer C."
+  },
+  {
+    "id": 124702,
+    "explanation": "Parallel rays from sun (effectively at infinity) converge at the principal focus after reflection from concave mirror. Answer B."
+  },
+  {
+    "id": 124705,
+    "explanation": "Periscope uses two plane mirrors (by reflection), not lenses. Lenses are used in projectors, eyes, and telescopes. Answer C."
+  },
+  {
+    "id": 124707,
+    "explanation": "Total internal reflection conditions: (II) light travels from denser to less dense medium AND (III) angle of incidence exceeds critical angle. I is wrong (it says less to denser). Answer C: II and III only."
+  },
+  {
+    "id": 124708,
+    "explanation": "Fuse must be on live side to disconnect the live wire when excess current flows, making the circuit safe. Answer C."
+  },
+  {
+    "id": 124709,
+    "explanation": "Dispersion: white light separates into component colors (ROYGBIV) because each color has different speed in glass. Answer D."
+  },
+  {
+    "id": 124710,
+    "explanation": "Accumulator has very low internal resistance → can deliver high current. Dry cells have higher internal resistance, limiting current. Answer B: dry cells have low current capacity."
+  },
+  {
+    "id": 124713,
+    "explanation": "EMF = BLv sinθ = 1.5 × 1 × 50 × sin30° = 1.5 × 1 × 50 × 0.5 = 37.5 V. Answer A."
+  },
+  {
+    "id": 124714,
+    "explanation": "X-ray used to locate foreign objects (like a pin) inside the body = X-ray diagnosis. Answer A."
+  },
+  {
+    "id": 124716,
+    "explanation": "Gamma rays are uncharged electromagnetic waves — not deflected by electric or magnetic fields. Alpha and beta particles carry charge and are deflected. Answer A."
+  },
+  {
+    "id": 124718,
+    "explanation": "Semiconductor advantages: small size (I), low power requirement (II), highly durable (IV). III ('not easily damaged by high temperature') is NOT an advantage — semiconductors are sensitive to high temperatures. Answer C: I, II and IV."
+  },
+  {
+    "id": 124719,
+    "explanation": "p-n junction diode allows current when forward-biased (low resistance) and blocks current when reverse-biased. Rectification works because it conducts in only one direction. Answer A."
+  },
+  {
+    "id": 124720,
+    "explanation": "Mass is the quantity of matter in a body — constant regardless of location (Earth or moon). Weight changes, not mass. Answer A."
+  },
+  {
+    "id": 124735,
+    "explanation": "Capillarity — rise or fall of liquid in a narrow tube — is caused by surface tension (interaction between liquid surface and tube walls). Answer B."
+  },
+  {
+    "id": 124736,
+    "explanation": "Below sea level, atmospheric pressure is higher. Higher external pressure raises the boiling point above 100°C. Answer A."
+  },
+  {
+    "id": 124737,
+    "explanation": "Steam at 100°C carries additional latent heat of vaporization. When it condenses on skin, it releases that extra energy. Note: option D (convection) is the given key answer. Answer D."
+  },
+  {
+    "id": 124738,
+    "explanation": "Transverse and longitudinal waves differ in the direction of particle vibration relative to wave travel. Transverse: perpendicular; longitudinal: parallel. Answer C."
+  },
+  {
+    "id": 124739,
+    "explanation": "Waves on stretched strings are mechanical (require medium) and transverse. Answer C: mechanical wave."
+  },
+  {
+    "id": 124740,
+    "explanation": "Conduction transfers heat by vibration of molecules passing energy to neighbours, requiring a medium. Answer B."
+  },
+  {
+    "id": 124745,
+    "explanation": "TIR requires going from denser to less dense medium. Water to glass: glass is denser than water → going from less dense (water) to more dense (glass) — TIR cannot occur. Answer B."
+  },
+  {
+    "id": 124748,
+    "explanation": "Capacitors in induction coils are used to prevent electric sparks across the contact breaker (spark quenching). Answer C."
+  },
+  {
+    "id": 124750,
+    "explanation": "Ohm's law (V ∝ I at constant temperature) is obeyed by metallic conductors. Diodes, electrolytes, and glass do not obey Ohm's law. Answer B."
+  },
+  {
+    "id": 124754,
+    "explanation": "Charge moving with electric force: electric PE decreases (moves to lower potential) while kinetic energy increases. Answer C: loses PE, gains KE."
+  },
+  {
+    "id": 124758,
+    "explanation": "Faraday's law quantitatively describes induced EMF as proportional to rate of change of magnetic flux. Answer B."
+  },
+  {
+    "id": 124759,
+    "explanation": "Photoelectric effect shows light behaves as particles (photons) — demonstrating particle nature. Diffraction shows wave nature. Answer A."
+  },
+  {
+    "id": 124762,
+    "explanation": "Silicon and germanium both in Group IV; they form covalent bonds by sharing electron pairs. Answer B."
+  },
+  {
+    "id": 124763,
+    "explanation": "Smallest graduation on a metre rule = 1 mm. Least count (half smallest division) = 0.5 mm. Answer C."
+  },
+  {
+    "id": 124765,
+    "explanation": "Vectors have magnitude and direction. Torque (II) and Momentum (IV) are vectors. Electrical potential (I) and kinetic energy (III) are scalars. Answer A: II and IV."
+  },
+  {
+    "id": 124769,
+    "explanation": "Equilibrium condition under parallel forces: vector sum of all forces = zero (and sum of moments = zero). Answer B."
+  },
+  {
+    "id": 124771,
+    "explanation": "g on planet = 10/3 m/s². Weight = mg = 8 × (10/3) ≈ 26.7 N ≈ 27 N. Answer C."
+  },
+  {
+    "id": 124775,
+    "explanation": "Dew forms when moist air cools to dew point — water vapour condenses on cool surfaces like grass in early morning. Answer D."
+  },
+  {
+    "id": 124779,
+    "explanation": "Heat capacity of body = heat required to raise temperature by 1 K (total, not per unit mass). Answer A."
+  },
+  {
+    "id": 124783,
+    "explanation": "Melting point and solidification (freezing) point are the same temperature — substance changes between solid and liquid at this point. Answer B."
+  },
+  {
+    "id": 124787,
+    "explanation": "Compound microscope uses short focal length lenses for both objective and eyepiece to achieve high magnification. Answer C."
+  },
+  {
+    "id": 124788,
+    "explanation": "In normal adjustment (relaxed eye), final image of telescope is at infinity. Answer A."
+  },
+  {
+    "id": 124794,
+    "explanation": "Electrical energy for billing purposes is measured in kilowatt-hours (kWh). Answer B."
+  },
+  {
+    "id": 124797,
+    "explanation": "Beta decay: neutron → proton + electron (β⁻). Atomic number increases by 1; mass number unchanged. Answer C."
+  },
+  {
+    "id": 124798,
+    "explanation": "At the magnetic equator, Earth's field is horizontal → angle of dip = 0°. Answer B."
+  },
+  {
+    "id": 124799,
+    "explanation": "²¹⁰₈₂Pb → ²⁰⁶₈₀Pb: mass decreases by 4, Z decreases by 2 → one alpha particle emitted. Answer B."
+  },
+  {
+    "id": 124800,
+    "explanation": "Newton (N = kg·m/s²) is a derived unit, not fundamental. Fundamental SI units include metre, ampere, and second. Answer C."
+  },
+  {
+    "id": 124801,
+    "explanation": "Neon gas in a discharge tube produces characteristic red/orange-red light. Answer D."
+  },
+  {
+    "id": 124803,
+    "explanation": "Two light nuclei (²₁X + ²₁X) combining to form heavier nucleus (³₂Y) with release of energy = nuclear fusion. Answer B."
+  },
+  {
+    "id": 124843,
+    "explanation": "Electromagnet strength increases with: more turns in coil, higher current, and softer core. Answer A: increases in number of turns."
+  },
+  {
+    "id": 124860,
+    "explanation": "Net movement of solvent through a semi-permeable membrane from high to low solvent potential = osmosis. Answer B."
+  },
+  {
+    "id": 124871,
+    "explanation": "Magnetic force on charge F = qvB sinθ. When velocity is parallel to field, θ = 0°, F = 0. Charge moves in straight line. Answer A."
+  },
+  {
+    "id": 124872,
+    "explanation": "Low humidity means air can absorb more water vapour → rate of evaporation from pool increases rapidly. Answer D."
+  },
+  {
+    "id": 124873,
+    "explanation": "Chemical energy (I) converts directly to light (chemiluminescence), and electrical energy (III) converts directly to light (in bulbs/LEDs). Sound (II) does not directly convert to light. Answer D: I and III only."
+  },
+  {
+    "id": 124875,
+    "explanation": "Image size/object size = image distance/object distance. Halving object distance doubles image size. Answer D: image is doubled."
+  },
+  {
+    "id": 124876,
+    "explanation": "Telescope is the instrument designed to view distant objects such as stars. Answer B."
+  },
+  {
+    "id": 124877,
+    "explanation": "Friction opposes motion, causing energy loss → reduces output work → efficiency decreases with increased friction. Answer B."
+  },
+  {
+    "id": 124881,
+    "explanation": "ΔL = L₀αΔT = 10 × 3×10⁻⁵ × (50−10) = 10 × 3×10⁻⁵ × 40 = 1.2×10⁻² m. Answer C."
+  },
+  {
+    "id": 124882,
+    "explanation": "Two parallel plane mirrors facing each other produce infinite images (each image is reflected in the other mirror). Answer A."
+  },
+  {
+    "id": 124885,
+    "explanation": "Molecules of matter ARE in constant random motion (this is a core principle of kinetic theory). Statement III is NOT correct. Answer C."
+  },
+  {
+    "id": 124886,
+    "explanation": "Dynamo (generator) converts mechanical energy (rotation) into electrical energy. Answer A."
+  },
+  {
+    "id": 124887,
+    "explanation": "Semiconductors: conductivity increases with temperature (more electrons gain enough energy to cross the band gap). Answer B."
+  },
+  {
+    "id": 124890,
+    "explanation": "Saturated vapour pressure (SVP) increases with temperature — more molecules have enough energy to escape the liquid surface. Answer A."
+  },
+  {
+    "id": 124891,
+    "explanation": "Electromagnetic spectrum order (decreasing wavelength / increasing frequency): radio > microwave > infrared > visible > UV > X-rays > gamma. Gamma rays have shortest wavelength. Answer D."
+  },
+  {
+    "id": 124895,
+    "explanation": "Water waves are mechanical (require medium) and transverse (particles move perpendicular to wave travel). Answer A."
+  },
+  {
+    "id": 124897,
+    "explanation": "At absolute zero (−273°C = 0 K), molecular kinetic energy = 0, so gas pressure drops to zero. Answer B."
+  },
+  {
+    "id": 124899,
+    "explanation": "Relative density of liquid = density of liquid / density of water = upthrust in liquid / upthrust in water (by Archimedes). Answer B."
+  },
+  {
+    "id": 124900,
+    "explanation": "Shadows and eclipses occur because light travels in straight lines (rectilinear propagation) — objects block light paths. Answer B."
+  },
+  {
+    "id": 124902,
+    "explanation": "Saturated vapour: rate of condensation equals rate of evaporation — dynamic equilibrium. Answer B."
+  },
+  {
+    "id": 124903,
+    "explanation": "Electromagnetic waves (light, radio, X-rays) are transverse waves that do not require a medium. Answer A."
+  },
+  {
+    "id": 124909,
+    "explanation": "Boiling occurs when vapour pressure of liquid equals atmospheric pressure — bubbles form throughout liquid. Answer D."
+  },
+  {
+    "id": 124914,
+    "explanation": "Diagram-dependent question. Neutral point is where the resultant magnetic field is zero. Answer B (point X)."
+  },
+  {
+    "id": 124916,
+    "explanation": "Atoms of different elements have different numbers of protons and different properties. They are NOT identical. Answer D."
+  },
+  {
+    "id": 124964,
+    "explanation": "All three are true: positive charge = deficit of electrons; negative charge = excess of electrons; electric current = movement of electrons. Answer D: all of the above."
+  },
+  {
+    "id": 124966,
+    "explanation": "'Negative charge means deficit of electrons' is NOT true — deficit of electrons = positive charge; excess of electrons = negative charge. Answer A."
+  },
+  {
+    "id": 124970,
+    "explanation": "All three statements are correct: positive charge = deficit electrons, negative charge = excess electrons, current = electron movement. Answer D."
+  },
+  {
+    "id": 124974,
+    "explanation": "Different colours travel at different speeds in glass because glass has different refractive indices for each wavelength. This speed difference causes dispersion (separation) of white light. Answer C."
+  },
+  {
+    "id": 124977,
+    "explanation": "²₁X + ²₁X → ³₂Z + ¹₀n + energy: two light nuclei combine to form a heavier nucleus = nuclear fusion reaction. Answer A."
+  },
+  {
+    "id": 124979,
+    "explanation": "Shadows and eclipses form because light travels in straight lines — objects cast shadows. Answer D: rectilinear propagation."
+  },
+  {
+    "id": 124980,
+    "explanation": "Ohm's law (V = IR, constant ratio) is obeyed by metallic conductors at constant temperature. Answer A: all metals."
+  },
+  {
+    "id": 124982,
+    "explanation": "Mirage: layers of air near hot road have varying refractive indices (I) and light bends (total internal reflection) so sky image appears on ground (III). I and III only. Answer A."
+  },
+  {
+    "id": 124983,
+    "explanation": "At verge of sliding: friction force = m₂g, normal reaction = m₁g. Coefficient μ = m₂g/m₁g = m₂/m₁. Answer C."
+  },
+  {
+    "id": 124984,
+    "explanation": "Isotopes: same chemical properties (same electron number) (I), separated by physical methods like mass spectrometry (II), same proton number (Z) by definition (III). All three are TRUE. Answer D."
+  },
+  {
+    "id": 124985,
+    "explanation": "Lead-acid accumulator has very low internal resistance → can deliver large currents. Dry cells and Leclanche cells have higher internal resistance. Answer D."
+  },
+  {
+    "id": 124986,
+    "explanation": "Pitch = perceived frequency. Higher frequency = higher pitch. Increasing frequency raises pitch. Answer C."
+  },
+  {
+    "id": 124987,
+    "explanation": "Diagram-dependent pressure calculation. Answer B: 830 mm."
+  },
+  {
+    "id": 124989,
+    "explanation": "Nuclear fission produces neutrons that can trigger further fissions → chain reaction is a key feature. Answer A."
+  },
+  {
+    "id": 124991,
+    "explanation": "Resonance occurs when natural frequencies match. Diagram-dependent — pendulum T resonates with P. Answer B."
+  },
+  {
+    "id": 124993,
+    "explanation": "(1/2)^n = 1/64 = (1/2)^6 → n = 6 half-lives. Half-life = 120/6 = 20 years. Answer A."
+  },
+  {
+    "id": 124996,
+    "explanation": "Newton's law of cooling: rate of heat loss ∝ (T_body − T_surroundings) — the temperature difference. Answer C."
+  },
+  {
+    "id": 124997,
+    "explanation": "Convex mirror always produces virtual, erect, and diminished images — suitable for wide-field driving mirror. Answer A."
+  },
+  {
+    "id": 124998,
+    "explanation": "Differences between solid, liquid, gas explained by intermolecular spacing and forces between molecules. Answer C."
+  },
+  {
+    "id": 124999,
+    "explanation": "Evaporation = liquid turning spontaneously to vapour at any temperature (not just boiling point). Answer B."
+  },
+  {
+    "id": 125000,
+    "explanation": "Diagram-dependent (double-touch magnetisation). When both south poles stroke bar from ends to middle, ends become north poles. Answer C: north and north."
+  },
+  {
+    "id": 125001,
+    "explanation": "Appliances connected in parallel so each gets full mains voltage. Series connection means voltage is shared and devices won't work correctly. Answer D."
+  },
+  {
+    "id": 125005,
+    "explanation": "ω = v/r = 1/0.5 = 2 rad/s. Answer D."
+  },
+  {
+    "id": 125038,
+    "explanation": "Conservation of momentum: M×0 = M₁V₁ + (M−M₁)V₂. V₂ = −M₁V₁/(M−M₁). Magnitude = M₁V₁/(M−M₁). Answer B."
+  },
+  {
+    "id": 125043,
+    "explanation": "Pair of calipers is suitable for measuring outside diameter of a narrow pipe. Answer A."
+  },
+  {
+    "id": 125050,
+    "explanation": "Photocell operates on photoelectric effect — incident radiation causes emission of electrons. Answer B."
+  },
+  {
+    "id": 125119,
+    "explanation": "Circular motion: constant speed but continuously changing direction → centripetal acceleration present. Body has both constant speed and acceleration. Answer A: circular motion."
+  },
+  {
+    "id": 125161,
+    "explanation": "Water contracts (density increases) from 0°C to 4°C — anomalous expansion. Above 4°C it expands normally. Answer C: 0°C to +4°C."
+  },
+  {
+    "id": 125162,
+    "explanation": "True statements: (i) alpha = positively charged (+2), (ii) beta = negatively charged (−1 electron), (iii) gamma = neutral. False: (iv) beta has same mass as helium — beta is an electron (negligible mass); (v) gamma is NOT charged. Correct: i, ii, iii only. Answer B."
+  },
+  {
+    "id": 125163,
+    "explanation": "X-rays are NOT used to detect fingerprints (that uses chemical/optical methods). X-rays are used for medical imaging, cancer treatment, and industrial flaw detection. Answer C."
+  },
+  {
+    "id": 125167,
+    "explanation": "High-tension transmission = high voltage, low current (to minimise I²R power loss). Answer B."
+  },
+  {
+    "id": 125168,
+    "explanation": "Natural radioactivity emits alpha particles, beta rays, and gamma rays — all three types. Answer D."
+  },
+  {
+    "id": 125170,
+    "explanation": "Proton mass ≈ neutron mass (both ~1 amu). They differ greatly from electrons (1/1836 amu) and alpha particles (4 amu). Answer C."
+  },
+  {
+    "id": 125172,
+    "explanation": "Sound entering water: frequency unchanged (determined by source), speed increases (water denser/stiffer), wavelength increases (λ = v/f). Answer B."
+  },
+  {
+    "id": 125175,
+    "explanation": "At Earth's magnetic north pole: field is vertical → angle of dip = 90°. At magnetic equator: field is horizontal → angle of dip = 0°. Answer D: 90° and 0°."
+  },
+  {
+    "id": 125177,
+    "explanation": "Convex mirror as driving mirror: (I) image is erect, (II) has wide field of view. III (long focal length) is NOT a reason. Answer B: I and II only."
+  },
+  {
+    "id": 125180,
+    "explanation": "Hydrometer measures relative density of liquids by flotation (how deep it sinks). Answer B."
+  },
+  {
+    "id": 125187,
+    "explanation": "Diagram-dependent (cooling curve). The flat region at 80°C = naphthalene's melting/solidification point. Answer C."
+  },
+  {
+    "id": 125192,
+    "explanation": "Diagram-dependent (resonance tube length = one wavelength). Answer C."
+  },
+  {
+    "id": 125229,
+    "explanation": "Sound wavelength λ = v/f. In hot air, sound speed v increases; frequency unchanged → wavelength increases. Answer A."
+  },
+  {
+    "id": 125570,
+    "explanation": "Upthrust = weight in air − apparent weight in liquid = 180 − 150 = 30 N. Answer C."
+  },
+  {
+    "id": 125572,
+    "explanation": "Graphite rods act as moderators in nuclear reactors, slowing fast neutrons to thermal energies to sustain fission chain reaction. Answer A."
+  },
+  {
+    "id": 125573,
+    "explanation": "μ = F_friction / Normal reaction = 10 / (2×10) = 10/20 = 0.5. Answer B."
+  },
+  {
+    "id": 125575,
+    "explanation": "High-voltage transmission reduces current → less I²R heat loss in cables → energy waste minimised. Answer E."
+  },
+  {
+    "id": 125576,
+    "explanation": "Changing from solid to liquid at same temperature T: only latent heat of fusion needed = ML. No temperature change, so specific heat terms cancel. Answer B."
+  },
+  {
+    "id": 125578,
+    "explanation": "Principle of moments for equilibrium: algebraic sum of all moments about any point = zero. Answer E."
+  },
+  {
+    "id": 125579,
+    "explanation": "Heat from fire in closed room reaches distant person mainly by radiation (electromagnetic waves travel through air directly). Answer D."
+  },
+  {
+    "id": 125581,
+    "explanation": "Force on charged body in electric field: F = qE. Depends on charge q (I) and field intensity E (II). Mass has no effect. Answer C: I and II only."
+  },
+  {
+    "id": 125585,
+    "explanation": "Mean time for 30 oscillations = (70+72+67)/3 = 209/3 = 69.67 s. Period T = 69.67/30 = 2.32 s. Answer C."
+  },
+  {
+    "id": 125588,
+    "explanation": "Inductance is measured in Henry (H). Named after Joseph Henry. Answer D."
+  },
+  {
+    "id": 125589,
+    "explanation": "v = 20/3 cm/s. f = v/λ = (20/3)/4 = 20/12 = 1.67 Hz. Answer B."
+  },
+  {
+    "id": 125590,
+    "explanation": "X by contact with positive rod → X becomes positive. Y by induction: near plate goes negative, far plate positive; when grounded, electrons flow in; after removing ground then rod, Y is negative. Answer D: X positive, Y negative."
+  },
+  {
+    "id": 125591,
+    "explanation": "P = V²/R = 250²/125 = 500 W = 0.5 kW. Energy in 1 hour = 0.5 kWh. Cost = 0.5 × 10k = 5.00k. Answer C."
+  },
+  {
+    "id": 125596,
+    "explanation": "Resonance tube: 1st resonance at λ/4 = 18 cm → λ = 72 cm. 2nd resonance at 3λ/4 = 3×18 = 54 cm from open end. Answer E."
+  },
+  {
+    "id": 125597,
+    "explanation": "Sound travels to wall and back = 2d. v = 2d/t = 2×510/3 = 340 m/s. Answer B."
+  },
+  {
+    "id": 125598,
+    "explanation": "Two 2Ω resistors: series = 4Ω, parallel = 1Ω. Possible values: 1Ω or 4Ω. Answer D."
+  },
+  {
+    "id": 125599,
+    "explanation": "Normal adjustment: final image at infinity → foci of objective and eyepiece coincide between the lenses. Answer D."
+  },
+  {
+    "id": 125600,
+    "explanation": "Nuclear fission: (I) heavy nucleus splits into two comparable masses — TRUE. (III) total mass of products less than reactants (mass defect → energy) — TRUE. (II) two light nuclei joining = fusion, not fission — FALSE. Answer D: I and III only."
+  },
+  {
+    "id": 125601,
+    "explanation": "Plane mirror: image is upright (erect), virtual (behind mirror), same size as object (magnification = 1). Answer D."
+  },
+  {
+    "id": 125603,
+    "explanation": "Magnetic field deflects charged particles. Neutrons (III) carry no charge → not deflected by magnetic field. Alpha (I) and cathode rays (II) are charged → deflected. Answer C: III only."
+  },
+  {
+    "id": 125606,
+    "explanation": "v² = u² + 2as: 0 = 3² − 2a×15 → 2a×15 = 9 → a = 0.30 m/s². Answer B."
+  },
+  {
+    "id": 125607,
+    "explanation": "Smallest measurement = pitch/number of thimble divisions = 0.5mm/50 = 0.01 mm = 0.001 cm. Answer D."
+  },
+  {
+    "id": 125608,
+    "explanation": "γ = 3α = 3×4×10⁻⁵ = 1.2×10⁻⁴ K⁻¹. ΔV = V₀γΔT = 125 × 1.2×10⁻⁴ × 100 = 1.5 cm³. V = 125 + 1.5 = 126.5 cm³. Answer E."
+  },
+  {
+    "id": 125610,
+    "explanation": "Bell cannot be heard in vacuum → sound requires medium. Light from bell still visible → light does not require medium. Answer C."
+  },
+  {
+    "id": 125612,
+    "explanation": "Invisible parts of white light spectrum: infrared (below red) and ultraviolet (above violet). Answer A."
+  },
+  {
+    "id": 125613,
+    "explanation": "Initial volume = 50 cm³. By key answer A = 12.5 Nm⁻², applying Boyle's law P₁V₁ = P₂V₂. Answer A (note: exact calculation depends on piston displacement interpretation in problem)."
+  },
+  {
+    "id": 125614,
+    "explanation": "200 m: metre (fundamental). 24 s: second (fundamental). 8.3 ms⁻¹: derived (metre/second). Two fundamental, one derived. Answer D."
+  },
+  {
+    "id": 125616,
+    "explanation": "E = ½CV² = ½ × 10×10⁻⁶ × 40² = ½ × 10⁻⁵ × 1600 = 8×10⁻³ J. Answer D."
+  },
+  {
+    "id": 125617,
+    "explanation": "Henri Becquerel discovered natural radioactivity in 1896 while studying phosphorescence of uranium salts. Answer B."
+  },
+  {
+    "id": 125618,
+    "explanation": "⁴₂He + ⁹₄Be → ¹²₆C + X. Mass: 4+9=13, products 12+1. Atomic number: 2+4=6, products 6+0. X has mass 1, Z=0 → neutron. Answer D."
+  },
+  {
+    "id": 125621,
+    "explanation": "Temperature is a scalar quantity (magnitude only, no direction). Answer C: 'temperature is a vector quantity' is NOT true."
+  },
+  {
+    "id": 125622,
+    "explanation": "F = (Δm/Δt) × v = (15/(3.8×60)) × 20 = (15/228) × 20 = 1.32 N. Answer C."
+  },
+  {
+    "id": 125623,
+    "explanation": "Real image, m=2: v = 2u (magnitudes). Using lens formula 1/f = 1/v − 1/u with u=−15, v=+30: 1/f = 1/30 + 1/15 = 3/30 = 1/10. f = 10 cm. Answer B."
+  },
+  {
+    "id": 125624,
+    "explanation": "In a stationary wave, adjacent node and antinode are separated by λ/4. λ = 24 cm → λ/4 = 6 cm. Answer A."
+  },
+  {
+    "id": 125626,
+    "explanation": "MA = load/effort = 3. Ratio of effort to load = 1/3 = 1:3. Answer D."
+  },
+  {
+    "id": 125627,
+    "explanation": "Line spectra: electron transitions from higher to lower energy level emit photons of specific frequencies. Answer A."
+  },
+  {
+    "id": 125628,
+    "explanation": "Lead-acid accumulator: can deliver large current (low internal resistance) and can be recharged. Dry batteries can do neither efficiently. Answer C."
+  },
+  {
+    "id": 125632,
+    "explanation": "Incorrect kinematics equation: 'v = u + 2as' — correct form is v² = u² + 2as. Answer D."
+  },
+  {
+    "id": 125633,
+    "explanation": "E = I(R + r). Two equations: 0.60(2+r) = 0.30(5+r) → 1.2+0.6r = 1.5+0.3r → 0.3r = 0.3 → r = 1Ω. Answer C."
+  },
+  {
+    "id": 125634,
+    "explanation": "NOT true: 'vapour molecules are closer together than liquid molecules' — vapour molecules are much farther apart. Answer B (statement II only is false)."
+  },
+  {
+    "id": 125636,
+    "explanation": "Using: θ = (L−L₀)/(L₁₀₀−L₀) × 100. 20 = (60−X)/(180−X) × 100 → 0.2(180−X) = 60−X → 36−0.2X = 60−X → 0.8X = 24 → X = 30 mm. Answer C."
+  },
+  {
+    "id": 125637,
+    "explanation": "Speed of sound increases with medium density/elasticity. Order: air (340 m/s) < water (1500 m/s) < iron bar (~5000 m/s). Answer B."
+  },
+  {
+    "id": 125639,
+    "explanation": "Object at 15 cm from concave mirror of focal length 20 cm: object is between F and pole → virtual, erect, magnified image. Answer D."
+  },
+  {
+    "id": 125640,
+    "explanation": "Energy = 0.75 kW × 24 h = 18 kWh. Cost = 18 × 65k = 1170k = N11.70. Answer B."
+  },
+  {
+    "id": 125644,
+    "explanation": "Specific heat capacity of brass is lower than clay. Same heat, lower SHC → greater temperature rise for brass. Answer E."
+  },
+  {
+    "id": 125647,
+    "explanation": "Pinhole camera: image/object height = image/object distance. 6/300 = d/750 → d = 6×750/300 = 15 cm. Answer C."
+  },
+  {
+    "id": 125648,
+    "explanation": "Laws of friction state that friction/normal reaction ratio is CONSTANT for two surfaces. 'It varies' is NOT a law of friction. Answer B."
+  },
+  {
+    "id": 125649,
+    "explanation": "F = qE = 1.6×10⁻¹⁹ × 2.4×10⁵ = 3.84×10⁻¹⁴ N. Answer D."
+  },
+  {
+    "id": 125651,
+    "explanation": "Gas molecules move randomly (not regularly). 'Molecules of gases are in regular motion' is NOT correct. Answer D."
+  },
+  {
+    "id": 125653,
+    "explanation": "Camera film records the image like the retina detects light in the eye. Both are at the back and receive focused light. Answer B."
+  },
+  {
+    "id": 125654,
+    "explanation": "ω = v/r = 12/1.5 = 8 rad/s. Answer C."
+  },
+  {
+    "id": 125656,
+    "explanation": "Silver coating on inner walls of vacuum flask reflects radiated heat back → reduces radiation losses. Answer E."
+  },
+  {
+    "id": 125658,
+    "explanation": "High PD in X-ray tube accelerates electrons to high kinetic energy. When they hit the anode target, X-rays are produced. Answer A."
+  },
+  {
+    "id": 125659,
+    "explanation": "Thermostat uses bimetallic strip (thermal expansion) — does not use magnetic effect of current. The others (bells, relays, earpiece) all use electromagnetic effects. Answer E."
+  },
+  {
+    "id": 125662,
+    "explanation": "Accommodation = ability of eye lens to change shape (via ciliary muscles) to focus on objects at different distances. Answer A."
+  },
+  {
+    "id": 125663,
+    "explanation": "E = ½CV². 40 = ½ × 5×10⁻⁶ × V². V² = 80/(5×10⁻⁶) = 16×10⁶. V = 4000 V. Answer E."
+  },
+  {
+    "id": 125664,
+    "explanation": "Ampere is a fundamental SI unit (base unit for electric current). Joule, Newton, ohm, and watt are all derived units. Answer A."
+  },
+  {
+    "id": 125665,
+    "explanation": "After 2 s at 6 cm/s: object distance = 8 + 12 = 20 cm from mirror. Image is 20 cm behind mirror. Separation = 20 + 20 = 40 cm. Answer E."
+  },
+  {
+    "id": 125666,
+    "explanation": "Simple magnifying glass (convex lens): produces erect, virtual, magnified image when object is inside focal length. Answer B."
+  },
+  {
+    "id": 125668,
+    "explanation": "Hot-wire ammeter uses heating effect of current (wire expands when heated), NOT the magnetic effect. Answer A."
+  },
+  {
+    "id": 125670,
+    "explanation": "Rutherford's model does not specifically apply to 'atoms with one electron' — that was Bohr's model refinement. Rutherford's model applies generally. Answer C."
+  },
+  {
+    "id": 125671,
+    "explanation": "a = F/m = 9/4 = 2.25 m/s². v² = u² + 2as = 0 + 2×2.25×8 = 36. v = 6 m/s. Answer A."
+  },
+  {
+    "id": 125672,
+    "explanation": "Heat absorbed during melting at constant temperature = latent heat (specifically, the total latent heat of fusion = mL). Answer B."
+  },
+  {
+    "id": 125673,
+    "explanation": "Iris of eye controls light entering (like diaphragm of camera). Both regulate the amount of light reaching the detector. Answer A."
+  },
+  {
+    "id": 125675,
+    "explanation": "Upthrust = weight of liquid displaced = 12 N (by Archimedes' principle). Answer D."
+  },
+  {
+    "id": 125676,
+    "explanation": "Third-class lever: effort between fulcrum and load. Sugar tongs fit this (effort applied between hinge and load). Answer D."
+  },
+  {
+    "id": 125678,
+    "explanation": "d = v × t/2 = 330 × 4/2 = 660 m. (Echo travels to wall and back = 2d.) Answer B."
+  },
+  {
+    "id": 125681,
+    "explanation": "Volume of liquid does not affect evaporation rate. Rate depends on surface area, humidity, temperature, and nature of liquid. Answer E."
+  },
+  {
+    "id": 125682,
+    "explanation": "sin c = 1/n = 1/1.33 = 0.7519. c = sin⁻¹(0.7519) ≈ 48.8°. Answer D."
+  },
+  {
+    "id": 125685,
+    "explanation": "Fast electrons (cathode rays) stopped by heavy metal target → X-rays produced (bremsstrahlung radiation). Answer E."
+  },
+  {
+    "id": 125686,
+    "explanation": "Fuse: melts when current is too high, disconnecting the circuit. Cuts off mains supply to protect against overcurrent. Answer D."
+  },
+  {
+    "id": 125687,
+    "explanation": "Period T = 2π√(L/g). Shorter L → smaller T → higher frequency of oscillation. Answer B: decrease length."
+  },
+  {
+    "id": 125688,
+    "explanation": "Dry Leclanche cell converts chemical energy to electrical energy. It stores chemical energy. Answer A."
+  },
+  {
+    "id": 125689,
+    "explanation": "Lenz's law: induced current direction opposes the change (in flux) that produces it. Answer C."
+  },
+  {
+    "id": 125690,
+    "explanation": "From rest with uniform acceleration: s = ½at². Displacement (s) varies linearly with t² (I). Velocity v = at varies linearly with t (not t²). Only displacement (I). Answer A."
+  },
+  {
+    "id": 125693,
+    "explanation": "Conservation of momentum: M₁U + M₂×0 = (M₁+M₂)V → V = M₁U/(M₁+M₂). Answer D."
+  },
+  {
+    "id": 125694,
+    "explanation": "Temperature increase at constant volume → molecules move faster (mean speed increases) → more collisions per second → higher momentum change per collision → higher pressure. A DECREASE in mean speed does NOT occur. Answer A."
+  },
+  {
+    "id": 125695,
+    "explanation": "Short response time: thin-walled bulb (heat transfers quickly) and liquid is good heat conductor. Answer E."
+  },
+  {
+    "id": 125696,
+    "explanation": "AC generator uses slip rings. To produce DC, replace slip rings with split-ring commutators (which rectify the output). Answer A."
+  },
+  {
+    "id": 125697,
+    "explanation": "Heisenberg's uncertainty principle: impossible to simultaneously determine exact position and momentum of a particle. Answer D."
+  },
+  {
+    "id": 125698,
+    "explanation": "Node-to-antinode distance = λ/4 = 36/4 = 9 cm. Answer B."
+  },
+  {
+    "id": 125699,
+    "explanation": "Silver walls reflect infrared radiation back → minimise radiation heat loss. Answer E: radiation only."
+  },
+  {
+    "id": 125701,
+    "explanation": "At 20 m depth: P₁ = 10 + 20 = 30 m water (atm = 10 m water). At surface: P₂ = 10 m water. P₁V₁ = P₂V₂: 30×4 = 10×V₂ → V₂ = 12 cm³. Answer E."
+  },
+  {
+    "id": 125702,
+    "explanation": "Bell is struck to produce sound → percussion instrument. Flute and organ are wind instruments (air column vibration). Answer A."
+  },
+  {
+    "id": 125703,
+    "explanation": "Input power = V×I = 240×0.120 = 28.8 W. Output power = 24 W. Efficiency = 24/28.8 × 100 = 83.3%. Answer C."
+  },
+  {
+    "id": 125704,
+    "explanation": "Bimetallic strip thermometer uses differential thermal expansion, NOT photoelectric effect. Answer B."
+  },
+  {
+    "id": 125705,
+    "explanation": "Young's modulus (stress/strain ratio) is only valid up to the elastic limit, beyond which permanent deformation occurs. Answer B."
+  },
+  {
+    "id": 125706,
+    "explanation": "Virtual image at v = −20 cm. 1/f = 1/v − 1/u = 1/(−20) − 1/u = 1/5. 1/u = −1/20 − 1/5 = −5/20. u = −4 cm. Object 4 cm from lens. Answer B."
+  },
+  {
+    "id": 125707,
+    "explanation": "Nuclear fission: (I) heavy nucleus splits into comparable pieces — TRUE. (III) product mass less than reactant mass (mass defect → energy by E=mc²) — TRUE. (II) joining two light nuclei = fusion, not fission — FALSE. Answer D: I and III only."
+  },
+  {
+    "id": 125708,
+    "explanation": "Evaporation: most energetic molecules escape → average KE of remaining liquid falls → temperature falls → cooling effect. Answer B."
+  },
+  {
+    "id": 125709,
+    "explanation": "Potentiometer measures EMF without drawing current from the cell → most accurate. Voltmeter draws some current and has loading effect. Answer D."
+  },
+  {
+    "id": 125710,
+    "explanation": "Using peak value (as per key): H = I²Rt = 5² × 8 × 100 = 25 × 800 = 20,000 = 2×10⁴ J. Answer A."
+  },
+  {
+    "id": 125711,
+    "explanation": "Efficiency = (MA/VR) × 100. 80 = (60/40)/VR × 100. VR = (1.5 × 100)/80 = 150/80 = 1.875 ≈ 1.88. Answer E."
+  },
+  {
+    "id": 125712,
+    "explanation": "Q = mL = 50 × 2260 = 113,000 = 1.13×10⁵ J. Answer D."
+  },
+  {
+    "id": 125713,
+    "explanation": "Fundamental (base) SI units: length (metre), time (second), mass (kilogram). These three are all fundamental. Answer C."
+  },
+  {
+    "id": 125714,
+    "explanation": "Electric field lines: (I) begin and end on equal and opposite charges — TRUE. (II) under longitudinal tension, tend to shorten — TRUE. (III) lines do NOT attract each other (they repel laterally). Answer D: I and II only."
+  },
+  {
+    "id": 125716,
+    "explanation": "EM spectrum, longest wavelength: radio waves > microwaves > infrared > visible > UV > X-rays > gamma. Answer D: radio waves."
+  },
+  {
+    "id": 125717,
+    "explanation": "Luminous body produces its own light (sun, candle, bulb). Non-luminous bodies only reflect light. Answer A."
+  },
+  {
+    "id": 125720,
+    "explanation": "Prongs of tuning fork move back and forth repeatedly = oscillatory motion. Answer B."
+  },
+  {
+    "id": 125722,
+    "explanation": "Z_C² + R² = Z². Z_C² = 13² − 5² = 169 − 25 = 144. Z_C = 12 Ω. Answer A."
+  },
+  {
+    "id": 125723,
+    "explanation": "SI unit of magnetic flux density = Tesla (T). Named after Nikola Tesla. Answer D."
+  },
+  {
+    "id": 125724,
+    "explanation": "Tube vertical (open end up): mercury weight adds to atmospheric pressure on trapped air → higher pressure → shorter trapped air column. Answer B: vertical length less than horizontal."
+  },
+  {
+    "id": 125726,
+    "explanation": "R = R₀ + (R₁₀₀−R₀)/100 × θ = 4 + (8/100)×45 = 4 + 3.6 = 7.6 Ω. Answer C."
+  },
+  {
+    "id": 125729,
+    "explanation": "Ns/Np = Vs/Vp → Ns = 5500 × (120/240) = 5500/2 = 2750 turns. Answer D."
+  },
+  {
+    "id": 125730,
+    "explanation": "Metal chain drags on ground → conducts static electricity generated by friction to earth → prevents dangerous spark build-up. Answer A."
+  },
+  {
+    "id": 125733,
+    "explanation": "Friction acts AGAINST (opposing) motion, not IN the direction of motion. Answer A: this statement is NOT true."
+  },
+  {
+    "id": 125734,
+    "explanation": "v = fλ = 2 × 0.5 = 1.00 m/s. Answer C."
+  },
+  {
+    "id": 125735,
+    "explanation": "Magnetic field = region around a magnet where magnetic force can be detected. Answer A."
+  },
+  {
+    "id": 125736,
+    "explanation": "Louis de Broglie postulated that all matter has wave properties (de Broglie wavelength λ = h/mv). Answer D."
+  },
+  {
+    "id": 125738,
+    "explanation": "Area under velocity-time graph = displacement = distance covered (for motion in one direction). Answer B."
+  },
+  {
+    "id": 125739,
+    "explanation": "Escape velocity: ½mv² = GMm/R → v = √(2GM/R). Answer B."
+  },
+  {
+    "id": 125741,
+    "explanation": "Lenz's law: induced current direction opposes the change in flux that caused it. Answer B."
+  },
+  {
+    "id": 125742,
+    "explanation": "Isotopes have same chemical properties (same electron configuration) (I) and same proton number (Z) (III). They differ in neutron number (nucleon number differs). Answer D: I and III only."
+  },
+  {
+    "id": 125743,
+    "explanation": "True: when liquid expands, volume increases, density = mass/volume decreases (I). Answer A: I only. Note: mercury in thermometer first rises (not falls) when placed in hot liquid, so II is incorrect."
+  },
+  {
+    "id": 125744,
+    "explanation": "Polarization is exclusive to transverse waves (requires oscillation perpendicular to travel). Sound waves are longitudinal and CANNOT be polarized. Answer C."
+  },
+  {
+    "id": 125745,
+    "explanation": "Wave nature of matter evidenced by electron diffraction (electrons show interference/diffraction patterns). Answer C."
+  },
+  {
+    "id": 125747,
+    "explanation": "At mountain top, atmospheric pressure is lower → boiling point (where SVP = atmospheric pressure) is lower than 100°C. Answer B."
+  },
+  {
+    "id": 125748,
+    "explanation": "Thomson's plum-pudding model could not explain Rutherford's alpha-scattering experiment (most alpha particles passed straight through, few deflected sharply). Answer A."
+  },
+  {
+    "id": 125749,
+    "explanation": "Charles' law: V/T = constant. T₁ = 300 K, T₂ = 363 K. V₂ = 40 × 363/300 = 48.4 cm³. Answer C."
+  },
+  {
+    "id": 125750,
+    "explanation": "NOT true: lead-acid accumulator delivers large current because of its VERY LOW (not large) internal resistance. Answer A."
+  },
+  {
+    "id": 125751,
+    "explanation": "At neutral point, magnetic field of bar magnet is equal and opposite to Earth's field — they cancel. Answer A."
+  },
+  {
+    "id": 125752,
+    "explanation": "Blue glass absorbs all colours except blue, which it transmits. White paper reflects all incident light → appears blue. Answer B."
+  },
+  {
+    "id": 125753,
+    "explanation": "Newton's 2nd law F = ma, equivalent to: F proportional to product of mass and acceleration (I), to rate of change of momentum (related to II), and impulse (F×t = Δp, so F proportional to impulse for given Δt — III). All I, II and III. Answer E."
+  },
+  {
+    "id": 125754,
+    "explanation": "General wave equation form E contains T (period, fixed value) where t (time, variable) should be — making it dimensionally incorrect for a general wave equation. Answer E."
+  },
+  {
+    "id": 125755,
+    "explanation": "I_rms = V_rms/R = 12/4 = 3 A. I_peak = I_rms × √2 = 3√2 ≈ 4.2 A. Answer D."
+  },
+  {
+    "id": 125756,
+    "explanation": "Echo: sound travels to hill and back = 2d. d = vt/2 = 340×1.6/2 = 272 m. Answer B."
+  },
+  {
+    "id": 125757,
+    "explanation": "Q = mcΔT → ΔT = Q/(mc) = 80/(0.040×400) = 80/16 = 5 K. Answer D."
+  },
+  {
+    "id": 125758,
+    "explanation": "Prism binoculars: (I) pair of telescopes side by side — TRUE; (II) reduce optical path — TRUE; (III) present inverted image — FALSE (they present erect image); (IV) present erect and magnified image — TRUE. Answer D: I, II and IV only."
+  },
+  {
+    "id": 125759,
+    "explanation": "Component of vector in a given direction = the effective value (scalar projection) of the vector in that direction. Answer D."
+  },
+  {
+    "id": 125760,
+    "explanation": "Gravitational field is always attractive — no repulsion. Magnetic fields have both attraction and repulsion (unlike poles attract, like poles repel). Electric fields: like charges repel. Only gravitational field has no repulsive forces. Answer B: II only."
+  },
+  {
+    "id": 125762,
+    "explanation": "Percussion instruments are struck to produce sound. Flute is a wind instrument (air column vibration). Bell, drum, gong, xylophone are percussion. Answer C."
+  },
+  {
+    "id": 125763,
+    "explanation": "By given key: tension = 40 N. Note: lifting upward with acceleration should give T = m(g+a) = 5(10+2) = 60 N; the key answer B = 40 N may reflect a different scenario interpretation. Answer B."
+  },
+  {
+    "id": 125764,
+    "explanation": "Velocity ratio of inclined plane = distance along slope / vertical height = 1/sinθ = 1/sin30° = 1/0.5 = 2. Answer A."
+  },
+  {
+    "id": 125765,
+    "explanation": "Mean time for 20 oscillations = (32.0+34.6+35.5)/3 = 102.1/3 = 34.03 s. Period = 34.03/20 = 1.70 s. Answer B."
+  },
+  {
+    "id": 125766,
+    "explanation": "Dew point = temperature at which water vapour in air just saturates (relative humidity reaches 100%) and dew begins to form. Answer C."
+  },
+  {
+    "id": 125768,
+    "explanation": "Nuclear fission releases very large amounts of energy (from mass defect via E=mc²). Answer E."
+  },
+  {
+    "id": 125769,
+    "explanation": "Natural (or natural resonant) frequency = frequency at which body oscillates when freely vibrating without external driving. Answer D."
+  },
+  {
+    "id": 125770,
+    "explanation": "Thin-walled glass: all parts heat up uniformly → no thermal stress between inner and outer walls → less likely to break. Answer A."
+  },
+  {
+    "id": 125771,
+    "explanation": "Projectile reaches maximum height when vertical component of velocity = 0. This occurs at θ = 90° (vertical launch). Answer E."
+  },
+  {
+    "id": 125772,
+    "explanation": "Newton (N = kg·m·s⁻²) is a derived unit. Ampere, Kelvin, kilogram, and second are fundamental SI units. Answer D."
+  },
+  {
+    "id": 125773,
+    "explanation": "Energy loss = higher level − lower level = |−1.60 − (−10.4)| = |−1.60 + 10.4| = 8.8 eV. Answer D."
+  },
+  {
+    "id": 125774,
+    "explanation": "Loudness depends on amplitude. A has amplitude 4 mm > B's 2 mm → A is louder. (Pitch depends on frequency: B has higher pitch.) Answer B: A is louder than B."
+  },
+  {
+    "id": 125775,
+    "explanation": "Viscosity of a fluid determines its resistance to flow, making it suitable (or unsuitable) as a lubricant. Answer E."
+  },
+  {
+    "id": 125776,
+    "explanation": "TIR conditions: (I) light travels from optically denser to less dense medium — TRUE; (II) angle of incidence > critical angle — TRUE; (III) angle of refraction = 90° in less dense medium — this is the definition of critical angle itself, not a separate condition; for TIR, angle of incidence EXCEEDS critical angle, so refraction doesn't occur. Key says I and II only. Answer D."
+  },
+  {
+    "id": 125777,
+    "explanation": "λ = v/f = (3×10⁸)/(6.2×10¹⁴) = 4.84×10⁻⁷ ≈ 4.8×10⁻⁷ m. Answer B."
+  },
+  {
+    "id": 125778,
+    "explanation": "Using ΔE·Δt = h (simplified form): Δt = h/ΔE = (6.6×10⁻³⁴)/(2.45×10⁻¹⁹) = 2.69×10⁻¹⁵ s. Answer B."
+  },
+  {
+    "id": 125779,
+    "explanation": "A wavefront is a surface connecting all points in a wave that are in the same phase (same state of disturbance). Answer E."
+  },
+  {
+    "id": 125780,
+    "explanation": "Diffusion rate increases with temperature (faster molecular motion) but decreases with density (heavier molecules diffuse slower). Only temperature (II) increases diffusion rate among given options. Answer B."
+  },
+  {
+    "id": 125781,
+    "explanation": "h = ½gt². 11.25 = ½×10×t² → t² = 2.25 → t = 1.5 s. Answer B."
+  },
+  {
+    "id": 125782,
+    "explanation": "In oil: apparent mass = m − ρ_oil×V = 0.013. In water: m − ρ_water×V = 0.012. Subtracting: (ρ_water − ρ_oil)×V = 0.001. V = 0.001/125 = 8×10⁻⁶ m³. m = 0.012 + 1000×8×10⁻⁶ = 0.012 + 0.008 = 0.02 kg. Answer A."
+  },
+  {
+    "id": 125783,
+    "explanation": "Heat: (I) is a form of energy — TRUE; (II) measured with thermometer — FALSE (thermometers measure temperature, not heat); (III) cannot be created or destroyed (conservation of energy) — TRUE; (IV) only transferred by conduction — FALSE. Answer B: I and III only."
+  },
+  {
+    "id": 125784,
+    "explanation": "v = 45 km/h = 45/3.6 = 12.5 m/s. d = vt = 12.5×20 = 250 m. Answer E: 250.000 m."
+  },
+  {
+    "id": 125785,
+    "explanation": "Crystalline structures (ordered lattice arrangements) exist in solids only. Liquids and gases have no fixed crystalline structure. Answer C: III only."
+  },
+  {
+    "id": 125786,
+    "explanation": "In ideal inductors and capacitors, current and voltage are 90° out of phase → no real power is dissipated. Power in L = 0, power in C = 0 → sum = zero. Answer E."
+  },
+  {
+    "id": 125787,
+    "explanation": "Emission spectra: electrons fall from higher to lower energy levels, emitting photons of specific wavelengths (line spectrum). Answer C."
+  },
+  {
+    "id": 125788,
+    "explanation": "Rate of heat production P = I²R. For same current I, P is directly proportional to resistance R. Answer B."
+  },
+  {
+    "id": 125789,
+    "explanation": "Capacitance C = ε₀εᵣA/d. Decreasing plate separation d → increases C. Answer C."
+  },
+  {
+    "id": 125790,
+    "explanation": "9 half-lives in 72 days (72/8 = 9). Fraction remaining = (1/2)⁹ = 1/512 = 1.953×10⁻³. Answer C."
+  },
+  {
+    "id": 125791,
+    "explanation": "In a Daniell cell, the depolarizer is copper(II) sulphate solution (CuSO₄), which prevents hydrogen polarization at the copper electrode. Answer B."
+  },
+  {
+    "id": 125792,
+    "explanation": "E = ½LI² = ½ × 0.5 × 3² = ½ × 0.5 × 9 = 2.25 J. Answer E."
+  },
+  {
+    "id": 125793,
+    "explanation": "Minimum deviation in equilateral prism (A=60°): angle of refraction r = A/2 = 30°. n = sin i/sin r → sin i = 1.5 × sin30° = 0.75 → i = sin⁻¹(0.75) ≈ 48.6°. Answer B."
+  },
+  {
+    "id": 125795,
+    "explanation": "Angle between geographic north (true north) meridian and magnetic meridian at a point = angle of declination. Answer A."
+  },
+  {
+    "id": 125797,
+    "explanation": "Hydrometer measures relative density of liquids by flotation. Used to check battery acid concentration. Answer B."
+  },
+  {
+    "id": 125798,
+    "explanation": "In inelastic collision: (I) KE decreases — not increases; (II) momentum is conserved — does not decrease; (III) in perfectly inelastic, both move with same velocity — TRUE. Answer C: III only."
+  },
+  {
+    "id": 125799,
+    "explanation": "Centripetal acceleration a = v×ω = 3.0×0.6 = 1.8 m/s². Answer B."
+  },
+  {
+    "id": 125801,
+    "explanation": "kg·m⁻³, N, Ns, m³ are all derived units. kg (kilogram) is a fundamental SI base unit. Answer E."
+  },
+  {
+    "id": 125802,
+    "explanation": "λ = hc/E = (6.6×10⁻³⁴ × 3×10⁸)/(1.5×10⁻¹⁹) = 19.8×10⁻²⁶/1.5×10⁻¹⁹ = 1.32×10⁻⁶ m. Answer A."
+  },
+  {
+    "id": 125803,
+    "explanation": "T(°C) = T(K) − 273 = 491 − 273 = 218°C. Answer B."
+  },
+  {
+    "id": 125804,
+    "explanation": "Balance wheel of watch: thermal expansion changes period of oscillation → timekeeping errors. This is a disadvantage of solid expansion. Answer C."
+  },
+  {
+    "id": 125806,
+    "explanation": "R = V/I = 12/0.4 = 30 Ω. Answer A."
+  },
+  {
+    "id": 125807,
+    "explanation": "F = qvB = 1.60×10⁻¹⁹ × 4.00×10⁶ × 0.40 = 2.56×10⁻¹³ N. Answer C."
+  },
+  {
+    "id": 125809,
+    "explanation": "v² = u² − 2gh → 0 = 5² − 2×10×h → h = 25/20 = 1.25 m. Answer A."
+  },
+  {
+    "id": 125812,
+    "explanation": "By key answer: ratio mass A to mass B = 3:1. Note: physics calculation gives m_A/m_B = 1/3, since m_A×3c_B = m_B×c_B. Answer A (following given key)."
+  },
+  {
+    "id": 125813,
+    "explanation": "Ice in water: heat conducted directly through glass-to-water contact (conduction) and cold water sinks while warm rises (convection). Answer C."
+  },
+  {
+    "id": 125814,
+    "explanation": "T = 2π√(L/g). If L → 4L: T → 2π√(4L/g) = 2×T. Period doubles → factor 2. Answer D."
+  },
+  {
+    "id": 125815,
+    "explanation": "Mercury doesn't wet glass because cohesive forces between mercury atoms are stronger than adhesive forces between mercury and glass. Answer C."
+  },
+  {
+    "id": 125816,
+    "explanation": "By given key: height = 2.5 m. Note: standard physics states barometer height is independent of tube radius; the key answer may reflect a non-standard interpretation. Answer A."
+  },
+  {
+    "id": 125817,
+    "explanation": "V_peak = V_rms × √2 = 220 × 1.414 = 311.1 V. Answer D."
+  },
+  {
+    "id": 125818,
+    "explanation": "Translucent: allows light through but scatters it. Frosted glass and waxed paper both transmit and diffuse light. Answer C."
+  },
+  {
+    "id": 125820,
+    "explanation": "AC generator uses slip rings. Split rings (commutator) are used in DC generators. Split rings are NOT a component of AC generators. Answer E."
+  },
+  {
+    "id": 125821,
+    "explanation": "Escape velocity v = √(2GM_planet/R). Depends on planet mass M (II — larger M → larger v) and planet radius R. Does NOT depend on object mass (I). Moon has smaller v than Earth (III). Answer D: II and III only."
+  },
+  {
+    "id": 125822,
+    "explanation": "In any machine: (I) VR ≥ MA (due to friction losses, efficiency < 100%) — TRUE. (III) VR is determined by geometry only, independent of friction — TRUE. (II) efficiency = work output/work input (not input/output as stated) — FALSE as written. Answer D: I and III only."
+  },
+  {
+    "id": 125823,
+    "explanation": "Xylophone = pitched percussion instrument (struck bars). Flute, guitar, piano, trumpet are wind/string instruments. Answer E."
+  },
+  {
+    "id": 125824,
+    "explanation": "Conservation of momentum: 5×12 = 12×V → V = 60/12 = 5 m/s. Answer D."
+  },
+  {
+    "id": 125825,
+    "explanation": "Gamma rays: electromagnetic radiation with no mass, no charge, highest penetrating power of all three radioactive emissions. Answer E."
+  },
+  {
+    "id": 125826,
+    "explanation": "Alpha particle charge = +2. Each beta particle charge = −1. Need 2 beta particles to neutralize +2 charge. Answer C."
+  },
+  {
+    "id": 125827,
+    "explanation": "Lead provides dense shielding against all types of radiation including gamma rays (highest penetrating power). Answer B."
+  },
+  {
+    "id": 125829,
+    "explanation": "Work = force × displacement in direction of force = F×s×cosθ. Only horizontal component does work. Answer A."
+  },
+  {
+    "id": 125830,
+    "explanation": "T = 2π√(L/g). Increasing L increases T → decreases frequency. Answer C."
+  },
+  {
+    "id": 125831,
+    "explanation": "EM spectrum frequency order (increasing): radio < microwave < infrared < visible < UV < X-rays < gamma. X-rays have shorter wavelength than UV, IR, and visible. Answer E."
+  },
+  {
+    "id": 125833,
+    "explanation": "Longitudinal waves: particles vibrate parallel to wave travel. Sound waves in air (II) = longitudinal. Light (I) = transverse electromagnetic. Waves on string (III) = transverse mechanical. Answer B: II only."
+  },
+  {
+    "id": 125834,
+    "explanation": "Radio receivers are tuned by adjusting a variable capacitor in an LC circuit to match the frequency of desired station. Answer D."
+  },
+  {
+    "id": 125835,
+    "explanation": "Three non-parallel coplanar forces represented by sides of triangle (in order) satisfy triangle law → resultant = 0 → equilibrium. Each force is the equilibrant of the other two. Answer A."
+  },
+  {
+    "id": 125836,
+    "explanation": "Electric motor converts electrical energy into mechanical energy (rotation). Answer C."
+  },
+  {
+    "id": 125837,
+    "explanation": "Bicycle wheel rolls forward: spins around its axle (rotation) while moving forward (translation). Answer E: rotational and translational."
+  },
+  {
+    "id": 125839,
+    "explanation": "F = m(v−u)/t = 50×(90−20)/10 = 50×70/10 = 350 N. Answer D."
+  },
+  {
+    "id": 125843,
+    "explanation": "Vacuum between walls eliminates air → prevents convection currents (heat transfer by moving air). Answer C."
+  },
+  {
+    "id": 125844,
+    "explanation": "Sublimation (solid → gas directly): iodine and naphthalene sublime. Key selects iodine. Answer C."
+  },
+  {
+    "id": 125846,
+    "explanation": "Gravitational force is always attractive — no repulsion in gravitational field. Electric and magnetic fields both have repulsive components. Answer B: gravitational only."
+  },
+  {
+    "id": 125847,
+    "explanation": "Pressure in a liquid does NOT depend on the material of the container (only on depth and fluid density). Answer B."
+  },
+  {
+    "id": 125849,
+    "explanation": "R = √(8²+4²) = √80 = 8.94 N. tan θ = 4/8 = 0.5 → θ = 26.6°. Answer B."
+  },
+  {
+    "id": 125850,
+    "explanation": "Presbyopia: weakening of ciliary muscles with age → reduced ability to accommodate. Answer D."
+  },
+  {
+    "id": 125852,
+    "explanation": "Surface tension causes liquid surfaces to minimise area → spherical shape minimises surface area for given volume. Answer E."
+  },
+  {
+    "id": 125854,
+    "explanation": "Wave-particle duality resolved by recognising light exhibits both: emission and absorption of light (photoelectric effect, line spectra) show particle nature; diffraction/interference show wave nature. Answer C."
+  },
+  {
+    "id": 125855,
+    "explanation": "Time of flight T = 2u sinθ/g = 2×10×sin30°/10 = 2×10×0.5/10 = 1.0 s. Answer B."
+  },
+  {
+    "id": 125857,
+    "explanation": "Inertia = property of matter that resists change in state of rest or motion. Body is reluctant to start moving when at rest. Answer B."
+  },
+  {
+    "id": 125858,
+    "explanation": "Torque = moment of a force = force × perpendicular distance from axis. Answer B."
+  },
+  {
+    "id": 125860,
+    "explanation": "Uniform velocity = constant velocity → acceleration = 0 (no change in velocity). Answer A: zero."
+  },
+  {
+    "id": 125861,
+    "explanation": "Plane mirror (Y): magnification = 1, image erect. Convex mirror (X): magnification < 1, image erect. Answer C: magnification of Y = 1, X < 1."
+  },
+  {
+    "id": 125863,
+    "explanation": "Direction of current through the coil determines which end of the electromagnet is north or south (by right-hand rule). Answer B."
+  },
+  {
+    "id": 125864,
+    "explanation": "Volatile liquids have weak intermolecular forces → evaporate easily → low boiling point. Answer A."
+  },
+  {
+    "id": 125865,
+    "explanation": "P_out = V_s × I_s. P_in = V_p × I_p. Efficiency = P_out/P_in. With N_p/N_s = 128/45 and η = 0.925: I_p = I_s × N_s/(N_p × η) = 9 × 45/(128 × 0.925) = 405/118.4 = 3.42 A. Answer C."
+  },
+  {
+    "id": 125867,
+    "explanation": "Charles' law: V ∝ T at constant P. In PˣVʸTᶻ = constant form: P constant (x=0), V proportional to T means VT⁻¹ = constant → y=1, z=−1. Answer A: x=0, y=1, z=−1."
+  },
+  {
+    "id": 125868,
+    "explanation": "Micrometer screw gauge measures diameters accurately to 0.01 mm — best for thin wire measurement. Answer B."
+  },
+  {
+    "id": 125869,
+    "explanation": "Q = mcΔT → t = Q/P = (1 × 4200 × 30)/1500 = 126000/1500 = 84 s. Answer A."
+  },
+  {
+    "id": 125873,
+    "explanation": "Circular motion: speed constant but direction changes continuously → acceleration present (centripetal). Constant speed + acceleration = circular motion. Answer C."
+  },
+  {
+    "id": 125874,
+    "explanation": "d = vt/2 = 1500 × 8.4/2 = 6300 m = 6.300 km. Answer D."
+  },
+  {
+    "id": 125875,
+    "explanation": "Gas molecules are widely spaced (not closely packed). Close packing is a property of solids. Answer C: this statement is NOT correct."
+  },
+  {
+    "id": 125876,
+    "explanation": "T = 2π/ω = 2π/(2π) = 1.0 s. Answer B."
+  },
+  {
+    "id": 125877,
+    "explanation": "Trumpet and flute both produce sound by vibrating air columns (wind instruments). Bell and piano use struck elements; guitar and violin use vibrating strings. Answer D."
+  },
+  {
+    "id": 125878,
+    "explanation": "Both light and sound waves transmit energy from source to receiver. (Light is transverse EM; sound is longitudinal mechanical — they differ in other properties.) Answer E."
+  },
+  {
+    "id": 125879,
+    "explanation": "Mechanical advantage = load/effort = W/P. Answer C: W/P."
+  },
+  {
+    "id": 125880,
+    "explanation": "By given key: sound production from film tracks is NOT a use of photoelectric effect. Answer D."
+  },
+  {
+    "id": 125881,
+    "explanation": "Heat to cool water from 100°C to 0°C: Q₁ = mcΔT = 10×4.2×100 = 4200 J. Heat to freeze at 0°C: Q₂ = mL = 10×336 = 3360 J. Total = 7560 J. Answer E."
+  },
+  {
+    "id": 125882,
+    "explanation": "Resultant = B − A (vector subtraction) means A and B point in opposite directions (antiparallel), with B larger than A. Angle between them = 180°. Answer E."
+  },
+  {
+    "id": 125883,
+    "explanation": "EM spectrum increasing frequency: radio (III), infrared (IV), visible (I), ultraviolet (V), gamma (II). Order: III, IV, I, V, II. Answer E."
+  },
+  {
+    "id": 125884,
+    "explanation": "E = ½CV² = ½ × 20×10⁻⁶ × 1000² = ½ × 20×10⁻⁶ × 10⁶ = 10 J. Answer E."
+  },
+  {
+    "id": 125885,
+    "explanation": "Drum rolling down incline: spins (rotational) while moving down slope (translational). Both types of motion occur simultaneously. Answer E."
+  },
+  {
+    "id": 125887,
+    "explanation": "g_X = (2/5)g_E. W_X = mg_X = 4.80 N. W_E = mg_E = W_X × (g_E/g_X) = 4.80 × (5/2) = 12.00 N. Answer E."
+  },
+  {
+    "id": 125888,
+    "explanation": "Series RLC resonance: capacitive reactance = inductive reactance, so they cancel → impedance Z = R (minimum value). Answer D."
+  },
+  {
+    "id": 130674,
+    "explanation": "When steel bar is melted and recast as cube: same mass, same material, same density, same specific heat capacity. Volume = mass/density = unchanged. However, electrical resistance R = ρL/A depends on geometry — reshaped cube has different L and A, so resistance changes. By key: volume changes. Answer B."
+  },
+  {
+    "id": 130675,
+    "explanation": "Micrometer screw gauge gives precise measurements to 0.01 mm — ideal for measuring thin wire diameter. Answer C."
+  },
+  {
+    "id": 130677,
+    "explanation": "By given key: static friction depends on relative motion between surfaces. Answer C. (Note: standard physics states this applies to kinetic friction; static friction depends on normal force/weight.)"
+  },
+  {
+    "id": 130678,
+    "explanation": "Cylindrical drum rolling down incline: rotates about its own axis (rotational) while moving along incline (translational). Answer B."
+  },
+  {
+    "id": 130680,
+    "explanation": "Average speed = (u+v)/2 only when acceleration is uniform (constant). Answer B."
+  },
+  {
+    "id": 130684,
+    "explanation": "By given key: rigid body is one that is not equally deformed. Answer A."
+  },
+  {
+    "id": 130686,
+    "explanation": "Third-class lever: effort applied between fulcrum and load (e.g., forearm lifting, tongs). Answer C."
+  },
+  {
+    "id": 130689,
+    "explanation": "Thermoelectric thermometer (thermocouple) is NOT particularly sensitive — it generates small EMF per degree. 'Fairly sensitive' is NOT among its advantages. Answer D."
+  },
+  {
+    "id": 130694,
+    "explanation": "Ideal gas law: PV = nRT → PV/T = constant → 1/T = constant/PV. Answer D: 1/T = constant/PV."
+  },
+  {
+    "id": 130698,
+    "explanation": "Object at principal focus of concave mirror: reflected rays are parallel → image formed at infinity. Answer C."
+  },
+  {
+    "id": 130699,
+    "explanation": "Binoculars use prisms (total internal reflection), not plane mirrors. Periscope, sextant, and kaleidoscope all use plane mirrors. Answer D."
+  },
+  {
+    "id": 130700,
+    "explanation": "Diffraction = spreading of waves around obstacles/corners. Characteristic wave property. Answer C."
+  },
+  {
+    "id": 130701,
+    "explanation": "Lens thinner at middle, thicker at edges = concave (diverging) lens. Causes light rays to spread apart. Answer A."
+  },
+  {
+    "id": 130702,
+    "explanation": "Refractive index n = c/v = λ_air/λ_medium. For air to water: n = wavelength in air/wavelength in water. Answer D."
+  },
+  {
+    "id": 130704,
+    "explanation": "By given key: frequency decreases as air column decreases. Answer A. (Note: standard physics states shorter column → higher frequency for standing waves.)"
+  },
+  {
+    "id": 130705,
+    "explanation": "Amplitude determines the energy and hence loudness/intensity of a sound wave. Frequency determines pitch. Answer C."
+  },
+  {
+    "id": 130706,
+    "explanation": "Longest wavelength in EM spectrum = radio waves (wavelengths from mm to km). Answer A."
+  },
+  {
+    "id": 130707,
+    "explanation": "Capacitors store charge and are used in fans and TVs. Electric irons use only resistive heating elements — no capacitors needed. Answer C."
+  },
+  {
+    "id": 130708,
+    "explanation": "Like charges repel. Bringing positive rod near positive electroscope adds more repulsion between leaves → divergence increases. Answer B."
+  },
+  {
+    "id": 130710,
+    "explanation": "In UK/Nigerian standard wiring: brown = live. Fuse goes on brown (live) wire. Answer B."
+  },
+  {
+    "id": 130713,
+    "explanation": "Bar magnets stored with unlike poles facing each other (N of one facing S of other) with keepers at ends — completes magnetic circuit, reduces demagnetisation. Answer C."
+  },
+  {
+    "id": 130714,
+    "explanation": "Moving-coil meter sensitivity increases with: stronger magnet, more coil turns, larger coil area, and soft iron core (concentrates flux). Answer D."
+  },
+  {
+    "id": 130715,
+    "explanation": "Resistance R = ρL/A depends on length (L), material/resistivity (ρ), and cross-sectional area (A). Mass has no direct effect on resistance. Answer B."
+  },
+  {
+    "id": 130717,
+    "explanation": "Resonant frequency f = 1/(2π√(LC)). New L' = L/2, C' = C/2. New f' = 1/(2π√(L/2 × C/2)) = 1/(2π × ½√(LC)) = 2f = 2×1000 = 2000 kHz. Answer D."
+  },
+  {
+    "id": 130718,
+    "explanation": "By given key: E = LI². Note: correct formula is E = ½LI². Answer B (following key)."
+  },
+  {
+    "id": 130719,
+    "explanation": "Argon (inert/noble gas) is introduced into light bulbs to prevent oxidation of the hot tungsten filament. Answer C."
+  },
+  {
+    "id": 130720,
+    "explanation": "In a CRT, x-plates create horizontal electric field → deflect electron beam horizontally. Y-plates deflect vertically. Answer A."
+  },
+  {
+    "id": 130723,
+    "explanation": "Neutrons carry no charge → not repelled by positively charged nucleus → can penetrate nucleus easily to induce artificial radioactivity. Answer B."
+  },
+  {
+    "id": 130724,
+    "explanation": "Ice, water, and water vapour all have different intermolecular distances: ice < water < vapour. They are NOT equal. Answer A."
+  },
+  {
+    "id": 130727,
+    "explanation": "Area under velocity-time graph = displacement = distance covered (when moving in one direction). Answer B."
+  },
+  {
+    "id": 130728,
+    "explanation": "Pressure at any point in a static liquid acts equally in all directions (Pascal's principle). Answer C."
+  },
+  {
+    "id": 130729,
+    "explanation": "Viscosity determines how easily a fluid flows and acts as a lubricant. Higher viscosity = thicker oil = better lubrication for heavy loads. Answer B."
+  },
+  {
+    "id": 130731,
+    "explanation": "Weight = mg. Without gravitational force (g=0): weight = m×0 = 0. Mass itself remains unchanged. Answer B."
+  },
+  {
+    "id": 130737,
+    "explanation": "Simple machine: a device that makes work easier — allows same work done with less effort (or more conveniently). Answer C."
+  },
+  {
+    "id": 130739,
+    "explanation": "Cubic expansivity γ = 3α (linear expansivity). Expanding in 3 dimensions, each by α per degree. Answer D."
+  },
+  {
+    "id": 130740,
+    "explanation": "Anomalous expansion: water contracts (density increases) from 0°C to 4°C (i) and volume is minimum at 4°C (iii). Above 4°C it expands normally. Answer C: i and iii only."
+  },
+  {
+    "id": 130741,
+    "explanation": "Hypsometer: boils water and measures boiling point (steam point), which varies with local atmospheric pressure. Used to determine altitude. Answer A."
+  },
+  {
+    "id": 130745,
+    "explanation": "Convex mirror always produces virtual, erect, and diminished images regardless of object position. Answer D."
+  },
+  {
+    "id": 130746,
+    "explanation": "Plane mirror image is formed by apparent (not actual) intersection of diverging reflected rays — it is virtual. Saying it forms by 'actual intersection' is NOT correct. Answer C."
+  },
+  {
+    "id": 130747,
+    "explanation": "Ether has high latent heat of vaporisation. It evaporates quickly, absorbing latent heat from the skin → cooling effect. Answer C."
+  },
+  {
+    "id": 130748,
+    "explanation": "TIR in prism occurs when light hits the glass-air surface at angle greater than critical angle. Answer B."
+  },
+  {
+    "id": 130749,
+    "explanation": "Absolute refractive index n = c/v (speed in vacuum/speed in medium). Answer B: C/V."
+  },
+  {
+    "id": 130751,
+    "explanation": "Presbyopia: weak ciliary muscles (age-related) cannot change lens shape sufficiently → difficulty focusing on near objects. Answer A."
+  },
+  {
+    "id": 130752,
+    "explanation": "Astronomical telescope magnification (normal adjustment) = f_objective/f_eyepiece = f₂/f₁ (using question's notation where f₂=objective, f₁=eyepiece). Answer A."
+  },
+  {
+    "id": 130754,
+    "explanation": "Echo: distinct reflected sound heard after delay. Reverberation: rapid multiple reflections, shorter interval between incident and reflected sound. Answer B."
+  },
+  {
+    "id": 130757,
+    "explanation": "C = ε₀εᵣA/d. Inserting dielectric (εᵣ > 1) increases C. Answer D."
+  },
+  {
+    "id": 130759,
+    "explanation": "Gravitational field strength g = GM/R². Derived from F = GMm/R² and F = mg. Answer B."
+  },
+  {
+    "id": 130762,
+    "explanation": "Glass is an insulator — electrons not free to move. Does not conduct electricity. Answer B."
+  },
+  {
+    "id": 130763,
+    "explanation": "Transmitting at low voltage, high current → high I → high I²R losses in cables → significant power wasted. Answer C."
+  },
+  {
+    "id": 130764,
+    "explanation": "EMF = BLv = 0.40 × 0.30 × 2 = 0.24 V. Answer B."
+  },
+  {
+    "id": 130766,
+    "explanation": "U-234 → Th-230: mass drops by 4, Z drops by 2 → one alpha particle emitted. Answer A."
+  },
+  {
+    "id": 130767,
+    "explanation": "X-rays are electromagnetic waves (no charge) — they are NOT deflected by electric or magnetic fields. Answer C."
+  },
+  {
+    "id": 130768,
+    "explanation": "Threshold frequency = minimum frequency of incident light that will just eject electrons from a metal surface. Answer B."
+  },
+  {
+    "id": 130770,
+    "explanation": "Nuclear fusion requires extremely high temperatures (~10⁸ K) to overcome Coulomb repulsion between nuclei — not yet achievable sustainably for power generation. Answer A."
+  },
+  {
+    "id": 130774,
+    "explanation": "Hydrometer floats in liquid and measures relative density by how deep it sinks. Used to check battery acid concentration. Answer B."
+  },
+  {
+    "id": 130775,
+    "explanation": "Heating trapped air: molecules move faster, collide more frequently with walls → gas expands → piston rises. By key: molecules expand more. Answer B."
+  },
+  {
+    "id": 130778,
+    "explanation": "Capillarity: water rises in narrow glass tubes (adhesion > cohesion), mercury falls (cohesion > adhesion). Answer C."
+  },
+  {
+    "id": 130779,
+    "explanation": "Time of flight = 2U sinθ/g (total time in air for projectile). Answer C."
+  },
+  {
+    "id": 130780,
+    "explanation": "Petrol has lowest boiling point among the options → most volatile at room temperature. Answer C."
+  },
+  {
+    "id": 130784,
+    "explanation": "When slightly tilted, if CG rises → restoring force acts → stable equilibrium. Answer B."
+  },
+  {
+    "id": 130786,
+    "explanation": "Inertia = tendency of body to resist change in state of rest or uniform motion. Answer C."
+  },
+  {
+    "id": 130787,
+    "explanation": "Scale reading < weight → lift accelerating downward (apparent weight = m(g−a) < mg). Answer D."
+  },
+  {
+    "id": 130791,
+    "explanation": "Thermopile: series of thermocouples — detects and measures radiant heat (infrared radiation). Answer B."
+  },
+  {
+    "id": 130794,
+    "explanation": "Superposition of two waves produces: constructive/destructive interference (nodal and antinodal lines) and stationary waves. Dispersion is NOT a superposition effect — it's a refraction phenomenon. Answer D."
+  },
+  {
+    "id": 130795,
+    "explanation": "Polarization is exclusive to transverse waves (oscillation perpendicular to propagation can be restricted to one plane). Longitudinal waves cannot be polarized. Answer D."
+  },
+  {
+    "id": 130797,
+    "explanation": "Diverging lens always produces virtual, erect, diminished image on same side as object. Object between F and C: image forms between X and C. Answer B."
+  },
+  {
+    "id": 130800,
+    "explanation": "Normal adjustment: final image at infinity, requiring objective and eyepiece focal points to coincide. Answer D."
+  },
+  {
+    "id": 130801,
+    "explanation": "Echo = reflected sound heard distinctly after delay (time gap distinguishes it from original sound). Answer C."
+  },
+  {
+    "id": 130808,
+    "explanation": "Lead-acid accumulator advantage: higher EMF (~2V per cell vs ~1.2V for alkaline). Answer D."
+  },
+  {
+    "id": 130809,
+    "explanation": "Laminated core: each thin sheet is insulated from adjacent sheets → breaks up eddy current paths → reduces eddy current losses and heating. Answer B."
+  },
+  {
+    "id": 130810,
+    "explanation": "Magnetic relay: small current in control circuit operates electromagnet → switches larger current circuit. Answer D."
+  },
+  {
+    "id": 130814,
+    "explanation": "AC at high voltage, low current minimises I²R power loss in transmission cables. Most economical method. Answer C."
+  },
+  {
+    "id": 130816,
+    "explanation": "Excited atom: one or more electrons have absorbed energy and moved to higher energy levels (above ground state). Answer D."
+  },
+  {
+    "id": 130817,
+    "explanation": "X-rays produced when high-speed electrons strike a metal target (anode) and are rapidly decelerated — bremsstrahlung + characteristic radiation. Answer B."
+  },
+  {
+    "id": 130823,
+    "explanation": "Slope of distance-time graph = Δdistance/Δtime = speed. Answer C."
+  },
+  {
+    "id": 130829,
+    "explanation": "In SHM, amplitude = maximum displacement from equilibrium position. Answer B."
+  },
+  {
+    "id": 130832,
+    "explanation": "By given key: expansion depends on temperature change (i) and nature of substance (ii) only. Answer A. (Note: original length/size also affects total expansion ΔL = L₀αΔT.)"
+  },
+  {
+    "id": 130833,
+    "explanation": "Constant-volume gas thermometer is the primary standard because it directly measures temperature via gas pressure with well-understood physics. Used to calibrate other thermometers. Answer B."
+  },
+  {
+    "id": 130837,
+    "explanation": "By given key: polished silvery surfaces are poor absorbers and good emitters. Answer B. (Note: standard physics states they are poor absorbers AND poor emitters, per Kirchhoff's radiation law.)"
+  },
+  {
+    "id": 130842,
+    "explanation": "Concave mirror: object at centre of curvature (C = 2f) → image at C, real, inverted, same size (magnification = 1). Answer A."
+  },
+  {
+    "id": 130845,
+    "explanation": "Galilean telescope uses diverging eyepiece → produces erect final image. So 'final image is inverted' is NOT correct about Galilean telescope. Answer A."
+  },
+  {
+    "id": 130847,
+    "explanation": "Negatively charged rod + barefoot on ground: excess electrons flow from rod through body to earth (earthing). Negative charges flow to ground. Answer A."
+  },
+  {
+    "id": 130848,
+    "explanation": "Closed pipe: only odd harmonics (fundamental + 3rd, 5th, 7th…). Open pipe: all harmonics. Answer C."
+  },
+  {
+    "id": 130851,
+    "explanation": "Potentiometer measures EMF without drawing current (null method) → most accurate. Voltmeter has internal resistance → draws current → reads slightly low. Answer D."
+  },
+  {
+    "id": 130856,
+    "explanation": "Work function = minimum energy needed to eject electron from metal surface = threshold photon energy hf₀. Answer C."
+  },
+  {
+    "id": 130858,
+    "explanation": "Nucleons = particles in nucleus = protons + neutrons. Electrons are outside nucleus (not nucleons). Answer A."
+  },
+  {
+    "id": 130861,
+    "explanation": "By given key: inducing mutations in plants/animals is NOT a correct use of radioisotopes. Answer A. (Note: radiation IS used in plant mutation breeding; the key may be in error, but we follow it.)"
+  },
+  {
+    "id": 130862,
+    "explanation": "Diagram-dependent (waveform). Points Q and S are at same phase on waveform. Answer D."
+  },
+  {
+    "id": 130864,
+    "explanation": "Pump piston compresses air: volume decreases → same number of molecules in smaller volume → frequency of collisions with walls increases → pressure increases. Answer C."
+  },
+  {
+    "id": 130866,
+    "explanation": "Ball falling through viscous liquid: (1) gravity (weight downward), (2) upthrust (buoyancy, upward), (3) viscous drag (upward, opposing motion). All three act simultaneously. Answer D."
+  },
+  {
+    "id": 130867,
+    "explanation": "Centripetal force = mω²r (or mv²/r). Both are equivalent but mω²r is listed as option A. Answer A."
+  },
+  {
+    "id": 130868,
+    "explanation": "Stretched elastic material: work done against elastic forces → stored as elastic potential energy. Answer B."
+  },
+  {
+    "id": 130869,
+    "explanation": "Newton's first law: body maintains state of rest or constant velocity if net force = zero. Answer A."
+  },
+  {
+    "id": 130870,
+    "explanation": "Constant momentum → dp/dt = 0 → net force F = dp/dt = 0. Answer A."
+  },
+  {
+    "id": 130871,
+    "explanation": "Vectors have both magnitude and direction: displacement (direction matters) and acceleration (has direction). Speed and length are scalars. Answer C."
+  },
+  {
+    "id": 130872,
+    "explanation": "Surface tension applications: waterproof coatings (raingear), floating needle, soapy water reducing surface tension for cleaning. Palm oil production does NOT involve surface tension. Answer B."
+  },
+  {
+    "id": 130878,
+    "explanation": "Screw-jack VR = circumference of circle described by tommy bar / pitch = 2πr/P. Answer B."
+  },
+  {
+    "id": 130879,
+    "explanation": "Dynamo (generator) converts mechanical energy (rotation) to electrical energy. Answer A."
+  },
+  {
+    "id": 130880,
+    "explanation": "SI unit of power = Watt (W = J/s). Answer C."
+  },
+  {
+    "id": 130881,
+    "explanation": "Dew point = temperature at which water vapour saturates and begins to condense. Answer A."
+  },
+  {
+    "id": 130883,
+    "explanation": "Melting (solid → liquid): heat absorbed at constant temperature (melting point) until all solid converts. Answer A."
+  },
+  {
+    "id": 130885,
+    "explanation": "Temperature range −50°C to 50°C: clinical thermometer (only ~35–42°C), mercury (freezes −39°C — cannot reach −50°C), alcohol-in-glass (freezes ~−115°C — can reach −50°C). Only alcohol works. Answer C: iii only."
+  },
+  {
+    "id": 130886,
+    "explanation": "On inclined plane, weight component parallel to surface = Mg sinθ (pointing down the slope). Answer A."
+  },
+  {
+    "id": 130887,
+    "explanation": "Quality (timbre) of a musical note depends on the number and relative intensity of overtones (harmonics) present. Answer C."
+  },
+  {
+    "id": 130890,
+    "explanation": "Compound microscope: objective focal length < eyepiece focal length (f_o < f_e). This allows high magnification of nearby specimens. Answer B."
+  },
+  {
+    "id": 130891,
+    "explanation": "Transverse waves can be polarized; longitudinal waves cannot. Polarization distinguishes them. Answer D."
+  },
+  {
+    "id": 130894,
+    "explanation": "Diagram-dependent (electromagnetic wave). By key: wavelength = 0.16 m. Answer C."
+  },
+  {
+    "id": 130895,
+    "explanation": "Lens works by refraction (bends light at curved surface). Mirror works by reflection. Answer B."
+  },
+  {
+    "id": 130897,
+    "explanation": "Converting ammeter to voltmeter: add high-value multiplier resistor in series (limits current for given voltage). Answer B."
+  },
+  {
+    "id": 130899,
+    "explanation": "At resonance (f = f_resonant): X_L = X_C, they cancel → impedance = R → current in phase with voltage (no phase angle). Answer D."
+  },
+  {
+    "id": 130900,
+    "explanation": "Magnetic field = region of space around a magnet (or current-carrying conductor) where magnetic force acts. Answer C."
+  },
+  {
+    "id": 130901,
+    "explanation": "Simple electrochemical cell stores and converts chemical energy to electrical energy. Answer D."
+  },
+  {
+    "id": 130904,
+    "explanation": "Electric motor: converts electrical energy to mechanical (kinetic) energy. Answer A."
+  },
+  {
+    "id": 130909,
+    "explanation": "Nuclear binding energy = energy required to completely separate all nucleons in a nucleus. Related to mass defect by E = mc². Answer D."
+  },
+  {
+    "id": 130910,
+    "explanation": "Temperature of R increases → R increases → total resistance in series circuit increases → current decreases → less power to lamp → brightness decreases slightly. Answer B."
+  },
+  {
+    "id": 130911,
+    "explanation": "Major advantage of fusion over fission: fusion produces far less long-lived radioactive waste/dangerous radiation. Answer C."
+  },
+  {
+    "id": 130912,
+    "explanation": "Aluminium foil stops alpha particles (low penetrating power) and beta particles (moderate penetrating power). Gamma rays pass through aluminium. Answer A."
+  },
+  {
+    "id": 130913,
+    "explanation": "Alpha emission: mass number decreases by 4, atomic number decreases by 2. New element: mass = P−4, atomic number = Q−2. Answer B."
+  },
+  {
+    "id": 130914,
+    "explanation": "True: weight = gravitational force (i); mass = quantity of matter (ii). False: weight greatest at poles not equator (iii); mass is constant everywhere (iv). Answer A: i and ii only."
+  },
+  {
+    "id": 130915,
+    "explanation": "Elastic materials return to original shape after removal of deforming force (below elastic limit). Answer A."
+  },
+  {
+    "id": 130916,
+    "explanation": "Newton (N = kg·m·s⁻²) is derived from fundamental units. Answer D."
+  },
+  {
+    "id": 130919,
+    "explanation": "A couple consists of two equal and opposite forces → resultant force = zero (couple produces pure rotation, no net translation). Answer A."
+  },
+  {
+    "id": 130920,
+    "explanation": "Stable equilibrium: when displaced, CG rises → restoring force acts → returns to equilibrium. Ball in hemispherical bowl = stable. Answer D."
+  },
+  {
+    "id": 130921,
+    "explanation": "Time to reach maximum height = u sinθ/g (vertical velocity component becomes zero at maximum height). Answer C."
+  },
+  {
+    "id": 130922,
+    "explanation": "Slope of velocity-time graph = Δv/Δt = acceleration. For straight-line graph = uniform acceleration. Answer A."
+  },
+  {
+    "id": 130924,
+    "explanation": "Two strings at 30° to horizontal. Each string supports half the weight vertically: T sin30° = 10 N → T = 10/0.5 = 20 N. Answer B."
+  },
+  {
+    "id": 130926,
+    "explanation": "On hot sunny day, aluminium sheets heat up and expand → crackling noise as sheets expand and contract against fixings. Answer D."
+  },
+  {
+    "id": 130932,
+    "explanation": "Diagram-dependent (cooling curve). Flat region at 60°C = melting/solidification point (temperature constant during phase change). Answer D."
+  },
+  {
+    "id": 130934,
+    "explanation": "Diagram-dependent (same cooling curve question as 130932). Flat region at 60°C = melting point. Answer D."
+  },
+  {
+    "id": 130935,
+    "explanation": "Radiation transfers heat as electromagnetic waves — no material medium required. Conduction and convection both need a medium. Answer B."
+  },
+  {
+    "id": 130936,
+    "explanation": "Pascal's principle: pressure applied to enclosed fluid is transmitted equally in all directions throughout the fluid and to container walls. Answer C."
+  },
+  {
+    "id": 130939,
+    "explanation": "Loudspeaker cone vibrates back and forth → compresses and rarefies air → produces longitudinal sound waves. Answer B."
+  },
+  {
+    "id": 130941,
+    "explanation": "In stationary (standing) wave, consecutive nodes are separated by λ/2. Answer B."
+  },
+  {
+    "id": 130945,
+    "explanation": "All EM waves travel at c = 3×10⁸ m/s in vacuum regardless of frequency or wavelength. Answer C."
+  },
+  {
+    "id": 130946,
+    "explanation": "By given key: blue light is more intense than red light explains why red travels faster. Answer D. (Note: correct physics reason is refractive index of red < blue → red speed higher in glass.)"
+  },
+  {
+    "id": 130949,
+    "explanation": "Diagram-dependent (charged particles W and X). Lines of force show both pointing inward from surrounding field → both negative charges. Answer A."
+  },
+  {
+    "id": 130951,
+    "explanation": "Capacitors in series: same charge Q flows through each (charge on one plate induces equal charge on adjacent plates). Voltage differs across each. Answer A."
+  },
+  {
+    "id": 130952,
+    "explanation": "Three-pin plug: (i) brown = live — TRUE; (ii) fuse on live wire — TRUE; (iii) earth = blue — FALSE (earth = green/yellow, blue = neutral). i and ii correct. Answer C."
+  },
+  {
+    "id": 130956,
+    "explanation": "Angle of dip (magnetic dip) = angle between Earth's total magnetic field vector and the horizontal at a location. Answer B."
+  },
+  {
+    "id": 130957,
+    "explanation": "Force on coil in galvanometer = BNIL. Depends on current (I) and length/number of turns. By key: i (current strength) and iii (length of coil). Answer C."
+  },
+  {
+    "id": 130958,
+    "explanation": "Diagram-dependent (incomplete circuit). To establish steady current, need a cell (EMF source). Answer C."
+  },
+  {
+    "id": 130959,
+    "explanation": "Cathode rays = stream of electrons emitted from heated cathode in evacuated tube. Answer C."
+  },
+  {
+    "id": 130961,
+    "explanation": "By given key: forward bias diodes have high resistance. Answer B. (Note: correct physics — forward biased diodes have LOW resistance and HIGH current.)"
+  },
+  {
+    "id": 130962,
+    "explanation": "Ra-226 emits 2 alpha particles: mass decreases by 8 (226−8=218), Z decreases by 4 (88−4=84). Product = ²¹⁸₈₄Po. Answer D."
+  },
+  {
+    "id": 130965,
+    "explanation": "Diagram-dependent (stress-strain curve). Point Q on the curve = breaking/fracture point where wire snaps. Answer B."
+  },
+  {
+    "id": 130966,
+    "explanation": "Density = mass/volume. Volume already known (from measuring cylinder). Still need mass of liquid (weigh it). Answer C."
+  },
+  {
+    "id": 130967,
+    "explanation": "Detergent (soap) molecules reduce surface tension by disrupting water molecules at surface. Answer C."
+  },
+  {
+    "id": 130974,
+    "explanation": "At maximum height of vertical throw, all kinetic energy converted to potential energy → vertical velocity = zero. Answer B."
+  },
+  {
+    "id": 130975,
+    "explanation": "Wide plank distributes weight over larger area → pressure = F/A decreases → wheelbarrow doesn't sink into soft ground. Answer C."
+  },
+  {
+    "id": 130976,
+    "explanation": "Clinical thermometer kink: (i) prevents mercury flowing back after use (so reading is maintained) and (iv) allows temperature to be read after removal from patient. Answer C: i and iv only."
+  },
+  {
+    "id": 130977,
+    "explanation": "Resonance: when driving frequency matches natural frequency of second object → large amplitude vibration. Answer C: natural frequency."
+  },
+  {
+    "id": 130978,
+    "explanation": "Telephone mouthpiece (microphone) converts sound energy (pressure variations) to electrical signals. Answer B."
+  },
+  {
+    "id": 130982,
+    "explanation": "Dissolved salt lowers freezing point of water (freezing point depression — colligative property). Answer A."
+  },
+  {
+    "id": 130983,
+    "explanation": "Stirring ensures all parts of mixture reach same temperature → uniform distribution of thermal energy. Answer B."
+  },
+  {
+    "id": 130984,
+    "explanation": "θ = (L−L_ice)/(L_steam−L_ice) × 100 = (9−4)/(29−4) × 100 = 5/25 × 100 = 20°C. Answer B."
+  },
+  {
+    "id": 130986,
+    "explanation": "Wave equation: v = fλ → f = v/λ. Answer B: f = v/λ."
+  },
+  {
+    "id": 130987,
+    "explanation": "Gas heated by sun: molecules absorb energy → move faster (higher kinetic energy). Answer C."
+  },
+  {
+    "id": 130988,
+    "explanation": "All EM waves travel at speed c = 3×10⁸ m/s in vacuum. X-rays and infrared both travel at same speed. Answer D."
+  },
+  {
+    "id": 130989,
+    "explanation": "Concave mirror, real inverted magnified image: object must be between centre of curvature (C) and principal focus (F). Answer D."
+  },
+  {
+    "id": 130990,
+    "explanation": "TIR conditions: (i) light in denser medium going to less dense — note the question's statement is about 'refraction phenomenon' (i) and (iii) critical angle exceeded. I and III only. Answer B."
+  },
+  {
+    "id": 130991,
+    "explanation": "Flute and trumpet both produce sound by vibrating air columns (wind instruments). Answer D."
+  },
+  {
+    "id": 130992,
+    "explanation": "Complementary colours: two colours that combine to form white light (e.g., red + cyan, blue + yellow, green + magenta). Answer D."
+  },
+  {
+    "id": 130995,
+    "explanation": "Electricity meters (kWh meters) measure energy consumed in kilowatt-hours (kWh). Answer A."
+  },
+  {
+    "id": 130997,
+    "explanation": "Rubbing two different materials transfers electrons from one to other → both acquire equal and opposite charges = charging by friction. Answer B."
+  },
+  {
+    "id": 131000,
+    "explanation": "Same question as 130997: rubbing materials together = charging by friction. Answer B."
+  },
+  {
+    "id": 131001,
+    "explanation": "EMF of primary cell depends on: electrode materials, electrolyte type, temperature, duration of use. Size (physical dimensions) does NOT affect EMF. Answer A."
+  },
+  {
+    "id": 131003,
+    "explanation": "Keepers placed across ends of bar magnets create complete magnetic circuit → reduces self-demagnetisation due to stray fields. Answer A."
+  },
+  {
+    "id": 131005,
+    "explanation": "'Steel is more magnetized than soft iron' is NOT correct. Soft iron is more easily magnetized (higher permeability), while steel retains magnetism longer (harder magnet). Answer A."
+  },
+  {
+    "id": 131006,
+    "explanation": "Two light nuclei combining to form heavier nucleus + energy = nuclear fusion. Answer B."
+  },
+  {
+    "id": 131007,
+    "explanation": "¹⁹⁸₇₉Au → ¹⁹⁸₈₀Hg: mass number unchanged, Z increases by 1 → one beta-minus particle emitted (neutron → proton + electron). Answer A."
+  },
+  {
+    "id": 131008,
+    "explanation": "Polarity of electromagnet (which end is N or S) determined by direction of current through the coil (right-hand rule). Answer D."
+  },
+  {
+    "id": 131010,
+    "explanation": "Heisenberg uncertainty principle: Δx·Δp ≥ h/4π. Simplified textbook form: Δx·Δp ≥ h. Answer C."
+  },
+  {
+    "id": 131011,
+    "explanation": "Diagram-dependent (micrometer reading). By key: reading = 2.46 mm. Answer B."
+  },
+  {
+    "id": 131018,
+    "explanation": "Surface phenomena occur at surfaces. Evaporation (surface), photoelectric emission (surface), thermionic emission (surface). Condensation is a bulk/volume process, not strictly surface. Answer A."
+  },
+  {
+    "id": 131022,
+    "explanation": "Diagram-dependent (circular motion vectors). Velocity is tangential; acceleration is centripetal (toward centre). Answer B: diagram II."
+  },
+  {
+    "id": 131023,
+    "explanation": "Diagram-dependent (pendulum KE vs displacement). KE is maximum at equilibrium (displacement=0) and zero at extremes. Answer B: diagram II."
+  },
+  {
+    "id": 131031,
+    "explanation": "Efficiency = (1 − fraction wasted) × 100 = (1 − 1/4) × 100 = 75%. Answer D."
+  },
+  {
+    "id": 131045,
+    "explanation": "Diagram-dependent (magnetic field pattern between bar magnets). Answer B: diagram II."
+  },
+  {
+    "id": 131047,
+    "explanation": "Diagram-dependent (fuse placement in iron circuit). Fuse must be on live wire, before the element. Answer C: diagram III."
+  },
+  {
+    "id": 131049,
+    "explanation": "By given key: only statement I is correct. Answer D. (Note: standard physics — gravitational potential ∝ 1/r, not r²; field strength is a vector; field intensity ∝ weight of unit mass. Key may be erroneous.)"
+  },
+  {
+    "id": 131053,
+    "explanation": "Impedance = total opposition to AC in circuit (includes resistance and reactance). In C-R circuit, Z = √(R² + X_C²). Answer A."
+  },
+  {
+    "id": 131054,
+    "explanation": "AC transmitted at high voltage, low current: power loss = I²R. Lower I → much less heat loss in cables → economical transmission. Answer D."
+  },
+  {
+    "id": 131056,
+    "explanation": "Heisenberg uncertainty principle: complementary variables are position (x) and momentum (p): Δx·Δp ≥ ℏ/2. Answer C."
+  },
+  {
+    "id": 131057,
+    "explanation": "Diagram-dependent (mercury atom energy levels). Ionisation energy = energy to remove electron from ground state to infinity. By key: +10.4 eV. Answer B."
+  },
+  {
+    "id": 131058,
+    "explanation": "Nucleon number (mass number) = total protons + neutrons in nucleus. Answer D."
+  },
+  {
+    "id": 131059,
+    "explanation": "Diagram-dependent (EM spectrum table). By key: P = Visible, Q = Ultraviolet, R = X-ray. Answer A."
+  },
+  {
+    "id": 131060,
+    "explanation": "Gamma radiation can be used as radioactive tracer (gamma cameras in medicine) and is naturally present in background radiation. Answer D."
+  },
+  {
+    "id": 131073,
+    "explanation": "Diagram-dependent (density-temperature graph of water). Water density peaks at 4°C — graph shows maximum at 4°C. Answer C: diagram III."
+  },
+  {
+    "id": 131082,
+    "explanation": "Pitch depends on frequency (and factors affecting frequency: tension, mass, length of vibrating string). Amplitude affects loudness, not pitch. Answer D."
+  },
+  {
+    "id": 131097,
+    "explanation": "Diagram-dependent (three-pin plug wiring). By key: P=neutral, Q=earth, R=live. Answer B."
+  },
+  {
+    "id": 131098,
+    "explanation": "'Electrolyte does not need attention' — NOT an advantage; alkaline accumulator electrolyte (KOH) DOES need periodic checking. Answer A."
+  },
+  {
+    "id": 131099,
+    "explanation": "Standard resistor = resistor with precise, fixed, known resistance value used as reference. Answer B."
+  },
+  {
+    "id": 131104,
+    "explanation": "Induction coil produces high-voltage AC pulses — used for spark generation, X-ray tubes, discharge studies. NOT suitable for AC power transmission (uses transformers instead). Answer D."
+  },
+  {
+    "id": 131108,
+    "explanation": "Photoelectric effect applications: (I) automatic light switches at dusk — YES (light-dependent resistors/photoelectric cells); (II) automatic doors — YES; (IV) automatic voltage stabilizers — YES. (III) air conditioning switches use thermostats, not PE effect. Answer A: I, II and IV only."
+  },
+  {
+    "id": 131109,
+    "explanation": "Radioisotopes used in: medicine (tracers, cancer treatment), oil industry (pipeline tracing), agriculture (mutation breeding, pest control). NOT used in weather forecasting. Answer D."
+  },
+  {
+    "id": 131111,
+    "explanation": "Acceleration = rate of change of velocity = Δv/Δt. 'Time rate of increase of velocity' = acceleration. Answer C."
+  },
+  {
+    "id": 131112,
+    "explanation": "Momentum = mv, has both magnitude and direction → vector quantity. Volume, energy, and speed are scalars. Answer B."
+  },
+  {
+    "id": 131113,
+    "explanation": "Lenz's law: induced current direction opposes the flux change causing it. Named after Heinrich Lenz. Answer B."
+  },
+  {
+    "id": 131115,
+    "explanation": "Gold-leaf electroscope: degree of leaf divergence indicates amount of charge — can compare charge magnitudes on different bodies. Answer C."
+  },
+  {
+    "id": 131116,
+    "explanation": "Mechanical waves require a medium (waves in pipes, water waves, sound waves). Radio waves = electromagnetic waves → do not require medium. Answer C."
+  },
+  {
+    "id": 131120,
+    "explanation": "TIR requires: light going from dense to less dense medium AND angle > critical angle. Air to water: air is less dense than water → going from less dense to more dense → TIR cannot occur. Answer C."
+  },
+  {
+    "id": 131123,
+    "explanation": "At steady (constant) velocity: acceleration = 0 → net force = 0 (Newton's 1st law). Answer C."
+  },
+  {
+    "id": 131124,
+    "explanation": "Air introduced above mercury creates additional pressure above it → total pressure on mercury increases → mercury level drops. Answer B."
+  },
+  {
+    "id": 131126,
+    "explanation": "East-West placement ensures bar magnet is perpendicular to Earth's horizontal magnetic field → molecular magnets remain randomly arranged (not aligned by Earth's field). Answer A."
+  },
+  {
+    "id": 131132,
+    "explanation": "Speed of sound lowest in gases (least dense/elastic), higher in liquids, highest in solids. Air has lowest speed. Answer A."
+  },
+  {
+    "id": 131133,
+    "explanation": "Maximum-minimum thermometer records highest and lowest temperatures since last reset (not continuously). Answer D."
+  },
+  {
+    "id": 131137,
+    "explanation": "Soft iron loses magnetism readily → armature demagnetises quickly each cycle → allows electric bell to work (clapper released between strikes). Answer B."
+  },
+  {
+    "id": 131138,
+    "explanation": "AC generator → DC generator: replace slip rings with split-ring commutator (rectifies output). Answer D."
+  },
+  {
+    "id": 131140,
+    "explanation": "Capacitor stores electric charge (and electrical energy). Answer D."
+  },
+  {
+    "id": 131142,
+    "explanation": "Water anomalous expansion: from 0°C to 4°C, water contracts (density increases to maximum at 4°C). Answer B: 0°C to 4°C."
+  },
+  {
+    "id": 131153,
+    "explanation": "Connecting wires simply carry current — they are not safety devices. Earth wire, fuse, and switch are all safety devices. Answer A."
+  },
+  {
+    "id": 131154,
+    "explanation": "Area under velocity-time graph = displacement = distance (for motion in one direction). Answer D."
+  },
+  {
+    "id": 131160,
+    "explanation": "Kinetic energy is conserved only in perfectly elastic collisions (no deformation, no energy converted to heat/sound). Answer D."
+  },
+  {
+    "id": 131161,
+    "explanation": "Volume inversely proportional to pressure at constant temperature = Boyle's Law: PV = constant (T constant). Answer C."
+  },
+  {
+    "id": 131165,
+    "explanation": "C = ε₀εᵣA/d. Decreasing separation d → C increases (inversely proportional to d). Answer A."
+  },
+  {
+    "id": 131168,
+    "explanation": "Depolarizing agent in Leclanche cell = manganese(IV) oxide (MnO₂), which oxidises hydrogen to prevent polarization. Answer C."
+  },
+  {
+    "id": 131169,
+    "explanation": "Hot soapy water: soap reduces surface tension of oil (making it easier to wash off) and heat speeds up the process. Answer B."
+  },
+  {
+    "id": 131170,
+    "explanation": "Graphite moderator in nuclear reactor slows fast neutrons to thermal neutrons needed for sustained fission chain reaction. Answer C."
+  },
+  {
+    "id": 131172,
+    "explanation": "Telephone earpiece converts electrical signals to sound (pressure) waves via electromagnet moving a diaphragm. Answer A: electrical to sound."
+  },
+  {
+    "id": 131176,
+    "explanation": "Lift accelerating upward: apparent weight = m(g+a) = 60(10+5) = 60×15 = 900 N. Answer D."
+  },
+  {
+    "id": 131179,
+    "explanation": "Total resistance = V/I = 5/0.005 = 1000 Ω. R_meter = 1000 − 975 = 25 Ω. Answer C."
+  },
+  {
+    "id": 131180,
+    "explanation": "In magnetic field: alpha particles (charged) deflected, beta particles (charged) deflected, gamma rays (uncharged EM) NOT deflected. Answer B: deflected, deflected, not deflected."
+  },
+  {
+    "id": 131181,
+    "explanation": "Work done by friction = μmg × d = 0.22 × 500 × 8 = 880 J. Answer A."
+  },
+  {
+    "id": 131191,
+    "explanation": "g is larger at poles than equator (Earth is flatter at poles → closer to centre). T = 2π√(L/g): larger g → smaller T → faster oscillation. Answer D."
+  },
+  {
+    "id": 131192,
+    "explanation": "By given key: red light releases smaller number of electrons than green light. Answer B. (Note: number of photoelectrons depends on intensity; frequency determines KE of emitted electrons.)"
+  },
+  {
+    "id": 131194,
+    "explanation": "Hydraulic press: F₁/A₁ = F₂/A₂ (Pascal). F ∝ A = π d²/4 ∝ d². Answer A: F ∝ d²."
+  },
+  {
+    "id": 131196,
+    "explanation": "AC generator → DC motor: replace slip rings with split-ring commutator AND connect a DC battery (to drive it as motor). Answer A."
+  },
+  {
+    "id": 131199,
+    "explanation": "Light going from less dense (air) to denser (water) medium: bends toward normal (refracts toward normal). Answer C."
+  },
+  {
+    "id": 131202,
+    "explanation": "Coulomb's law: F = kq₁q₂/r². Decreasing distance r → F increases (inversely proportional to r²). Answer B."
+  },
+  {
+    "id": 131203,
+    "explanation": "Diver falls: gravitational PE decreases (converts to KE). In absence of air resistance, total mechanical energy conserved (PE+KE = constant). Answer A: decrease in gravitational PE."
+  },
+  {
+    "id": 131204,
+    "explanation": "Luminous object = produces its own light (sun, fire, light bulb). Non-luminous = only reflects light. Answer B."
+  },
+  {
+    "id": 131205,
+    "explanation": "In photoelectric effect: number of electrons emitted per second ∝ intensity of incident radiation (more photons = more electrons). KE of electrons ∝ frequency. Answer A."
+  },
+  {
+    "id": 131206,
+    "explanation": "Joule (J = kg·m²·s⁻²) is derived from fundamental units. Metre, kilogram, candela are fundamental SI base units. Answer C."
+  },
+  {
+    "id": 131207,
+    "explanation": "Vacuum between double walls: eliminates air → no convection (no medium for air currents) and no conduction through air. Silver coating handles radiation. Answer B: convection and conduction."
+  },
+  {
+    "id": 131216,
+    "explanation": "Molecules of both solids and liquids exhibit vibratory motion (vibrate about mean positions). Gas molecules move freely. Answer D."
+  },
+  {
+    "id": 131218,
+    "explanation": "In transverse stationary wave, node to adjacent antinode = λ/4. Answer D."
+  },
+  {
+    "id": 131219,
+    "explanation": "Heating metal sphere: volume increases (thermal expansion), mass stays constant, density = m/V decreases. Answer C."
+  },
+  {
+    "id": 131220,
+    "explanation": "C = ε₀εᵣA/d. Increase C by: (I) decrease d — YES; (III) increase plate overlap area A — YES; (II) increase d — NO (decreases C); (IV) remove dielectric — NO (decreases C). Answer A: I and III only."
+  },
+  {
+    "id": 131222,
+    "explanation": "Acceleration = slope of velocity-time graph (Δv/Δt). Area gives displacement. Answer C."
+  },
+  {
+    "id": 131223,
+    "explanation": "Voltmeter = galvanometer + high-value resistor in series (multiplier). Limits current through galvanometer for given voltage. Answer D."
+  },
+  {
+    "id": 131226,
+    "explanation": "X_L = 2πfL → L = X_L/(2πf) = 1/(2×3.14×100) = 1/628 = 1.59×10⁻³ H. Answer B."
+  },
+  {
+    "id": 131237,
+    "explanation": "Heat in wire = I²Rt. To reduce heat, reduce resistance. R = ρL/A: increasing diameter (cross-sectional area A) reduces resistance. Answer B: greater diameter wire."
+  },
+  {
+    "id": 131245,
+    "explanation": "f = holes × rotations/sec → 480 = 20 × n → n = 24 rev/s. Answer C."
+  },
+  {
+    "id": 131246,
+    "explanation": "Half-life = 1 hr. 6am to 9am = 3 hours = 3 half-lives. Remaining = 200 × (1/2)³ = 25 g. Decayed = 200 − 25 = 175 g. Answer A."
+  },
+  {
+    "id": 131248,
+    "explanation": "Increasing voltage → current increases (I = V/R); more current → more heating → resistance and temperature increase. Answer C: current and temperature only (resistance is fixed, not changed by voltage directly)."
+  },
+  {
+    "id": 131249,
+    "explanation": "In plane progressive wave, all points have the same amplitude (energy distributed uniformly). 'Neighboring points have different amplitudes' is NOT a characteristic. Answer B."
+  },
+  {
+    "id": 131250,
+    "explanation": "Ice cube heating from −5°C to 0°C (question likely means −5°C): Q = mcΔT = 20×2.1×5 = 210 J. Answer D."
+  },
+  {
+    "id": 131252,
+    "explanation": "Quality (timbre) of a note = characteristic determined by its overtone composition. Different instruments playing same pitch have different quality. Answer C."
+  },
+  {
+    "id": 131253,
+    "explanation": "In CRT, electrons produced by thermionic emission from heated metal filament (cathode). Answer A."
+  },
+  {
+    "id": 131254,
+    "explanation": "Distance is a scalar (magnitude only). Displacement is a vector (magnitude + direction). 'Distance is a vector' is NOT correct. Answer D."
+  },
+  {
+    "id": 131255,
+    "explanation": "High relative humidity: air already saturated with water vapour → less evaporation from skin → sweating less effective → feel hotter. Answer A: rate decreases."
+  },
+  {
+    "id": 131256,
+    "explanation": "Pascal's principle: pressure applied to enclosed fluid is transmitted equally in all directions throughout the fluid. Answer C."
+  },
+  {
+    "id": 131257,
+    "explanation": "Force (vector), displacement (vector), momentum (vector) — all three are vectors. Answer B."
+  },
+  {
+    "id": 131259,
+    "explanation": "Resistance R = ρL/A depends on resistivity (material), length, and cross-sectional area. Mass has no direct effect on resistance. Answer A."
+  }
+]

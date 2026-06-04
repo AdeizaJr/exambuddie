@@ -104,7 +104,11 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
   );
 }
 
-export default function Flags() {
+interface FlagsProps {
+  onFlagsResolved?: () => void;
+}
+
+export default function Flags({ onFlagsResolved }: FlagsProps) {
   const [flags, setFlags] = useState<Flag[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -115,12 +119,13 @@ export default function Flags() {
       const data = await getFlags();
       setFlags(data);
       setError(null);
+      onFlagsResolved?.();
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to load flags');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [onFlagsResolved]);
 
   useEffect(() => {
     load();

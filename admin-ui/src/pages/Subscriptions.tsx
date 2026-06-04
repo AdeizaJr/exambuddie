@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getSubscriptions } from '../api';
 import type { Subscription } from '../types';
 import Spinner from '../components/Spinner';
@@ -21,9 +22,25 @@ function statusVariant(status: string): 'green' | 'amber' | 'red' | 'gray' {
 }
 
 export default function Subscriptions() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Derive filter values from URL
+  const statusFilter = searchParams.get('status') ?? '';
+
   const [subs, setSubs] = useState<Subscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  function setFilter(key: string, value: string) {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (value) next.set(key, value); else next.delete(key);
+        return next;
+      },
+      { replace: true },
+    );
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -38,9 +55,12 @@ export default function Subscriptions() {
     }
   }, []);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
+
+  // Apply status filter client-side (all subs are loaded at once)
+  const filtered = statusFilter
+    ? subs.filter((s) => s.status === statusFilter)
+    : subs;
 
   const totalRevenue = subs
     .filter((s) => s.status === 'active')
@@ -52,16 +72,30 @@ export default function Subscriptions() {
         <div>
           <h1 className="text-xl font-bold font-display text-white">Subscriptions</h1>
           <p className="text-sm text-muted mt-0.5">
-            {subs.length} subscriptions · Active revenue:{' '}
+            {filtered.length} subscription{filtered.length !== 1 ? 's' : ''}
+            {statusFilter ? ` (${statusFilter})` : ''} · Active revenue:{' '}
             <span className="text-accent font-medium">₦{totalRevenue.toLocaleString()}</span>
           </p>
         </div>
-        <button
-          onClick={load}
-          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors"
-        >
-          Refresh
-        </button>
+        <div className="flex items-center gap-3">
+          <select
+            value={statusFilter}
+            onChange={(e) => setFilter('status', e.target.value)}
+            className="bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent"
+          >
+            <option value="">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <button
+            onClick={load}
+            className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
       </div>
 
       <div className="bg-surface border border-border rounded-xl overflow-hidden">
@@ -86,7 +120,7 @@ export default function Subscriptions() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {subs.map((s) => (
+                {filtered.map((s) => (
                   <tr key={s.id} className="hover:bg-surface2 transition-colors">
                     <td className="px-4 py-3">
                       <div>
@@ -112,8 +146,8 @@ export default function Subscriptions() {
                 ))}
               </tbody>
             </table>
-            {subs.length === 0 && (
-              <div className="text-center py-10 text-muted text-sm">No subscriptions yet</div>
+            {filtered.length === 0 && (
+              <div className="text-center py-10 text-muted text-sm">No subscriptions found</div>
             )}
           </div>
         )}

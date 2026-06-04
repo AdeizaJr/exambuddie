@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getQuestions, updateQuestion, deleteQuestion } from '../api';
 import type { Question, PaginatedResponse } from '../types';
 import Spinner from '../components/Spinner';
@@ -56,21 +57,36 @@ interface EditState {
 }
 
 export default function Questions() {
-  const [result, setResult] = useState<PaginatedResponse<Question> | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [subject, setSubject] = useState('');
-  const [examType, setExamType] = useState('');
-  const [year, setYear] = useState('');
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
+  // Derive filter values from URL — these are the source of truth
+  const subject  = searchParams.get('subject') ?? '';
+  const examType = searchParams.get('exam')    ?? '';
+  const year     = searchParams.get('year')    ?? '';
+  const search   = searchParams.get('q')       ?? '';
+  const page     = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
 
-  const [editTarget, setEditTarget] = useState<Question | null>(null);
-  const [editState, setEditState] = useState<EditState | null>(null);
-  const [saving, setSaving] = useState(false);
+  const [result, setResult]       = useState<PaginatedResponse<Question> | null>(null);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState<string | null>(null);
+  const [editTarget, setEditTarget]   = useState<Question | null>(null);
+  const [editState, setEditState]     = useState<EditState | null>(null);
+  const [saving, setSaving]           = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Question | null>(null);
-  const [deleting, setDeleting] = useState(false);
+  const [deleting, setDeleting]     = useState(false);
+
+  // Update a single filter key; resets page to 1 unless changing the page itself
+  function setFilter(key: string, value: string, keepPage = false) {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (value) next.set(key, value); else next.delete(key);
+        if (!keepPage) next.delete('page');
+        return next;
+      },
+      { replace: true },
+    );
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -78,10 +94,10 @@ export default function Questions() {
       const data = await getQuestions({
         page,
         limit: 50,
-        subject: subject || undefined,
-        exam_type: examType || undefined,
-        year: year ? parseInt(year) : undefined,
-        search: search || undefined,
+        subject:   subject   || undefined,
+        exam_type: examType  || undefined,
+        year:      year      ? parseInt(year) : undefined,
+        search:    search    || undefined,
       });
       setResult(data);
       setError(null);
@@ -92,13 +108,7 @@ export default function Questions() {
     }
   }, [page, subject, examType, year, search]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [subject, examType, year, search]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
 
   function openEdit(q: Question) {
     setEditTarget(q);
@@ -120,7 +130,7 @@ export default function Questions() {
     try {
       await updateQuestion(editTarget.id, {
         ...editState,
-        option_e: editState.option_e || undefined,
+        option_e:    editState.option_e    || undefined,
         explanation: editState.explanation || undefined,
       });
       setEditTarget(null);
@@ -157,7 +167,7 @@ export default function Questions() {
       <div className="flex flex-wrap gap-3">
         <select
           value={subject}
-          onChange={(e) => setSubject(e.target.value)}
+          onChange={(e) => setFilter('subject', e.target.value)}
           className="bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent"
         >
           <option value="">All Subjects</option>
@@ -168,7 +178,7 @@ export default function Questions() {
 
         <select
           value={examType}
-          onChange={(e) => setExamType(e.target.value)}
+          onChange={(e) => setFilter('exam', e.target.value)}
           className="bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent"
         >
           <option value="">All Exams</option>
@@ -179,7 +189,7 @@ export default function Questions() {
 
         <select
           value={year}
-          onChange={(e) => setYear(e.target.value)}
+          onChange={(e) => setFilter('year', e.target.value)}
           className="bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent"
         >
           <option value="">All Years</option>
@@ -192,7 +202,7 @@ export default function Questions() {
           type="text"
           placeholder="Search question text..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setFilter('q', e.target.value)}
           className="flex-1 min-w-48 bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent placeholder-muted"
         />
 
@@ -295,14 +305,14 @@ export default function Questions() {
                 </p>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    onClick={() => setFilter('page', String(page - 1), true)}
                     disabled={page === 1}
                     className="px-3 py-1.5 text-xs bg-surface2 border border-border text-white rounded hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     Previous
                   </button>
                   <button
-                    onClick={() => setPage((p) => Math.min(result.pages, p + 1))}
+                    onClick={() => setFilter('page', String(page + 1), true)}
                     disabled={page === result.pages}
                     className="px-3 py-1.5 text-xs bg-surface2 border border-border text-white rounded hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >

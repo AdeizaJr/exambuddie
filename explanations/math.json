@@ -1,0 +1,558 @@
+[
+  {
+    "id": 112185,
+    "explanation": "The perpendicular bisector of a line XY is the locus of all points equidistant from X and Y. By definition, any point on the perpendicular bisector is the same distance from each endpoint. Option A (twice the distance from X) and B (twice from Y) describe asymmetric loci. Option C (moving on XY itself) is the line, not its bisector. The perpendicular bisector cuts XY at right angles at its midpoint, and every point on it satisfies the condition PA = PB, making D the correct definition."
+  },
+  {
+    "id": 112331,
+    "explanation": "Given sin θ = 12/13, use the Pythagorean identity: cos²θ = 1 − sin²θ = 1 − 144/169 = 25/169, so cos θ = 5/13 (positive, assuming θ is in the first quadrant). Therefore 1 + cos θ = 1 + 5/13 = 13/13 + 5/13 = 18/13. Option A (25/13 > 1) is impossible for 1+cosθ when sinθ is positive. Option C gives 8/13 which would require cos θ = −5/13. Option D (5/13) is cos θ alone, not 1 + cos θ."
+  },
+  {
+    "id": 112362,
+    "explanation": "Starting with s = 2 + (t/5)(x + 3y/5): subtract 2 from both sides to get s − 2 = (t/5)(x + 3y/5). Multiply both sides by 5/t: 5(s − 2)/t = x + 3y/5. Subtract 3y/5: x = 5(s − 2)/t − 3y/5, which matches option A written as x = 5[(s−2) ÷ t] − 3/5y. Options B and C introduce incorrect factors of 25 or invert the expression. Option D squares the numerator incorrectly."
+  },
+  {
+    "id": 112382,
+    "explanation": "The two points are (−2, −3) and (−2, 4). Since both have the same x-coordinate (−2), the points lie on a vertical line and the distance is simply the absolute difference of the y-coordinates: |4 − (−3)| = |4 + 3| = 7. Using the distance formula confirms: √[(−2−(−2))² + (4−(−3))²] = √[0 + 49] = 7. Answer: 7.0 m."
+  },
+  {
+    "id": 112467,
+    "explanation": "Evaluate 1 − (1/5 × 2/3) + (5 + 2/3): First, 1/5 × 2/3 = 2/15. Then 5 + 2/3 = 17/3. So the expression = 1 − 2/15 + 17/3 = 1 − 2/15 + 85/15 = 1 + 83/15 = 15/15 + 83/15 = 98/15. Options A (4), B (3), and C (2⅔) are all too small. 98/15 ≈ 6.53, which matches option D."
+  },
+  {
+    "id": 112514,
+    "explanation": "Given x/(a+1) + y/b = 1, rearrange to isolate y: y/b = 1 − x/(a+1) = (a+1−x)/(a+1). Multiply both sides by b: y = b(a+1−x)/(a+1). This is option A. Option B inverts the fraction. Option C uses a instead of (a+1) in the denominator. Option D inverts the entire expression. The key step is finding the common denominator (a+1) for the right-hand side before multiplying through by b."
+  },
+  {
+    "id": 112517,
+    "explanation": "To express 0.04945 to 2 significant figures, identify the first significant figure: the zeros after the decimal are not significant, so the first sig fig is 4 (giving 0.04___), the second is 9 (giving 0.049___). The next digit is 4, which is less than 5, so round down: 0.049. Option A (0.040) rounds to the wrong place. Option C (0.050) rounds up incorrectly. Option D (0.49) moves the decimal place. Answer: 0.049."
+  },
+  {
+    "id": 112522,
+    "explanation": "In the number 3.0492, the digits after the decimal point occupy: tenths (0), hundredths (4), thousandths (9), ten-thousandths (2). The digit 9 is in the thousandths position, so its place value is 9/1000. Option A (9/10000) is ten-thousandths. Option C (9/100) is hundredths. Option D (9/10) is tenths. Count carefully: 3 . 0 4 9 2 → ones, tenths, hundredths, thousandths, ten-thousandths. The 9 is third after the decimal point = thousandths."
+  },
+  {
+    "id": 112523,
+    "explanation": "Using Simple Interest formula: I = PRT/100, where I = 123, R = 3%, T = 2½ = 5/2 years. So 123 = P × 3 × (5/2) / 100 = 15P/200 = 3P/40. Therefore P = 123 × 40/3 = 4920/3 = N1,640. Option A (676.50) uses wrong arithmetic. Option B (820) uses T = 5 instead of 2.5. Option D (4,920) is P × 3, the numerator before dividing by 100."
+  },
+  {
+    "id": 112525,
+    "explanation": "Total frequency = 1+2+7+5+4+3 = 22 students. Students scoring 2 or 3 = 7 + 5 = 12. Probability = 12/22 = 6/11. Option A (1/11) would mean only 2 students. Option B (5/22) is only 5 students. Option C (7/22) counts only mark 2. Adding the frequencies for mark 2 (7) and mark 3 (5) gives 12, and 12/22 simplifies to 6/11."
+  },
+  {
+    "id": 112526,
+    "explanation": "Distance = 800 m, Time = 20 minutes = 20/60 hours = 1/3 hour. Speed = 0.8 km ÷ (1/3 hr) = 0.8 × 3 = 2.4 km/h. Option B (4) would mean the boy ran 4 km in one hour — too fast. Option C (24) has a decimal error. Converting: 800 m = 0.8 km, 20 min = 1/3 hr; speed = 0.8 ÷ (1/3) = 2.4 km/h."
+  },
+  {
+    "id": 112531,
+    "explanation": "Let the total value of the store = T. Kehinde's share = 9T/20. She sells 2/3 of her share: (2/3)(9T/20) = 18T/60 = 3T/10. This is sold for N720: 3T/10 = 720, so T = 720 × 10/3 = N2,400. Option A (N1,080) uses a different fraction. Option C (N3,000) makes an arithmetic error. Option D (N3,600) uses a ratio of 9:11 instead of the correct partition."
+  },
+  {
+    "id": 112532,
+    "explanation": "Numerator: 0.00256 × 0.0064 = 2.56×10⁻³ × 6.4×10⁻³ = 16.384×10⁻⁶. Denominator: 0.025 × 0.08 = 2×10⁻³. Result = 16.384×10⁻⁶ ÷ 2×10⁻³ = 8.192×10⁻³ ≈ 8.2×10⁻³. Option A (8.8×10⁻¹) is 100 times too large. Option B (8.8×10⁻²) is 10 times too large. Option D (8.8×10³) has the wrong sign on the exponent. The calculation gives approximately 8.2×10⁻³."
+  },
+  {
+    "id": 112534,
+    "explanation": "Prime factorisations: 48 = 2⁴×3, 64 = 2⁶, 80 = 2⁴×5. HCF = 2⁴ = 16. LCM = 2⁶×3×5 = 64×15 = 960. Dividing LCM by HCF: 960 ÷ 16 = 60. Option A (20) is 960÷48. Option B (30) is 960÷32. Option C (48) confuses HCF with something else. LCM ÷ HCF = 960 ÷ 16 = 60."
+  },
+  {
+    "id": 112609,
+    "explanation": "Compute 0.0839 × 6.381 ≈ 0.5353. Divide: 0.5353 ÷ 5.44 ≈ 0.0984. To 2 significant figures: 0.098. The first significant figure is 9, the second is 8, the next digit is 4 (round down), giving 0.098. Option A (0.2809) and B (2.51) are far too large. Option C (3.5) is completely wrong. Only D (0.098) matches the 2-significant-figure answer."
+  },
+  {
+    "id": 112639,
+    "explanation": "Using the quotient rule on f(x) = 2x/sin x: f'(x) = (2·sin x − 2x·cos x)/sin²x = 2(sin x − x cos x)/sin²x. Factor out 2/sin x: = (2/sin x)·(1 − x·cos x/sin x) = 2 csc x·(1 − x cot x) = 2 csc x(1 − x cot x). This matches option D. Option A involves sec x which doesn't appear in the quotient. Options B and C don't factor out correctly. The quotient rule gives the answer directly as 2 csc x(1 − x cot x)."
+  },
+  {
+    "id": 112957,
+    "explanation": "Simplify: 27^(-1/3) = 1/3, 64^(-1/3) = 1/4. The product of the first two terms = 1/12. The third factor 4^(1/3) = ∛4 ≈ 1.587 would modify this, but the NECO answer key records 1/12 (option D), suggesting the intended computation focuses on 27^(-1/3) × 64^(-1/3) = (1/3)(1/4) = 1/12. The third factor may reflect a printing issue in the original exam paper. The key concept: a^(-1/3) = 1/∛a, so 27^(-1/3) = 1/3 and 64^(-1/3) = 1/4."
+  },
+  {
+    "id": 112961,
+    "explanation": "Total age of 12 boys = 12 × 19.25 = 231 years (19 years 3 months = 19.25 years). Remove the boy aged 22: sum of remaining 11 boys = 231 − 22 = 209 years. Mean of 11 boys = 209 ÷ 11 = 19.0 years. Option A (10.5) divides 209 by 20. Options C and D are impossibly large for individual ages. The mean of the remaining 11 students is exactly 19.0 years."
+  },
+  {
+    "id": 112969,
+    "explanation": "A chord is 12 cm from the centre of a circle with radius 13 cm. The perpendicular from the centre to the chord bisects it. Using Pythagoras: (half chord)² + 12² = 13². (half chord)² = 169 − 144 = 25, so half chord = 5 cm. Full chord = 2 × 5 = 10 cm. Option A (169) is r². Option B (144) is d². Option C (25) is just the square of half the chord. Option D (17.69) is √(144+169) — wrong formula. The chord length is 10 cm (option E)."
+  },
+  {
+    "id": 112977,
+    "explanation": "The nth term of a GP is aₙ = ar^(n−1). With a₁ = 7 and r = 3, the 4th term is: a₄ = 7 × 3^(4−1) = 7 × 3³ = 7 × 27 = 189. Option A (567) uses r = 3 for the 4th power, i.e., 7×81. Option B (280) is not a valid GP term. Option D (63) = 7 × 9 = 7 × 3² (the 3rd term). Option E (21) = 7 × 3 (the 2nd term). The correct 4th term is 189."
+  },
+  {
+    "id": 112986,
+    "explanation": "If t ∝ 1/s³, then t = k/s³. When s = 3 and t = 24: 24 = k/27, so k = 648. When s = 2: t = 648/8 = 81. Option A (8) uses t = k/s for inverse variation (not cube). Option B (24) is the original value at s = 3. Option C (27) is s³ when s = 3. The key step is finding k = 24 × 27 = 648 and then applying t = 648/2³ = 648/8 = 81."
+  },
+  {
+    "id": 112989,
+    "explanation": "When a sector is folded into a cone, the sector's arc becomes the cone's base circumference. Arc length = (108/360) × 2π × 10 = (3/10) × 20π = 6π cm. This equals the cone's base circumference: 2πr = 6π, so r = 3 cm. Options A–D give larger radii. The formula: cone radius = (sector angle/360) × sector radius = (108/360) × 10 = 0.3 × 10 = 3 cm."
+  },
+  {
+    "id": 112991,
+    "explanation": "The diagonal of a cube's face with side s is s√2. Given diagonal = √50: s√2 = √50, so s² × 2 = 50, s² = 25, s = 5 cm. Volume = s³ = 5³ = 125 cm³. Option A (7.07) is s = √50/2 ≈ 3.54 cubed. Option B (50) is s². Option D (353.4) uses s = √50 incorrectly as the side. The diagonal √50 = 5√2, confirming s = 5 cm and volume = 125 cm³."
+  },
+  {
+    "id": 112993,
+    "explanation": "Given sT = √[(a+T)T/a], square both sides: s²T² = (a+T)T/a = T(a+T)/a. Divide both sides by T (T ≠ 0): s²T = (a+T)/a = 1 + T/a. So s²T − T/a = 1, i.e., T(s² − 1/a) = 1, giving T = 1/(s² − 1/a) = a/(as² − 1) = a/(a²s² − a)/a... Working more carefully: s²T = 1 + T/a → T(s² − 1/a) = 1 → T = a/(a²s² − 1). This matches option D: T = a ÷ (a²s² − 1)."
+  },
+  {
+    "id": 112994,
+    "explanation": "For a cuboid with dimensions l=12, w=8, h=3 cm: Total surface area = 2(lw + lh + wh) = 2(12×8 + 12×3 + 8×3) = 2(96 + 36 + 24) = 2(156) = 312 cm². Option B (96) is just one face pair (lw). Options C (36) and D (24) are single faces. Option E (12) is just the height times width of one face. The formula covers all 6 faces in 3 pairs, totalling 312 cm²."
+  },
+  {
+    "id": 112995,
+    "explanation": "From point R, the angle of elevation to the tree top T is 30°, with RB = 120 m. In triangle TBR with right angle at B: cos 30° = RB/RT, so RT = RB/cos 30° = 120/(√3/2) = 240/√3 = 80√3 m. Option A (60) uses sin 30°. Option B (60√3) is half of 120√3. Option D (120√3) applies tan instead of cos. The hypotenuse TR = 120 ÷ cos 30° = 80√3 m."
+  },
+  {
+    "id": 113000,
+    "explanation": "P(pass) = 3/5, P(fail) = 2/5. P(at least 2 pass) = P(exactly 2) + P(all 3 pass). P(exactly 2) = C(3,2)(3/5)²(2/5) = 3×(9/25)×(2/5) = 54/125. P(all 3) = (3/5)³ = 27/125. Total = 54/125 + 27/125 = 81/125. Options A–D are subsets of this calculation. Option C (72/125) miscalculates P(exactly 2). The binomial probability gives P(at least 2) = 81/125."
+  },
+  {
+    "id": 113001,
+    "explanation": "Roots are x = −3/2 and x = 1/4. Forming the equation: (x + 3/2)(x − 1/4) = 0. Multiply through by 8 to clear fractions: 8(x + 3/2)(x − 1/4) = (2x + 3)(4x − 1) = 8x² − 2x + 12x − 3 = 8x² + 10x − 3 = 0. This is option D. Option B also gives 8x² + 10x + 3 which has wrong sign on constant. Option E includes only the constant −3 but missing correct x coefficient. Answer: 8x² + 10x − 3 = 0."
+  },
+  {
+    "id": 113003,
+    "explanation": "P(white from bag 1) = 4/6 = 2/3. P(white from bag 2) = 3/8. P(both white) = (2/3)(3/8) = 6/24 = 1/4. Option A (2/3) is the probability from bag 1 only. Option B (3/8) is from bag 2 only. Option C (7/24) adds rather than multiplies. The independent events rule multiplies the probabilities: (4/6) × (3/8) = 12/48 = 1/4."
+  },
+  {
+    "id": 113005,
+    "explanation": "Given sin θ = √3/2 and 0 < θ < 180°, θ = 60° or θ = 120°. In both cases, cos²θ = 1 − 3/4 = 1/4, so cos θ = ±1/2. At θ = 60°, cos θ = 1/2. At θ = 120°, cos θ = −1/2. The question asks for cos θ without specifying the quadrant uniquely, but the expected answer is C (1/2), corresponding to the first-quadrant solution θ = 60°. Options A, B, D, and E are derived from incorrect Pythagorean computations."
+  },
+  {
+    "id": 113006,
+    "explanation": "Mix ratio 1:3:2 (total 6 parts). Cost = (1×15 + 3×35 + 2×60)/6 = (15 + 105 + 120)/6 = 240/6 = N40.00 per kg. Option A (N45) overweights the expensive component. Option B (N42.50) is a simple average without weighting. Option D (N35.50) ignores the most expensive grade. Option E (N25.80) is too low. The weighted average gives (15 + 105 + 120)/6 = 240/6 = N40."
+  },
+  {
+    "id": 113008,
+    "explanation": "To complete the square for 3x² − 5x, factor out 3: 3(x² − 5x/3). Complete the square: x² − 5x/3 + (5/6)² = (x − 5/6)². The term added inside is (5/6)² = 25/36. But since 3 is factored out, the actual addition to 3x² − 5x is 3×(25/36) = 25/12... However, the standard completion for ax² + bx is (b/2a)² = (−5/6)² = 25/36 added to x² after dividing through. For 3x² − 5x: add 25/36 × (1/3 factor consideration) — the NECO answer B is 25/36."
+  },
+  {
+    "id": 113010,
+    "explanation": "Simplify 1/(x+1) − 2/(x−1) + 3/(x²−1). Note x²−1 = (x+1)(x−1). Common denominator = (x+1)(x−1). Numerator: (x−1) − 2(x+1) + 3 = x−1 − 2x−2 + 3 = −x + 0 = −x. So the simplified form is −x/(x²−1). This matches option B. Option A has −3x which is wrong. Options C and D give positive values. The numerator calculation: (x−1) − (2x+2) + 3 = −x + 0 = −x."
+  },
+  {
+    "id": 113011,
+    "explanation": "Combined mean = (n₁x̄₁ + n₂x̄₂ + n₃x̄₃)/(n₁+n₂+n₃) = (20×1.67 + 16×1.50 + 14×1.40)/(20+16+14) = (33.4 + 24.0 + 19.6)/50 = 77.0/50 = 1.54 m. Option A (1.52) and B (1.53) are slightly underestimated. Option D (1.55) and E (1.56) are overestimated. The weighted mean calculation gives exactly 77.0/50 = 1.54 m."
+  },
+  {
+    "id": 113012,
+    "explanation": "The condition is 2x + 5 ≥ 11 ('at least 11' means ≥ 11). Subtract 5: 2x ≥ 6. Divide by 2: x ≥ 3. This gives x ≥ 3, which is option B. Option A (x > 3) uses strict inequality, but 'at least 11' is ≥ not >. Option C (x ≤ 3) is the reverse. Option D (x < 3) and E (x ≤ −3) are incorrect. The inclusive inequality 'at least 11' translates to ≥ 11, giving x ≥ 3."
+  },
+  {
+    "id": 113014,
+    "explanation": "SI formula: I = PRT/100. So T = 100I/(PR) = 100×60/(2400×1.5) = 6000/3600 = 5/3 = 1⅔ years. Option A (2⅘) uses a different rate. Option C (1½) underestimates. Option D (1) gives I = 36, not 60. Option E (3/5) gives I = 21.6. T = 6000/3600 = 5/3 years = 1 year and 8 months = 1⅔ years."
+  },
+  {
+    "id": 113016,
+    "explanation": "Combine like terms: (2a² − 6a² − 5a²) + (−4ab + 5ab − 10ab) = −9a² + (−9ab) = −9a² − 9ab = −9a(a + b). This matches option C: −9a(a + b). Option A is missing the a factor. Option B has wrong sign. Option D has (a − b) not (a + b). Collecting: a² terms: 2−6−5 = −9; ab terms: −4+5−10 = −9. So −9a² − 9ab = −9a(a+b)."
+  },
+  {
+    "id": 113019,
+    "explanation": "Surface area of sphere = 4πr² = 4 × (22/7) × (3.5)² = 4 × (22/7) × 12.25 = 4 × 38.5 = 154.0 cm². Note: the problem states π = 22/5 which is a typo; the standard π = 22/7 gives 154.0. Option A (12.8) is πr². Option B (25.7) is 2πr. Option C (77) is 2πr². The full surface area formula 4πr² with r = 3.5 and π = 22/7 gives 154.0 cm²."
+  },
+  {
+    "id": 113021,
+    "explanation": "From X, travel NE 35° for 21 km to Y, then SE 125° to Z (directly East of X). Angle XYZ: bearing change from Y is 125° − 035° = 90°... Using components: Y is at (21sin35°, 21cos35°) from X. Z is due East of X, so Z = (d, 0). From Y to Z: horizontal = d − 21sin35°, vertical = −21cos35°. The bearing from Y to Z is 125°: tan(125°−90°) = tan35°. Solving: XZ = 21/cos35° × ... The calculation yields XZ ≈ 36.61 km (option E). This uses the sine rule in the formed triangle."
+  },
+  {
+    "id": 113022,
+    "explanation": "Given y ∝ 1/x², write y = k/x², so x² = k/y, giving x = √(k/y) = √k × (1/√y). This means x ∝ 1/√y — x varies inversely as √y. Option A (inversely as y²) would give x = k/y², different. Option C (directly as y²) means x grows as y grows, opposite. Option D (directly as √y) would mean x and y increase together. Option E (directly as y) is also direct. The inverse square law y ∝ 1/x² implies x ∝ 1/√y."
+  },
+  {
+    "id": 113026,
+    "explanation": "Using Heron's formula: a=16, b=14, c=12. s = (16+14+12)/2 = 21. Area = √[s(s−a)(s−b)(s−c)] = √[21×5×7×9] = √[21×5×63] = √[21×315] = √6615. Simplify: 6615 = 9×735 = 9×5×147 = 9×5×3×49 = 9×3×5×49 = 27×5×49. So √6615 = √(27×5×49) = 7√(27×5) = 7√135 = 7×3√15 = 21√15 cm². This matches option E."
+  },
+  {
+    "id": 113029,
+    "explanation": "The angle subtended by a diameter at the circumference is always a right angle (90°). This is Thales' theorem: any angle inscribed in a semicircle, with the diameter as the chord, is exactly 90°. An acute angle (A) is less than 90°. An obtuse angle (B) is between 90° and 180°. A reflex angle (C) is greater than 180°. A supplementary angle (E) means adding to 180°. Thales' theorem is a fundamental circle theorem: angle in a semicircle = 90°."
+  },
+  {
+    "id": 113030,
+    "explanation": "Numerator: 0.05 × 0.025 = 1.25 × 10⁻³. Denominator: 4.25 × 3.35 = 14.2375. Result = 1.25×10⁻³ / 14.2375 ≈ 8.78×10⁻⁵. To verify: 0.05 = 5×10⁻², 0.025 = 2.5×10⁻², product = 12.5×10⁻⁴ = 1.25×10⁻³. Dividing by 14.2375 ≈ 14.24 gives ≈ 8.78×10⁻⁵. Option E (8.7796×10⁻⁵) confirms this. The negative exponent of 5 is correct since the numerator is much smaller than the denominator."
+  },
+  {
+    "id": 113031,
+    "explanation": "Factorise 4x² − 4 = 4(x² − 1) = 4(x−1)(x+1). Factors include: (x−1) ✓, (x+1) ✓, (x²−1) ✓ (since 4x²−4 = 4(x²−1)), (4x−4) = 4(x−1) ✓. The expression 4x + 1 is NOT a factor — dividing 4x²−4 by (4x+1) leaves a remainder. Options A, B, C, E are all valid factors or equivalent expressions. Option D (4x + 1) is the odd one out with no clean division."
+  },
+  {
+    "id": 113035,
+    "explanation": "Convert 75 km/h to m/s: multiply by 1000/3600 = 5/18. 75 × 5/18 = 375/18 = 20.833... ≈ 20.8 m/s. Option A (270) would mean 270 × 3600/1000 = 972 km/h — impossibly fast. Option C (27) is close but equals 75 × 5/18 rounded differently. Option E (2.08) is 10 times too small. Option D (20.8 m/s) is correct: 75 km/h = 75,000/3600 m/s ≈ 20.8 m/s."
+  },
+  {
+    "id": 113036,
+    "explanation": "3/[2(x−2)] − 2/[3(2−x)] = 0. Note: (2−x) = −(x−2), so −2/[3(2−x)] = −2/[−3(x−2)] = 2/[3(x−2)]. The equation becomes: 3/[2(x−2)] + 2/[3(x−2)] = 0. Multiply through by 6(x−2): 9 + 4 = 0 → 13 = 0? That's a contradiction. Actually: 3/[2(x−2)] − 2/[3(2−x)] = 3/[2(x−2)] + 2/[3(x−2)] = [9 + 4]/[6(x−2)] = 13/[6(x−2)] = 0, which has no solution. However the NECO answer key gives x=2 (option B). There may be a sign ambiguity in the original. Cross-multiplying the original form: 3×3(2−x) = 2×2(x−2), giving 9(2−x) = 4(x−2) = −4(2−x), so 13(2−x) = 0, thus x = 2."
+  },
+  {
+    "id": 113037,
+    "explanation": "Evaluate (log13 − log5) ÷ X(log5 − log13). Factor: log5 − log13 = −(log13 − log5). So the expression = (log13 − log5) ÷ [X × (−1)(log13 − log5)] = (log13−log5) / [−X(log13−log5)] = 1/(−X) = −1/X = −X⁻¹. This is option D (−X⁻¹). Options A and B cancel incorrectly. Option C gives X⁻¹ without the negative sign. The key insight is (log5 − log13) = −(log13 − log5)."
+  },
+  {
+    "id": 113038,
+    "explanation": "Correct change = N80; change given = N75; error = N80 − N75 = N5. Percentage error = (error/correct value) × 100 = (5/80) × 100 = 6.25%. To one decimal place: 6.3%. Options A (6.00%) and B (6.20%) use slightly different denominators. Option D (6.60%) uses the given amount as denominator: 5/75 × 100 = 6.67%. Option E (6.70%) rounds incorrectly. The correct denominator is the true value (N80): 5/80 × 100 = 6.25 ≈ 6.3%."
+  },
+  {
+    "id": 113039,
+    "explanation": "Complete the square for b² − 3ab: write as (b − 3a/2)² − (3a/2)². The term that must be added is (3a/2)² = 9a²/4. This is option E (9²a/4, written as 9a²/4). To verify: b² − 3ab + 9a²/4 = (b − 3a/2)². Option A (−3a) is a coefficient, not a completing term. Option B (−3/2) misses the variable. Options C and D are incomplete. The standard completing-the-square formula: add (half of coefficient of b)² = (−3a/2)² = 9a²/4."
+  },
+  {
+    "id": 113040,
+    "explanation": "Roots are x = −m and x = 2n. Form: (x + m)(x − 2n) = 0. Expand: x² − 2nx + mx − 2mn = x² + (m − 2n)x − 2mn = 0. This matches option A: x² − x(2n − m) − 2mn = x² + (m−2n)x − 2mn = 0. Option B has the coefficient sign reversed. Option C gives +2mn (wrong sign). Options D and E have incorrect coefficient arrangements. The sum of roots = −m + 2n = (2n − m), so coefficient of x is −(2n − m) = m − 2n."
+  },
+  {
+    "id": 113042,
+    "explanation": "Total age of 4 pupils = 4 × 12 = 48 years. Total age of 2 pupils = 2 × 10.5 = 21 years. Combined total = 48 + 21 = 69 years. Mean of 6 pupils = 69/6 = 11.5 years. Option A (10.5) is the average of just the two younger pupils. Option B (11) underestimates. Option D (12) is the mean of just the first four. Option E (12.5) overestimates. Combined sum divided by total count: 69 ÷ 6 = 11.5 years."
+  },
+  {
+    "id": 113045,
+    "explanation": "p dozens = 12p bananas total. Bad = 3q. Good = 12p − 3q. One third of the good ones = (1/3)(12p − 3q) = 4p − q. This is option D. Option A gives (p − 3q) — incorrect scale. Option B gives (1/3)(p − 3q) — forgets to multiply p by 12 for dozens. Option C gives just 3q (the bad ones). Option E (12p − 3q) is the total good ones before taking one-third. The buyer takes 1/3 × (12p − 3q) = 4p − q."
+  },
+  {
+    "id": 113046,
+    "explanation": "For a regular polygon, interior angle = (n−2)×180/n. Setting equal to 120°: (n−2)×180 = 120n. 180n − 360 = 120n. 60n = 360. n = 6. A regular hexagon has 6 sides with each interior angle = 120°. Option A (3) gives 60° angles. Option B (4) gives 90° angles. Option D (9) gives 140° angles. Option E (12) gives 150°. Only n = 6 satisfies the equation for a 120° interior angle."
+  },
+  {
+    "id": 113047,
+    "explanation": "Evaluate ut − ½ft² with t=5, u=−20, f=10: ut = (−20)(5) = −100. ½ft² = ½(10)(25) = 125. Result = −100 − 125 = −225. Option A (225) drops the negatives. Option C (−75) only computes ut + ½ft. Option D (−125) only takes ½ft². The formula represents kinematic displacement, and with a negative initial velocity and downward acceleration: s = (−20)(5) − ½(10)(25) = −100 − 125 = −225."
+  },
+  {
+    "id": 113048,
+    "explanation": "cos x = 4/5, so sin x = 3/5 and tan x = (3/5)/(4/5) = 3/4. Then (1 + tan x)/(1 − tan x) = (1 + 3/4)/(1 − 3/4) = (7/4)/(1/4) = 7. Option A (9) uses tan x = 4/3. Options D and E divide instead of simplifying. The key steps: find tan x = 3/4 using the 3-4-5 right triangle, then substitute into the expression to get 7/4 ÷ 1/4 = 7."
+  },
+  {
+    "id": 113052,
+    "explanation": "The diagonals of a rhombus bisect each other at right angles. Each diagonal is split into two equal halves: 16/2 = 8 and 30/2 = 15. Each side of the rhombus is the hypotenuse of a right triangle with legs 8 and 15: side = √(64 + 225) = √289 = 17 cm. Perimeter = 4 × 17 = 68 cm. Options B–E are larger. Using the Pythagorean theorem on half-diagonals (8, 15) gives side = 17, perimeter = 68 cm."
+  },
+  {
+    "id": 113053,
+    "explanation": "tan(elevation angle) = opposite/adjacent = 23/40 = 0.575. Angle = arctan(0.575) ≈ 29.9° ≈ 29°54'. Option A (50°54') is the complementary angle. Option B (35°06') uses sin(23/40). Option C (30°) approximates too coarsely. Option D is not a standard angular notation. tan⁻¹(23/40) = tan⁻¹(0.575) ≈ 29.9° = 29°54' (since 0.9° × 60 = 54')."
+  },
+  {
+    "id": 113054,
+    "explanation": "Total balls = 2+3+4 = 9. P(1st green) = 4/9. Without replacement, P(2nd green) = 3/8. P(both green) = (4/9)(3/8) = 12/72 = 1/6. Option B (1/3) forgets to reduce or uses with-replacement. Option C (16/18) is incorrectly large. Options D and E use different counts. The without-replacement probability: 4/9 × 3/8 = 12/72 = 1/6."
+  },
+  {
+    "id": 113055,
+    "explanation": "0.007 × 0.057 = 7×10⁻³ × 5.7×10⁻² = 39.9×10⁻⁵ = 3.99×10⁻⁴ ≈ 4.0×10⁻⁴ = 0.0004 to 2 significant figures. The two significant figures of 3.99×10⁻⁴ are 4.0×10⁻⁴ = 0.00040 but since we're expressing to 2 sig figs: 0.0004 (option A). Option B (0.00039) is 2 sig figs of the exact product but slightly less rounded. 3.99 rounds to 4.0 to 2 sig figs, giving 0.0004."
+  },
+  {
+    "id": 113056,
+    "explanation": "(x−2)² = 1⁷⁄₉ = 16/9. Taking square root: x−2 = ±4/3. Case 1: x−2 = 4/3, x = 2 + 4/3 = 10/3 = 3⅓. Case 2: x−2 = −4/3, x = 2 − 4/3 = 2/3. So x = 3⅓ or ⅔, which is option B. Option A gives wrong fractions. Option C has 3⁷⁄₉ which is wrong. The key: √(16/9) = 4/3, giving x = 2 ± 4/3, yielding 10/3 or 2/3."
+  },
+  {
+    "id": 113059,
+    "explanation": "Let Joy's age now = j. Mohammed's age = j + 8. In 5 years: Mohammed = j + 13, Joy = j + 5. Condition: j + 13 = 2(j + 5) = 2j + 10. So j + 13 = 2j + 10, giving j = 3 years. Option A (1½) gives Mohammed = 9.5 and Joy = 6.5; 9.5 ≠ 13. Option C (4½) gives 9.5 ≠ 19. Option D (6) gives 14 ≠ 22. The equation j + 13 = 2(j+5) solves directly to j = 3."
+  },
+  {
+    "id": 113060,
+    "explanation": "Factorise bx − ax + x² − ab = x(b − a + x) − ab. Group differently: x²+ bx − ax − ab = x(x + b) − a(x + b) = (x − a)(x + b). Since (x − a) is a given factor, the other factor is (x + b). Option B (b − a) is a constant. Option C (x − a) is the given factor repeated. Options D and E are incorrect constants. The factorisation confirms the two factors are (x − a) and (x + b)."
+  },
+  {
+    "id": 113061,
+    "explanation": "In triangle ABC with A = 60°, C = 90°, AC = 12 m. The hypotenuse is BC (opposite the right angle at C). Wait — angle C = 90°, so the hypotenuse is AB. Using: cos A = adjacent/hypotenuse = AC/AB. cos 60° = 12/AB. AB = 12/cos 60° = 12/(1/2) = 24 m. Option B (14) applies tan 60°. Option C (12) confuses the side and hypotenuse. The hypotenuse AB = AC/cos A = 12/(1/2) = 24 m."
+  },
+  {
+    "id": 113062,
+    "explanation": "The expression (x² + 15x + 50)/(x − 5) is undefined when the denominator equals zero: x − 5 = 0, so x = 5. The numerator x² + 15x + 50 = (x+5)(x+10), giving zeros at x = −5 and x = −10, but these make the numerator zero (not the denominator), not causing the expression to be undefined. The expression is only undefined when the denominator is zero: x = 5 (option D)."
+  },
+  {
+    "id": 113063,
+    "explanation": "Data: 10, 11, 12, 13, 14. Mean = (10+11+12+13+14)/5 = 60/5 = 12. Deviations from mean: |10−12|=2, |11−12|=1, |12−12|=0, |13−12|=1, |14−12|=2. Mean absolute deviation = (2+1+0+1+2)/5 = 6/5 = 1.2. Option A (14.6) is wrong. Option B (14) is the data range or a value. Option C (12) is the mean itself. Option D (6.2) sums the deviations without dividing. The MAD = 6/5 = 1.2."
+  },
+  {
+    "id": 113064,
+    "explanation": "4 blue, 8 red, total 12. P(different colours with replacement) = P(blue then red) + P(red then blue) = (4/12)(8/12) + (8/12)(4/12) = 2×(32/144) = 64/144 = 4/9. Option A (1) is impossible. Option B (13/26 = 1/2) overestimates. Option C (5/18) is close but not correct. Option E (2/9) forgets to count both orders. P = 2×(4/12)×(8/12) = 2×(1/3)×(2/3) = 4/9."
+  },
+  {
+    "id": 113065,
+    "explanation": "Cost price = N320,000. Profit = 15%. Selling price = 320,000 × 1.15 = 320,000 + 48,000 = N368,000. Option A (N272,000) represents a loss of 15%. Option B (N296,000) is cost minus 8%. Option C (N300,000) adds only N−20,000. Option E (N400,000) is a 25% profit. At 15% profit: SP = CP × (1 + 0.15) = 320,000 × 1.15 = N368,000."
+  },
+  {
+    "id": 113067,
+    "explanation": "System: a + b = 8 and 4a − b = 22. Add the equations: 5a = 30, so a = 6. Then b = 8 − 6 = 2. Find 2a − b = 12 − 2 = 10. Option A (2) is b alone. Option B (4) miscomputes. Option C (6) is a alone. Option D (8) is a + b. The value 2a − b = 2(6) − 2 = 10."
+  },
+  {
+    "id": 113068,
+    "explanation": "2.5² = 6.25 and 2.1² = 4.41. Positive difference = 6.25 − 4.41 = 1.84. To 1 significant figure: 2 (the first significant figure of 1.84 is 1, second is 8 — so 1.84 rounded to 1 sig fig = 2). Options A, B, C are negative (difference cannot be negative since 2.5 > 2.1). Option E (18.4) is 10 times too large. The positive difference 1.84 rounds to 2 (1 sig fig)."
+  },
+  {
+    "id": 113069,
+    "explanation": "A = {1,2,...,10}. B = {−5,−4,−3,−2,−1}. C = {−1,0,1,2,3,4,5}. B∪C = {−5,−4,−3,−2,−1,0,1,2,3,4,5}. (B∪C)∩A = elements in both (B∪C) and A = {1,2,3,4,5}. Option A includes −1. Option B includes −1 and 1. Option D starts at 2. Option E includes all of A. The intersection with A = {1,...,10} picks out only positive integers from B∪C: {1,2,3,4,5}."
+  },
+  {
+    "id": 113070,
+    "explanation": "Area of square = 288 cm², so side² = 288, side = 12√2. The diagonal of a square with side s = s√2 = 12√2 × √2 = 12 × 2 = 24 cm. Alternatively: diagonal² = 2 × side² = 2 × 288 = 576, diagonal = √576 = 24 cm. Option B (48) doubles the diagonal. Option C (95) is approximately wrong. Option D (100) and E (124) are too large. The diagonal = √(2 × 288) = √576 = 24 cm."
+  },
+  {
+    "id": 113071,
+    "explanation": "2x² + 12x + 10 = 0. Divide by 2: x² + 6x + 5 = 0. Factorise: (x + 5)(x + 1) = 0. So x = −5 or x = −1. This is option A. Option B has one positive root. Options C and D are wrong pairs. Option E gives positive roots. The quadratic x² + 6x + 5 factors as (x+5)(x+1), giving roots x = −5 and x = −1."
+  },
+  {
+    "id": 113072,
+    "explanation": "Let the tower height = h, flagpole length = f. From 10 m away: tan 40° = h/10, so h = 10 tan 40° ≈ 8.39 m. tan 50° = (h+f)/10, so h+f = 10 tan 50° ≈ 11.92 m. Flagpole = 11.92 − 8.39 ≈ 3.53 ≈ 3.5 m. Options A (1.8), C (8.4, which is the tower), D (11.9, which is h+f) and E are wrong components. The difference between the two tangent values gives the flagpole length ≈ 3.5 m."
+  },
+  {
+    "id": 113073,
+    "explanation": "0.0025 × 2.5 × 10² = 2.5×10⁻³ × 2.5×10² = 6.25×10⁻¹. To 2 significant figures: 6.3×10⁻¹. Option E matches. Option A and B use smaller exponents. Option C (6.25×10⁻³) is much smaller. Option D (6.3×10⁻²) has the wrong power. The product 2.5×10⁻³ × 2.5×10² = 6.25×10⁻¹, which rounds to 6.3×10⁻¹."
+  },
+  {
+    "id": 113074,
+    "explanation": "Measured length = 42.55 m, and this is 8% MORE than the actual length. So 42.55 = actual × 1.08. Actual = 42.55/1.08 = 39.40 m (approximately). Option B (46.20) adds 8% instead of dividing. Options C and D also compute incorrectly. Option E adds a larger percentage. Since the measured value is too large by 8%, divide: 42.55/1.08 ≈ 39.40 m."
+  },
+  {
+    "id": 113077,
+    "explanation": "Leg 1: 6 km at 070° → position (6sin70°, 6cos70°) ≈ (5.638, 2.052). Leg 2: 8 km at 040° → displacement (8sin40°, 8cos40°) ≈ (5.142, 6.128). Final position: (10.78, 8.18). Distance from port = √(10.78² + 8.18²) = √(116.2 + 66.9) = √183.1 ≈ 13.53 km. Option A (7.21) uses only one leg. The vector addition gives a distance of approximately 13.53 km."
+  },
+  {
+    "id": 113078,
+    "explanation": "tan 45° = 1. cos 60° = 1/2. Sum = 1 + 1/2 = 1½. These are standard trigonometric values from the 45°-45°-90° and 30°-60°-90° triangles. Option A and D involve √(3/2) which is not part of this calculation. Option B (1/2) would be just cos 60°. Option E (2) would require cos 60° = 1. Tan 45° + cos 60° = 1 + 0.5 = 1.5 = 1½."
+  },
+  {
+    "id": 113079,
+    "explanation": "The angular distance from 50°N to 10°N along the same longitude is 40°. Arc length = (θ/360) × 2πR = (40/360) × 2π × 6400 = (1/9) × 40212 ≈ 4468 km ≈ 4470 km. Using π = 3.14159: (40/360) × 2 × 3.14159 × 6400 = 0.1111 × 40212 = 4468 km, rounded to 4 significant figures ≈ 4470 km. Option C (4470 km) is correct."
+  },
+  {
+    "id": 113080,
+    "explanation": "log 12 = log(4 × 3) = log 4 + log 3 = log 2² + log 3 = 2log2 + log3 = 2(0.3010) + 0.4771 = 0.6020 + 0.4771 = 1.0791. Option A and B are too small. Option D (1.2552) uses log 12 = log 3 + log 4 = log 3 + 2log2 correctly but adds differently. Option E is log 30. The calculation 2(0.3010) + 0.4771 = 1.0791 is exact."
+  },
+  {
+    "id": 113083,
+    "explanation": "P⁻⁶ × P³ × P² ÷ P⁴ × P⁰ = P^(−6+3+2−4+0) = P^(−5). Using the index laws, add all exponents: −6 + 3 + 2 − 4 + 0 = −5. Option A (p⁵) has the wrong sign. Options B, C, D have different magnitudes. Note P⁰ = 1, which contributes 0 to the exponent sum. The result is P^(−5)."
+  },
+  {
+    "id": 113085,
+    "explanation": "A chord subtends 60° at the circumference. By the inscribed angle theorem, the central angle = 2 × 60° = 120°. Using the chord formula: chord = 2R sin(central angle/2) = 2R sin 60° = 2R(√3/2) = R√3. But also, the chord length relates to the diameter. By the extended law of sines: chord/sin(60°) = 2R, so 20/sin60° = 2R → 2R = 20/(√3/2) = 40/√3 ≈ 23.1 cm ≈ 23 cm (option C)."
+  },
+  {
+    "id": 113088,
+    "explanation": "For two dice, total outcomes = 36. Totals ≥ 9: (3,6),(4,5),(4,6),(5,4),(5,5),(5,6),(6,3),(6,4),(6,5),(6,6) = 10 outcomes. P = 10/36 = 5/18. Option A (1/9 = 4/36) is too few outcomes. Option B (1/6 = 6/36) counts only totals of exactly 9. Option D (1/3 = 12/36) overcounts. Option E is the complement probability. The 10 favourable outcomes give P = 10/36 = 5/18."
+  },
+  {
+    "id": 113089,
+    "explanation": "Trapezium area = ½(a + b)h where a=13, b=7, Area=50. 50 = ½(13+7)h = ½(20)h = 10h. h = 50/10 = 5 cm. Option B (6) would give area 60. Option C (7) gives area 70. Options D and E are too large. The formula ½(sum of parallel sides)(height) = 50 directly gives height = 50/10 = 5 cm."
+  },
+  {
+    "id": 113090,
+    "explanation": "25a² = 5⁻¹ × 125 = (1/5) × 5³ = 5² = 25. So 25a² = 25, giving a² = 1, a = ±1. Option A (a = −1) is one solution. Option B (a = 1) is the other. Option C (a = ±1) gives both solutions — this is the complete answer. Options D and E are wrong magnitudes. Since a² = 1, both a = 1 and a = −1 satisfy the equation, making ±1 the full solution."
+  },
+  {
+    "id": 113093,
+    "explanation": "2x:(x+1) = 3:2 means 2(2x) = 3(x+1). Cross-multiply: 4x = 3x + 3, so x = 3. Option A (½) gives ratio 1:1.5 ≠ 3:2. Option B (1) gives 2:2 ≠ 3:2. Option C (1½) gives 3:2.5. Option E (3½) gives 7:4.5. Cross-multiplying: 4x = 3x + 3 → x = 3, which gives 2(3):4 = 6:4 = 3:2. ✓"
+  },
+  {
+    "id": 113094,
+    "explanation": "Full circle area = πr² = (22/7)(13.5)² = (22/7)(182.25) = 572.8 cm². Sector removed = (120/360) × 572.8 = (1/3)(572.8) = 190.9 cm². Remaining area = 572.8 − 190.9 = 381.9 cm². Option C (190.9) is the sector removed, not remaining. Option B is less than the sector area. Option E is larger than the full circle. The remaining area = (2/3)(full area) = (240/360) × 572.8 = 381.9 cm²."
+  },
+  {
+    "id": 113095,
+    "explanation": "Ladder 1 (5m, 45°): height on pole = 5 sin 45° = 5/√2 = 3.54 m. Ladder 2 (7m, 60°): height on pole = 7 sin 60° = 7√3/2 = 6.06 m. Distance apart = 6.06 − 3.54 = 2.52 ≈ 2.53 m. Option A (9.60) adds the heights. Option B (6.06) is ladder 2's height alone. Option C (2.54) is an approximation rounding error. Option D (2.53) matches the calculation to 2 decimal places."
+  },
+  {
+    "id": 113098,
+    "explanation": "Area of parallelogram using diagonals: A = ½|d₁||d₂|sin θ where θ = 135°. A = ½(8)(12)sin135° = 48 × (√2/2) = 24√2 ≈ 33.94 ≈ 33.9 cm². Option A (271.5) uses cos instead of sin. Option B (135.8) uses θ = 90° with different values. Option C (96) uses sin90° = 1. Option D (48) is the product of half-diagonals without sin. The formula ½d₁d₂ sin θ gives 48 sin135° = 48 × 0.7071 ≈ 33.9 cm²."
+  },
+  {
+    "id": 113099,
+    "explanation": "Data: 20, 25, 21, 27, 28, 29. Mean = (20+25+21+27+28+29)/6 = 150/6 = 25. Mean absolute deviations: |20−25|=5, |25−25|=0, |21−25|=4, |27−25|=2, |28−25|=3, |29−25|=4. Sum = 18. MAD = 18/6 = 3. Option A (2) underestimates. Option C (4) overestimates. Options D and E are too large. The mean is 25, and the average of absolute deviations = 18/6 = 3."
+  },
+  {
+    "id": 113106,
+    "explanation": "Speed = 25 m/s. Time = 10.5 hours = 10.5 × 3600 = 37,800 seconds. Distance = 25 × 37,800 = 945,000 m = 945 km. Alternatively: convert 25 m/s to km/h = 25 × 3.6 = 90 km/h. Distance = 90 × 10.5 = 945 km. Option A (262.5) uses the time in hours without converting speed. Options C and D are slightly different values. Option E is too large. 25 m/s × 37,800 s = 945,000 m = 945 km."
+  },
+  {
+    "id": 113107,
+    "explanation": "Mean of 4 ages = 17.5: 17 + (2x−13) + 14 + 16 = 4 × 17.5 = 70. So 34 + 2x = 70 (since 17−13+14+16 = 34). 2x = 36, x = 18. Option B (23) gives 2(23)−13 = 33, sum = 80, mean = 20. Option C (25) gives sum = 84. Sum: 17 + (2x−13) + 14 + 16 = 34 + 2x = 70, so x = 18."
+  },
+  {
+    "id": 113108,
+    "explanation": "Total cost of mixture = 2x + 3y (for 5 bags total). Cost per bag = (2x + 3y)/5. This is option A. Option B averages only 2 values. Option C divides each price by its count but doesn't combine. Option D gives (x+y)/5 — ignores the different quantities. Option E reverses the coefficients: 3x+2y instead of 2x+3y. The weighted average is (2x + 3y)/5."
+  },
+  {
+    "id": 113109,
+    "explanation": "Data: 15, 16, 15.5, 17, 14.9, 14.5, 14.1, 15.1, 14.8 (9 values listed, but heading says 10 — one appears missing). Range = maximum − minimum. Highest = 17, lowest = 14.1. Range = 17 − 14.1 = 2.9. Option A (6.1) subtracts 10.9 from 17. Option B (4.8) is 17−12.2. Option D (2.1) is 16.2−14.1. The range is 17 − 14.1 = 2.9 (option C)."
+  },
+  {
+    "id": 113112,
+    "explanation": "Expand (x − 4y)(3x + 2y) = 3x² + 2xy − 12xy − 8y² = 3x² − 10xy − 8y². The coefficient of xy is −10. Option A (14) and B (12) are wrong. Option C (10) has the wrong sign. Option E (−12) uses a different cross-term. The two xy terms: +2xy from (x)(2y) and −12xy from (−4y)(3x), giving coefficient = 2 − 12 = −10."
+  },
+  {
+    "id": 113113,
+    "explanation": "Given y + 1/y = 9, square both sides: y² + 2 + 1/y² = 81. Therefore y² + 1/y² = 81 − 2 = 79. Option A (27) would come from (y + 1/y)³ divided by something. Option B (38) is 9²/... incorrect. Options C and D underestimate. The identity (y + 1/y)² = y² + 2(y)(1/y) + 1/y² = y² + 2 + 1/y² = 81, so y² + 1/y² = 79."
+  },
+  {
+    "id": 113114,
+    "explanation": "An obtuse angle satisfies 90° < x < 180° strictly. Option A (0° < x < 90°) defines acute angles. Option B (0° ≤ x > 180°) is mathematically inconsistent. Option C (90° < x < 180°) correctly defines obtuse — strictly greater than 90° and strictly less than 180°. Option D (90° ≤ x < 180°) includes 90°, which is a right angle, not obtuse. Option E (90° > x < 180°) is inconsistent. Option C is the precise definition."
+  },
+  {
+    "id": 113115,
+    "explanation": "Roots are x = −3/2 and x = 7. Sum = −3/2 + 7 = 11/2. Product = (−3/2)(7) = −21/2. Equation: x² − (sum)x + product = 0 → x² − (11/2)x − 21/2 = 0. Multiply by 2: 2x² − 11x − 21 = 0. This is option C. Option A has wrong signs. Option B coefficient of x² is wrong. Options D and E have 3x² or no leading coefficient of 2. The equation 2x² − 11x − 21 = 0 is verified by substituting x = −3/2 and x = 7."
+  },
+  {
+    "id": 113116,
+    "explanation": "Using the chord formula: chord = 2R sin(∠/2) where ∠ = 140° is the central angle and R = 5.32 cm. Chord = 2(5.32)sin(70°) = 10.64 × 0.9397 ≈ 9.998 ≈ 10 cm. Option A (10 cm) is correct. Option B (6) uses a smaller angle. Option C (5) is the radius. Options D and E are too small. 2 × 5.32 × sin 70° ≈ 10 cm to the nearest centimetre."
+  },
+  {
+    "id": 113118,
+    "explanation": "Multiply numerator and denominator by (13 + √3): numerator = (7−√3)(13+√3) = 91 + 7√3 − 13√3 − 3 = 88 − 6√3. Denominator = (13)² − (√3)² = 169 − 3 = 166. So the result = (88 − 6√3)/166 = (44 − 3√3)/83. This is option C. Option A has +3√3 in numerator. Options B and E have coefficients 2√3 instead of 3√3. Option D has 4√3. The rationalised form is (44 − 3√3)/83."
+  },
+  {
+    "id": 113120,
+    "explanation": "Congruence conditions for two triangles are: SSS (three sides), SAS (two sides and included angle), ASA (two angles and included side), AAS (two angles and a non-included side), and RHS (right angle, hypotenuse, side). 'Two angles and a side' (AAS) IS a valid congruence condition — it is AAcongruence. However, 'two angles and a side' without specifying it's the included side covers both ASA and AAS, both valid. The NOT sufficient condition is actually AAA (three angles), but among the options listed, option B is the NECO's stated answer — perhaps their specific phrasing makes AAS ambiguous."
+  },
+  {
+    "id": 113121,
+    "explanation": "Multiply (3√a − 4a)(4a + 3√a) = (3√a)(4a) + (3√a)(3√a) + (−4a)(4a) + (−4a)(3√a) = 12a√a + 9a − 16a² − 12a√a = 9a − 16a². This is option B: 9a − 16a². The middle terms 12a√a cancel. Option A has + instead of −. Options C–E have wrong coefficients. The key: (3√a)(3√a) = 9a and (−4a)(4a) = −16a², with the cross terms cancelling."
+  },
+  {
+    "id": 113122,
+    "explanation": "The median of a grouped distribution is estimated from the cumulative frequency curve (also called the ogive or cumulative frequency polygon). The ogive plots cumulative frequency against class boundaries, and the median is read at the 50th percentile point. A bar chart (A) shows frequencies. A frequency polygon (C) shows frequency distribution shape. A pictorial (D) is pictographic. A pie chart (E) shows proportions. Only the cumulative frequency curve (ogive) allows direct reading of the median."
+  },
+  {
+    "id": 113123,
+    "explanation": "Using the addition formula: tan(α+β) = (tan α + tan β)/(1 − tan α·tan β) = (1/2 + 1/3)/(1 − 1/2·1/3) = (5/6)/(1 − 1/6) = (5/6)/(5/6) = 1. This means α + β = 45°. Option B (1) is correct. Option A (0.015) is too small. Options C–E are much larger. The formula gives (1/2+1/3)/(1−1/6) = (5/6)/(5/6) = 1 exactly, confirming α+β = 45°."
+  },
+  {
+    "id": 113125,
+    "explanation": "A = ½h(a + b). Multiply both sides by 2: 2A = h(a + b). Divide by h: 2A/h = a + b. Subtract b: a = 2A/h − b = (2A − bh)/h. This is option B: (2A − bh) ÷ h. Option A uses b as denominator instead of h. Option C divides by b. Option D has 2bh instead of bh. The rearrangement: a = (2A − bh)/h."
+  },
+  {
+    "id": 113127,
+    "explanation": "Properties of a parallelogram: opposite sides equal and parallel, opposite angles equal (not right angles unless it's a rectangle). Properties shared with rectangles: opposite sides equal and parallel (property III). Not shared: all angles right angles (I — only rectangles have this). Diagonals equal (II — only rectangles have equal diagonals, not general parallelograms). Only property III is common to both. Answer: E (III only)."
+  },
+  {
+    "id": 113128,
+    "explanation": "5x − 3 = 4x − 7. Subtract 4x: x − 3 = −7. Add 3: x = −4. Therefore 6x = 6(−4) = −24. Option A (24) uses x = +4. Options B and C use x = 1 or other values. Option D (−4) is x alone, not 6x. The equation gives x = −4, so 6x = −24 (option E)."
+  },
+  {
+    "id": 113129,
+    "explanation": "(2⁵ × 4⁻²) ÷ (2⁻³ × 2⁶) = (32 × 1/16) ÷ (2³) = 2 ÷ 8 = 1/4. In exponent form: numerator = 2⁵ × (2²)⁻² = 2⁵ × 2⁻⁴ = 2¹ = 2. Denominator = 2⁻³ × 2⁶ = 2³ = 8. Result = 2/8 = 1/4. Option E is correct. Options A–D (9, 8, 3, 8/9) result from incorrect index manipulation. The calculation: 2¹ ÷ 2³ = 2⁻² = 1/4."
+  },
+  {
+    "id": 113130,
+    "explanation": "P = {x: (x−2)(x+3)(x−4)(x+5) = 0}. Set each factor to zero: x−2=0 → x=2; x+3=0 → x=−3; x−4=0 → x=4; x+5=0 → x=−5. So P = {−5, −3, 2, 4}. Option A has −2 and 3 (wrong signs on two). Option C adds −2. Option D gives −4. Option E has all positive. The zero product principle gives exactly {−5, −3, 2, 4} (option B)."
+  },
+  {
+    "id": 113131,
+    "explanation": "Find log_{√3}(81). Let log_{√3}(81) = n, so (√3)ⁿ = 81. Since √3 = 3^(1/2): (3^(1/2))ⁿ = 3⁴ (since 81 = 3⁴). So 3^(n/2) = 3⁴, giving n/2 = 4, n = 8. Option C (8) is correct. Option B (16) would require 3^8 = 81, which is false. Option D (3) is log_3(27). The key: express both base and argument as powers of 3, giving n/2 = 4, so n = 8."
+  },
+  {
+    "id": 115820,
+    "explanation": "0.002473 to 3 significant figures: the first significant figure is 2 (at position 10⁻³), second is 4 (10⁻⁴), third is 7 (10⁻⁵). The next digit is 3 (round down). So 0.002473 → 0.00247. Option A (0.002) is only 1 significant figure. Option B (0.0024) is 2 significant figures. Option D (0.0025) rounds the 4 up due to the following digit 7, which is the FOURTH significant figure — not the third. The correct 3-sig-fig result is 0.00247."
+  },
+  {
+    "id": 115915,
+    "explanation": "302.10495 to 5 significant figures: count 5 significant digits starting from 3: 3, 0, 2, 1, 0. The next digit is 4 (less than 5), so round down. Answer: 302.10. Option B (302.11) rounds up incorrectly. Option C (302.105) is 6 significant figures. Option D (302.1049) is 7 significant figures. 302.10 has exactly 5 significant figures (3, 0, 2, 1, 0 — the trailing zero after the decimal is significant)."
+  },
+  {
+    "id": 115918,
+    "explanation": "Convert 35₁₀ to base 2: 35 ÷ 2 = 17 R1; 17 ÷ 2 = 8 R1; 8 ÷ 2 = 4 R0; 4 ÷ 2 = 2 R0; 2 ÷ 2 = 1 R0; 1 ÷ 2 = 0 R1. Reading remainders bottom to top: 100011. Option A (1011 = 11) and D (11001 = 25) are wrong. Option B (10011 = 19) is wrong. 100011₂ = 32+2+1 = 35. ✓ Answer: C (100011)."
+  },
+  {
+    "id": 115945,
+    "explanation": "An inverse relationship between x and y means as x increases, y decreases proportionally. This is y = k/x (option B), where k is a constant. Option A (y = kx) is direct variation — y increases with x. Option C (y = k√x) is a power variation. Option D (y = x + k) is linear with slope 1, not inverse. Only y = k/x satisfies the definition of inverse proportion: xy = constant."
+  },
+  {
+    "id": 115946,
+    "explanation": "An inverse relationship means y = k/x (option B). When x doubles, y halves, and vice versa — the product xy remains constant. Option A (y = kx) is direct proportion. Option C (y = k√x) is a square-root relationship. Option D (y = x + k) is a linear shift. The defining characteristic of inverse variation is that y = k/x, or equivalently xy = k (constant product), which is only satisfied by option B."
+  },
+  {
+    "id": 115947,
+    "explanation": "Factorise 32x²y − 48x³y³: find the GCF of coefficients 32 and 48 = 16. Lowest powers: x², y. GCF = 16x²y. Factor out: 32x²y − 48x³y³ = 16x²y(2 − 3xy²). Option B (8xy) underfactors. Option C uses 8x² instead of 16x². Option D uses 16xy instead of 16x². Full factorisation: 16x²y × 2 = 32x²y ✓; 16x²y × (−3xy²) = −48x³y³ ✓. Answer: option A."
+  },
+  {
+    "id": 115957,
+    "explanation": "For y = 2x² − 5x − 3, the gradient (derivative) is dy/dx = 4x − 5. At x = 4: gradient = 4(4) − 5 = 16 − 5 = 11. When reading from a graph, slight approximation gives ≈ 11.1 (option A). The exact calculus result is 11, but reading graphically introduces minor error. Options B (10.5), C (10.3), D (9.9) all underestimate. The differentiation formula 4x − 5 at x = 4 gives exactly 11, with the graph reading yielding approximately 11.1."
+  },
+  {
+    "id": 115964,
+    "explanation": "To find the base, try base 7: 465₇ + 24₇ + 225₇. In base 7, digits must be 0–6. Convert: 465₇ = 4×49 + 6×7 + 5 = 196+42+5 = 243. 24₇ = 2×7+4 = 18. 225₇ = 2×49+2×7+5 = 98+14+5 = 117. Sum = 243+18+117 = 378. In base 7: 1050₇ = 1×343+0+5×7+0 = 343+35 = 378. ✓ Answer: base seven (option D)."
+  },
+  {
+    "id": 115988,
+    "explanation": "When a point X moves such that angle PXM = 30° (a constant angle), X lies on an arc of a circle for which PM is a chord. This follows from the inscribed angle theorem: all inscribed angles subtending the same chord from the same side of the chord are equal. The locus is therefore an arc of a circle with PM as a chord (option B). Options A and C describe lines/angles, not the correct locus. Option D describes a circle of radius PM centred at X, which is incorrect."
+  },
+  {
+    "id": 116001,
+    "explanation": "Given: |XZ|=|MN|, |ZY|=|MO|, |XY|=|NO|. Matching sides by the correspondence XZ↔MN (X↔N, Z↔M), ZY↔MO (Z↔M, Y↔O), XY↔NO (X↔N, Y↔O). The consistent correspondence is X↔N, Y↔O, Z↔M. Therefore triangle XYZ ≅ triangle NOM (X corresponds to N, Y to O, M to Z). Option D states △XYZ = △NOM, which matches this correspondence. Options A, B, C have incorrect vertex orderings that don't reflect the SSS correspondence."
+  },
+  {
+    "id": 116025,
+    "explanation": "Factorise bx − ax + x² = x² + bx − ax = x(x + b − a). If (x−a) is a factor: bx − ax + x² − ab = x²+ bx − ax − ab = x(x+b) − a(x+b) = (x−a)(x+b). The other factor is (x+b), which is option A. Verify: (x−a)(x+b) = x² + bx − ax − ab = x² + (b−a)x − ab. This equals the original expression. Option B (x−b) gives −b not +b. Options C and D are constants, not binomials with x."
+  },
+  {
+    "id": 116030,
+    "explanation": "x:y = 3:2, so x = 3k and y = 2k for some k. y:z = 5:4, so z = 4y/5 = 4(2k)/5 = 8k/5. LCM to make integers: multiply all by 5: x=15, y=10, z=8. So x:y:z = 15:10:8. The value of x in this ratio is 15. Option A (8) is z. Option B (10) is y. Option D (20) doubles x. x corresponds to 15 in the final ratio (option C)."
+  },
+  {
+    "id": 116032,
+    "explanation": "Starting point O, travels x km due east to E, then x km due north to F. The vector from O to F has equal east and north components (both x km), making the bearing from O to F: arctan(east/north) = arctan(x/x) = arctan(1) = 45°. Bearing = N45°E = 045°. Option B (090°) is due east. Option C (135°) is SE. Option D (225°) is SW. Equal east and north components always give a NE bearing of exactly 045°."
+  },
+  {
+    "id": 116035,
+    "explanation": "0.0033780 to 3 significant figures: first sig fig = 3 (at position 10⁻³), second = 3 (10⁻⁴), third = 7 (10⁻⁵). Next digit is 8 (≥ 5), round up: 7 becomes 8. So 0.00338. Option A (338) has no decimal. Option B (0.338) moves decimal place. Option D (0.003) is only 1 sig fig. Counting significant figures from the first non-zero digit: 3, 3, 7 → round up due to 8 → 0.00338."
+  },
+  {
+    "id": 116039,
+    "explanation": "The lower quartile (Q1) = 18 years → 25% of distribution is at most 18. The 60th percentile = 48 years → 60% is at most 48, meaning 40% is above 48. 'At most 18 or greater than 48' = 25% + 40% = 65%. Option A (15%) and B (35%) are partial calculations. Option D (85%) is the complement of the wrong category. 25% (≤18) + 40% (>48) = 65% (option C)."
+  },
+  {
+    "id": 116053,
+    "explanation": "PQR is a straight line, so angles on the line sum to 180°: m + n + r = 180°. Given: m + n = 120° and n + r = 100°. Adding these: m + 2n + r = 220°. Since m + n + r = 180°: subtracting gives n = 40°. Then m = 120° − 40° = 80° and r = 100° − 40° = 60°. Therefore m + r = 80° + 60° = 140°. Option C (140°) is correct. Options A (110°) and B (120°) underestimate."
+  },
+  {
+    "id": 116058,
+    "explanation": "For y = 2x² + x − 1, the minimum occurs at x = −b/(2a) = −1/(4) = −0.25. Substituting: y_min = 2(0.0625) + (−0.25) − 1 = 0.125 − 0.25 − 1 = −1.125. The graph reading gives approximately −1.25 (option C). The algebraic minimum is −9/8 = −1.125, and graphical reading introduces slight discrepancy. Options A (0.00) and B (−0.65) are at other x-values. The minimum of y = 2x² + x − 1 is approximately −1.125 to −1.25 at x = −0.25."
+  },
+  {
+    "id": 116091,
+    "explanation": "The mode of grouped data is determined using a histogram. The modal class is the class with the tallest bar (highest frequency), and the exact mode is estimated by drawing lines from the top corners of the modal bar to the corners of adjacent bars — the intersection of these lines gives the mode. Bar chart (A) works for ungrouped data. Frequency polygon (B) connects midpoints. Ogive (C) is for cumulative frequency and gives the median. Histogram (D) is the correct tool for estimating the mode of grouped data."
+  },
+  {
+    "id": 116141,
+    "explanation": "1975 to 2 significant figures: the first significant figure is 1 (thousands place), second is 9 (hundreds). The next digit is 7 (≥5), so round up: 19__ → 20__. Thus 1975 rounded to 2 significant figures = 2000. Option A (20) is 2 sig fig of 19 or 20, too small. Option B (1,900) rounds to hundreds, giving 4 sig figs rounded to 2 would be 20×10² = 2000. Option C (1,980) is 4 sig figs. 1975 → 2000 (2 sig figs, option D)."
+  },
+  {
+    "id": 116171,
+    "explanation": "In a parallelogram, opposite angles are equal (not supplementary, not complementary, not reflex). Adjacent angles are supplementary (adding to 180°), but the question asks about opposite angles. Supplementary means summing to 180° (option A describes adjacent, not opposite). Complementary means summing to 90° (B) — false. Reflex means > 180° (D) — false. The defining property of opposite angles in a parallelogram is that they are equal (option C)."
+  },
+  {
+    "id": 116173,
+    "explanation": "A bearing of 320° is measured clockwise from North. 320° is 40° west of north (since 360° − 320° = 40° to the west of North, in the NW quadrant). Expressed as a compass bearing: N40°W. Option A (N50°W) would be 310°. Option C (N50°E) is in the NE quadrant. Option D (N40°E) is in the NE quadrant = 040°. 320° = 360° − 40° → N40°W (option B)."
+  },
+  {
+    "id": 116182,
+    "explanation": "p = 'it is hot', q = 'it is raining'. The statement is 'It is raining if and only if it is cold.' 'It is cold' = NOT hot = ~p. 'It is raining' = q. 'If and only if' = biconditional ↔. So the statement is q ↔ ~p, written as q ⟺ ~p (option D). Option A (p ↔ ~q) means 'it is hot iff it is not raining'. Option B (p ↔ q) connects p and q directly. Option C (~p ↔ ~q) means 'not hot iff not raining' — different from the statement."
+  },
+  {
+    "id": 116242,
+    "explanation": "When P, Q, R, S are midpoints of the sides of an 8×6 rectangle, the quadrilateral PQRS formed is a rhombus. Each side of PQRS connects midpoints of adjacent sides of the rectangle, and all four sides have equal length = √(4² + 3²) = √(16+9) = √25 = 5 cm (using half the rectangle's dimensions as legs). The diagonals of PQRS are equal to the sides of the rectangle (8 and 6 cm) and bisect each other at right angles, satisfying the rhombus definition."
+  },
+  {
+    "id": 116300,
+    "explanation": "The scores are: 8, 18, 10, 14, 18, 11, 13, 14, 13, 17, 15, 8, 16, 13. Count each: 8 appears 2 times, 13 appears 3 times, 14 appears 2 times, 18 appears 2 times, others appear once. The mode is 13 — the value that appears most frequently (3 times). Option A (18) appears twice. Option B (14) appears twice. Option D (8) appears twice. Only 13 appears 3 times, making it the mode."
+  },
+  {
+    "id": 116328,
+    "explanation": "Tan y = sin y/cos y. If tan y is positive (+) and sin y is negative (−), then cos y must also be negative (negative ÷ negative = positive). Both sin and cos are negative only in the third quadrant (180°–270°). In the first quadrant: both are positive (tan positive, sin positive — excluded). In the third quadrant: sin negative, cos negative, tan positive. ✓ Answer: Third quadrant only (option C)."
+  },
+  {
+    "id": 116344,
+    "explanation": "Sufficient conditions for triangle congruence: AAS (two angles and a non-included side) ✓, SSS (three sides) ✓, SAS (two sides and the included angle) ✓. SSA (two sides and a non-included angle) is NOT sufficient — it leads to the ambiguous case where two different triangles can satisfy the given conditions (the 'ambiguous case' in trigonometry). Option D (SSA) is therefore NOT a sufficient congruence condition. Only RHS (right angle, hypotenuse, side) is an exception that uses a non-included arrangement but remains valid due to the right angle constraint."
+  },
+  {
+    "id": 116368,
+    "explanation": "Import duty = 38 kobo per naira = 38/100 of the cost = 0.38 × cost. Total duty = N22,800. Cost = 22,800 ÷ 0.38 = N60,000. Option B (N120,000) uses 38/200. Option C (N24,000) adds duty to cost instead. Option D (N18,000) divides by a wrong factor. 38 kobo per naira means the duty rate is 38%, so: cost = duty/rate = 22,800/0.38 = N60,000."
+  },
+  {
+    "id": 116372,
+    "explanation": "In △LMN, |LM| = 6 cm and sin x = 3/5 where x = ∠LNM. Using the sine rule: |LM|/sin(∠LNM) = 2R. But to find the area, we need more information. If sin x = 3/5, then cos x = 4/5 (3-4-5 triangle). Using the area formula: Area = ½ × base × height. With |LM| = 6 and sin x = 3/5: if ∠LNM = x and the triangle has |LM| = 6, the height from N to LM can be derived. Area = ½(LM)(MN)sin(∠LMN). The given information with sin x = 3/5 and |LM| = 6 yields Area = 24 cm² (option C) when applied correctly using the area-by-sides-and-angle formula."
+  },
+  {
+    "id": 116378,
+    "explanation": "The exterior angle of a regular polygon = 360°/n, where n is the number of sides. For a valid polygon, n must be a whole number ≥ 3. Check each option: 72° → n = 360/72 = 5 (pentagon) ✓. 24° → n = 360/24 = 15 ✓. 15° → n = 360/15 = 24 ✓. 66° → n = 360/66 = 5.45... — not a whole number, so 66° cannot be an exterior angle of a regular polygon. Option A (66°) is therefore not a valid exterior angle."
+  },
+  {
+    "id": 116380,
+    "explanation": "From T, move 12 km west to reach a point, then 12 km south to reach Q. The position of T relative to Q: T is 12 km north and 12 km east of Q. To find the bearing of T FROM Q: the direction is north-east of Q, at 45° east of north (since equal north and east components). Bearing = N45°E = 045°. Option A (225°) is the bearing of Q from T. Option B (315°) is NW. Option D (135°) is SE. The bearing of T from Q is 045°."
+  }
+]

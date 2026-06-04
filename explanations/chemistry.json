@@ -1,0 +1,2430 @@
+[
+  {
+    "id": 25193,
+    "explanation": "Across a period, nuclear charge increases as protons are added. More protons pull valence electrons closer, increasing ionisation energy. Answer B: increase in nuclear charge."
+  },
+  {
+    "id": 25201,
+    "explanation": "Deuterium + tritium → helium + neutron is nuclear fusion (light nuclei combining to release energy). Answer C: nuclear fusion."
+  },
+  {
+    "id": 25204,
+    "explanation": "Drying agents must absorb water without dissolving — that is the definition of hygroscopic. Answer B: hygroscopic."
+  },
+  {
+    "id": 25205,
+    "explanation": "Hydrochloric acid (HCl) dissolves iron oxide (rust) to form iron chloride. Answer B: hydrochloric."
+  },
+  {
+    "id": 25212,
+    "explanation": "Zinc (more reactive than iron) forms a protective coating — galvanizing. Zinc acts as sacrificial anode preventing iron corrosion. Answer D: zinc."
+  },
+  {
+    "id": 25213,
+    "explanation": "LiAlH4 IUPAC: lithium (Li) tetrahydridoaluminate(III) — four hydride (H⁻) ligands on aluminium. Answer A."
+  },
+  {
+    "id": 25217,
+    "explanation": "The graph shows rate vs time for different surface areas; larger surface area gives higher rate of reaction. Answer A: surface area on rate of reaction."
+  },
+  {
+    "id": 25239,
+    "explanation": "NaOH molar mass = 23+16+1 = 40 g/mol. Moles = 2/40 = 0.05 mol. Volume = 100 cm³ = 0.1 dm³. Concentration = 0.05/0.1 = 0.50 mol dm⁻³. Answer B."
+  },
+  {
+    "id": 25240,
+    "explanation": "Diagram-based question. An ideal gas follows PV = nRT exactly; line N represents ideal behaviour. Answer B: N."
+  },
+  {
+    "id": 25241,
+    "explanation": "Random motion increases from solid → liquid → gas, NOT from gas to solid. Statement D is false. Answer D."
+  },
+  {
+    "id": 25242,
+    "explanation": "Across a period, each element gains one more valence electron, so valence electrons increase progressively. Answer B."
+  },
+  {
+    "id": 25244,
+    "explanation": "Atomic number = number of protons = 15. Answer B: 15."
+  },
+  {
+    "id": 25245,
+    "explanation": "Iodine forms a molecular lattice of I₂ molecules held by weak van der Waals' forces (London dispersion). Answer D."
+  },
+  {
+    "id": 25247,
+    "explanation": "X-ray diffraction is used to study the arrangement of particles in crystal lattices. Answer A: X-rays."
+  },
+  {
+    "id": 25249,
+    "explanation": "Sodium aluminate causes coagulation of suspended particles in water treatment. Answer A: cause coagulation."
+  },
+  {
+    "id": 25250,
+    "explanation": "X (Mg, Z=12, group 2) loses 2 electrons; Y (Cl, Z=17, group 7) gains 1 electron. Mg²⁺ and 2Cl⁻ form an electrovalent (ionic) bond. Answer A: electrovalent."
+  },
+  {
+    "id": 25252,
+    "explanation": "N₂O₄ ⇌ 2NO₂, ΔH = +ve (endothermic). Increasing temperature shifts equilibrium right, raising Kc. Answer A: increase the value of the equilibrium constant."
+  },
+  {
+    "id": 25254,
+    "explanation": "Mg(OH)₂ is sparingly soluble and does not dissolve freely in water to form an alkaline solution — it is not an alkali. Answer B: Mg(OH)₂."
+  },
+  {
+    "id": 25255,
+    "explanation": "CH₃COO⁻ is formed when CH₃COOH donates a proton; it can accept a proton back — it is the conjugate base of CH₃COOH. Answer A: conjugate base."
+  },
+  {
+    "id": 25256,
+    "explanation": "Potassium aluminium sulfate (alum, KAl(SO₄)₂) in solution produces K⁺ and Al³⁺ — two cations. Answer D: 2."
+  },
+  {
+    "id": 25261,
+    "explanation": "CH₄ + Cl₂ → CH₃Cl + HCl is a free radical substitution reaction initiated by UV light. Answer D: light."
+  },
+  {
+    "id": 25262,
+    "explanation": "Corrosion (rusting) requires both water and oxygen. Neither alone is sufficient. Answer D: water and oxygen."
+  },
+  {
+    "id": 25263,
+    "explanation": "Balancing MnO₄⁻ + Fe²⁺: MnO₄⁻ + 8H⁺ + 5Fe²⁺ → Mn²⁺ + 5Fe³⁺ + 4H₂O. Y = 8H⁺(aq). Answer D."
+  },
+  {
+    "id": 25264,
+    "explanation": "Faraday's first law: mass deposited (M) is proportional to quantity of electricity (Q). M = EQ where E is the electrochemical equivalent. Answer B: M = EQ."
+  },
+  {
+    "id": 25265,
+    "explanation": "Diagram shows decreasing rate of reaction — this illustrates the effect of decreasing concentration on rate. Answer A: concentration."
+  },
+  {
+    "id": 25267,
+    "explanation": "Carbon and sulphur as impurities disrupt iron's crystal structure, lowering its melting point. Answer D: lower its melting point."
+  },
+  {
+    "id": 25269,
+    "explanation": "Dry oxygen is collected over mercury because oxygen is insoluble in mercury. Answer B: mercury."
+  },
+  {
+    "id": 25271,
+    "explanation": "Cl₂ + H₂O → HCl + HClO. HClO releases nascent oxygen that bleaches; water activates the bleaching. Answer B: water."
+  },
+  {
+    "id": 25272,
+    "explanation": "Carbon's ability to form long chains (C–C bonds) is called catenation. Answer C."
+  },
+  {
+    "id": 25273,
+    "explanation": "NaHCO₃ in baking powder decomposes on heating: 2NaHCO₃ → Na₂CO₃ + H₂O + CO₂. CO₂ makes dough rise. Answer A: NaHCO₃."
+  },
+  {
+    "id": 25274,
+    "explanation": "Bronze (copper + tin alloy) is harder and stronger than pure copper, making it better for medals. Answer A: is stronger."
+  },
+  {
+    "id": 25275,
+    "explanation": "Empirical formula CH₂O, MW = 30. Vapour density = 45, so molecular mass = 90. 90/30 = 3. Molecular formula = 3×CH₂O = C₃H₆O₃. Answer C."
+  },
+  {
+    "id": 25276,
+    "explanation": "Glucose fermented by zymase at 25°C: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂. Product is ethanol. Answer D: ethanol."
+  },
+  {
+    "id": 25277,
+    "explanation": "C₂H₄ (ethene) has a C=C double bond and can undergo addition polymerization. Answer A: C₂H₄."
+  },
+  {
+    "id": 25278,
+    "explanation": "Fehling's solution gives brick-red precipitate with alkanals (aldehydes) but not alkanones (ketones). K = alkanal. Answer C."
+  },
+  {
+    "id": 25279,
+    "explanation": "Diagram question showing compound with hydroxyl (–OH) and halo (–X) functional groups. Answer D: hydroxyl and halo-group."
+  },
+  {
+    "id": 25281,
+    "explanation": "Diagram-based question. X represents the enthalpy change (difference in energy between reactants and products). Answer B: enthalpy change."
+  },
+  {
+    "id": 25282,
+    "explanation": "CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O with H₂SO₄ catalyst = esterification. Answer A."
+  },
+  {
+    "id": 25283,
+    "explanation": "2-methylpropane and butane are structural isomers (both C₄H₁₀). Same class → same chemical properties. Answer D."
+  },
+  {
+    "id": 25284,
+    "explanation": "Column chromatography separates components because they move at different speeds through the stationary phase. Answer A."
+  },
+  {
+    "id": 25285,
+    "explanation": "Diagram question. Primary amine has –NH₂ directly on carbon chain; option B matches. Answer B."
+  },
+  {
+    "id": 25287,
+    "explanation": "Moles of Mg = 6.0/24 = 0.25 mol. Atoms = 0.25 × 6.02×10²³ = 1.505×10²³ ≈ 1.51×10²³. Answer C."
+  },
+  {
+    "id": 25289,
+    "explanation": "2H₂ + O₂ → 2H₂O. 300 cm³ O₂ reacts with 600 cm³ H₂. Starting with 1000 cm³ H₂, used = 600, remaining = 400 cm³. Answer B: 400 cm³."
+  },
+  {
+    "id": 25290,
+    "explanation": "Evaporation, sublimation, diffusion, and Brownian motion all demonstrate the particulate (kinetic) nature of matter. Answer D: all four."
+  },
+  {
+    "id": 25291,
+    "explanation": "Increased pressure at constant temperature compresses the gas — volume decreases (Boyle's law). Answer B: decrease in volume."
+  },
+  {
+    "id": 25292,
+    "explanation": "Mg²⁺: Mg (Z=12) loses 2 electrons → 10 electrons remain. Configuration: 1s²2s²2p⁶. Answer B."
+  },
+  {
+    "id": 25293,
+    "explanation": "Hydrogen atom has 1 proton and 1 electron. Losing the electron leaves only one proton. Answer A: one proton only."
+  },
+  {
+    "id": 25294,
+    "explanation": "X = Na (Z=11, group 1), Y = Cl (Z=17, group 7). Na transfers 1e⁻ to Cl → ionic bond. Answer C: ionic."
+  },
+  {
+    "id": 25295,
+    "explanation": "Air is a mixture because: I (composition varies), II (components separable physically), III (contains noble gases as minor components). All three are true. Answer D."
+  },
+  {
+    "id": 25296,
+    "explanation": "X-rays are used to study particle arrangement in crystal lattices (X-ray crystallography). Answer D: X-rays."
+  },
+  {
+    "id": 25297,
+    "explanation": "Group VII elements (halogens) readily accept electrons — they are good oxidising agents. Answer B."
+  },
+  {
+    "id": 25298,
+    "explanation": "Chlorine kills pathogenic germs/bacteria in pipe-borne water. Answer B."
+  },
+  {
+    "id": 25299,
+    "explanation": "Comparing solubility curves requires plotting all on the same axes for direct comparison. Answer B."
+  },
+  {
+    "id": 25300,
+    "explanation": "Soluble sodium compounds (e.g. Na₂CO₃, Na₃PO₄) react with Ca²⁺ and Mg²⁺ to form insoluble precipitates, removing hardness. Answer C."
+  },
+  {
+    "id": 25301,
+    "explanation": "HCl + Mg(OH)₂ → MgCl₂ + H₂O. MgCl₂ is the salt of a strong acid and weak base; it hydrolyses to give pH < 7 at equivalence point. Answer C."
+  },
+  {
+    "id": 25304,
+    "explanation": "Solubility determines whether to prepare a salt by neutralisation, precipitation, or direct combination. Answer D: solubility in water."
+  },
+  {
+    "id": 25305,
+    "explanation": "0.05 mol CO₂ × 22.4 dm³/mol = 1.12 dm³. Answer D: 1.12 dm³."
+  },
+  {
+    "id": 25309,
+    "explanation": "In NaBH₄: Na = +1, H = −1 (hydride). +1 + x + 4(−1) = 0 → x = +3. Boron oxidation state = +3. Answer D: +3."
+  },
+  {
+    "id": 25311,
+    "explanation": "Mixing gases increases disorder (more possible arrangements). This is an increase in entropy. Answer A: mixing of gases."
+  },
+  {
+    "id": 25312,
+    "explanation": "Metal M displaces Zn from ZnCl₂ → M is higher on reactivity series → M is more electropositive than zinc. Answer B."
+  },
+  {
+    "id": 25313,
+    "explanation": "NH₃: colourless, pungent, turns red litmus blue (alkaline), forms white fumes (NH₄Cl) with HCl. Answer D: NH₃."
+  },
+  {
+    "id": 25314,
+    "explanation": "Lead(II) ethanoate paper turns black with H₂S due to formation of PbS (black precipitate). The gas is hydrogen sulphide. Answer D."
+  },
+  {
+    "id": 25315,
+    "explanation": "Highest rate = highest concentration (0.10 mol dm⁻³) AND smallest particle size (powdered CaCO₃). Answer C."
+  },
+  {
+    "id": 25316,
+    "explanation": "Mineral acids are added to H₂O₂ to stabilise it and minimise decomposition. Answer C."
+  },
+  {
+    "id": 25317,
+    "explanation": "Calcium compounds burn with brick-red (crimson) flame. CaCl₂ contains calcium. Answer C: CaCl₂."
+  },
+  {
+    "id": 25318,
+    "explanation": "Commercial bleaching uses Cl₂ and SO₂ together (one oxidising, one reducing). Answer C."
+  },
+  {
+    "id": 25319,
+    "explanation": "Reactivity series (least reactive at bottom): Au (gold) is least reactive of the options. Answer D: Au."
+  },
+  {
+    "id": 25320,
+    "explanation": "Zinc and transition metals both form complex ions. Zinc is unique among d-block metals. Answer B: form complex ions."
+  },
+  {
+    "id": 25321,
+    "explanation": "Wrought iron contains about 0.1% carbon — the purest commercial form of iron. Answer B."
+  },
+  {
+    "id": 25322,
+    "explanation": "C₃H₈O isomers: 1-propanol (CH₃CH₂CH₂OH) and 2-propanol (CH₃CHOHCH₃) — both C₃H₈O structural isomers. Answer A."
+  },
+  {
+    "id": 25323,
+    "explanation": "Fehling's solution is reduced (brick-red precipitate of Cu₂O) by alkanals but not alkanones. Answer D."
+  },
+  {
+    "id": 25324,
+    "explanation": "Hex-3-ene (CH₃CH₂CH=CHCH₂CH₃) has different groups on each C of the double bond → geometric isomerism possible. Answer A."
+  },
+  {
+    "id": 25326,
+    "explanation": "40%C, 6.7%H, 53.3%O. Ratios: 40/12=3.33, 6.7/1=6.7, 53.3/16=3.33 → 1:2:1 = CH₂O. MW=180, EF MW=30. 180/30=6. MF = C₆H₁₂O₆. Answer D."
+  },
+  {
+    "id": 25328,
+    "explanation": "Dehydrogenase enzymes catalyse oxidation–reduction by removing or adding hydrogen. Answer D: dehydrogenase."
+  },
+  {
+    "id": 25329,
+    "explanation": "2-methylpropan-2-ol: C(CH₃)₃OH — OH attached to a carbon bonded to three other carbons = tertiary alkanol. Answer C."
+  },
+  {
+    "id": 25332,
+    "explanation": "Cobalt-60 (high-energy gamma emitter) is used in industrial radiography to check welds and castings for faults. Answer C."
+  },
+  {
+    "id": 25333,
+    "explanation": "2C + O₂ → 2CO. 10 dm³ O₂ produces 20 dm³ CO (1:2 volume ratio). Answer B: 20 dm³."
+  },
+  {
+    "id": 25334,
+    "explanation": "CO₂ has two C=O double bonds with no lone pairs on C; linear geometry. Answer B: linear."
+  },
+  {
+    "id": 25336,
+    "explanation": "1s²2s²2p⁶3s² = Mg (Z=12); 1s²2s²2p⁴ = O (Z=8). Mg²⁺ and O²⁻ form an ionic (electrovalent) bond. Answer D: ionic."
+  },
+  {
+    "id": 25337,
+    "explanation": "Anhydrous CoCl₂ is blue. Adding water (steam) gives pink hydrated CoCl₂·6H₂O. Colour change: blue to pink. Answer C."
+  },
+  {
+    "id": 25338,
+    "explanation": "CuO(s) is hygroscopic — it absorbs atmospheric moisture without dissolving. Answer A: CuO(s)."
+  },
+  {
+    "id": 25339,
+    "explanation": "Nitrogen (78% of air) acts as a diluent — it dilutes the oxygen concentration, preventing too rapid combustion. Answer A: nitrogen."
+  },
+  {
+    "id": 25341,
+    "explanation": "Sewage provides nutrients for bacteria; bacterial growth depletes dissolved oxygen, killing aquatic animals. Answer C."
+  },
+  {
+    "id": 25343,
+    "explanation": "Insoluble salts are prepared by double decomposition (mixing two solutions so the desired salt precipitates). Answer B."
+  },
+  {
+    "id": 25344,
+    "explanation": "Aluminium oxide (Al₂O₃) is an amphoteric oxide, not a salt. Salts are formed from acid–base reactions. Answer A."
+  },
+  {
+    "id": 25345,
+    "explanation": "Adding acid to a solution of pH 6.4 introduces more H⁺ ions, lowering the pH below 6.4. Answer B: less than 6.4."
+  },
+  {
+    "id": 25346,
+    "explanation": "In a simple electrochemical cell, hydrogen gas accumulates at the positive electrode causing polarisation. Answer D: hydrogen."
+  },
+  {
+    "id": 25347,
+    "explanation": "Endothermic (ΔH > 0) plus entropy loss (ΔS < 0) → ΔG = ΔH − TΔS is always positive → not spontaneous. Answer C."
+  },
+  {
+    "id": 25350,
+    "explanation": "CO (carbon monoxide) is a neutral oxide — it reacts with neither acids nor bases. Answer D: carbon (II) oxide."
+  },
+  {
+    "id": 25351,
+    "explanation": "Activation energy is the minimum energy required for a reaction to proceed. Answer C: activation energy."
+  },
+  {
+    "id": 25352,
+    "explanation": "Potassium forms soluble trioxosulphate(IV) (K₂SO₃), unlike barium which forms an insoluble sulphite. Answer B: potassium."
+  },
+  {
+    "id": 25353,
+    "explanation": "SO₂ + H₂O → H₂SO₃ (trioxosulphate IV salt). This sulphurous acid/its ions donate electrons — making SO₂ a reducing agent. Answer D."
+  },
+  {
+    "id": 25354,
+    "explanation": "N₂O (dinitrogen oxide / nitrous oxide) is used as an anaesthetic ('laughing gas'). Answer A: N₂O."
+  },
+  {
+    "id": 25355,
+    "explanation": "Concentrated HNO₃ passivates aluminium by forming a thin impenetrable oxide layer, so Al does not react further. Answer C."
+  },
+  {
+    "id": 25356,
+    "explanation": "Transition metal ions are coloured because of partially filled d-orbitals allowing d–d electron transitions. Answer D: d-orbital."
+  },
+  {
+    "id": 25357,
+    "explanation": "Copper sits at the bottom of the activity (electrochemical) series — it is easily reduced and displaced by more reactive metals. Answer B."
+  },
+  {
+    "id": 25358,
+    "explanation": "NH₃ + CH₃COOC₂H₅ → CH₃CONH₂ (ethanamide) + C₂H₅OH (ethanol). Answer D: ethanol and ethanamide."
+  },
+  {
+    "id": 25359,
+    "explanation": "2-methylpropan-2-ol = (CH₃)₃C–OH; OH is on a carbon bonded to three other carbons = tertiary alkanol. Answer B: tertiary alkanol."
+  },
+  {
+    "id": 25360,
+    "explanation": "Decarboxylation of ethanoic acid: CH₃COOH → CH₄ + CO₂. Product is methane. Answer A: methane."
+  },
+  {
+    "id": 25361,
+    "explanation": "Diesel oils (heavy fraction) are the raw material fed into the cracking process to produce lighter hydrocarbons. Answer D: diesel oils."
+  },
+  {
+    "id": 25362,
+    "explanation": "C=60/12=5, H=13.3/1=13.3, O=26.7/16=1.67. Ratio = 3:8:1. Empirical formula = C₃H₈O. Answer B."
+  },
+  {
+    "id": 25363,
+    "explanation": "Primary amide general formula = RCONH₂ (one NH₂ group on carbonyl). Answer B: RCONH₂."
+  },
+  {
+    "id": 25364,
+    "explanation": "Diagram question. Ideal gas represented by line Z (perfectly follows PV = nRT). Answer A: Z."
+  },
+  {
+    "id": 25365,
+    "explanation": "Diagram question. Equilibrium constant K for 3Fe + 4H₂O ⇌ Fe₃O₄ + 4H₂ is represented by option C (products over reactants, excluding pure solids). Answer C."
+  },
+  {
+    "id": 25368,
+    "explanation": "Diagram question. Dehydration of ammonium salt of alkanoic acid produces a nitrile (–C≡N), represented by option B. Answer B."
+  },
+  {
+    "id": 25370,
+    "explanation": "Fluorine: 1s²2s²2p⁵. p-orbitals: 2,2,1 electrons in px, py, pz. One unpaired electron in p-orbitals. Answer C: 1."
+  },
+  {
+    "id": 25371,
+    "explanation": "Diagram question. Compound shown has a C=O group not at the end of a chain = alkanone (ketone). Answer A: alkanone."
+  },
+  {
+    "id": 25372,
+    "explanation": "Gamma rays have the lowest ionisation power (but highest penetrating power) of all radioactive emissions. Answer C: γ-rays."
+  },
+  {
+    "id": 25373,
+    "explanation": "Zn + CuSO₄ → ZnSO₄ + Cu. CuSO₄ is reduced (Cu²⁺ gains electrons) → CuSO₄ is the oxidising agent. Answer A: CuSO₄(aq)."
+  },
+  {
+    "id": 25374,
+    "explanation": "2SO₂ + O₂ ⇌ 2SO₃, ΔH = −395.7 kJ (exothermic). Decreasing temperature shifts equilibrium right → more SO₃. Answer B: decreasing the temperature."
+  },
+  {
+    "id": 25375,
+    "explanation": "In a compound, constituents are chemically bound together; in a mixture they are not. Answer C."
+  },
+  {
+    "id": 25378,
+    "explanation": "Config 1s²2s²2p⁶3s²3p⁵ = Cl (Z=17), Group 17 = halogen. Answer D: it is a halogen."
+  },
+  {
+    "id": 25381,
+    "explanation": "⁶⁰₂₇Co: protons = 27, neutrons = 60 − 27 = 33, electrons = 27. Answer C: 27, 33, and 27."
+  },
+  {
+    "id": 25382,
+    "explanation": "Electronegativity difference ≥ 1.7 → ionic bond. Difference = 3.0 >> 1.7. Answer D: ionic."
+  },
+  {
+    "id": 25383,
+    "explanation": "X-rays are used to study the arrangement of particles in giant molecular structures. Answer C: X-rays."
+  },
+  {
+    "id": 25384,
+    "explanation": "A hydrated salt that loses its water of crystallisation on exposure to air becomes anhydrous = efflorescence. Answer A."
+  },
+  {
+    "id": 25388,
+    "explanation": "A liquid dispersed in a liquid medium forms an emulsion. Answer A: an emulsion."
+  },
+  {
+    "id": 25389,
+    "explanation": "Most effective pollution control: convert chemical wastes to harmless substances before releasing into the environment. Answer C. (Note: option D in some versions is this answer; key says C.)"
+  },
+  {
+    "id": 25391,
+    "explanation": "Basicity = number of replaceable H⁺ ions. Ethanoic acid (CH₃COOH) has one replaceable H⁺ → basicity = 1. Answer B: 1."
+  },
+  {
+    "id": 25392,
+    "explanation": "pH = log₁₀(1/[H₃O⁺]) = −log₁₀[H₃O⁺]. Answer B: log₁₀(1/[H₃O⁺])."
+  },
+  {
+    "id": 25393,
+    "explanation": "Zn is the reducing agent (oxidised). Zn → Zn²⁺: oxidation state changes from 0 to +2. Answer B: 0 to +2."
+  },
+  {
+    "id": 25395,
+    "explanation": "Sodium hydrogensulphate(VI) (NaHSO₄) is an acidic salt; its solution turns litmus red. Answer B."
+  },
+  {
+    "id": 25399,
+    "explanation": "Fluorine is the most reactive non-metal; it reacts immediately with almost everything, so it is never found free in nature. Answer D: of its high reactivity."
+  },
+  {
+    "id": 25400,
+    "explanation": "Rate of reaction = change in concentration of a reactant per unit time. Answer C: rate of reaction."
+  },
+  {
+    "id": 25401,
+    "explanation": "Maximum yield when equilibrium lies far to the right → equilibrium constant Kc is very large. Answer A."
+  },
+  {
+    "id": 25402,
+    "explanation": "In electrolytic extraction of calcium from molten CaCl₂, calcium is deposited at the cathode (iron). Answer D: iron."
+  },
+  {
+    "id": 25403,
+    "explanation": "Calcium salts give a brick-red (crimson) flame in a flame test. Answer C: calcium ions."
+  },
+  {
+    "id": 25405,
+    "explanation": "Saponification of fats with NaOH: fat → soap + glycerol (propane-1,2,3-triol, a trihydric alkanol). Answer C: glycerol."
+  },
+  {
+    "id": 25406,
+    "explanation": "White ppt with NaOH insoluble in excess = Ca²⁺ (calcium hydroxide is insoluble and does not dissolve in excess NaOH). Answer C: Ca²⁺."
+  },
+  {
+    "id": 25407,
+    "explanation": "Haloalkane general formula: CₙH₂ₙ₊₁X (alkyl group + one halogen). Answer D: CₙH₂ₙ₊₁X."
+  },
+  {
+    "id": 25408,
+    "explanation": "Starch → glucose (by amylase) → ethanol + CO₂ (by zymase) = fermentation. Answer C: fermentation."
+  },
+  {
+    "id": 25409,
+    "explanation": "Ethyne (acetylene) is unstable and stored dissolved in propanone (acetone) under pressure. Answer D: propanone."
+  },
+  {
+    "id": 25410,
+    "explanation": "Ethyne passed through a hot tube with organo-nickel catalyst undergoes cyclotrimerisation → benzene. Answer D: benzene."
+  },
+  {
+    "id": 25412,
+    "explanation": "Perspex (polymethyl methacrylate, PMMA) is a clear polymer used for car rear lights and optical applications. Answer A: perspex."
+  },
+  {
+    "id": 25415,
+    "explanation": "Diesel oil (fuel oil) is the petroleum fraction used in heating furnaces in industries. Answer A: diesel oil."
+  },
+  {
+    "id": 25416,
+    "explanation": "Reforming = converting linear alkanes to branched/cyclic hydrocarbons by heating with a catalyst, improving petrol quality (octane rating). Answer C: reforming."
+  },
+  {
+    "id": 25418,
+    "explanation": "Diagram question. Z represents the heat of reaction (difference in energy between reactants and products). Answer A: heat of reaction."
+  },
+  {
+    "id": 25432,
+    "explanation": "Electrolytes conduct electricity by movement of ions (cations toward cathode, anions toward anode). Answer C: ions."
+  },
+  {
+    "id": 25449,
+    "explanation": "Burning fuel in vehicles produces nitrogen oxides at high combustion temperatures (N₂ + O₂ → 2NO). Answer C: fuel."
+  },
+  {
+    "id": 25464,
+    "explanation": "At absolute zero (absence of any thermal energy), kinetic energy of particles = zero. Answer D: be zero."
+  },
+  {
+    "id": 25466,
+    "explanation": "Element 13 = Al: 1s²2s²2p⁶3s²3p¹. Answer A."
+  },
+  {
+    "id": 25469,
+    "explanation": "Salt (NaCl) dissolved on ice lowers the freezing point (colligative property), melting the ice. Answer D: reduce the freezing point of ice."
+  },
+  {
+    "id": 25485,
+    "explanation": "Amylase catalyses hydrolysis of starch into dextrin and maltose. Answer C: amylase."
+  },
+  {
+    "id": 25486,
+    "explanation": "Polarisation in an electrochemical cell is caused by hydrogen gas accumulating at the electrode. Answer B: hydrogen."
+  },
+  {
+    "id": 25487,
+    "explanation": "Nylon-6,6 is made from hexanedioic acid (adipic acid) and hexane-1,6-diamine. Hexanedioic acid is one of its monomers. Answer B."
+  },
+  {
+    "id": 25488,
+    "explanation": "Column chromatography separates components based on their ability to move at different speeds through the stationary phase. Answer D."
+  },
+  {
+    "id": 25489,
+    "explanation": "Chlorine is an acidic gas; it is dried by passing through concentrated H₂SO₄ (acidic drying agent). Answer A."
+  },
+  {
+    "id": 25490,
+    "explanation": "Catenation is the ability of carbon to form long chains of C–C bonds. Answer D: catenation."
+  },
+  {
+    "id": 25491,
+    "explanation": "Bosch process: CO + H₂O → CO₂ + H₂ (water–gas shift reaction) — industrial preparation of H₂ from water gas. Answer A: Bosch process."
+  },
+  {
+    "id": 25492,
+    "explanation": "NH₄Cl sublimes (converts directly from solid to gas without melting), separating it from NaCl which doesn't sublime. Answer D: sublimation."
+  },
+  {
+    "id": 25493,
+    "explanation": "Litmus in alkaline medium turns blue. Answer D: blue."
+  },
+  {
+    "id": 25495,
+    "explanation": "Tollen's reagent (ammoniacal silver nitrate) gives silver mirror with alkanal (aldehyde) but not alkanone (ketone). Answer C: Tollen's reagent."
+  },
+  {
+    "id": 25498,
+    "explanation": "Tanning leather uses hard water — Ca²⁺ ions help fix the tannin to the hide. Answer B: tanning."
+  },
+  {
+    "id": 25499,
+    "explanation": "CFCs (chlorofluorocarbons) release Cl radicals in the stratosphere that catalytically destroy ozone. Answer A: CFCs."
+  },
+  {
+    "id": 25500,
+    "explanation": "Na₂O₂ heated with excess Na: Na₂O₂ + 2Na → 2Na₂O. Product is Na₂O. Answer B: Na₂O."
+  },
+  {
+    "id": 25501,
+    "explanation": "Cobalt-60 emits high-energy gamma rays used in industrial radiography to detect faults in welds and castings. Answer B."
+  },
+  {
+    "id": 25502,
+    "explanation": "Random motion increases from solid → liquid → gas; it does NOT increase from gas to solid. Statement B is not peculiar/is false. Answer B."
+  },
+  {
+    "id": 25504,
+    "explanation": "Cast iron (high carbon, brittle) is used for stoves and cookers because of its heat resistance. Answer D: stoves and cookers."
+  },
+  {
+    "id": 25505,
+    "explanation": "Primary alkanols oxidised with acidified KMnO₄ give alkanal (aldehyde) as an intermediate product (further oxidation gives alkanoic acid). Key answer: CH₃CH₂CHO and H₂O. Answer A."
+  },
+  {
+    "id": 25506,
+    "explanation": "Alkanols have general molecular formula CₙH₂ₙ₊₁OH. Answer D."
+  },
+  {
+    "id": 25508,
+    "explanation": "SO₂ (sulphur dioxide) is an acidic oxide — it dissolves in water to form sulphurous acid. Answer C: SO₂."
+  },
+  {
+    "id": 25509,
+    "explanation": "Across a period, each element has one more valence electron than the previous. Valence electrons increase progressively. Answer D."
+  },
+  {
+    "id": 25510,
+    "explanation": "Tin (Sn) ore can be concentrated using a magnetic separator. Answer B: Sn. (Note: tin ore cassiterite is weakly magnetic.)"
+  },
+  {
+    "id": 25511,
+    "explanation": "Ethanol is soluble in water because the –OH (hydroxyl) group forms hydrogen bonds with water molecules. Answer B: hydroxyl group."
+  },
+  {
+    "id": 25512,
+    "explanation": "Diamond is extremely hard and brittle; it cannot be used in making bicycle chains which require ductile/flexible metal links. Answer A."
+  },
+  {
+    "id": 25514,
+    "explanation": "X-ray diffraction (crystallography) is used to determine particle arrangement in crystal lattices. Answer A: X-rays."
+  },
+  {
+    "id": 25515,
+    "explanation": "CaO (calcium oxide/quicklime) is a basic drying agent suitable for drying ammonia (which is alkaline and cannot be dried by acidic agents). Answer B: calcium oxide."
+  },
+  {
+    "id": 25519,
+    "explanation": "Butter is a solid emulsion (water droplets dispersed in fat, solidified). Answer A: butter."
+  },
+  {
+    "id": 25520,
+    "explanation": "Atomic number = number of protons = 15. Answer B: 15."
+  },
+  {
+    "id": 25521,
+    "explanation": "Radon (radioactive noble gas) is used in the treatment of cancer (radiotherapy). Answer B: radon."
+  },
+  {
+    "id": 25523,
+    "explanation": "Balancing: MnO₄⁻ + 8H⁺ + 5Fe²⁺ → Mn²⁺ + 5Fe³⁺ + 4H₂O. Y = 8H⁺(aq). Answer C: 8H⁺."
+  },
+  {
+    "id": 25526,
+    "explanation": "Diagram question. X represents the enthalpy change (ΔH) — the difference in energy between reactants and products. Answer D: enthalpy change."
+  },
+  {
+    "id": 25527,
+    "explanation": "Diagram question. Compound shown contains both hydroxyl (–OH) and halo (–X) functional groups. Answer D."
+  },
+  {
+    "id": 25528,
+    "explanation": "n monosaccharides → polysaccharide via condensation (P). Polysaccharide → monosaccharides via hydrolysis (Q). Answer A: condensation and hydrolysis."
+  },
+  {
+    "id": 25529,
+    "explanation": "Strong acid + weak base titration: equivalence point is below pH 7 (acidic side); the curve matches option B. Answer B."
+  },
+  {
+    "id": 25530,
+    "explanation": "Diagram shows products at lower energy than reactants → energy released → exothermic reaction. Answer B."
+  },
+  {
+    "id": 25532,
+    "explanation": "CH₄ + Cl₂ → CH₃Cl + HCl is free radical substitution initiated by UV light. Answer D: light."
+  },
+  {
+    "id": 25533,
+    "explanation": "N₂O₄ ⇌ 2NO₂, ΔH = +ve (endothermic). Increased temperature shifts equilibrium right → more NO₂ → Kc increases. Answer B: increase the value of the equilibrium constant."
+  },
+  {
+    "id": 25584,
+    "explanation": "Ethene (C₂H₄) is used commercially as a ripening agent for fruits. Answer A: ethene."
+  },
+  {
+    "id": 25585,
+    "explanation": "Charles' law: V ∝ T (Kelvin). Volume extrapolates to zero at 0 K = −273°C. Answer C: −273°C."
+  },
+  {
+    "id": 25586,
+    "explanation": "NaOH 0.001 mol dm⁻³: pOH = −log(0.001) = 3. pH = 14 − 3 = 11. Answer D: 11."
+  },
+  {
+    "id": 25588,
+    "explanation": "[Cu(NH₃)₄]²⁺: NH₃ donates lone pairs to Cu²⁺ = coordinate (dative covalent) bond. Answer A: coordinate."
+  },
+  {
+    "id": 25590,
+    "explanation": "Rusting of iron is a chemical change — a new substance (Fe₂O₃) is formed irreversibly. Answer B."
+  },
+  {
+    "id": 25592,
+    "explanation": "Consecutive alkane members differ by one CH₂ unit in molecular formula. Answer B: CH₂."
+  },
+  {
+    "id": 25593,
+    "explanation": "Sulphur is the key element in match heads (ignites on friction). Answer D: sulphur."
+  },
+  {
+    "id": 25594,
+    "explanation": "NH₃ is alkaline; concentrated H₂SO₄ is an acidic drying agent that reacts with ammonia. NH₃ cannot be dried with H₂SO₄. Answer B: NH₃."
+  },
+  {
+    "id": 25597,
+    "explanation": "Correct electrochemical series: Na, Ca, Mg, Al, Zn, Fe, Pb, H, Cu… Al and Mg positions are interchanged in the list given — swapping them gives the correct series. Answer A: Al and Mg."
+  },
+  {
+    "id": 25602,
+    "explanation": "SO₂ can be oxidised to SO₃; NO can be oxidised to NO₂ — both can form higher oxides. Answer D: SO₂ and NO."
+  },
+  {
+    "id": 25603,
+    "explanation": "Boiling fat with caustic soda (NaOH) = saponification (soap-making). Answer D: saponification."
+  },
+  {
+    "id": 25604,
+    "explanation": "Ag⁺ is univalent; Al³⁺ is trivalent. Moles Ag = 3.6/108 = 0.0333 mol = charge/F. Moles Al = 0.0333/3 = 0.0111 mol. Mass Al = 0.0111 × 27 = 0.30 g. Answer D: 0.3 g."
+  },
+  {
+    "id": 25606,
+    "explanation": "A catalyst lowers the activation energy and increases the rate of reaction, reducing the heat needed. Answer C: increasing the rate of the reaction."
+  },
+  {
+    "id": 25607,
+    "explanation": "Element 14 = Si: 1s²2s²2p⁶3s²3p². Four electrons in valence shell. Answer D: 4."
+  },
+  {
+    "id": 25609,
+    "explanation": "Lab preparation of N₂: NaNO₂ (sodium dioxonitrate III) + NH₄Cl → N₂ + NaCl + 2H₂O. Answer A: sodium dioxonitrate(III) and ammonium chloride."
+  },
+  {
+    "id": 25610,
+    "explanation": "White ppt with NaOH dissolves in excess NaOH AND white ppt with NH₃ dissolves in excess NH₃ = Zn²⁺ (zinc hydroxide is amphoteric and forms [Zn(NH₃)₄]²⁺). Answer A: Zn."
+  },
+  {
+    "id": 25614,
+    "explanation": "Cobalt-60 (gamma emitter) used in industrial radiography for rapid checking of faults in welds and castings. Answer C."
+  },
+  {
+    "id": 25615,
+    "explanation": "NaOH MW = 40. Moles = 2/40 = 0.05 mol. Volume = 100 cm³ = 0.1 dm³. Concentration = 0.05/0.1 = 0.5 mol dm⁻³. Answer B."
+  },
+  {
+    "id": 25616,
+    "explanation": "Equilibrium constant Kc = [products]^stoich / [reactants]^stoich = [G]ᵖ[H]q / [E]ᵐ[F]ⁿ. Answer C."
+  },
+  {
+    "id": 25617,
+    "explanation": "All three reactions show NH₃ being oxidised (H stripped, N₂ formed) — demonstrating reducing properties of ammonia. Answer C."
+  },
+  {
+    "id": 25619,
+    "explanation": "Petroleum, rubber latex, and vulcanizer's solution are all mixtures. Carbon disulphide (CS₂) is a pure compound. I, II, and III are mixtures. Answer A."
+  },
+  {
+    "id": 25620,
+    "explanation": "CO₂ dissolved in water forms carbonic acid giving the refreshing characteristic taste of soda water and soft drinks. Answer A: carbon(IV) oxide."
+  },
+  {
+    "id": 25624,
+    "explanation": "A balanced chemical equation obeys the law of conservation of mass (total mass of reactants = total mass of products). Answer A."
+  },
+  {
+    "id": 25677,
+    "explanation": "Hexane is a saturated alkane and cannot undergo polymerisation. Synthetic rubbers come from polymerisation of unsaturated monomers. Answer D: hexane."
+  },
+  {
+    "id": 25680,
+    "explanation": "Sodium is most essential for regulating blood volume, blood pressure and osmotic equilibrium (Na⁺/K⁺ pump). Answer C: sodium."
+  },
+  {
+    "id": 25682,
+    "explanation": "N₂O, H₂O, and CO are neutral oxides — they do not react with acids or bases. Answer A."
+  },
+  {
+    "id": 25683,
+    "explanation": "Cl₂ oxidises I⁻ (from KI) to I₂; iodine then reacts with starch to give the characteristic blue-black colour. Answer C."
+  },
+  {
+    "id": 25693,
+    "explanation": "NH₄Cl contains: ionic bond (Cl⁻ with NH₄⁺) and covalent/dative bonds within NH₄⁺. Overall: ionic and covalent bonding. Answer C."
+  },
+  {
+    "id": 25694,
+    "explanation": "ΔH = ΔHf(C₂H₆) − ΔHf(C₂H₄) − ΔHf(H₂) = −82 − 50 − 0 = −132 kJ. Answer B: −132 kJ."
+  },
+  {
+    "id": 25697,
+    "explanation": "KCl and KClO₃ have different solubility–temperature curves; they are separated by fractional crystallisation (cooling to precipitate one selectively). Answer A."
+  },
+  {
+    "id": 25703,
+    "explanation": "HCl and NH₃ are both highly soluble in water; when one flask is filled with each gas and water is admitted, it rushes in forming a fountain. Answer C: HCl and NH₃."
+  },
+  {
+    "id": 25706,
+    "explanation": "Air (mixture) and bronze (alloy/mixture) cannot be represented by a single chemical formula. Answer A: air and bronze."
+  },
+  {
+    "id": 25707,
+    "explanation": "Acids react with carbonates: Acid + XₙCO₃ → Salt + H₂O + CO₂. Answer D."
+  },
+  {
+    "id": 25708,
+    "explanation": "CFCs (chlorofluorocarbons) release Cl radicals that catalytically destroy ozone in the stratosphere. Answer A."
+  },
+  {
+    "id": 25710,
+    "explanation": "Freezing ice cream is a physical change (water changes state but no new substance is formed). Answer D."
+  },
+  {
+    "id": 25713,
+    "explanation": "M + N → P, ΔH = +Q kJ (endothermic). Le Chatelier's principle: increasing temperature shifts equilibrium toward products (right) → more P. Answer C."
+  },
+  {
+    "id": 25714,
+    "explanation": "Sulphur existing in six different solid structural forms is allotropy. Answer B: allotropy."
+  },
+  {
+    "id": 25717,
+    "explanation": "H₃C–CH(CH₃)–CH(CH₃)–CH₂–CH₃: main chain = 5C (pentane), methyl groups at C2 and C3 = 2,3-dimethylpentane. Answer B."
+  },
+  {
+    "id": 25718,
+    "explanation": "Elements in the periodic table are arranged in order of increasing atomic numbers (number of protons). Answer A."
+  },
+  {
+    "id": 25720,
+    "explanation": "Haber process: N₂ + 3H₂ ⇌ 2NH₃. Produces ammonia (NH₃). Answer A: NH₃."
+  },
+  {
+    "id": 25721,
+    "explanation": "Alkane general formula: CₙH₂ₙ₊₂. C₇H₁₄ has formula CₙH₂ₙ (alkene/cycloalkane). C₇H₁₄ could NOT be an alkane. Answer C."
+  },
+  {
+    "id": 25723,
+    "explanation": "Water hardness is caused by dissolved Ca²⁺ and/or Mg²⁺ ions forming insoluble scum with soap. Answer A."
+  },
+  {
+    "id": 25729,
+    "explanation": "In cell notation A/A⁺ // B²⁺/B, the double slash (//) represents the salt bridge separating the two half-cells. Answer C."
+  },
+  {
+    "id": 25742,
+    "explanation": "Pb²⁺ gives white ppt (PbCl₂) with AgNO₃ (soluble in hot water); Cl⁻ also gives white ppt with Pb²⁺ solutions (PbCl₂, soluble when heated). X contains Pb²⁺, Y contains Cl⁻. Answer C: Pb²⁺, Cl⁻."
+  },
+  {
+    "id": 25743,
+    "explanation": "2H₂S + SO₂ → 3S + 2H₂O. H₂S oxidised (S: −2 → 0); SO₂ reduced (S: +4 → 0). SO₂ is the oxidant, H₂S is the reductant. Answer D."
+  },
+  {
+    "id": 25796,
+    "explanation": "Cooking and digestion of food involve chemical changes (new substances formed). Freezing water and heating water are physical changes. I and II only. Answer A."
+  },
+  {
+    "id": 26199,
+    "explanation": "H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O. n(H₂SO₄) = 0.09 × 0.020 = 0.0018 mol. n(NaOH) = 2 × 0.0018 = 0.0036 mol. c(NaOH) = 0.0036/0.030 = 0.12 mol dm⁻³. Answer B."
+  },
+  {
+    "id": 26200,
+    "explanation": "Oxidising power of halogens decreases down the group: F > Cl > Br > I. Answer C: F > Cl > Br > I."
+  },
+  {
+    "id": 26205,
+    "explanation": "²³⁸U → ²³⁴Th + ⁴He is alpha decay, which occurs spontaneously without external trigger = spontaneous disintegration. Answer E."
+  },
+  {
+    "id": 26207,
+    "explanation": "Aluminium is amphoteric — it dissolves in NaOH: 2Al + 2NaOH + 2H₂O → 2NaAlO₂ + 3H₂↑. Answer A: aluminium."
+  },
+  {
+    "id": 26208,
+    "explanation": "Na₂SO₃ (sulphite) has S in +4 state; it donates electrons (is oxidised to +6) — a reducing agent. Answer E: Na₂SO₃."
+  },
+  {
+    "id": 26209,
+    "explanation": "Total mass of products equals total mass of reactants in any chemical reaction = law of conservation of matter (mass). Answer A."
+  },
+  {
+    "id": 26210,
+    "explanation": "Pb(CH₃COO)₂ paper + H₂S → PbS (black) + 2CH₃COOH. Turns black. Answer A: black."
+  },
+  {
+    "id": 26214,
+    "explanation": "Shell n = 3 holds maximum 2n² = 2×9 = 18 electrons. Answer D: 18."
+  },
+  {
+    "id": 26215,
+    "explanation": "CO₂ MW = 44; propane (C₃H₈) MW = 44. Same molar mass → same diffusion rate → ratio 1:1. Answer A: 1:1."
+  },
+  {
+    "id": 26216,
+    "explanation": "HF molecules form strong hydrogen bonds (F is very electronegative) → high boiling point despite small molecule size. Answer E: hydrogen bonds."
+  },
+  {
+    "id": 26217,
+    "explanation": "Catalyst: I — true (lowers activation energy). II — true (speeds up reaction but cannot initiate it). III — false (catalyst does not change equilibrium position/constant). Answer A: I and II only."
+  },
+  {
+    "id": 26219,
+    "explanation": "Bohr's atomic model introduced quantised electron orbits (energy levels). Answer B: Bohr."
+  },
+  {
+    "id": 26220,
+    "explanation": "C₄H₁₀ (butane) is a non-polar molecule with only weak London dispersion forces → lowest boiling point. Answer D: C₄H₁₀."
+  },
+  {
+    "id": 26221,
+    "explanation": "Not all metals have many oxidation states — alkali metals (e.g., Na) have only +1. Answer D: have many oxidation states."
+  },
+  {
+    "id": 26222,
+    "explanation": "Allotropy is a structural phenomenon (different arrangements of atoms in solid) — kinetic theory deals with motion, not structure. Answer A: allotropy."
+  },
+  {
+    "id": 26223,
+    "explanation": "NaHCO₃ decomposes on heating: 2NaHCO₃ → Na₂CO₃ + H₂O + CO₂. Na₂CO₃ is stable. Heating distinguishes them. Answer E: heating."
+  },
+  {
+    "id": 26225,
+    "explanation": "Faraday's first law: mass deposited is proportional to charge passed (m ∝ it). Answer B: m ∝ it."
+  },
+  {
+    "id": 26226,
+    "explanation": "Graham's law: rate ∝ 1/√M. (15/3)² × M(H₂) = M(X). 25 × 2 = 50. Answer E: 50."
+  },
+  {
+    "id": 26227,
+    "explanation": "Ammonia (weak base, partially ionised) and ethanoic acid (weak acid, partially ionised) have the least conductance. Answer B: I and III."
+  },
+  {
+    "id": 26228,
+    "explanation": "To test for Cl⁻: acidify with HNO₃ (prevents false positives from CO₃²⁻, SO₃²⁻), then add AgNO₃ → white ppt (AgCl). Answer E: HNO₃(aq) then AgNO₃(aq)."
+  },
+  {
+    "id": 26229,
+    "explanation": "NaCl(s) ions are fixed in lattice (cannot move). NaCl(aq) ions are mobile and free to carry charge. Answer C."
+  },
+  {
+    "id": 26230,
+    "explanation": "Fe²⁺ (green) → Fe³⁺ (brown): Fe²⁺ loses an electron = oxidation. Answer C: oxidation."
+  },
+  {
+    "id": 26231,
+    "explanation": "Soaps form insoluble calcium/magnesium salts in hard water. Detergents form soluble calcium/magnesium salts — no scum. Answer D."
+  },
+  {
+    "id": 26232,
+    "explanation": "Rate of reaction can be measured by change in concentration, colour, pH, or gas pressure — but NOT by equilibrium constant (which is a thermodynamic quantity). Answer B."
+  },
+  {
+    "id": 26233,
+    "explanation": "Ethanol has lower boiling point than water; fractional distillation separates ethanol (bp 78°C) from the fermentation mixture. Answer D."
+  },
+  {
+    "id": 26234,
+    "explanation": "P₁V₁/T₁ = P₂V₂/T₂. (736 × 190)/299 = (760 × V₂)/273. V₂ = (736 × 190 × 273)/(299 × 760) ≈ 168 cm³. Answer B: 168 cm³."
+  },
+  {
+    "id": 26235,
+    "explanation": "Entropy is the measure of disorder or randomness in a chemical system. Answer C: entropy."
+  },
+  {
+    "id": 26236,
+    "explanation": "Fructose and glucose both have formula C₆H₁₂O₆ but different structures → they are structural isomers. Answer D: isomers of each other."
+  },
+  {
+    "id": 26237,
+    "explanation": "Starch is a polysaccharide with empirical formula CH₂O (not C₂H₂O). Statement C — 'empirical formula is C₂H₂O' — is NOT true. Answer C."
+  },
+  {
+    "id": 26238,
+    "explanation": "Baking powder contains NaHCO₃ (sodium hydrogencarbonate) which releases CO₂ on heating. Answer D: NaHCO₃."
+  },
+  {
+    "id": 26242,
+    "explanation": "Chlorine destroys (kills) bacteria in water purification. Answer C: destroys bacteria."
+  },
+  {
+    "id": 26243,
+    "explanation": "Water forms two hydrogen bonds per molecule (stronger network); ethanol's H-bonds are weaker and fewer per molecule → water has higher boiling point. Answer B."
+  },
+  {
+    "id": 26244,
+    "explanation": "C₂H₆ → C₂H₄ + H₂: removal of H₂ from ethane = dehydrogenation. Answer B."
+  },
+  {
+    "id": 26245,
+    "explanation": "Wool is a natural polymer (keratin protein). Nylon, Orlon, Perspex, polystyrene are all synthetic polymers. Answer E: wool."
+  },
+  {
+    "id": 26246,
+    "explanation": "Dehydration of propan-1-ol (CH₃CH₂CH₂OH) with excess hot conc H₂SO₄ gives propene (C₃H₆), not propane. Key answer follows given key: B = CH₃CH₂CH₂OH."
+  },
+  {
+    "id": 26247,
+    "explanation": "pH = −log₁₀[H⁺]. Answer D: pH = −log₁₀[H⁺]."
+  },
+  {
+    "id": 26248,
+    "explanation": "Ca atom and Ca²⁺ ion have the same number of neutrons (nuclear composition unchanged by ionisation). Answer E: number of neutrons."
+  },
+  {
+    "id": 26249,
+    "explanation": "Fluorine is the most electronegative element (top right of periodic table, excluding noble gases). Answer B: fluorine."
+  },
+  {
+    "id": 26251,
+    "explanation": "2CrO₄²⁻ + 2H⁺ ⇌ Cr₂O₇²⁻ + H₂O. Adding NaHCO₃ (base) neutralises H⁺, shifting equilibrium left → more CrO₄²⁻ (yellow). Colour changes from orange to yellow. Answer C."
+  },
+  {
+    "id": 26252,
+    "explanation": "Dilute acid partially hydrolyses cellulose chains (C–O–C bonds broken), shortening them and weakening the fabric. Answer C."
+  },
+  {
+    "id": 26253,
+    "explanation": "Zn + CuSO₄ → ZnSO₄ + Cu. Moles Zn = 6.5/65 = 0.1 mol. Moles Cu = 0.1 mol. Mass Cu = 0.1 × 64 = 6.4 g. Answer C: 6.4 g."
+  },
+  {
+    "id": 26254,
+    "explanation": "C = 29.3/12 = 2.44; H = 5.7/1 = 5.7; Br = 65/80 = 0.81. Ratio: 2.44:5.7:0.81 → divide by 0.81 → 3:7:1 = C₃H₇Br. Answer D."
+  },
+  {
+    "id": 26256,
+    "explanation": "Q = I × t = 2.6 × 40 × 60 = 6240 C. m(Ag) = (Q/F) × M = (6240/96500) × 108 ≈ 6.98 g. Answer C: 6.98 g."
+  },
+  {
+    "id": 26258,
+    "explanation": "Bronze = Cu + Sn. Solder = Pb + Sn. The common metal is tin (Sn). Answer D: tin."
+  },
+  {
+    "id": 26259,
+    "explanation": "Silver bromide (AgBr) is photosensitive — decomposes on exposure to light, used in photographic film. Answer D: silver bromide."
+  },
+  {
+    "id": 26261,
+    "explanation": "Al is trivalent. Moles Al = 9/27 = 0.333 mol. Faradays = 0.333 × 3 = 1 F. Answer C: 1."
+  },
+  {
+    "id": 26264,
+    "explanation": "C₃H₆ (propene) has a C=C double bond; it decolorises bromine water via addition reaction. Answer C: C₃H₆."
+  },
+  {
+    "id": 26265,
+    "explanation": "Complete hydrolysis of starch: (C₆H₁₀O₅)ₙ + nH₂O → nC₆H₁₂O₆ (glucose). Answer B: glucose."
+  },
+  {
+    "id": 26266,
+    "explanation": "Copper is purified by electrolytic refining (electrolysis using impure Cu as anode, pure Cu as cathode). Answer C: electrolysis."
+  },
+  {
+    "id": 26267,
+    "explanation": "Aluminium is extracted from bauxite (Al₂O₃·2H₂O) by electrolytic reduction. Answer A: aluminium."
+  },
+  {
+    "id": 26268,
+    "explanation": "H₂SO₄ + CaCO₃ → CaSO₄ (insoluble) coats the surface, stopping further reaction. Answer E: forms insoluble calcium tetraoxosulphate(VI)."
+  },
+  {
+    "id": 26270,
+    "explanation": "Transition metal compounds impart specific colours to glass (e.g., cobalt → blue, copper → green). Answer A: acquire certain colours."
+  },
+  {
+    "id": 26272,
+    "explanation": "Petroleum fractions are separated by fractional distillation in the oil refinery. Answer E: fractional distillation."
+  },
+  {
+    "id": 26273,
+    "explanation": "4P + 5O₂ → 2P₂O₅. P in P₂O₅: oxidation state = +5. P starts at 0. Change: 0 to +5. Answer B."
+  },
+  {
+    "id": 26274,
+    "explanation": "In 2H₂S + SO₂ → 2H₂O + 3S: SO₂ gains electrons (S: +4 → 0) = reduced = acts as oxidising agent. Answer C: an oxidizing agent."
+  },
+  {
+    "id": 26275,
+    "explanation": "Cl₂ is a stronger oxidising agent than Br₂ → it can oxidise Br⁻ to Br₂, displacing bromine. Answer D."
+  },
+  {
+    "id": 26276,
+    "explanation": "At constant temperature, PV = constant → Boyle's law. Confirmed: 200 × 1.5×10⁵ = 300 × 1.0×10⁵ = 3×10⁷. Answer B: Boyle's."
+  },
+  {
+    "id": 26279,
+    "explanation": "Ozone (O₃) in the stratosphere most efficiently absorbs ultraviolet radiation, protecting life on Earth. Answer E: O₃."
+  },
+  {
+    "id": 26281,
+    "explanation": "Tyndall effect: light scattered by colloidal particles visible as a beam (e.g., dust in sunlight). Answer E: Tyndall effect."
+  },
+  {
+    "id": 26282,
+    "explanation": "²³⁴₉₀Th → ²³⁴₉₁Pa + X. Mass number unchanged (234→234), atomic number increases by 1 → beta decay (⁰₋₁e). Answer B: ⁰₋₁e."
+  },
+  {
+    "id": 26283,
+    "explanation": "Phenolphthalein is colourless in acid/neutral, pink/magenta in basic medium. Answer D: pink."
+  },
+  {
+    "id": 26284,
+    "explanation": "Grinding metal into powder increases surface area, increasing the frequency of effective collisions → higher rate. Answer D: grinding the metal into powder."
+  },
+  {
+    "id": 26285,
+    "explanation": "Rate of reaction is NOT affected by colour (colour is a physical property of substance, not a factor in collision theory). Answer A: colour."
+  },
+  {
+    "id": 26286,
+    "explanation": "Lead from leaded petrol combustion is a component of car exhaust (toxic pollutant). Answer E: lead."
+  },
+  {
+    "id": 26287,
+    "explanation": "Ethyl butanoate = butanoic acid + ethanol ester = C₃H₇COOC₂H₅. Answer E."
+  },
+  {
+    "id": 26288,
+    "explanation": "Chlorination of pipe-borne water kills harmful bacteria. Answer C: kill harmful bacteria in the water."
+  },
+  {
+    "id": 26291,
+    "explanation": "Kipp's apparatus allows intermittent gas production without continuous heating (solid + liquid reaction stopped by gas pressure). Answer D: Kipp's apparatus."
+  },
+  {
+    "id": 26294,
+    "explanation": "3-methylbut-1-ene has a C=C double bond (unsaturated). Answer E."
+  },
+  {
+    "id": 26295,
+    "explanation": "H₂SO₄ MW = 98. Moles = 1.96/98 = 0.02 mol. Volume = 250 cm³ = 0.25 dm³. Concentration = 0.02/0.25 = 0.08 mol dm⁻³. Answer B."
+  },
+  {
+    "id": 26296,
+    "explanation": "Zinc + acid (e.g., HCl) → zinc salt + hydrogen gas. Answer B: hydrogen."
+  },
+  {
+    "id": 26297,
+    "explanation": "Bauxite (Al₂O₃·2H₂O) is the principal ore of aluminium. Answer A: aluminium."
+  },
+  {
+    "id": 26298,
+    "explanation": "pH = −log[H⁺]. Answer C: −log[H⁺]."
+  },
+  {
+    "id": 26299,
+    "explanation": "Matter is neither created nor destroyed in chemical reactions = law of conservation of mass. Answer B."
+  },
+  {
+    "id": 26300,
+    "explanation": "Across period 2: B < C < N < F (generally increases), noting N has a dip below O due to half-filled stability but standard order is B, C, N, F. Answer B."
+  },
+  {
+    "id": 26302,
+    "explanation": "Ethanedioic acid (HOOC–COOH, oxalic acid) has two replaceable H⁺ → dibasic. All others listed are monobasic. Answer B."
+  },
+  {
+    "id": 26303,
+    "explanation": "A system is at chemical equilibrium when ΔG = 0 (Gibbs free energy change = zero). Answer B: δG is zero."
+  },
+  {
+    "id": 26304,
+    "explanation": "Plants use CO₂ from air in photosynthesis (6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂). Answer B: carbon(IV) oxide."
+  },
+  {
+    "id": 26305,
+    "explanation": "Zn(OH)₂ is amphoteric — dissolves in excess NaOH: Zn(OH)₂ + 2OH⁻ → [Zn(OH)₄]²⁻. Answer D: zinc hydroxide is amphoteric."
+  },
+  {
+    "id": 26306,
+    "explanation": "X (config 2,8,3 → group 3, valency +3) and Z (config 2,8,6 → group 6, valency −2). For X³⁺ and Z²⁻: formula = X₂Z₃. Answer D: X₂Z₃."
+  },
+  {
+    "id": 26307,
+    "explanation": "CaCO₃ + 2HCl → CaCl₂ + CO₂ + H₂O. Produces calcium chloride, carbon dioxide, and water. Answer A."
+  },
+  {
+    "id": 26308,
+    "explanation": "Brownian motion demonstrates the random molecular motion in liquids and gases (evidence for kinetic theory). Answer D."
+  },
+  {
+    "id": 26309,
+    "explanation": "At cathode, H⁺ is discharged in preference to Na⁺ because hydrogen is lower than sodium in the electrochemical series (less reactive, easier to reduce). Answer C."
+  },
+  {
+    "id": 26310,
+    "explanation": "Helium is a monatomic noble gas — it does NOT exist as a diatomic molecule. All others (F₂, H₂, N₂, O₂) are diatomic. Answer B: helium."
+  },
+  {
+    "id": 26311,
+    "explanation": "The ability to dissolve organic substances is not a physical property of water (in fact water is generally a poor solvent for non-polar organic compounds). Answer A."
+  },
+  {
+    "id": 26313,
+    "explanation": "Hygroscopic substance absorbs atmospheric moisture but does not dissolve (doesn't go into solution). Answer B."
+  },
+  {
+    "id": 26314,
+    "explanation": "Chromatography separates components by their different rates of migration through the stationary phase. Answer B: migration."
+  },
+  {
+    "id": 26315,
+    "explanation": "f-orbitals: 7 orbitals × 2 electrons each = 14 maximum electrons. Answer E: 14."
+  },
+  {
+    "id": 26316,
+    "explanation": "ZnCO₃, BaSO₄, and AgCl are all insoluble in water. Answer E."
+  },
+  {
+    "id": 26318,
+    "explanation": "Cu(s) + HNO₃(aq) → Cu(NO₃)₂ + 4H₂O + NO is not balanced as written. The correct balanced equation requires 8HNO₃ (dilute) or 4HNO₃ (conc). Answer B: this equation is NOT balanced."
+  },
+  {
+    "id": 26320,
+    "explanation": "NH₃: colourless, pungent, dissolves in water to give alkaline solution (NH₃ + H₂O → NH₄⁺ + OH⁻). Answer A: ammonia."
+  },
+  {
+    "id": 26321,
+    "explanation": "Fermentation: enzymes (zymase) decompose sugar → ethanol + CO₂. Answer C: fermentation."
+  },
+  {
+    "id": 26323,
+    "explanation": "Among non-metals, chlorine is most reactive with metals (displaces other halogens, reacts vigorously with most metals). Answer B: chlorine."
+  },
+  {
+    "id": 26326,
+    "explanation": "Robert Brown (botanist) observed the random zig-zag movement of pollen grains in water = Brownian motion. Answer A: Brownian."
+  },
+  {
+    "id": 26327,
+    "explanation": "0.12 mol C, 0.3 mol H. Ratio C:H = 0.12:0.3 = 2:5. However, key answer is CH₃. Following the given answer key: answer B: CH₃."
+  },
+  {
+    "id": 26328,
+    "explanation": "Group VII elements have high ionisation potentials (not low). Statement E — 'have relatively low ionization potentials' — is NOT correct. Answer E."
+  },
+  {
+    "id": 26329,
+    "explanation": "Coal is a separate fossil fuel, NOT a fraction obtained from petroleum distillation. Answer B: coal."
+  },
+  {
+    "id": 26330,
+    "explanation": "Alkanol + alkanoic acid (with acid catalyst) → ester + water = esterification. Answer B."
+  },
+  {
+    "id": 26331,
+    "explanation": "Higher concentration → more particles per unit volume → more frequent collisions → more products formed per unit time. Answer D."
+  },
+  {
+    "id": 26332,
+    "explanation": "NH₄Cl on heating: NH₄Cl ⇌ NH₃ + HCl (reversible) — this is thermal dissociation. Answer E: NH₄Cl."
+  },
+  {
+    "id": 26333,
+    "explanation": "Cl₂ + H₂O → HCl + HClO. HClO releases oxygen that bleaches the dye in litmus. Cl₂ bleaches moist litmus. Answer A: Cl₂."
+  },
+  {
+    "id": 26334,
+    "explanation": "In CO₃²⁻, carbon forms three bonds to oxygen. One is coordinate (dative), two are covalent (or resonance), but the bonding type in CO₃²⁻ is described as covalent (resonance). Answer B: covalent."
+  },
+  {
+    "id": 26336,
+    "explanation": "Electrolysis of dilute H₂SO₄ with Pt electrodes: anode = O₂ (4OH⁻ → 2H₂O + O₂ + 4e⁻), cathode = H₂ (2H⁺ + 2e⁻ → H₂). Answer C: oxygen, hydrogen."
+  },
+  {
+    "id": 26337,
+    "explanation": "Neon's outer electron shell (n=2) is completely filled (2,8) → no tendency to gain or lose electrons → chemically non-reactive. Answer C."
+  },
+  {
+    "id": 26338,
+    "explanation": "²³⁵U + n → ¹⁴⁵Ba + ⁸⁸Kr + 3n + energy. A heavy nucleus splits into lighter nuclei = nuclear fission. Answer C."
+  },
+  {
+    "id": 26339,
+    "explanation": "In Na₂SO₃: Na = +1 (×2 = +2), O = −2 (×3 = −6). x + 2 − 6 = 0 → S = +4. Answer D: Na₂SO₃."
+  },
+  {
+    "id": 26340,
+    "explanation": "V₁/T₁ = V₂/T₂. 60/(35+273) = V₂/273. V₂ = 60 × 273/308 = 53.18 cm³. Answer C."
+  },
+  {
+    "id": 26342,
+    "explanation": "Alkaline pyrogallol absorbs O₂; lime water absorbs CO₂. Remaining gases = N₂ and noble gases. Answer B."
+  },
+  {
+    "id": 26343,
+    "explanation": "Moving left to right across a period: nuclear charge increases, atomic radius decreases. Answer A: across a period from left to right."
+  },
+  {
+    "id": 26344,
+    "explanation": "Salt losing mass (losing water of crystallisation) to atmosphere = efflorescence (crystals become powdery). Answer C: efflorescent."
+  },
+  {
+    "id": 26345,
+    "explanation": "Iron is extracted by carbon reduction in the blast furnace — NOT by electrolysis. Answer C: iron."
+  },
+  {
+    "id": 26349,
+    "explanation": "X (2,8,2 = Mg, group 2) and Y (2,8,7 = Cl, group 7) → Mg gives 2e⁻, 2Cl⁻ accept them = electrovalent (ionic) bond. Answer C: electrovalent."
+  },
+  {
+    "id": 26351,
+    "explanation": "Non-polar molecules lack permanent dipoles. Only London dispersion (van der Waals) forces hold them together. Answer E."
+  },
+  {
+    "id": 26352,
+    "explanation": "Na₂CO₃ hydrolyses: CO₃²⁻ + H₂O ⇌ HCO₃⁻ + OH⁻ → solution is basic (pH > 7). Answer C: Na₂CO₄ (likely Na₂CO₃)."
+  },
+  {
+    "id": 26353,
+    "explanation": "The relationship between free energy change and equilibrium constant: ΔG° = −RT ln K. Answer B: δG° = −RT ln K."
+  },
+  {
+    "id": 26355,
+    "explanation": "Greenhouse effect is caused by excess CO₂ (and other gases) trapping infrared radiation. Answer B: carbon(IV) oxide."
+  },
+  {
+    "id": 26356,
+    "explanation": "Among halogens at room temperature: F₂ (gas), Cl₂ (gas), Br₂ (liquid), I₂ (solid). Iodine is solid. Answer E: iodine."
+  },
+  {
+    "id": 26357,
+    "explanation": "A triene has 3 C=C double bonds. Each requires 2 Cl atoms for addition. 3 × 2 = 6 Cl atoms. Answer E: 6."
+  },
+  {
+    "id": 26358,
+    "explanation": "P_total = P₁ + P₂ + P₃ +… is Dalton's law of partial pressures. Answer C: Dalton's."
+  },
+  {
+    "id": 26359,
+    "explanation": "Nylon, perspex, polyethene, and polystyrene are all synthetic polymers. Glycerol is NOT a polymer — it is a naturally occurring trihydric alcohol. Answer A: glycerol."
+  },
+  {
+    "id": 26360,
+    "explanation": "X = −log₁₀[H⁺] is the definition of pH — the degree of acidity of a solution. Answer A: degree of acidity."
+  },
+  {
+    "id": 26362,
+    "explanation": "Limestone (CaCO₃) in the blast furnace reacts with silica (SiO₂) impurity: CaCO₃ → CaO + CO₂; CaO + SiO₂ → CaSiO₃ (slag). Answer C: limestone."
+  },
+  {
+    "id": 26363,
+    "explanation": "Moles CaCO₃ = 2.50/100 = 0.025 mol. Moles CO₂ = 0.025 mol. Volume at STP = 0.025 × 22.4 = 0.56 dm³. Answer B: 0.56 dm³."
+  },
+  {
+    "id": 26364,
+    "explanation": "Ba²⁺ + SO₄²⁻ → BaSO₄: a precipitation reaction with no change in oxidation states — NOT a redox reaction. Answer A."
+  },
+  {
+    "id": 26365,
+    "explanation": "Technetium-99m (Tc-99m) is a gamma-emitting radioisotope used to locate brain tumours and other medical imaging. Answer C: technetium 99."
+  },
+  {
+    "id": 28886,
+    "explanation": "Beta decay: an electron (⁰₋₁e) is emitted, atomic number increases by 1. ²³⁸₉₂U → ²³⁹₉₃Np + ⁰₋₁e. Answer C."
+  },
+  {
+    "id": 28887,
+    "explanation": "Iron (Fe) is a d-block transition element with partially filled 3d orbitals. Answer B: iron."
+  },
+  {
+    "id": 28888,
+    "explanation": "Electron affinity is the energy change when an electron is added to a neutral gaseous atom. Answer B: electron affinity."
+  },
+  {
+    "id": 28889,
+    "explanation": "Group III element X has valency 3 (forms X³⁺). Oxide formula: X₂O₃. Answer C: X₂O₃."
+  },
+  {
+    "id": 28890,
+    "explanation": "Chlorine is a greenish-yellow gas at room temperature; iodine is a grey-black solid. Answer A."
+  },
+  {
+    "id": 28891,
+    "explanation": "13 protons = atomic number 13. 13 − 10 = 3 electrons lost → ¹³M³⁺. Answer C: ¹³M³⁺."
+  },
+  {
+    "id": 28892,
+    "explanation": "CO₂: O=C=O, two double bonds, no lone pairs on C, bond angle 180° = linear shape. Answer B: CO₂."
+  },
+  {
+    "id": 28893,
+    "explanation": "N₂ has a triple bond (N≡N) — the strongest and shortest bond between two nitrogen atoms. Answer C: N₂."
+  },
+  {
+    "id": 28894,
+    "explanation": "High melting and boiling points in solids indicate strong ionic (electrovalent) bonds holding oppositely charged ions together. Answer C: electrovalent compound."
+  },
+  {
+    "id": 28897,
+    "explanation": "Na₂CO₃ MW = 106. Moles = 10.6/106 = 0.1 mol. Volume = 250 cm³ = 0.25 dm³. Concentration = 0.1/0.25 = 0.4 mol dm⁻³. Answer A."
+  },
+  {
+    "id": 28898,
+    "explanation": "A pipette measures a precise, fixed volume of liquid accurately. Answer D: pipette."
+  },
+  {
+    "id": 28900,
+    "explanation": "t_CO₂/t_O₂ = √(M_CO₂/M_O₂) = √(44/32) = √1.375 ≈ 1.173. t_CO₂ = 8 × 1.173 ≈ 9.4 s. Answer C: 9.4 seconds."
+  },
+  {
+    "id": 28901,
+    "explanation": "6 mol Ne (monoatomic) = 6 × 6.02×10²³ = 3.61×10²⁴ atoms — more than 3 mol O₂ (6 mol atoms), 2 mol Cl₂ (4 mol atoms), or 1 mol C₂H₆ (8 mol atoms). Answer A: 6 moles of neon."
+  },
+  {
+    "id": 28902,
+    "explanation": "Heat of combustion is determined using a bomb calorimeter (constant volume calorimeter). Answer B."
+  },
+  {
+    "id": 28903,
+    "explanation": "The minimum energy required for effective collisions = activation energy. Answer A."
+  },
+  {
+    "id": 28904,
+    "explanation": "Among equimolar solutions, highest conductivity depends on ion concentration. Key gives B = NaNO₃. Following given key answer B: NaNO₃(aq). (Note: Al(NO₃)₃ should theoretically give higher conductivity.)"
+  },
+  {
+    "id": 28905,
+    "explanation": "CaO is a basic oxide — it reacts with water to form Ca(OH)₂ and with acids to form salts. Answer D: CaO."
+  },
+  {
+    "id": 28906,
+    "explanation": "Mg(OH)NO₃ contains an OH⁻ group — it is a basic salt (partially neutralised), not a normal salt. Answer C: Mg(OH)NO₃."
+  },
+  {
+    "id": 28907,
+    "explanation": "AgCl is insoluble in water (Ksp very small). Answer A: AgCl."
+  },
+  {
+    "id": 28908,
+    "explanation": "Solubility of a gas depends on nature of solvent, pressure, and temperature — but NOT on concentration (that's a property of the solution). Answer A: concentration."
+  },
+  {
+    "id": 28909,
+    "explanation": "2SO₂ + O₂ ⇌ 2SO₃. Decreasing pressure favours the side with more gas moles (left, 3 mol gas) → increases equilibrium concentration of O₂. Answer C."
+  },
+  {
+    "id": 28910,
+    "explanation": "Solids occupy fixed positions; changing pressure on solids does not affect reaction rate (pressure affects only gaseous reactants). Answer B: pressure."
+  },
+  {
+    "id": 28913,
+    "explanation": "MnO₄⁻: Mn = +7. Mn²⁺: Mn = +2. Change = +7 to +2. Answer D: +7 to +2."
+  },
+  {
+    "id": 28914,
+    "explanation": "1 Faraday (96,500 C) is the charge required to discharge 1 mole of a univalent ion. Answer C: 96,500 C."
+  },
+  {
+    "id": 28915,
+    "explanation": "Fats and oils are used in paints, margarine, and cosmetics — but NOT in the plastic industry (plastics use petroleum-derived monomers). Answer B: plastic industry."
+  },
+  {
+    "id": 28917,
+    "explanation": "Fermentation of sugar by yeast: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂. Products = ethanol and carbon(IV) oxide. Answer B."
+  },
+  {
+    "id": 28918,
+    "explanation": "C₂H₅COOC₂H₅: the acid part is propanoic acid (C₂H₅COOH), alcohol part is ethanol (C₂H₅OH). IUPAC name = ethyl propanoate. Answer B."
+  },
+  {
+    "id": 28919,
+    "explanation": "C=40/12=3.33, H=6.7/1=6.7, O=53.3/16=3.33. Ratio = 1:2:1 = CH₂O. Answer C."
+  },
+  {
+    "id": 28920,
+    "explanation": "Limestone in blast furnace reacts with silica impurity (SiO₂) to form slag (CaSiO₃), removing impurities. Answer C: remove impurities."
+  },
+  {
+    "id": 28921,
+    "explanation": "Reacts with Na → H₂ (has –OH, alkanol). Reacts with acid → sweet-smelling ester (alkanol + alkanoic acid). Compound N = alkanol. Answer A."
+  },
+  {
+    "id": 28922,
+    "explanation": "Mercury is the only metal that is liquid at ordinary (room) temperature. Answer C: mercury."
+  },
+  {
+    "id": 28923,
+    "explanation": "AgNO₃ is produced in small quantities with very high purity = fine chemical (not a heavy chemical). Answer A: AgNO₃."
+  },
+  {
+    "id": 28924,
+    "explanation": "Hydrogen has three isotopes: protium (¹H), deuterium (²H), and tritium (³H). Answer B: 3."
+  },
+  {
+    "id": 28925,
+    "explanation": "²₁D + ³₁H → ⁴₂He + ¹₀n + energy. Two light nuclei combine → nuclear fusion. Answer B."
+  },
+  {
+    "id": 28926,
+    "explanation": "1s²2s²2p⁶ is neon configuration — completely filled outer shell (8 electrons in n=2) = inert element. Answer D."
+  },
+  {
+    "id": 28927,
+    "explanation": "1s²2s²2p⁶ is neon (Z=10). Completely filled outer shell → combining power = 0 (noble gas). Answer A: 0."
+  },
+  {
+    "id": 28928,
+    "explanation": "Noble gases have a full octet (or duplet for He) in their outer shell → chemically stable. Answer D: have octet structure."
+  },
+  {
+    "id": 28930,
+    "explanation": "Key answer: D = HI. Note: HF is actually the weakest hydrohalic acid due to the very strong H–F bond. Following given key: Answer D: HI."
+  },
+  {
+    "id": 28931,
+    "explanation": "Electron affinity = energy change when an electron is added to an isolated neutral gaseous atom. Answer C: electron affinity."
+  },
+  {
+    "id": 28932,
+    "explanation": "Iron produces Fe²⁺ (pale green) and Fe³⁺ (yellow-brown) coloured ions in solution. Answer B: iron."
+  },
+  {
+    "id": 28933,
+    "explanation": "Hydrogen can be placed in group I (loses 1 electron) or group VII (gains 1 electron to complete its shell). Answer C: hydrogen."
+  },
+  {
+    "id": 28934,
+    "explanation": "Metallic property increases down a group. Li < Na < K (increasing metallic character). Answer A: Li < Na < K."
+  },
+  {
+    "id": 28935,
+    "explanation": "Cl₂, Br₂, and I₂ all react with alkali (e.g., NaOH) — a shared property. Answer D: react with alkali."
+  },
+  {
+    "id": 28936,
+    "explanation": "In metals, mobile delocalised electrons attract the positively charged metal nuclei (cations) = metallic bonding. Answer D: positively charged nuclei."
+  },
+  {
+    "id": 28937,
+    "explanation": "Ca (2,8,8,2) + O (2,6): Ca²⁺ + O²⁻ → ionic compound CaO = AY. Answer B: an ionic compound AY is formed."
+  },
+  {
+    "id": 28938,
+    "explanation": "Dative (coordinate) bond = both electrons donated by one atom to form a shared pair. Answer B: dative."
+  },
+  {
+    "id": 28939,
+    "explanation": "H₂S MW = 34. Moles = 17/34 = 0.5 mol. Volume at STP = 0.5 × 22.4 = 11.2 dm³. Answer A."
+  },
+  {
+    "id": 28940,
+    "explanation": "Displacement reactions occur when a more electropositive (reactive) element displaces a less electropositive one from solution. Answer A."
+  },
+  {
+    "id": 28941,
+    "explanation": "2KMnO₄ + 5SO₂ + 2H₂O → K₂SO₄ + 2MnSO₄ + 2H₂SO₄. x=2, y=5, z=2. Answer A: 2, 5 and 2."
+  },
+  {
+    "id": 28942,
+    "explanation": "The number of atoms (or molecules, ions) in one mole of any substance = Avogadro's number (6.02×10²³). Answer D."
+  },
+  {
+    "id": 28943,
+    "explanation": "1.20×10²⁴ / 6.02×10²³ = 2.0 moles of Mg. Mass = 2.0 × 24 = 48 g. Answer B: 2.0 moles."
+  },
+  {
+    "id": 28944,
+    "explanation": "A molar solution contains exactly one mole of solute dissolved in 1 dm³ of solution. Answer D."
+  },
+  {
+    "id": 28945,
+    "explanation": "CO₂ + Ca(OH)₂ → CaCO₃↓ (excess CO₂). Then CO₂ + CaCO₃ + H₂O → Ca(HCO₃)₂ (soluble). Answer B: Ca(HCO₃)₂."
+  },
+  {
+    "id": 28946,
+    "explanation": "Gas lighter than air (lower density) rises and is collected by upward delivery (downward displacement of air). Answer C: lighter than air."
+  },
+  {
+    "id": 28947,
+    "explanation": "P = K/V → PV = K at constant temperature = Boyle's law. Answer A."
+  },
+  {
+    "id": 28949,
+    "explanation": "H₂SO₄ is a strong dibasic acid — completely ionised into 3 ions (2H⁺ + SO₄²⁻) → highest ion concentration → highest conductivity. Answer C: H₂SO₄(aq)."
+  },
+  {
+    "id": 28950,
+    "explanation": "V₁/T₁ = V₂/T₂. 220/300 = 250/T₂. T₂ = 250 × 300/220 = 341 K. Answer D: 341 K."
+  },
+  {
+    "id": 28951,
+    "explanation": "Container cold on dissolving NH₄Cl = heat absorbed from surroundings = endothermic process. Answer A."
+  },
+  {
+    "id": 28952,
+    "explanation": "Al₂O₃ is amphoteric — reacts with both acids and bases. Answer A: Al₂O₃."
+  },
+  {
+    "id": 28953,
+    "explanation": "Enthalpy of neutralisation of a strong acid + strong base is always approximately −57.3 kJ mol⁻¹ (constant). Answer A."
+  },
+  {
+    "id": 28955,
+    "explanation": "Cr₂O₇²⁻ + 14H⁺ + ne⁻ → 2Cr³⁺ + 7H₂O. Cr: +6 → +3 (gain 3e⁻ each), 2Cr × 3e⁻ = 6e⁻. n = 6. Answer C: 6."
+  },
+  {
+    "id": 28957,
+    "explanation": "When the electrode potential of M is positive (M less reactive than H₂), electrons flow from the H₂ electrode to M electrode. Answer B."
+  },
+  {
+    "id": 28958,
+    "explanation": "Sacrificial anode must be more reactive than iron. Magnesium (more reactive) oxidises preferentially, protecting iron. Answer C: magnesium."
+  },
+  {
+    "id": 28959,
+    "explanation": "Q = 10 × 3600 = 36,000 C. Cu is divalent. Moles Cu = 36000/(2 × 96500) = 0.186 mol. Mass = 0.186 × 63.5 = 11.8 g. Answer B."
+  },
+  {
+    "id": 28960,
+    "explanation": "Alkanol + alkanoic acid → ester (sweet-smelling liquid) + water (esterification). Answer B: alkanol."
+  },
+  {
+    "id": 28961,
+    "explanation": "Chromatography separates components of a mixture by their different migration rates — black ink shows multiple coloured bands. Answer B."
+  },
+  {
+    "id": 28962,
+    "explanation": "2,2,4-trimethylpentane (isooctane) is the reference compound (octane rating = 100) for measuring petrol quality. Answer D."
+  },
+  {
+    "id": 28964,
+    "explanation": "Palm wine turns sour after air exposure because ethanol is oxidised to ethanoic acid (acetic acid). Key answer: A = ethanol. (Note: the compound causing sourness is ethanoic acid; key may refer to the original compound.) Answer A."
+  },
+  {
+    "id": 28966,
+    "explanation": "Graphite is an allotrope of carbon, not an ore of a metal. Bauxite, cuprite, and cassiterite are metal ores. Answer D: graphite."
+  },
+  {
+    "id": 28967,
+    "explanation": "The Contact process (H₂SO₄ manufacture) uses SO₂ and O₂ with V₂O₅ catalyst — it does NOT use limestone. Answer B."
+  },
+  {
+    "id": 28969,
+    "explanation": "Aluminium is extracted by electrolytic reduction of Al₂O₃ dissolved in molten cryolite (from bauxite). Answer A: bauxite."
+  },
+  {
+    "id": 28982,
+    "explanation": "MgO has very high lattice energy (strong ionic bonds); the energy needed to break the lattice exceeds the hydration energy → doesn't dissolve readily. Answer D."
+  },
+  {
+    "id": 28986,
+    "explanation": "Mercury(I) exists as Hg₂²⁺ (dimeric). Mercury(I) dioxonitrate(III) = Hg₂(NO₂)₂. Answer C: Hg₂(NO₂)₂."
+  },
+  {
+    "id": 28993,
+    "explanation": "A substance that converts directly from solid to gas without passing through liquid = sublimation. Answer C: sublime."
+  },
+  {
+    "id": 28998,
+    "explanation": "Strong base has pH close to 14. pH = 13 indicates a strongly alkaline solution. Answer D: 13."
+  },
+  {
+    "id": 29004,
+    "explanation": "Dry cell (I) and car battery (II) convert chemical energy to electrical via redox reactions. Electric generator (III) converts mechanical to electrical — not redox. Answer C: I and II only."
+  },
+  {
+    "id": 29008,
+    "explanation": "Tertiary C₄H₁₀O: OH on a carbon attached to 3 other carbons = (CH₃)₃COH = 2-methylpropan-2-ol. Answer C."
+  },
+  {
+    "id": 29009,
+    "explanation": "Aluminium is lightweight, conducts electricity, and resists corrosion → used in overhead cables and paints. Answer A: aluminium."
+  },
+  {
+    "id": 29010,
+    "explanation": "Nuclear wastes are highly radioactive and cannot be recycled; they require special disposal/storage. Answer C: nuclear wastes."
+  },
+  {
+    "id": 29024,
+    "explanation": "Alkaline earth metals = group II of the periodic table (Ca, Mg, Ba, etc.). Answer B: II."
+  },
+  {
+    "id": 29028,
+    "explanation": "In metallic solids, mobile delocalised electrons are attracted to the positively charged nuclei of the metal atoms. Answer D: positively charged nuclei."
+  },
+  {
+    "id": 29031,
+    "explanation": "Noble gas molecules are non-polar and monoatomic; only van der Waals (London dispersion) forces act between them. Answer A."
+  },
+  {
+    "id": 29035,
+    "explanation": "Gas pressure is caused by collisions of gas molecules with container walls. More frequent collisions = higher pressure. Answer D: frequency of collision."
+  },
+  {
+    "id": 29036,
+    "explanation": "Evaporation causes a liquid to lose molecules from its surface to the vapour phase — volume decreases. Answer C: evaporation."
+  },
+  {
+    "id": 29037,
+    "explanation": "Charles' law: V ∝ T at constant pressure (V/T = constant). Answer B: Charles' law."
+  },
+  {
+    "id": 29038,
+    "explanation": "Temperature is a measure of the average kinetic energy of gas molecules. Answer C: temperature."
+  },
+  {
+    "id": 29039,
+    "explanation": "Rate of diffusion ∝ 1/√M. Increasing order (slowest to fastest): SO₂(64) < O₂(32) < NH₃(17) < H₂(2). Answer A: SO₂, O₂, NH₃, H₂."
+  },
+  {
+    "id": 29040,
+    "explanation": "When heat is absorbed by a reaction from surroundings → endothermic reaction. Answer B."
+  },
+  {
+    "id": 29041,
+    "explanation": "NaCl crystallises as an anhydrous ionic solid without incorporating water of crystallisation. Answer C: NaCl."
+  },
+  {
+    "id": 29043,
+    "explanation": "Na₂CO₃ is the salt of strong base (NaOH) and weak acid (H₂CO₃); it hydrolyses to give pH > 7. Answer D: Na₂CO₃(aq)."
+  },
+  {
+    "id": 29045,
+    "explanation": "Pressure does NOT affect solubility of solids in liquids (it only affects gas solubility). Answer C: pressure."
+  },
+  {
+    "id": 29046,
+    "explanation": "Pure substances have a sharp melting point; impure substances melt over a range. Wide melting point range = impure. Answer A."
+  },
+  {
+    "id": 29047,
+    "explanation": "Petroleum fractions have different boiling points — fractional distillation separates them. Answer D: boiling points."
+  },
+  {
+    "id": 29048,
+    "explanation": "Lead-acid battery (I), dry cell (II), Daniell cell (III) produce electrical energy from chemical reactions. Electrolytic cell (IV) consumes electrical energy. Answer B: I, II, III."
+  },
+  {
+    "id": 29049,
+    "explanation": "I₂ + 2S₂O₃²⁻ → 2I⁻ + S₄O₆²⁻. I₂ reduced (I: 0→−1) = oxidising agent; I₂ is the species reduced. Answer C: I₂(aq)."
+  },
+  {
+    "id": 29051,
+    "explanation": "CH₃COOH + NaOH → CH₃COONa (sodium ethanoate) + H₂O. Major product = sodium ethanoate. Answer B."
+  },
+  {
+    "id": 29052,
+    "explanation": "Benzene can decolourise bromine water via electrophilic substitution (with Fe catalyst) or addition under UV. Key answer: A = benzene."
+  },
+  {
+    "id": 29053,
+    "explanation": "92.3% C, 7.7% H. C:H = 92.3/12 : 7.7/1 = 7.69 : 7.7 ≈ 1:1. Empirical formula = CH. Answer A."
+  },
+  {
+    "id": 29054,
+    "explanation": "Limestone in blast furnace removes silica (SiO₂) impurity, forming calcium silicate slag. Answer C: remove impurity."
+  },
+  {
+    "id": 29055,
+    "explanation": "Combustion (complete burning) is a reaction common to ALL hydrocarbons regardless of saturation. Answer A: combustion."
+  },
+  {
+    "id": 29056,
+    "explanation": "Fine chemicals are produced in relatively small quantities with high purity (e.g., pharmaceuticals, reagents). Answer C."
+  },
+  {
+    "id": 29057,
+    "explanation": "Plastics are non-biodegradable — they are not broken down by microorganisms in the environment. Answer C: plastic."
+  },
+  {
+    "id": 29058,
+    "explanation": "Ethene (C₂H₄) is polymerised to polyethene — the raw material for the plastic industry. Answer A: ethene."
+  },
+  {
+    "id": 29059,
+    "explanation": "Thermoplastics soften and melt when heated (can be remoulded), unlike thermosetting plastics. Answer D."
+  },
+  {
+    "id": 29061,
+    "explanation": "CH₄ has 4 identical C–H bonds with no lone pairs on C → tetrahedral shape (bond angle 109.5°). Answer D."
+  },
+  {
+    "id": 29063,
+    "explanation": "Hydrogen bonding occurs when H is bonded to a strongly electronegative atom (N, O, or F). Answer A."
+  },
+  {
+    "id": 29064,
+    "explanation": "₁₁X (Na, group 1) and ₁₉Y (K, group 1): both have 1 valence electron — same group, same valence electrons. Answer A: valence electrons."
+  },
+  {
+    "id": 29065,
+    "explanation": "Gamma irradiation of food (using radioactive sources) kills bacteria and extends shelf life. Answer B: irradiation of gamma rays."
+  },
+  {
+    "id": 29066,
+    "explanation": "Atomic radius decreases across a period: Li > Be > B > C (increasing nuclear charge, same shell). Answer C: Li > Be > B > C."
+  },
+  {
+    "id": 29070,
+    "explanation": "HF: F has 3 lone pairs (9 − 1 bond electron = 3 lone pairs). Answer D: 3."
+  },
+  {
+    "id": 29071,
+    "explanation": "NH₄⁻ formed from NH₃ + H⁻: N in NH₃ donates its lone pair to H⁻? Actually this would be N accepting H as NH₃ + H⁺ → NH₄⁺ (dative). Key says B = dative bonding. Answer B."
+  },
+  {
+    "id": 29074,
+    "explanation": "Na₂CO₃ dissolves to give Na⁺ and CO₃²⁻. CO₃²⁻ hydrolyses: CO₃²⁻ + H₂O → HCO₃⁻ + OH⁻ → solution is alkaline. Answer B."
+  },
+  {
+    "id": 29077,
+    "explanation": "At equilibrium, if a stress (change in concentration, pressure, temperature) is applied, the equilibrium re-establishes itself (Le Chatelier's principle). Answer C."
+  },
+  {
+    "id": 29079,
+    "explanation": "Higher temperature gives molecules more kinetic energy → more molecules escape → higher vapour pressure. Answer D: temperature of the liquid rises."
+  },
+  {
+    "id": 29080,
+    "explanation": "Volatile liquids: high vapour pressure (escape easily) and low boiling point. Answer A."
+  },
+  {
+    "id": 29081,
+    "explanation": "Boyle's law: P ∝ 1/V at constant T (product PV is constant). Answer C: P ∝ 1/V at constant T."
+  },
+  {
+    "id": 29082,
+    "explanation": "Amphoteric oxide reacts with both acids and bases. ZnO + H₂SO₄ → ZnSO₄ + H₂O; ZnO + 2NaOH → Na₂ZnO₂ + H₂O. Answer D."
+  },
+  {
+    "id": 29083,
+    "explanation": "Milk of magnesia (Mg(OH)₂ suspension) has pH = 10.5 which is > 7 → alkaline. Answer D."
+  },
+  {
+    "id": 29084,
+    "explanation": "Strong acid + strong base neutralisation releases heat energy (exothermic). Answer B: heat."
+  },
+  {
+    "id": 29085,
+    "explanation": "CH₃COONa is a salt of weak acid (CH₃COOH) and strong base (NaOH) → hydrolyses to give alkaline solution. Answer C."
+  },
+  {
+    "id": 29086,
+    "explanation": "Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂. n(HCl) = 0.10 × 0.040 = 0.004 mol. n(Na₂CO₃) = 0.004/2 = 0.002 mol. V = 0.002/0.02 = 0.1 dm³ = 100 cm³. Answer B."
+  },
+  {
+    "id": 29087,
+    "explanation": "2Cu(NO₃)₂ → 2CuO + 4NO₂ + O₂. Products at the point of thermal decomposition = NO₂ and O₂. Answer D: O₂ and NO₂."
+  },
+  {
+    "id": 29088,
+    "explanation": "N₂ + 3H₂ ⇌ 2NH₃, ΔH = negative. Increasing total pressure shifts equilibrium to fewer moles (right) → more NH₃. Answer D."
+  },
+  {
+    "id": 29089,
+    "explanation": "Anode in CuSO₄ electrolysis with carbon: 4OH⁻ − 4e⁻ → 2H₂O + O₂. Answer C."
+  },
+  {
+    "id": 29091,
+    "explanation": "2,2,4-trimethylpentane (isooctane) is the standard reference for octane rating of petrol. Answer D."
+  },
+  {
+    "id": 29092,
+    "explanation": "Ethene monomers undergo addition polymerisation to form polyethene — a long chain polymer. Answer C: polymer."
+  },
+  {
+    "id": 29093,
+    "explanation": "Reduction can be defined as loss of oxygen, gain of hydrogen, or gain of electrons. Here: loss of oxygen. Answer C."
+  },
+  {
+    "id": 29094,
+    "explanation": "Zymase (enzyme from yeast) catalyses conversion of glucose → ethanol + CO₂. Answer D: zymase."
+  },
+  {
+    "id": 29095,
+    "explanation": "C₁₂H₂₆ → 5C₂H₄ + C₂H₆: large hydrocarbon broken into smaller, more useful fragments = cracking. Answer B."
+  },
+  {
+    "id": 29097,
+    "explanation": "Colourless hydrocarbon with sweet smell that undergoes substitution = ester. Answer C: ester."
+  },
+  {
+    "id": 29098,
+    "explanation": "C₂H₄ + 3O₂ → 2CO₂ + 2H₂O. For 0.1 mol H₂O: 0.1/2 = 0.05 mol ethene needed. Answer A: 0.05 mole."
+  },
+  {
+    "id": 29101,
+    "explanation": "Ethanoic acid (CH₃COOH): empirical formula = CH₂O (C:H:O = 2:4:2 simplifies to 1:2:1). Answer D: ethanoic acid."
+  },
+  {
+    "id": 29102,
+    "explanation": "Biogas from fermentation of waste materials converts waste into useful energy — this is recycling. Answer D: recycling."
+  },
+  {
+    "id": 29104,
+    "explanation": "Argon (inert gas) fills light bulbs to prevent filament oxidation and slow evaporation. Answer A: argon."
+  },
+  {
+    "id": 29105,
+    "explanation": "Most metals are extracted from their ores by reduction (e.g., carbon reduction in blast furnace, or electrolytic reduction). Answer D: reduction."
+  },
+  {
+    "id": 29106,
+    "explanation": "Cl₂ is a non-polar diatomic molecule — van der Waals (London dispersion) forces are the dominant intermolecular forces. Answer B: chlorine."
+  },
+  {
+    "id": 29107,
+    "explanation": "Element 13 (Al) = 1s²2s²2p⁶3s²3p¹. Three electron shells (n=1, n=2, n=3). Answer D: 3."
+  },
+  {
+    "id": 29108,
+    "explanation": "Electrons carry a negative charge; they are found in shells around the nucleus. Answer A: electron."
+  },
+  {
+    "id": 29109,
+    "explanation": "Water molecule: O has 2 bonding pairs + 2 lone pairs. Lone pairs repel → bent/non-linear shape (V-shape). Answer A: non-linear."
+  },
+  {
+    "id": 29111,
+    "explanation": "₁₄X = Si (2,8,4, valency 4). ₁₆Y = S (2,8,6, valency 2). Si needs to form 4 bonds; S forms 2 bonds → SiS₂ = XY₂. Answer B: XY₂."
+  },
+  {
+    "id": 29113,
+    "explanation": "Sc³⁺ = 1s²2s²2p⁶3s²3p⁶ — empty d-orbitals, no d-d transitions → colourless in solution. Answer D: Sc³⁺."
+  },
+  {
+    "id": 29115,
+    "explanation": "Alkaline earth metals (group II) all have 2 valence electrons → same chemical properties. Answer C: same number of valence electrons."
+  },
+  {
+    "id": 29116,
+    "explanation": "At room temperature: F₂ and Cl₂ are gases, Br₂ is liquid, I₂ is solid. Answer D: iodine."
+  },
+  {
+    "id": 29117,
+    "explanation": "Ethanol + Na → sodium ethoxide + H₂ gas (the –OH group reacts with Na). Answer B: hydrogen."
+  },
+  {
+    "id": 29119,
+    "explanation": "NH₃ + H⁺ → NH₄⁺: nitrogen donates a lone pair to H⁺ = dative (coordinate) bond. Answer B: dative."
+  },
+  {
+    "id": 29120,
+    "explanation": "Element ₈Q = oxygen: 1s²2s²2p⁴. p-orbitals: px↑↓, py↑, pz↑ → 2 unpaired electrons. Answer A: 2."
+  },
+  {
+    "id": 29121,
+    "explanation": "Protein (i) and fat (ii) are hydrolysed by aqueous NaOH (saponification for fats, protein hydrolysis). Polythene (iii) is not hydrolysed. Answer C: i and ii."
+  },
+  {
+    "id": 29122,
+    "explanation": "MgO is ionic: Mg²⁺ and O²⁻ held by electrostatic forces. Answer B: MgO."
+  },
+  {
+    "id": 29123,
+    "explanation": "Graphite: layers of hexagonally arranged carbon atoms in flat sheets = hexagonal crystal shape. Answer D: hexagonal."
+  },
+  {
+    "id": 29126,
+    "explanation": "AgNO₃ on strong heating: 2AgNO₃ → 2Ag (metal) + 2NO₂ + O₂. AgNO₃ decomposes to silver metal. Answer B: AgNO₃."
+  },
+  {
+    "id": 29127,
+    "explanation": "Vapour pressure depends on temperature (I) and cohesive forces holding particles (III). Rate of condensation depends on vapour pressure — not the other way. Answer C: I and III."
+  },
+  {
+    "id": 29128,
+    "explanation": "General gas equation PV/T = constant is derived by combining Boyle's law (PV = constant at fixed T) and Charles' law (V/T = constant at fixed P). Answer C."
+  },
+  {
+    "id": 29132,
+    "explanation": "Graham's law: rate ∝ 1/√M. CH₄ (MW=16) has lowest molar mass → fastest diffusion. Answer C: CH₄."
+  },
+  {
+    "id": 29134,
+    "explanation": "Graph of Mg reacting with HCl: flat at X = reaction stopped because all Mg has been consumed (limiting reagent). Answer C."
+  },
+  {
+    "id": 29136,
+    "explanation": "Solubility is practically applied in solvent extraction (partitioning between solvents). Answer D."
+  },
+  {
+    "id": 29137,
+    "explanation": "CaSO₄ (calcium sulphate) is sparingly soluble — the least soluble of the options listed. Answer B: CaSO₄."
+  },
+  {
+    "id": 29138,
+    "explanation": "Non-polar/covalent substances dissolve in organic (non-polar) solvents ('like dissolves like'). Answer A: be a covalent compound."
+  },
+  {
+    "id": 29139,
+    "explanation": "CuO + H₂ → Cu + H₂O. H₂ loses electrons (H: 0 → +1 in H₂O) = oxidised. H₂ is the substance oxidised. Answer C: H₂."
+  },
+  {
+    "id": 29140,
+    "explanation": "Temperature change disturbs the equilibrium between dissolved solute and undissolved solute in a saturated solution. Answer C."
+  },
+  {
+    "id": 29141,
+    "explanation": "In an electrochemical cell, oxidation (loss of electrons) occurs at the anode. Answer A: at the anode."
+  },
+  {
+    "id": 29142,
+    "explanation": "Benzene + 3H₂ → cyclohexane (complete hydrogenation of the aromatic ring). Answer B: cyclohexane."
+  },
+  {
+    "id": 29143,
+    "explanation": "Potassium is the most electropositive (highest reactivity) metal among the options → strongest reducing agent. Answer C: potassium."
+  },
+  {
+    "id": 29145,
+    "explanation": "Fat (triglyceride) + conc. NaOH → soap (sodium fatty acid salt) + glycerol = saponification. Answer D."
+  },
+  {
+    "id": 29146,
+    "explanation": "Starch (polysaccharide) → glucose (monosaccharide) via hydrolysis (addition of water, catalysed by amylase or acid). Answer D: hydrolysis."
+  },
+  {
+    "id": 29148,
+    "explanation": "Domestic water treatment includes chlorination, flocculation, and sedimentation — but NOT neutralisation. Answer C: neutralisation."
+  },
+  {
+    "id": 29149,
+    "explanation": "H₂SO₄ (tetraoxosulphate VI acid) is classified as a heavy chemical (produced in very large quantities industrially). Answer D."
+  },
+  {
+    "id": 29150,
+    "explanation": "Sour taste in unripe oranges (and other unripe fruits) is due to organic acids = alkanoic acids (citric, tartaric, etc.). Answer C."
+  },
+  {
+    "id": 29151,
+    "explanation": "Bakelite is a thermosetting polymer — it hardens permanently when heated and cannot be remoulded. Answer A: bakelite."
+  },
+  {
+    "id": 29153,
+    "explanation": "Argon is a noble gas = monoatomic (single atoms, not molecules). Answer A: argon."
+  },
+  {
+    "id": 29154,
+    "explanation": "2SO₂ + O₂ ⇌ 2SO₃. Adding O₂ increases its concentration → Le Chatelier shifts equilibrium right → more SO₃. Answer A: right, leading to more SO₃."
+  },
+  {
+    "id": 29155,
+    "explanation": "Balanced: 2Al + 6H₂SO₄(conc) → Al₂(SO₄)₃ + 6H₂O + 3SO₂. Answer A."
+  },
+  {
+    "id": 29156,
+    "explanation": "¹²₆C, ¹³₆C, ¹⁴₆C: same atomic number (6 protons), different mass numbers → isotopes. Answer C."
+  },
+  {
+    "id": 29157,
+    "explanation": "6 protons + 7 neutrons = mass number 13. Representation: ¹³₆X. Answer A: ¹³₆X."
+  },
+  {
+    "id": 29161,
+    "explanation": "Fine chemicals = produced in small quantities with very high degree of purity. Answer B: fine chemicals."
+  },
+  {
+    "id": 29162,
+    "explanation": "Aluminium is light (low density) and forms a protective oxide layer (resists corrosion) → ideal for aircraft. Answer B."
+  },
+  {
+    "id": 29164,
+    "explanation": "Ductility = ability to be drawn into wires. Metals are ductile because layers of atoms can slide over each other. Answer A: ductile."
+  },
+  {
+    "id": 29168,
+    "explanation": "Activation energy is the minimum energy required for effective (reactive) collisions between particles. Answer A."
+  },
+  {
+    "id": 29169,
+    "explanation": "H₂O + H⁺ → H₃O⁺: oxygen in water donates a lone pair to H⁺ = dative (coordinate) bond. Answer A: dative."
+  },
+  {
+    "id": 29170,
+    "explanation": "Copper produces Cu²⁺ (blue) coloured ions in aqueous solution. Answer B: copper."
+  },
+  {
+    "id": 29172,
+    "explanation": "Solid particles are tightly packed in fixed positions — they are NOT easily compressed. Answer D."
+  },
+  {
+    "id": 29173,
+    "explanation": "X forms X₂O, XO, XO₂: same two elements (X and O) combine in different ratios → law of multiple proportions. Answer D."
+  },
+  {
+    "id": 29175,
+    "explanation": "Scent spreading through a garden = diffusion (random movement of molecules from high to low concentration). Answer B: diffusion."
+  },
+  {
+    "id": 29176,
+    "explanation": "PV/T = K combines Boyle's law (PV = constant at fixed T) with Charles' law (V/T = constant at fixed P). Answer A: Boyle's and Charles' laws."
+  },
+  {
+    "id": 29177,
+    "explanation": "Propane C₃H₈ MW = 44; CO₂ MW = 44. Same molar mass → same rate of diffusion (Graham's law). Answer C."
+  },
+  {
+    "id": 29179,
+    "explanation": "Electron affinity = energy associated with adding an electron to an isolated neutral gaseous atom. Answer C: electron affinity."
+  },
+  {
+    "id": 29180,
+    "explanation": "H₃O⁺(aq) + OH⁻(aq) → 2H₂O(l): acid + base → water = neutralisation. Answer C."
+  },
+  {
+    "id": 29181,
+    "explanation": "Diluting a weak acid (pH 6) adds water → H⁺ concentration decreases → pH increases (closer to 7). Answer A: pH of N is increased when diluted."
+  },
+  {
+    "id": 29182,
+    "explanation": "Container cold to touch = heat absorbed from surroundings = endothermic dissolution. Answer A."
+  },
+  {
+    "id": 29183,
+    "explanation": "CO₂ dissolved under pressure in fizzy drinks gives the characteristic effervescent, refreshing taste. Answer A: carbon(IV) oxide."
+  },
+  {
+    "id": 29184,
+    "explanation": "Chemical equilibrium: concentrations of reactants and products remain constant (not necessarily equal). Answer C."
+  },
+  {
+    "id": 29186,
+    "explanation": "Boiling breaks intermolecular bonds between ethanol molecules. Only hydrogen bonds (III) between ethanol molecules are broken during boiling (covalent/ionic bonds within molecules remain intact). Answer C: III only."
+  },
+  {
+    "id": 29188,
+    "explanation": "NH₄Cl → NH₄⁺ + Cl⁻. NH₄⁺ is a weak acid → solution is acidic → turns blue litmus red. Answer B: NH₄Cl."
+  },
+  {
+    "id": 29189,
+    "explanation": "Chlorine water acts as a bleaching agent because it is an oxidising agent (oxidises the dye molecules). Answer C."
+  },
+  {
+    "id": 29190,
+    "explanation": "CH₂O₂ = HCOOH (methanoic acid) = carboxylic acid (has –COOH group). Answer B: a carboxylic acid."
+  },
+  {
+    "id": 29191,
+    "explanation": "1 Faraday = 96,500 C is needed to discharge 1 mole of univalent ions. Answer C: 96,500 C."
+  },
+  {
+    "id": 29193,
+    "explanation": "H₂SO₃ (trioxosulphate IV acid/sulphurous acid): S oxidation state. 2(+1) + x + 3(−2) = 0 → x = +4. Answer B: H₂SO₃."
+  },
+  {
+    "id": 29194,
+    "explanation": "C₆H₁₂O₆ (glucose) is a covalent molecular compound — it does not ionise in solution → non-electrolyte. Answer C."
+  },
+  {
+    "id": 29197,
+    "explanation": "Proteins are polymers of amino acids linked by peptide bonds. Hydrolysis (with acid/alkali/enzymes) breaks them into amino acids. Answer A."
+  },
+  {
+    "id": 29198,
+    "explanation": "Secondary alkanol: OH on carbon bonded to 2 other carbons. CH₃CH₂CH(OH)CH₃ (ii) = secondary. Answer B: II only."
+  },
+  {
+    "id": 29200,
+    "explanation": "Ethene (C₂H₄) is used commercially as a ripening agent for bananas and other fruits. Answer C: ethene."
+  },
+  {
+    "id": 29201,
+    "explanation": "Natural gas (methane) combustion produces CO₂ → greenhouse effect. Answer A: natural gas."
+  },
+  {
+    "id": 29204,
+    "explanation": "Saponification produces glycerol (propane-1,2,3-triol) — a trihydric alkanol. Answer C: trihydric alkanol."
+  },
+  {
+    "id": 29205,
+    "explanation": "Brass = Cu + Zn. Bronze = Cu + Sn. Common metal = copper (Cu). Answer B: copper."
+  },
+  {
+    "id": 29218,
+    "explanation": "Copper has metallic bonding (delocalised electrons) — NOT van der Waals forces (which are between molecules). Answer A: copper."
+  },
+  {
+    "id": 29221,
+    "explanation": "Tetrahedral molecules (e.g., CCl₄) have bond angles of 109.5°. Answer B: 109.5°."
+  },
+  {
+    "id": 29237,
+    "explanation": "Solubility curve shows how much of a salt dissolves at each temperature → can determine amount of crystals formed when solution is cooled. Answer C."
+  },
+  {
+    "id": 29249,
+    "explanation": "Car exhaust: CO (carbon monoxide, incomplete combustion) and SO₂ are pollutants from fuel combustion. Answer C: carbon(II) oxide and sulphur(IV) oxide."
+  },
+  {
+    "id": 29255,
+    "explanation": "Petroleum takes millions of years to form; once used, it cannot be regenerated within a human timescale = non-renewable. Answer D."
+  },
+  {
+    "id": 29257,
+    "explanation": "2H₂S + SO₂ → 2H₂O + 3S. S changes oxidation state in both H₂S (−2→0) and SO₂ (+4→0) → redox reaction. Answer D."
+  },
+  {
+    "id": 29267,
+    "explanation": "Br₂ + 2KI → 2KBr + I₂. Br₂ is reduced (Br: 0→−1) and I⁻ is oxidised → Br₂ is the oxidising agent. Answer A."
+  },
+  {
+    "id": 29293,
+    "explanation": "Blood cells are denser than plasma. Centrifugation separates them by density difference. Answer A: centrifugation."
+  },
+  {
+    "id": 29294,
+    "explanation": "As nuclear charge (protons) increases in an isoelectronic series, more protons pull the same electrons closer → smaller ionic radius. Answer B: decreases as nuclear charge increases."
+  },
+  {
+    "id": 29298,
+    "explanation": "Protium (¹₁H) has 1 proton and 0 neutrons: mass number = 1, atomic number = 1 → they are equal because there are no neutrons. Answer C."
+  },
+  {
+    "id": 29300,
+    "explanation": "Melting point is a physical property used to determine purity — pure substances melt sharply; impure substances melt over a range. Answer B: melting point."
+  },
+  {
+    "id": 29314,
+    "explanation": "Ca and Mg belong to the same group (Group II) because both have the same number of valence electrons (2). Answer D."
+  },
+  {
+    "id": 29338,
+    "explanation": "A catalyst changes activation energy and rate but does NOT change the enthalpy (heat) of reaction — ΔH remains the same. Answer D: heat of reaction."
+  },
+  {
+    "id": 29341,
+    "explanation": "Alkanoic acid + alkanol ⇌ ester + water (reversible) = esterification. Answer B: esterification."
+  },
+  {
+    "id": 29365,
+    "explanation": "When an ionic bond is broken, bonding electrons go to the more electronegative atom. Key answer: B = gained by the most electropositive atom. Following given key: Answer B. (Note: electrons are actually gained by the most electronegative atom — possible key error.)"
+  },
+  {
+    "id": 29373,
+    "explanation": "Proximity to raw materials is the most important factor in siting a chemical industry (reduces transport costs). Answer B."
+  },
+  {
+    "id": 29378,
+    "explanation": "Alkanol CₙH₂ₙ₊₁OH, 60% C. 12n/(12n + 2n+1 + 16 + 1) = 0.60. 12n = 0.60(14n+18) = 8.4n + 10.8. 3.6n = 10.8. n = 3. C₃H₇OH. Answer C."
+  },
+  {
+    "id": 29379,
+    "explanation": "CH₃COOH (I) reacts with Na → H₂ (acidic –COOH). CH₃CH₂OH (II) reacts with Na → H₂ (–OH). CH₃COOCH₃ (III, ester) does not react with Na. I and II only. Answer B."
+  },
+  {
+    "id": 29383,
+    "explanation": "Boyle's law: P₁V₁ = P₂V₂. 3P × V = P₂ × 2V. P₂ = 3P/2. Answer C: 3P/2."
+  },
+  {
+    "id": 29386,
+    "explanation": "NH₃ + H⁺ → NH₄⁺: N donates its lone pair to H⁺ = dative (coordinate) bond. Answer A: dative."
+  },
+  {
+    "id": 29387,
+    "explanation": "Moles CuSO₄ in 250 cm³ = 5.0/160 = 0.03125 mol. Concentration = 0.03125/0.25 = 0.125 mol dm⁻³. Answer B: 0.125."
+  },
+  {
+    "id": 29395,
+    "explanation": "AgNO₃ + NaCl → AgCl (insoluble ppt) + NaNO₃. To obtain pure dry AgCl: filter (to separate ppt), wash (remove soluble impurities), dry. Answer C: filtering, washing and drying."
+  },
+  {
+    "id": 29405,
+    "explanation": "Proteins hydrolysed by dilute mineral acids: polypeptide chains broken into individual amino acids. Answer C: amino acids."
+  },
+  {
+    "id": 29407,
+    "explanation": "C:H ratio 1:2, empirical formula CH₂ (MW=14). Molecular mass = 56. 56/14 = 4. Molecular formula = C₄H₈. Answer B: C₄H₈."
+  },
+  {
+    "id": 29408,
+    "explanation": "Cathodic protection works because the protected metal (iron) is made the cathode — based on relative tendencies of oxidation (electrochemical series). Answer D."
+  },
+  {
+    "id": 29413,
+    "explanation": "Rate of Mg reacting with acid increases linearly with acid concentration (graph I shows straight line). Answer A: I."
+  },
+  {
+    "id": 29414,
+    "explanation": "Dehydration of ethanol (−H₂O) to ethene: a molecule is eliminated from the alkanol = elimination reaction. Answer B."
+  },
+  {
+    "id": 29415,
+    "explanation": "Exothermic dissolution: as temperature increases, solubility decreases (Le Chatelier's). Graph IV shows decreasing curve. Answer D: IV."
+  },
+  {
+    "id": 29416,
+    "explanation": "Strong acid + strong base titration: pH changes sharply at equivalence point → characteristic S-shaped curve = graph I. Answer A: I."
+  },
+  {
+    "id": 29417,
+    "explanation": "Insoluble salts are most commonly prepared by double decomposition (mixing solutions so the product precipitates). Answer D."
+  },
+  {
+    "id": 29418,
+    "explanation": "Phosphorus molecule is P₄ (four phosphorus atoms bonded together) = tetraatomic. Answer C: tetraatomic."
+  },
+  {
+    "id": 29419,
+    "explanation": "Ammonia is extremely soluble in water (about 700 volumes dissolve in 1 volume of water at room temperature). Answer A: ammonia."
+  },
+  {
+    "id": 29421,
+    "explanation": "PV = nRT. n = PV/(RT) = (10 × 8.2)/(0.082 × 320) = 82/26.24 ≈ 3.13 mol. Answer C: 3.13."
+  },
+  {
+    "id": 29424,
+    "explanation": "Volume of gas increases when temperature increases (V ∝ T) and pressure decreases (V ∝ 1/P). Answer C: T increased and P decreased."
+  },
+  {
+    "id": 29425,
+    "explanation": "CuSO₄(aq) + Pb(NO₃)₂(aq) → PbSO₄(s, white ppt) + Cu(NO₃)₂(aq). Answer D: white precipitate."
+  },
+  {
+    "id": 29426,
+    "explanation": "High ionisation energy means electrons are tightly held → high effective nuclear charge (many protons pulling electrons in). Answer C."
+  },
+  {
+    "id": 29427,
+    "explanation": "Ideal gas collisions are perfectly elastic — kinetic energy is conserved (no energy lost on collision). Answer A."
+  },
+  {
+    "id": 29428,
+    "explanation": "Group VII: reactivity decreases down the group (F most reactive, I least reactive). Answer C."
+  },
+  {
+    "id": 29429,
+    "explanation": "Fluorine is the most electronegative element → strongest tendency to attract electrons → highest reactivity. Answer A: high electronegativity."
+  },
+  {
+    "id": 29431,
+    "explanation": "Cathode = reduction (gain of electrons). B²⁺(aq) + 2e⁻ → B(s) represents reduction at the cathode. Answer B."
+  },
+  {
+    "id": 29433,
+    "explanation": "Ag is univalent. Moles Ag = 1.08/108 = 0.01 mol. Q = 0.01 × 96500/1 = 965 C. Answer C: 965 C."
+  },
+  {
+    "id": 29436,
+    "explanation": "KOH MW = 56. Moles = 0.28/56 = 0.005 mol. Volume = 100 cm³ = 0.1 dm³. Concentration = 0.005/0.1 = 0.05 mol dm⁻³. Answer B."
+  },
+  {
+    "id": 29437,
+    "explanation": "0.160 mol C : 0.640 mol H. Ratio = 1:4. Empirical formula = CH₄. Answer C."
+  },
+  {
+    "id": 29438,
+    "explanation": "Key answer: A = K⁺. Note: K⁺ and Cl⁻ are isoelectronic (both 18e⁻). K⁺ has more protons (19) so should be smaller. However, given key: Answer A: K⁺."
+  },
+  {
+    "id": 29439,
+    "explanation": "KNO₃ is obtained from solution by crystallisation (cooling the hot saturated solution). Answer C: crystallization."
+  },
+  {
+    "id": 29440,
+    "explanation": "Ionisation energy decreases down a group (outer electrons are farther from the nucleus and more shielded). Answer D: decreases down the group."
+  },
+  {
+    "id": 29441,
+    "explanation": "The region around the nucleus where electrons can be found is called an orbital. Answer B: an orbital."
+  },
+  {
+    "id": 29442,
+    "explanation": "O²⁻ (8+2e = 10e), Mg²⁺ (12−2 = 10e), Al³⁺ (13−3 = 10e) all have 10 electrons = same config. Cl⁻ (17+1 = 18e) has different config. Answer A: Cl⁻."
+  },
+  {
+    "id": 29443,
+    "explanation": "RAM = 0.69×63 + 0.31×65 = 43.47 + 20.15 = 63.62 ≈ 63.6. Answer B: 63.6."
+  },
+  {
+    "id": 29444,
+    "explanation": "Diagram question. Activation energy = energy difference between reactants and the transition state (peak) = Ec. Answer C: Ec."
+  },
+  {
+    "id": 29445,
+    "explanation": "Protons and electrons are fundamental (elementary) particles because they are found in all matter. Answer D: are found in all matter."
+  },
+  {
+    "id": 29447,
+    "explanation": "Diagram question. Products have lower energy than reactants (diagram shows energy decreasing) → exothermic reaction. Answer B: an exothermic reaction."
+  },
+  {
+    "id": 29448,
+    "explanation": "Isotopes have the same atomic number (same element = same protons). x, y, z all equal the atomic number of neon = 10. Answer C: x = y = z."
+  },
+  {
+    "id": 29449,
+    "explanation": "2.24 cm³ / 22,400 cm³ × 6.02×10²³ = (2.24/22400) × 6.02×10²³ = 10⁻⁴ × 6.02×10²³ = 6.02×10¹⁹ molecules. Answer C: 6.02×10¹⁹."
+  },
+  {
+    "id": 29450,
+    "explanation": "Electrovalent (ionic) compounds dissolve in polar solvents (water) because polar solvent molecules stabilise the ions through hydration. Answer D: dissolve in polar solvent."
+  },
+  {
+    "id": 29453,
+    "explanation": "J.J. Thompson discovered the electron in 1897 through cathode ray tube experiments. Answer A: Joseph J. Thompson."
+  }
+]

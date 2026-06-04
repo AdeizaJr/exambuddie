@@ -1,32 +1,28 @@
 import React from 'react';
-import type { Page } from '../types';
+import { NavLink, Outlet } from 'react-router-dom';
 
 interface NavItem {
-  id: Page;
+  path: string;
   label: string;
   icon: string;
-  badge?: number;
 }
 
 interface LayoutProps {
-  page: Page;
-  onNavigate: (page: Page) => void;
   pendingFlags: number;
   onLogout: () => void;
-  children: React.ReactNode;
 }
 
-const NAV_ITEMS: Omit<NavItem, 'badge'>[] = [
-  { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'questions', label: 'Questions', icon: '❓' },
-  { id: 'users', label: 'Users', icon: '👥' },
-  { id: 'flags', label: 'Flags', icon: '🚩' },
-  { id: 'subscriptions', label: 'Subscriptions', icon: '💳' },
-  { id: 'analytics', label: 'Analytics', icon: '📈' },
-  { id: 'broadcast', label: 'Broadcast', icon: '📢' },
+const NAV_ITEMS: NavItem[] = [
+  { path: '/overview',      label: 'Overview',      icon: '📊' },
+  { path: '/questions',     label: 'Questions',     icon: '❓' },
+  { path: '/users',         label: 'Users',         icon: '👥' },
+  { path: '/flags',         label: 'Flags',         icon: '🚩' },
+  { path: '/subscriptions', label: 'Subscriptions', icon: '💳' },
+  { path: '/analytics',     label: 'Analytics',     icon: '📈' },
+  { path: '/broadcast',     label: 'Broadcast',     icon: '📢' },
 ];
 
-export default function Layout({ page, onNavigate, pendingFlags, onLogout, children }: LayoutProps) {
+export default function Layout({ pendingFlags, onLogout }: LayoutProps) {
   return (
     <div className="flex h-screen overflow-hidden bg-bg text-white">
       {/* Sidebar */}
@@ -47,17 +43,18 @@ export default function Layout({ page, onNavigate, pendingFlags, onLogout, child
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
-            const isActive = page === item.id;
-            const badge = item.id === 'flags' && pendingFlags > 0 ? pendingFlags : 0;
+            const badge = item.path === '/flags' && pendingFlags > 0 ? pendingFlags : 0;
             return (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group ${
-                  isActive
-                    ? 'bg-accent/15 text-accent'
-                    : 'text-muted hover:text-white hover:bg-surface2'
-                }`}
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group ${
+                    isActive
+                      ? 'bg-accent/15 text-accent'
+                      : 'text-muted hover:text-white hover:bg-surface2'
+                  }`
+                }
               >
                 <span className="flex items-center gap-2.5">
                   <span className="text-base leading-none">{item.icon}</span>
@@ -68,7 +65,7 @@ export default function Layout({ page, onNavigate, pendingFlags, onLogout, child
                     {badge > 9 ? '9+' : badge}
                   </span>
                 )}
-              </button>
+              </NavLink>
             );
           })}
         </nav>
@@ -89,8 +86,10 @@ export default function Layout({ page, onNavigate, pendingFlags, onLogout, child
         </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      {/* Page content rendered by the router */}
+      <main className="flex-1 overflow-y-auto">
+        <Outlet />
+      </main>
     </div>
   );
 }

@@ -97,12 +97,3 @@ export interface PaginatedResponse<T> {
   limit: number;
   pages: number;
 }
-
-export type Page =
-  | 'overview'
-  | 'questions'
-  | 'users'
-  | 'flags'
-  | 'subscriptions'
-  | 'analytics'
-  | 'broadcast';

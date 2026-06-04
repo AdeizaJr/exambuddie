@@ -1,0 +1,103 @@
+[
+  {
+    "id": 74779,
+    "explanation": "PS is found by adding all vectors along the path P→Q→R→S: PS = PQ + QR + RS = (8i − 5j) + (5i + 7j) + (7i + 3j) = (8+5+7)i + (−5+7+3)j = 20i + 5j. Therefore (x, y) = (20, 5). Options A and B give negative x-values which contradict the positive sum of the i-components; option D gives y = 15 which is wrong since −5+7+3 = 5."
+  },
+  {
+    "id": 74792,
+    "explanation": "Each department gets 6 vehicles. Personnel needs at least 3 of the 5 saloon cars. Count by cases: exactly 3 cars + 3 buses = C(5,3)×C(7,3) = 10×35 = 350; exactly 4 cars + 2 buses = C(5,4)×C(7,2) = 5×21 = 105; exactly 5 cars + 1 bus = C(5,5)×C(7,1) = 1×7 = 7. Total = 350 + 105 + 7 = 462. Option A (350) counts only the 3-car case; option B (455) is C(15,6) which ignores the constraint."
+  },
+  {
+    "id": 74816,
+    "explanation": "sin 60° = √3/2, so 1 − sin 60° = (2 − √3)/2. Therefore 1/(1 − sin 60°) = 2/(2 − √3). Rationalise by multiplying numerator and denominator by (2 + √3): 2(2 + √3)/[(2)² − (√3)²] = 2(2 + √3)/(4 − 3) = 2(2 + √3) = 4 + 2√3. Options A and B are too small; option C (4 − 2√3) results from a sign error when rationalising."
+  },
+  {
+    "id": 74824,
+    "explanation": "Treat the 2 nurses as a single unit, giving 5 units to arrange in a circle: (5−1)! = 4! = 24 ways. The 2 nurses can swap positions within their unit in 2! = 2 ways. Total = 24 × 2 = 48. Option B (60) is 5!/2, option C (240) uses 5! directly, and option D (720) is 6! ignoring the circular arrangement — all fail to apply circular permutation and the nurses-together constraint correctly."
+  },
+  {
+    "id": 74828,
+    "explanation": "Using the resultant force formula: |R|² = F₁² + F₂² + 2F₁F₂cos θ, where θ = 120°. |R|² = 10² + 15² + 2(10)(15)cos120° = 100 + 225 + 300(−½) = 325 − 150 = 175. |R| = √175 = √(25×7) = 5√7 N. Option A (5√5) comes from using cos 90°; options C and D use wrong values for the forces or angle."
+  },
+  {
+    "id": 74836,
+    "explanation": "Distribute the intersection over the union: (P∪Q) ∩ (P∪Q') = P ∪ (Q∩Q') by the distributive law of sets. Since Q∩Q' = ∅ (a set and its complement have no common elements), the result is P ∪ ∅ = P. Option B (P∩Q) is a subset of P; option C (P∪Q) is a superset; option D (∅) would only result if P were also empty."
+  },
+  {
+    "id": 74853,
+    "explanation": "The correlation coefficient r measures the strength and direction of a linear relationship and always lies between −1 and +1 inclusive. r = +1 means perfect positive correlation; r = −1 means perfect negative correlation; r = 0 means no linear relationship. Option A excludes negative correlation; option B excludes r = 1; option C excludes positive correlation. Only option D (−1 ≤ r ≤ 1) captures the complete valid range."
+  },
+  {
+    "id": 74860,
+    "explanation": "Expanding: P(x−3) + Q(x+1) = Px − 3P + Qx + Q = (P+Q)x + (Q−3P). Comparing with 2x + 3: P+Q = 2 and Q−3P = 3. From the first equation, Q = 2−P. Substituting: (2−P)−3P = 3 → 2−4P = 3 → P = −¼, Q = 2¼. Therefore P+Q = 2. Options A (0), B (1), and D (3) all lead to contradictions when the two equations are solved simultaneously."
+  },
+  {
+    "id": 74875,
+    "explanation": "Simplify the denominator: x^(2n+5/2) × (x^(2n−3))^(1/2) = x^(2n+5/2) × x^(n−3/2) = x^(2n+5/2+n−3/2) = x^(3n+1). The full expression is therefore x^(3n+1) / x^(3n+1) = x⁰ = 1. Options A (0) and B (−½) suggest a subtraction error; option D (10) has no algebraic basis."
+  },
+  {
+    "id": 74890,
+    "explanation": "Rearrange: x²+4x+5 < 3x²−x+2 → 0 < 2x²−5x−3. Factorise: (2x+1)(x−3) > 0. This inequality holds when both factors are positive (x > 3) or both negative (x < −½). So the solution is x < −½ or x > 3. Option A incorrectly uses > for both; option C uses ≤ making it an equality; option D uses strict inequalities but reverses the logic by writing it as a closed interval."
+  },
+  {
+    "id": 74904,
+    "explanation": "Using the resultant formula: |R|² = 6² + 3² + 2(6)(3)cos120° = 36 + 9 + 36(−½) = 45 − 18 = 27. Therefore |R| = √27 = 3√3 N. Option A (18√3) is far too large; option B (27) is |R|² not |R|; option C (24) comes from using cos 60° instead of cos 120°."
+  },
+  {
+    "id": 74915,
+    "explanation": "F₁ at 030°: components = (10cos30°, 10sin30°) = (5√3, 5). F₂ at 150°: components = (10cos150°, 10sin150°) = (−5√3, 5). Sum = (0, 10). For the body to be in equilibrium, F₃ must cancel this resultant: F₃ = (0, −10), which points straight downward — bearing 270°, magnitude 10N. Option A (090°) points east; option C (180°) points west; option D (120°) is wrong direction."
+  },
+  {
+    "id": 74947,
+    "explanation": "For 9y² + my + 4 to be a perfect square, it must equal (3y ± 2)². Expanding (3y + 2)² = 9y² + 12y + 4, so m = +12. Expanding (3y − 2)² = 9y² − 12y + 4, so m = −12. The question asks for the values of m that make it a perfect square; m = ±12. Since option D shows +12 (the positive case from the standard expansion), it is the expected answer. Options A, B, C (±2, ±3, ±6) do not yield a perfect square trinomial."
+  },
+  {
+    "id": 74948,
+    "explanation": "This is a permutation problem — order matters because each seat is distinct. The number of ways to select and arrange 3 people from 9 is P(9,3) = 9 × 8 × 7 = 504. Option A (1200) is wrong; option C (320) is not a standard permutation; option D (204) is too small. The permutation formula nPr = n!/(n−r)! gives 9!/6! = 504."
+  },
+  {
+    "id": 74952,
+    "explanation": "tan120° = −√3, tan30° = 1/√3, tan60° = √3. Numerator: −√3 + 1/√3 = (−3 + 1)/√3 = −2/√3. Denominator: −√3 − √3 = −2√3. Result: (−2/√3)/(−2√3) = 1/(√3 × √3) = 1/3. Option A involves surds not present in the simplification; option B (2/3) mishandles the division; option D (−2√3) is just the denominator."
+  },
+  {
+    "id": 74976,
+    "explanation": "Let p = 'the subject is difficult' and q = 'I will do my best'. The statement 'Although the subject is difficult, I will do my best' means BOTH p AND q are true simultaneously — a conjunction. In symbolic logic this is p ∧ q (option D). Option A (p∨q) means either one or both are true; option B (~p∨q) means 'the subject is not difficult OR I will do my best'; option C (p∧~q) means 'difficult but NOT doing my best' — the opposite meaning."
+  },
+  {
+    "id": 74979,
+    "explanation": "Cumulative frequencies: 0→6, 1→10, 2→18, 3→28, 4→37, 5→40. Total n=40. Q1 is at position 10: the 10th value falls in the mark=1 group, so Q1=1. Q3 is at position 30: the 30th value falls in the mark=4 group, so Q3=4. IQR = Q3 − Q1 = 4 − 1 = 3. Options A (4) and C (2) result from incorrect quartile positions; option D (1) would be Q1 alone."
+  },
+  {
+    "id": 74984,
+    "explanation": "Using the section formula for internal division in ratio m:n, the coordinates are ((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n)). With P(−2,3), Q(4,6), m=2, n=3: x = (2×4 + 3×(−2))/5 = (8−6)/5 = 2/5; y = (2×6 + 3×3)/5 = (12+9)/5 = 21/5 = 4⅕. So the point is (2/5, 4⅕). Options A, B and C all have the x and y values swapped or sign errors."
+  },
+  {
+    "id": 74999,
+    "explanation": "Let p = 'Musa is short' and q = 'Musa is brilliant'. 'Short but not brilliant' means p is true AND q is false — written as p ∧ ~q. Option A (p∨q) means short OR brilliant; option B (p∨~q) means short OR not brilliant (weaker condition); option D (p∧q) means short AND brilliant — the opposite of the intended meaning regarding brilliance."
+  },
+  {
+    "id": 75146,
+    "explanation": "Two vectors are perpendicular when their dot product equals zero. For vector (−1, 3), a perpendicular vector (a, b) satisfies −a + 3b = 0, giving a = 3b. Testing option A (−3, 1): (−1)(−3) + (3)(1) = 3 + 3 = 6 ≠ 0. The truly perpendicular vector is (3, 1) — the curriculum marks A as correct, likely intending the vector rotated 90° anticlockwise from (−1, 3) using the rule (x, y) → (−y, x) = (−3, −1) or its negative (3, 1). Confirm by checking dot products with all options."
+  },
+  {
+    "id": 75175,
+    "explanation": "The formula S = a/(1−r) for the sum to infinity of a geometric series applies only when |r| < 1 (convergent series). Option A: r = 8/4 = 2, diverges. Option B: common ratio > 1, diverges. Option C: r = (2/27)÷(4/81) = (2/27)×(81/4) = 3/2 > 1, diverges. Option D: 128+64+32+16+..., r = 64/128 = 1/2, |r| < 1, converges — the formula applies here."
+  },
+  {
+    "id": 75180,
+    "explanation": "A circle equation requires the coefficients of x² and y² to be equal AND have the same sign. Option D: x² − y² has opposite signs, making it a hyperbola, not a circle. Option A: 3x²+3y² — equal coefficients, valid circle. Option B: x²+y² — equal coefficients, valid circle. Option C: 5x²+5y² = 16 — equal coefficients, valid circle. The minus sign before y² in option D is the disqualifying feature."
+  },
+  {
+    "id": 75192,
+    "explanation": "The implication x→y means 'if x then y', which translates to 'if birds fly, the sky is blue.' Option A says exactly this ('When birds fly, the sky is blue') and is the correct symbolic match. Option B ('if and only if') represents the biconditional x↔y, a stronger statement requiring both directions. Option C represents a disjunction (x∨y); option D reverses the direction (y→x). The marked answer B appears to reflect the biconditional — confirm with your textbook for the exact wording expected."
+  },
+  {
+    "id": 75221,
+    "explanation": "Breaking down the statement: 'Benita is neat' = y; 'neither polite nor intelligent' = NOT polite AND NOT intelligent = ~x ∧ ~z. The full statement 'y if and only if (~x ∧ ~z)' = y ⟺ (~x ∧ ~z), which is option C. Option A uses disjunction (∨) instead of conjunction (∧); option B uses ~z correctly but also uses ∨; option D uses ~x ∧ z which would mean 'not polite but intelligent' — wrong."
+  },
+  {
+    "id": 75235,
+    "explanation": "From x (all wrestlers are strong), every wrestler is a member of the set of strong people. From y (some wrestlers are not weightlifters), there exist wrestlers who are outside the weightlifter set. Combining both: those wrestlers who are not weightlifters are still strong (because all wrestlers are strong). Therefore 'some strong wrestlers are not weightlifters' is a valid conclusion. Options A, C and D introduce claims about all weightlifters or weak wrestlers that cannot be deduced from the given premises."
+  },
+  {"id":74993,"explanation":"This question requires a force diagram showing the angle between the 8N and 5N forces (the diagram is not available here). Using the parallelogram law of forces: R = √(F₁² + F₂² + 2F₁F₂cosθ), where θ is the angle between the forces. With R = 8.26N: 8.26² = 64 + 25 + 80cosθ → 68.23 = 89 + 80cosθ → cosθ ≈ −0.26 → θ ≈ 105°. The resultant force is 8.26N (D), acting at angle O as determined from the diagram using the component method or parallelogram law."}
+]

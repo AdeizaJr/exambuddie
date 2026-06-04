@@ -1,4 +1,4 @@
-# 🎓 ExamAce — AI Exam Prep Bot for Nigerian Students
+# 🎓 ExamBuddi — AI Exam Prep Bot for Nigerian Students
 
 > WAEC & JAMB past questions, AI-powered explanations, and progress tracking — right inside Telegram.
 

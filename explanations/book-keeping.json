@@ -1,0 +1,10 @@
+[
+  {
+    "id": 21831,
+    "explanation": "When an owner makes stock drawings for private use, it creates a Drawings account which is treated as a debtor to the business — a current asset. While the physical stock decreases, the drawings entry increases the asset side via the debtor relationship, resulting in a net increase in recorded business assets. Payment to trade creditors (A) reduces both cash and liabilities simultaneously. Additional liability incurred (B) increases liabilities without guaranteeing an equal asset increase in all scenarios."
+  },
+  {
+    "id": 21841,
+    "explanation": "At the end of the useful life of an asset, the asset disposal account is closed off. If the accumulated depreciation charged over three years does not fully write down the asset to its sale/scrap value, the disposal account will show a debit balance representing a loss on disposal. A debit balance of #250,000 means the business received less than the net book value, confirming a loss. A credit balance would indicate a profit on disposal, making options A and C incorrect."
+  }
+]

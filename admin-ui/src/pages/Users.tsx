@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getUsers, updateUserPlan } from '../api';
 import type { User, PaginatedResponse } from '../types';
 import Spinner from '../components/Spinner';
@@ -15,15 +16,30 @@ function formatDate(dateStr: string | null): string {
 }
 
 export default function Users() {
-  const [result, setResult] = useState<PaginatedResponse<User> | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // Derive filter values from URL
+  const search = searchParams.get('q')    ?? '';
+  const page   = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
+
+  const [result, setResult]         = useState<PaginatedResponse<User> | null>(null);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState<string | null>(null);
   const [grantTarget, setGrantTarget] = useState<User | null>(null);
-  const [months, setMonths] = useState(1);
-  const [saving, setSaving] = useState(false);
+  const [months, setMonths]         = useState(1);
+  const [saving, setSaving]         = useState(false);
+
+  function setFilter(key: string, value: string, keepPage = false) {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (value) next.set(key, value); else next.delete(key);
+        if (!keepPage) next.delete('page');
+        return next;
+      },
+      { replace: true },
+    );
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -38,13 +54,7 @@ export default function Users() {
     }
   }, [page, search]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [search]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
 
   async function handlePlanChange(user: User, plan: 'premium' | 'free', m?: number) {
     setSaving(true);
@@ -71,7 +81,7 @@ export default function Users() {
           type="text"
           placeholder="Search by name, username, or Telegram ID..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setFilter('q', e.target.value)}
           className="flex-1 bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent placeholder-muted"
         />
         <button
@@ -165,14 +175,14 @@ export default function Users() {
                 </p>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    onClick={() => setFilter('page', String(page - 1), true)}
                     disabled={page === 1}
                     className="px-3 py-1.5 text-xs bg-surface2 border border-border text-white rounded hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     Previous
                   </button>
                   <button
-                    onClick={() => setPage((p) => Math.min(result.pages, p + 1))}
+                    onClick={() => setFilter('page', String(page + 1), true)}
                     disabled={page === result.pages}
                     className="px-3 py-1.5 text-xs bg-surface2 border border-border text-white rounded hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >

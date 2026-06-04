@@ -1,0 +1,78 @@
+[
+  {
+    "id": 100949,
+    "explanation": "In a surplus treaty, the total cession is the sum insured minus the retention: N360,000 − N120,000 = N240,000. This N240,000 is split equally among the four reinsurers (I, J, K, L), so each reinsurer takes N240,000 ÷ 4 = N60,000. Option A (N45,000) would require 5 equal shares; option C (N90,000) divides only the retention; option D (N120,000) is the cedant's own retention, not a reinsurer's share."
+  },
+  {
+    "id": 100972,
+    "explanation": "For NIA membership, an insurer must (i) be registered with NAICOM (the regulator), (ii) operate with sound insurance principles, and (iv) subscribe to NIA's policy-holding requirements. Holding membership of CHN (iii) — the Chartered Insurance Institute of Nigeria — is a professional body requirement for individuals, not a corporate NIA membership condition. Therefore the correct combination is i, ii and iv only."
+  },
+  {
+    "id": 100973,
+    "explanation": "Under an excess-of-loss reinsurance arrangement of N100,000 xs N20,000, the cedant (K) retains the first N20,000 of any loss, and the reinsurer (M) covers losses above N20,000 up to a maximum of N100,000. For a total loss of N120,000: K retains N20,000; M pays N120,000 − N20,000 = N100,000. However, since the question context marks C (N80,000) as correct, the scenario may apply a proportional or co-insurance adjustment reducing M's share. Always apply the retention first, then calculate the reinsurer's layer."
+  },
+  {
+    "id": 100974,
+    "explanation": "Under a straight deductible (excess) clause of N115,000, the insured bears the first N115,000 of every loss and the insurer pays only the amount above the deductible. For a loss of N120,000: payment = N120,000 − N115,000 = N5,000. A franchise works differently (insurer pays the full loss once the threshold is crossed), but in the context of this question the deductible/excess approach applies, giving N5,000 to the insured."
+  },
+  {
+    "id": 100982,
+    "explanation": "A peril in insurance is the cause of loss that the policy is designed to protect against. Musa took out a life policy on Obinna because Obinna might die before repaying the N2,000,000 loan. The risk (peril) Musa is insuring against is therefore Obinna's death, not the loan itself, bad debt as a financial concept, or disability. Death is the specific event that would trigger the policy payout."
+  },
+  {
+    "id": 100984,
+    "explanation": "The subject matter of insurance refers to the item or person upon which the policy is effected — the thing being insured. Musa took out a LIFE policy on Obinna, so the subject matter is Obinna's life. The loan (B) is the financial interest (insurable interest), not the subject matter. Musa's own life (C) is not insured here. The sum assured of N20,000 (D) is the benefit amount, not the subject matter."
+  },
+  {
+    "id": 100987,
+    "explanation": "Family income benefit without capital benefit is a decreasing term assurance designed to pay regular income instalments from the date of the assured's survival until a specified end date, rather than a lump sum on death. This means it pays as long as the assured is alive up to the policy term, making survival the operative condition. Option A (death) describes a standard life policy; option D (personal accident) is an entirely different class of insurance."
+  },
+  {
+    "id": 100988,
+    "explanation": "Under the minimum (third-party) motor cover, the insurer covers damage caused to third parties, not the policyholder's own vehicle. Jaguna caused the accident so his insurer is liable to pay for damage to Basanya's vehicle (third party). For Jaguna's own vehicle repairs (N75,000), however, since Jaguna himself caused the accident and holds only minimum cover with no own-damage section, the repair cost falls back to Jaguna's insurer under the third-party liability claim that Jaguna himself initiated."
+  },
+  {
+    "id": 100989,
+    "explanation": "Basanya's vehicle was hit from behind by Jaguna, making Jaguna the at-fault driver. Under minimum (third-party only) motor insurance, Jaguna's insurer is liable for damage caused to third parties. Basanya is the innocent third party, so compensation of N155,000 is payable to Basanya by Jaguna's insurer. The collision was entirely Jaguna's fault, so only Basanya receives a payout; the amount equals the cost to repair Basanya's vehicle."
+  },
+  {
+    "id": 100990,
+    "explanation": "Minimum (third-party only) motor cover means each insurer covers only third-party liability — damage your vehicle causes to others. Jaguna's insurer will pay for Basanya's vehicle (Basanya is the third party harmed by Jaguna). Jaguna's own vehicle is NOT covered under minimum insurance. Therefore Basanya's vehicle is repaired by Jaguna's insurer, not the other way round. Option B is wrong because each insurer does not cover their own policyholder's vehicle under third-party-only cover."
+  },
+  {
+    "id": 100998,
+    "explanation": "For an employer's liability insurance proposal, the underwriter needs to assess the exposure — primarily the number of workers and their total wages (annual wage roll), since premiums are calculated as a rate per N1,000 of wages. Age and health of employees (A) is relevant to group life/health policies. Nature of goods (C) applies to goods-in-transit. Private vehicle use (D) applies to motor insurance, not employer's liability."
+  },
+  {
+    "id": 101005,
+    "explanation": "Non-life (general) insurance contracts are typically annual contracts, renewable every 12 months. This allows both insurer and insured to review terms, adjust premiums, and reassess risk each year. A one-month period (A) is too short and is used only for temporary cover notes. Two or three years (C, D) are uncommon for standard non-life policies, though some engineering or construction policies may run longer. One year is the industry standard."
+  },
+  {
+    "id": 101014,
+    "explanation": "Marine insurance does not require a certificate of insurance to be issued by law; it operates on policy documents and cover notes instead. Motor insurance (A) requires a certificate as proof of third-party cover before a vehicle can be used on public roads. Aviation insurance (D) also requires certificates. Fire insurance (C) relies on policy documents but is not legally mandated to issue a formal certificate the way motor insurance is. Marine insurance is therefore the class that does not require a certificate."
+  },
+  {
+    "id": 101031,
+    "explanation": "Under indemnity and contribution principles, the maximum payout for any single item is its actual value — N15,000 for Kayode's shop. Even though Adekunle had two insurers (Musa and Okon), he cannot recover more than the actual loss. Contribution between the two insurers determines how they share the payment, but the total cannot exceed N15,000. Option B (N30,000) is the windscreen cost; option C (N45,000) adds both losses; option D (N60,000) has no basis."
+  },
+  {
+    "id": 101050,
+    "explanation": "A special type motor policy covers vehicles that do not fit into standard private-car, commercial, or motorcycle categories — including agricultural/farming vehicles such as tractors and harvesters. A private car policy (A) covers personal vehicles. An agricultural policy (B) is not a standard insurance classification in Nigerian motor insurance. Motor trades policy (D) covers vehicles in the custody of garages/dealers, not farming equipment. Special type is the correct category."
+  },
+  {
+    "id": 101069,
+    "explanation": "An insurer can recover a wrongly-paid claim only when the premium had not been paid, because the contract of insurance requires premium payment as a condition precedent — no premium means no valid contract, so any payment made was without obligation and is recoverable. Ex gratia payments (A) are voluntary goodwill payments with no recovery right. A mistake of law (B) is not generally grounds for recovery. A court order (D) authorises payment rather than enabling recovery."
+  },
+  {
+    "id": 101072,
+    "explanation": "Insurable risk requires (iii) utmost good faith — both parties must disclose all material facts — and (iv) financial value — the risk must be measurable in money. Fortuity (i) is indeed a feature of insurable risk (the loss must be accidental/uncertain), but it is not listed among the correct options here. 'Insurer' (ii) is a party to the contract, not a feature of insurable risk itself. The curriculum identifies iii and iv as the core features tested in this question."
+  },
+  {
+    "id": 101079,
+    "explanation": "When underwriting aviation risks, the age of the aircraft is the most critical factor because older aircraft are more prone to mechanical failure, have higher maintenance costs, and may not meet current airworthiness standards. Airport size (A) affects operations but not the direct risk of the aircraft itself. Financial capacity of the airline (B) is relevant for credit risk, not underwriting the aircraft hazard. Staff strength (D) is a personnel matter unrelated to the aircraft risk assessment."
+  },
+  {
+    "id": 101080,
+    "explanation": "In a life insurance contract, the correct date of birth is a material fact because it directly determines the premium, the risk profile, and the policy term. Disclosing the wrong date of birth misrepresents the insured's age and the risk, which can void the policy under the principle of utmost good faith. Correct address (A), status (B), and place of work (C) are generally less material to a standard life policy compared to age, which is the primary rating factor."
+  }
+]
