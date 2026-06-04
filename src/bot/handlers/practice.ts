@@ -134,28 +134,10 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   if (!user) user = await requireProfile(ctx);
   if (!user) return;
 
-  if (user.plan === 'premium') {
-    // Step 0: pick year
-    if (year === undefined) {
-      await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'practice' });
-      await ctx.reply(
-        '📅 <b>Which exam year would you like to practise?</b>',
-        { parse_mode: 'HTML', reply_markup: fmt.flowYearKeyboard('practice') }
-      );
-      return;
-    }
-    // Step 1: pick exam type
-    if (sessionExamType === undefined) {
-      await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'practice' });
-      await ctx.reply(
-        '📋 <b>Which exam would you like to practise?</b>',
-        { parse_mode: 'HTML', reply_markup: fmt.examTypePickerKeyboard('practice') }
-      );
-      return;
-    }
-    // No timer step for practice — go straight to questions
-    if (questionTimerSecs === undefined) questionTimerSecs = 0;
-  }
+  // Use saved profile values as defaults — no re-selection needed
+  if (year === undefined) year = user.target_year ?? null;
+  if (sessionExamType === undefined) sessionExamType = user.exam_type || '';
+  if (questionTimerSecs === undefined) questionTimerSecs = 0;
 
   // Step 2 (all users): pick topic if any exist and none chosen yet
   const examType = sessionExamType || user.exam_type || '';
