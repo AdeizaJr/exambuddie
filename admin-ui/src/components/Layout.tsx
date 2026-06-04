@@ -34,7 +34,7 @@ export default function Layout({ pendingFlags, onLogout }: LayoutProps) {
               E
             </div>
             <div>
-              <p className="text-sm font-bold font-display text-white leading-tight">ExamAce</p>
+              <p className="text-sm font-bold font-display text-white leading-tight">ExamBuddi</p>
               <p className="text-xs text-muted leading-tight">Admin Panel</p>
             </div>
           </div>

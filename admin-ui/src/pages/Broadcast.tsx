@@ -145,7 +145,7 @@ export default function Broadcast() {
           <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">Preview</label>
           <div className="bg-surface border border-border rounded-xl p-4">
             <div className="bg-surface2 rounded-lg p-3">
-              <p className="text-xs text-muted mb-2">ExamAce Bot · Telegram</p>
+              <p className="text-xs text-muted mb-2">ExamBuddi Bot · Telegram</p>
               <pre className="text-sm text-white whitespace-pre-wrap font-sans leading-relaxed">{message}</pre>
             </div>
           </div>

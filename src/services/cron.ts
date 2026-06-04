@@ -21,7 +21,7 @@ export default function startCrons(bot: any): void {
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `⏰ *Your ExamAce Premium has expired, ${user.first_name}!*\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
+          `⏰ *Your ExamBuddi Premium has expired, ${user.first_name}!*\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
           { parse_mode: 'Markdown' }
         );
       } catch (e) { /* user may have blocked the bot */ }
@@ -43,7 +43,7 @@ export default function startCrons(bot: any): void {
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `⚠️ *Reminder, ${user.first_name}!*\n\nYour ExamAce Premium expires on *${expiryDate}*. Renew now to keep uninterrupted access to unlimited questions.\n\n/subscribe`,
+          `⚠️ *Reminder, ${user.first_name}!*\n\nYour ExamBuddi Premium expires on *${expiryDate}*. Renew now to keep uninterrupted access to unlimited questions.\n\n/subscribe`,
           { parse_mode: 'Markdown' }
         );
       } catch (e) {}

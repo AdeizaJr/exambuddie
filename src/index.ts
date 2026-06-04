@@ -1,4 +1,4 @@
-// src/index.ts — ExamAce Bot Entry Point
+// src/index.ts — ExamBuddi Bot Entry Point
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -38,10 +38,10 @@ bot.command('quiz', quiz.handleQuiz);
 bot.command('drill', (ctx) => practice.handleDrill(ctx));
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
-  await ctx.reply('Open the ExamAce app 🎓', {
+  await ctx.reply('Open the ExamBuddi app 🎓', {
     reply_markup: {
       inline_keyboard: [[{
-        text: '📱 Open ExamAce App',
+        text: '📱 Open ExamBuddi App',
         web_app: { url: `${APP_URL}/app` },
       }]],
     },
@@ -176,14 +176,14 @@ async function launchBot(attempt = 1): Promise<void> {
       await bot.launch({
         webhook: { domain: APP_URL, port: Number(PORT), path: '/bot' },
       });
-      console.log(`🤖 ExamAce Bot launched via webhook at ${APP_URL}/bot`);
+      console.log(`🤖 ExamBuddi Bot launched via webhook at ${APP_URL}/bot`);
     } else {
       await bot.launch();
-      console.log('🤖 ExamAce Bot launched via long polling (dev mode)');
+      console.log('🤖 ExamBuddi Bot launched via long polling (dev mode)');
     }
     console.log(`
   ╔═══════════════════════════════════════╗
-  ║         ExamAce Bot is live! 🎓       ║
+  ║         ExamBuddi Bot is live! 🎓       ║
   ║   WAEC & JAMB Prep — Nigeria          ║
   ╚═══════════════════════════════════════╝
     `);

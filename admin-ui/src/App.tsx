@@ -32,7 +32,7 @@ function LoginPage({ onLogin }: { onLogin: (secret: string) => void }) {
             E
           </div>
           <div>
-            <h1 className="text-lg font-bold font-display text-white">ExamAce Admin</h1>
+            <h1 className="text-lg font-bold font-display text-white">ExamBuddi Admin</h1>
             <p className="text-xs text-muted">Enter your admin secret to continue</p>
           </div>
         </div>

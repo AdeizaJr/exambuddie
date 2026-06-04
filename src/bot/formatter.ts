@@ -88,7 +88,7 @@ export const SUBJECT_EMOJI: Record<string, string> = {
 };
 
 export function welcome(firstName: string): string {
-  return `🎓 *Welcome to ExamAce, ${firstName}!*
+  return `🎓 *Welcome to ExamBuddi, ${firstName}!*
 
 I'm your personal WAEC & JAMB exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
 
@@ -373,7 +373,7 @@ export function freeLimitMessage(remaining: number, limit: number): string | nul
 
 You've used all ${limit} free questions for today. Come back tomorrow, or upgrade to Premium for *unlimited access*.
 
-💎 *ExamAce Premium:*
+💎 *ExamBuddi Premium:*
 • Unlimited questions, every day
 • Quiz mode & Topic drills
 • Progress tracking & weak-topic detection
@@ -385,7 +385,7 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 }
 
 export function upgradeMessage(): string {
-  return `💎 *Upgrade to ExamAce Premium*
+  return `💎 *Upgrade to ExamBuddi Premium*
 
 Unlock everything you need to ace your exams:
 
@@ -426,7 +426,7 @@ Reference: \`${txRef}\``;
 }
 
 export function helpMessage(): string {
-  return `📖 *ExamAce Commands*
+  return `📖 *ExamBuddi Commands*
 
 *Practice:*
 /practice — Start a practice session
@@ -444,7 +444,7 @@ export function helpMessage(): string {
 
 💡 *Tip:* During practice, tap ➡️ for the next question or 🚩 to flag a wrong explanation.
 
-Questions? DM @ExamAceSupport`;
+Questions? DM @ExamBuddiSupport`;
 }
 
 export function examTypeKeyboard() {

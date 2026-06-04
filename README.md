@@ -43,7 +43,7 @@ npm start          # Production (uses webhook if APP_URL is set)
 ## Project Structure
 
 ```
-examace/
+exambuddi/
 ├── src/
 │   ├── index.js                  # Entry point — bot + server launch
 │   ├── bot/
@@ -174,4 +174,4 @@ npm run generate-explanations   # Claude generates explanations for new question
 
 ## License
 
-MIT © ExamAce 2026
+MIT © ExamBuddi 2026
