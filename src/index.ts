@@ -89,6 +89,7 @@ bot.on('callback_query', async (ctx: any) => {
     return practice.startPractice(ctx, user, subject, year);
   }
   if (data.startsWith('practice:examtype:'))  return practice.handlePracticeExamTypePick(ctx);
+  if (data.startsWith('practice:topic:'))     return practice.handlePracticeTopicPick(ctx);
   if (data.startsWith('practice:timer:'))     return practice.handlePracticeTimerPick(ctx);
   if (data === 'practice:next')               return practice.handleNext(ctx);
   if (data === 'practice:stop')               return practice.handleStop(ctx);

@@ -557,6 +557,19 @@ export function quizSubjectKeyboard(subjects: string[]) {
   return { inline_keyboard: rows };
 }
 
+export function topicKeyboard(topics: string[]) {
+  const rows: any[][] = [
+    [{ text: '📚 All Topics', callback_data: 'practice:topic:__all__' }],
+  ];
+  for (let i = 0; i < topics.length; i += 2) {
+    rows.push(topics.slice(i, i + 2).map(t => ({
+      text: t,
+      callback_data: `practice:topic:${t}`,
+    })));
+  }
+  return { inline_keyboard: rows };
+}
+
 export function yearPickerKeyboard(subject: string) {
   const rows: any[][] = [
     [{ text: '📅 Any Year', callback_data: `practice:start:${subject}:any` }],

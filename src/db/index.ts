@@ -55,11 +55,27 @@ function isAllExams(examType: string): boolean {
   return examType === 'ALL' || examType === 'BOTH';
 }
 
+export async function getTopicsForSubject(examType: string, subject: string): Promise<string[]> {
+  const all = isAllExams(examType);
+  const params: any[] = all ? [subject] : [examType, subject];
+  const subjectIdx = all ? 1 : 2;
+  const examFilter = all ? '' : 'AND exam_type = $1';
+  const { rows } = await pool.query(
+    `SELECT DISTINCT topic FROM questions
+     WHERE subject = $${subjectIdx} ${examFilter}
+       AND topic IS NOT NULL AND topic != ''
+     ORDER BY topic`,
+    params
+  );
+  return rows.map((r: any) => r.topic as string);
+}
+
 export async function getRandomQuestion(
   examType: string,
   subject: string,
   excludeIds: number[] = [],
   year?: number | null,
+  topic?: string | null,
 ): Promise<Question | null> {
   const all = isAllExams(examType);
   const params: any[] = all ? [subject] : [examType, subject];
@@ -72,6 +88,12 @@ export async function getRandomQuestion(
     params.push(year);
   }
 
+  let topicFilter = '';
+  if (topic) {
+    topicFilter = `AND topic ILIKE $${params.length + 1}`;
+    params.push(`%${topic}%`);
+  }
+
   const excludeStart = params.length + 1;
   const excludeFilter = excludeIds.length > 0
     ? `AND id NOT IN (${excludeIds.map((_, i) => `$${excludeStart + i}`).join(',')})`
@@ -80,7 +102,7 @@ export async function getRandomQuestion(
 
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
-     WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${excludeFilter}
+     WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excludeFilter}
      ORDER BY RANDOM() LIMIT 1`,
     params
   );

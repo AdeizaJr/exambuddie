@@ -130,7 +130,7 @@ export async function handleYearPick(ctx: any): Promise<void> {
   );
 }
 
-export async function startPractice(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string): Promise<void> {
+export async function startPractice(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string, topic?: string | null): Promise<void> {
   if (!user) user = await requireProfile(ctx);
   if (!user) return;
 
@@ -157,16 +157,38 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     if (questionTimerSecs === undefined) questionTimerSecs = 0;
   }
 
+  // Step 2 (all users): pick topic if any exist and none chosen yet
+  const examType = sessionExamType || user.exam_type || '';
+  if (topic === undefined) {
+    const topics = await db.getTopicsForSubject(examType, subject);
+    if (topics.length > 0) {
+      await redis.updateSession(ctx.from.id, {
+        pendingSubject: subject,
+        pendingYear: year ?? null,
+        pendingExamType: sessionExamType,
+        pendingMode: 'practice',
+        pendingTimerSecs: questionTimerSecs ?? 0,
+      });
+      await ctx.reply(
+        '🎯 <b>Which topic would you like to practise?</b>',
+        { parse_mode: 'HTML', reply_markup: fmt.topicKeyboard(topics) }
+      );
+      return;
+    }
+    topic = null; // no topics available — skip filter
+  }
+
   if (!(await checkLimit(ctx, user))) return;
   if (!(await checkSubjectLimit(ctx, user, subject))) return;
 
-  const examType = sessionExamType || user.exam_type || '';
   // For non-premium, year may be undefined here — fall back to their saved target_year
   const effectiveYear = year !== undefined ? year : (user.target_year ?? null);
-  const q = await db.getRandomQuestion(examType, subject, [], effectiveYear);
+  const effectiveTopic = topic === '__all__' ? null : topic;
+  const q = await db.getRandomQuestion(examType, subject, [], effectiveYear, effectiveTopic);
   if (!q) {
     const yearStr = year ? ` for ${year}` : '';
-    await ctx.reply(`No questions found for ${subject}${yearStr}. Try a different year or subject!`);
+    const topicStr = effectiveTopic ? ` on topic "${effectiveTopic}"` : '';
+    await ctx.reply(`No questions found for ${subject}${yearStr}${topicStr}. Try a different selection!`);
     return;
   }
 
@@ -177,6 +199,7 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     subject,
     examType,
     year: effectiveYear,
+    topic: effectiveTopic,
     sessionId,
     qNum: 1,
     correct: 0,
@@ -189,6 +212,23 @@ export async function startPractice(ctx: any, user: User | null, subject: string
 
   await db.updateStreak(ctx.from.id);
   await sendQuestion(ctx, q, { mode: 'practice', qNum: 1, questionTimerSecs: timerSecs });
+}
+
+export async function handlePracticeTopicPick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const topic = ctx.callbackQuery.data.split(':').slice(2).join(':'); // preserve colons in topic name
+  const session = await redis.getSession(ctx.from.id);
+  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await startPractice(
+    ctx, user,
+    session.pendingSubject,
+    session.pendingYear ?? null,
+    session.pendingTimerSecs ?? 0,
+    session.pendingExamType,
+    topic,
+  );
 }
 
 // Step 0 callback — year selected in premium practice flow
@@ -318,11 +358,12 @@ export async function handleNext(ctx: any): Promise<void> {
     await ctx.reply('⚠️ <i>Your premium access has been revoked. The per-question timer has been removed.</i>', { parse_mode: 'HTML' });
   }
 
-  const q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year);
+  const q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic);
   if (!q) {
     const yearStr = session.year ? ` for ${session.year}` : '';
+    const topicStr = session.topic ? ` on topic "${session.topic}"` : '';
     await ctx.reply(
-      `🎉 You've gone through all available questions for this subject${yearStr}! Try another year or subject.`,
+      `🎉 You've gone through all available questions for this subject${yearStr}${topicStr}! Try another year or subject.`,
       { parse_mode: 'HTML', reply_markup: fmt.sessionKeyboard(session.subject || '', session.year) }
     );
     return;
