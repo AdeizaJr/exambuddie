@@ -8,7 +8,7 @@ import QuestionCard from '../components/QuestionCard';
 import Timer from '../components/Timer';
 import LoadingScreen from '../components/LoadingScreen';
 
-type Stage = 'subject' | 'examtype' | 'timer' | 'question' | 'revealed' | 'done';
+type Stage = 'subject' | 'examtype' | 'timer' | 'topic' | 'question' | 'revealed' | 'done';
 
 const EXAM_TYPES = ['WAEC', 'JAMB', 'NECO'];
 const TIMER_OPTIONS = [
@@ -41,6 +41,8 @@ export default function Practice() {
   const [sessionId] = useState(randomUUID);
   const [timeLeft, setTimeLeft] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [topic, setTopic] = useState<string | null>(null);
+  const [topics, setTopics] = useState<string[]>([]);
   const [weakTopics, setWeakTopics] = useState<{ topic: string; accuracy: number }[]>([]);
   const [drillTopic, setDrillTopic] = useState('');
   const [drillQuestions, setDrillQuestions] = useState<Question[]>([]);
@@ -68,10 +70,10 @@ export default function Practice() {
 
   useEffect(() => () => clearTimer(), [clearTimer]);
 
-  async function loadQuestion(subj: string, et: string) {
+  async function loadQuestion(subj: string, et: string, t: string | null = topic) {
     setLoading(true);
     try {
-      const q = await api.getQuestion({ subject: subj, examType: et, excludeIds: usedIds });
+      const q = await api.getQuestion({ subject: subj, examType: et, excludeIds: usedIds, topic: t });
       if (!q) {
         setStage('done');
         return;
@@ -92,27 +94,55 @@ export default function Practice() {
     }
   }
 
-  function handleSubject(s: string) {
+  async function handleSubject(s: string) {
     haptic('light');
     setSubject(s);
-    if (user?.plan === 'premium') { setStage('examtype'); }
-    else { setExamType(user?.exam_type || 'WAEC'); setStage('question'); loadQuestion(s, user?.exam_type || 'WAEC'); }
+    setTopic(null);
 
     if (isDrill) {
       api.getWeakTopics(s).then(setWeakTopics);
+      return;
+    }
+
+    const et = user?.plan === 'premium' ? examType : (user?.exam_type || 'WAEC');
+    if (user?.plan !== 'premium') setExamType(et);
+
+    // Fetch topics and show picker if any exist
+    const topicList = await api.getTopics(s, et);
+    if (topicList.length > 0) {
+      setTopics(topicList);
+      if (user?.plan === 'premium' && !examType) {
+        setStage('examtype');
+      } else {
+        setStage('topic');
+      }
+    } else {
+      if (user?.plan === 'premium') { setStage('examtype'); }
+      else { loadQuestion(s, et, null); }
     }
   }
 
   function handleExamType(et: string) {
     haptic('light');
     setExamType(et);
-    setStage('timer');
+    // Fetch topics after exam type is chosen
+    api.getTopics(subject, et).then(topicList => {
+      if (topicList.length > 0) { setTopics(topicList); setStage('topic'); }
+      else { setStage('timer'); }
+    });
+  }
+
+  function handleTopic(t: string | null) {
+    haptic('light');
+    setTopic(t);
+    if (user?.plan === 'premium') { setStage('timer'); }
+    else { loadQuestion(subject, examType || user?.exam_type || 'WAEC', t); }
   }
 
   function handleTimer(secs: number) {
     haptic('light');
     setTimerSecs(secs);
-    loadQuestion(subject, examType);
+    loadQuestion(subject, examType, topic);
   }
 
   async function handleAnswer(opt: string) {
@@ -223,6 +253,37 @@ export default function Practice() {
     );
   }
 
+  // ── Topic picker ─────────────────────────────────────────────────────────────
+  if (stage === 'topic') {
+    return (
+      <div className="page px-4 pt-6">
+        <h2 className="text-lg font-bold mb-1">🎯 Choose Topic</h2>
+        <p className="text-sm text-[var(--tg-hint)] mb-5">
+          {SUBJECT_LABELS[subject] || subject} — pick a topic or practise all
+        </p>
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => handleTopic(null)}
+            className="flex items-center gap-4 p-4 bg-white/70 rounded-2xl border-2 border-[var(--tg-button)] shadow-sm text-left"
+          >
+            <span className="text-2xl">📚</span>
+            <div>
+              <p className="font-semibold text-[var(--tg-button)]">All Topics</p>
+              <p className="text-xs text-[var(--tg-hint)]">Mix of everything</p>
+            </div>
+          </button>
+          {topics.map(t => (
+            <button key={t} onClick={() => handleTopic(t)}
+              className="flex items-center gap-4 p-4 bg-white/70 rounded-2xl border border-gray-100 shadow-sm text-left">
+              <span className="text-2xl">🎯</span>
+              <p className="font-medium text-sm">{t}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   // ── Timer picker ────────────────────────────────────────────────────────────
   if (stage === 'timer') {
     return (
@@ -260,7 +321,7 @@ export default function Practice() {
             <p className="text-xs text-[var(--tg-hint)]">Accuracy</p>
           </div>
         </div>
-        <button onClick={() => { setStage('subject'); setUsedIds([]); setQNum(1); setCorrect(0); setTotal(0); }}
+        <button onClick={() => { setStage('subject'); setUsedIds([]); setQNum(1); setCorrect(0); setTotal(0); setTopic(null); setTopics([]); }}
           className="w-full max-w-xs py-3 rounded-2xl font-bold text-[var(--tg-button-text)]"
           style={{ background: 'var(--tg-button)' }}>
           New Session

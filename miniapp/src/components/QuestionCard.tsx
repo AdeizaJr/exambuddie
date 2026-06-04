@@ -50,9 +50,16 @@ export default function QuestionCard({ question, qNum, total, selected, revealed
 
       {/* Question text */}
       <div className="bg-white/70 rounded-2xl p-4 shadow-sm border border-gray-100">
-        <p className="question-text text-sm font-medium text-[var(--tg-text)] leading-relaxed whitespace-pre-wrap">
-          {question.question_text}
-        </p>
+        <p
+          className="question-text text-sm font-medium text-[var(--tg-text)] leading-relaxed whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{
+            __html: question.question_text
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/\*([^*\n]+)\*/g, '<u>$1</u>'),
+          }}
+        />
       </div>
 
       {/* Options */}

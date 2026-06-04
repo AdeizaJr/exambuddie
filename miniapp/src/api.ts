@@ -35,11 +35,18 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
 export const api = {
   getMe: () => req<User>('GET', '/me'),
 
+  getTopics: (subject: string, examType?: string) => {
+    const qs = new URLSearchParams({ subject });
+    if (examType) qs.set('examType', examType);
+    return req<string[]>('GET', `/topics?${qs}`);
+  },
+
   getQuestion: (params: {
     subject: string;
     examType: string;
     excludeIds?: number[];
     year?: number | null;
+    topic?: string | null;
   }) => {
     const qs = new URLSearchParams({
       subject: params.subject,
@@ -47,6 +54,7 @@ export const api = {
     });
     if (params.year) qs.set('year', String(params.year));
     if (params.excludeIds?.length) qs.set('excludeIds', params.excludeIds.join(','));
+    if (params.topic) qs.set('topic', params.topic);
     return req<Question | null>('GET', `/question?${qs}`);
   },
 

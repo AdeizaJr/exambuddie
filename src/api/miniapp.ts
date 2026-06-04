@@ -81,7 +81,7 @@ router.get('/limit', requireAuth, async (req: Request, res: Response) => {
 
 // ── GET /api/miniapp/question ──────────────────────────────────────────────────
 router.get('/question', requireAuth, async (req: Request, res: Response) => {
-  const { subject, examType, year, excludeIds } = req.query;
+  const { subject, examType, year, excludeIds, topic } = req.query;
   if (!subject || !examType) return res.status(400).json({ error: 'subject and examType required' });
 
   const user = await db.getUser((req as any).telegramId);
@@ -98,7 +98,8 @@ router.get('/question', requireAuth, async (req: Request, res: Response) => {
     String(examType),
     String(subject),
     excludeArr,
-    year ? parseInt(String(year)) : null
+    year ? parseInt(String(year)) : null,
+    topic && topic !== '__all__' ? String(topic) : null,
   );
 
   res.json(q || null);
@@ -204,6 +205,17 @@ router.post('/quiz/complete', requireAuth, async (req: Request, res: Response) =
   const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
 
   res.json({ sessionId, correct, total, accuracy, durationSecs });
+});
+
+// ── GET /api/miniapp/topics ────────────────────────────────────────────────────
+router.get('/topics', requireAuth, async (req: Request, res: Response) => {
+  const { subject, examType } = req.query;
+  if (!subject) return res.status(400).json({ error: 'subject required' });
+  const user = await db.getUser((req as any).telegramId);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  const et = String(examType || user.exam_type || 'ALL');
+  const topics = await db.getTopicsForSubject(et, String(subject));
+  res.json(topics);
 });
 
 // ── GET /api/miniapp/weak-topics ───────────────────────────────────────────────
