@@ -1,20 +1,15 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
 
-// Telegram MarkdownV1 has no escape mechanism — sanitize all dynamic content
-// by replacing special chars that cause "can't parse entities" errors.
-// Exception: balanced *word* pairs are preserved as bold so "underlined word"
-// questions render the key term visibly instead of showing ×word×.
+// HTML-escape dynamic DB content and convert *word* markup to <u>word</u> (underline).
+// Inline phonetics marks like b*ea*r become b<u>ea</u>r.
 function md(text: string | null | undefined): string {
   if (!text) return '';
   return text
-    .replace(/\*([^*\n]+)\*/g, '\x00$1\x00') // protect paired *word*
-    .replace(/\*/g, '×')                      // strip lone asterisks
-    .replace(/\x00([^\x00]+)\x00/g, '*$1*')   // restore as bold
-    .replace(/_/g, '-')
-    .replace(/`/g, "'")
-    .replace(/\[/g, '(')
-    .replace(/\]/g, ')');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*([^*\n]+)\*/g, '<u>$1</u>');
 }
 
 export const SUBJECT_MAP: Record<string, string> = {
@@ -92,13 +87,13 @@ export const SUBJECT_EMOJI: Record<string, string> = {
 };
 
 export function welcome(firstName: string): string {
-  return `🎓 *Welcome to ExamBuddi, ${firstName}!*
+  return `🎓 <b>Welcome to ExamBuddi, ${firstName}!</b>
 
-I'm your personal WAEC & JAMB exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
+I'm your personal WAEC &amp; JAMB exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
 
 Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
 
-📅 *Step 1 of 3:* Which exam year are you preparing for?`;
+📅 <b>Step 1 of 3:</b> Which exam year are you preparing for?`;
 }
 
 export function onboardYearKeyboard() {
@@ -117,26 +112,26 @@ export function onboardYearKeyboard() {
 }
 
 export function askExamType(year: number | null): string {
-  const yearLabel = year ? `📅 Year: *${year}*` : `📅 Year: *Any*`;
+  const yearLabel = year ? `📅 Year: <b>${year}</b>` : `📅 Year: <b>Any</b>`;
   return `✅ ${yearLabel}
 
-📋 *Step 2 of 3:* Which exam are you preparing for?`;
+📋 <b>Step 2 of 3:</b> Which exam are you preparing for?`;
 }
 
 export function askSubjects(examType: string): string {
-  return `✅ *${examType} selected!*
+  return `✅ <b>${examType} selected!</b>
 
-📚 *Step 3 of 3:* Choose your subjects. You can pick multiple — I'll prepare questions for each one.`;
+📚 <b>Step 3 of 3:</b> Choose your subjects. You can pick multiple — I'll prepare questions for each one.`;
 }
 
 export function profileComplete(user: User): string {
   const subjects = user.subjects.map(s => SUBJECT_MAP[s] || s).join(', ');
-  const yearLabel = user.target_year ? `*${user.target_year}*` : '*Any Year*';
-  return `🎉 *You're all set, ${user.first_name}!*
+  const yearLabel = user.target_year ? `<b>${user.target_year}</b>` : '<b>Any Year</b>';
+  return `🎉 <b>You're all set, ${user.first_name}!</b>
 
-📋 *Your Profile:*
+📋 <b>Your Profile:</b>
 • 📅 Exam Year: ${yearLabel}
-• 📋 Exam: *${user.exam_type}*
+• 📋 Exam: <b>${user.exam_type}</b>
 • 📚 Subjects: ${subjects}
 
 What would you like to do?`;
@@ -159,13 +154,13 @@ export function mainMenuKeyboard() {
 
 export function formatQuestion(q: Question, number: number, total: number | string, mode?: string): string {
   const modeTag = mode === 'quiz'
-    ? `📋 *Question ${number}/${total}*`
+    ? `📋 <b>Question ${number}/${total}</b>`
     : mode === 'drill'
-    ? `🎯 *Topic Drill: ${q.topic || 'Mixed'}*`
-    : `📚 *Practice Mode*`;
+    ? `🎯 <b>Topic Drill: ${q.topic || 'Mixed'}</b>`
+    : `📚 <b>Practice Mode</b>`;
 
   return `${modeTag}
-_${q.exam_type} ${q.subject.charAt(0).toUpperCase() + q.subject.slice(1)} ${q.year}_
+<i>${q.exam_type} ${q.subject.charAt(0).toUpperCase() + q.subject.slice(1)} ${q.year}</i>
 
 ${md(q.question_text)}`;
 }
@@ -186,8 +181,8 @@ export function answerKeyboard(hasOptionE = false) {
 }
 
 export function answerOptions(q: Question): string {
-  let text = `\n\n*A.* ${md(q.option_a)}\n*B.* ${md(q.option_b)}\n*C.* ${md(q.option_c)}\n*D.* ${md(q.option_d)}`;
-  if (q.option_e) text += `\n*E.* ${md(q.option_e)}`;
+  let text = `\n\n<b>A.</b> ${md(q.option_a)}\n<b>B.</b> ${md(q.option_b)}\n<b>C.</b> ${md(q.option_c)}\n<b>D.</b> ${md(q.option_d)}`;
+  if (q.option_e) text += `\n<b>E.</b> ${md(q.option_e)}`;
   return text;
 }
 
@@ -195,8 +190,8 @@ export function correctAnswer(q: Question, selected: string): string {
   const wasCorrect = selected === q.correct_option;
   const emoji = wasCorrect ? '✅' : '❌';
   const header = wasCorrect
-    ? `${emoji} *Correct! Well done.*`
-    : `${emoji} *Wrong. The correct answer is ${q.correct_option}.*`;
+    ? `${emoji} <b>Correct! Well done.</b>`
+    : `${emoji} <b>Wrong. The correct answer is ${q.correct_option}.</b>`;
 
   const optionText: Record<string, string | null> = {
     A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d, E: q.option_e,
@@ -204,10 +199,10 @@ export function correctAnswer(q: Question, selected: string): string {
 
   return `${header}
 
-✔️ *${q.correct_option}.* ${md(optionText[q.correct_option])}
+✔️ <b>${q.correct_option}.</b> ${md(optionText[q.correct_option])}
 
-💡 *Explanation:*
-${md(q.explanation) || '_Explanation not yet available._'}`;
+💡 <b>Explanation:</b>
+${md(q.explanation) || '<i>Explanation not yet available.</i>'}`;
 }
 
 export function afterAnswerKeyboard(mode?: string) {
@@ -250,7 +245,7 @@ export function sessionSummary({
   const grade = accuracy >= 70 ? '🌟 Excellent!' : accuracy >= 50 ? '👍 Good effort!' : '💪 Keep practising!';
   const minutes = durationSecs ? Math.round(durationSecs / 60) : null;
 
-  return `📊 *Session Summary*
+  return `📊 <b>Session Summary</b>
 
 ${grade}
 
@@ -259,7 +254,7 @@ ${grade}
 ✅ Correct: ${correct}/${total}
 🎯 Accuracy: ${accuracy}%${minutes ? `\n⏱️ Time: ${minutes} min` : ''}
 
-${accuracy < 50 ? '💡 _Tip: Try /drill to focus on specific weak topics._' : ''}
+${accuracy < 50 ? '💡 <i>Tip: Try /drill to focus on specific weak topics.</i>' : ''}
 ${accuracy >= 70 ? '🔥 Keep it up! Consistency is key.' : ''}
 
 What next?`;
@@ -334,7 +329,7 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
     : '🆓 Free (5 questions/day)';
 
   const weakSection = weakTopics && weakTopics.length > 0
-    ? '\n⚠️ *Weak Topics (focus here!):*\n' +
+    ? '\n⚠️ <b>Weak Topics (focus here!):</b>\n' +
       weakTopics.map(t => `  • ${t.topic}: ${t.accuracy}% accuracy (${t.attempts} attempts)`).join('\n')
     : '';
 
@@ -346,41 +341,41 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
     const weak = subjectStats.filter(s => Number(s.accuracy) < 60);
 
     if (strong.length > 0) {
-      subjectSection += '\n✅ *Strong Subjects:*\n' +
+      subjectSection += '\n✅ <b>Strong Subjects:</b>\n' +
         strong.map(s => `  • ${s.subject}: ${s.accuracy}% (${s.attempts} attempts)`).join('\n');
     }
     if (weak.length > 0) {
-      subjectSection += '\n❌ *Needs Work:*\n' +
+      subjectSection += '\n❌ <b>Needs Work:</b>\n' +
         weak.map(s => `  • ${s.subject}: ${s.accuracy}% (${s.attempts} attempts)`).join('\n');
     }
   }
 
-  return `📈 *Your ${examLabel} Stats*
+  return `📈 <b>Your ${examLabel} Stats</b>
 
 👤 ${user.first_name}
 📋 Exam: ${user.exam_type || 'Not set'}
 🗓️ Joined: ${new Date(user.joined_at).toLocaleDateString('en-NG')}
 
-📊 *${examLabel} Performance:*
+📊 <b>${examLabel} Performance:</b>
 • Total Attempts: ${stats.total_attempts || 0}
 • Correct Answers: ${stats.correct || 0}
 • Accuracy: ${stats.accuracy || 0}%
 • 🔥 Streak: ${user.streak || 0} days
 
-💳 *Plan:* ${plan}
+💳 <b>Plan:</b> ${plan}
 ${subjectSection}${weakSection}`;
 }
 
 export function freeLimitMessage(remaining: number, limit: number): string | null {
   if (remaining === 0) {
-    return `⏰ *Daily limit reached!*
+    return `⏰ <b>Daily limit reached!</b>
 
-You've used all ${limit} free questions for today. Come back tomorrow, or upgrade to Premium for *unlimited access*.
+You've used all ${limit} free questions for today. Come back tomorrow, or upgrade to Premium for <b>unlimited access</b>.
 
-💎 *ExamBuddi Premium:*
+💎 <b>ExamBuddi Premium:</b>
 • Unlimited questions, every day
-• Quiz mode & Topic drills
-• Progress tracking & weak-topic detection
+• Quiz mode &amp; Topic drills
+• Progress tracking &amp; weak-topic detection
 • Only ₦800/month or ₦7,000/year
 
 👇 Tap to upgrade:`;
@@ -389,20 +384,20 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 }
 
 export function upgradeMessage(): string {
-  return `💎 *Upgrade to ExamBuddi Premium*
+  return `💎 <b>Upgrade to ExamBuddi Premium</b>
 
 Unlock everything you need to ace your exams:
 
 ✅ Unlimited questions (no daily cap)
 ✅ Timed quiz mode (40 questions, 45 mins)
 ✅ Topic drill (target weak areas)
-✅ Progress tracking & stats
+✅ Progress tracking &amp; stats
 ✅ Weak topic detection
 ✅ Priority support
 
-💰 *Pricing:*
+💰 <b>Pricing:</b>
 • Monthly: ₦800/month
-• Yearly: ₦7,000/year *(save ₦2,600)*
+• Yearly: ₦7,000/year <b>(save ₦2,600)</b>
 
 Choose your plan:`;
 }
@@ -418,35 +413,35 @@ export function subscribeKeyboard() {
 }
 
 export function paymentLinkMessage(link: string, planLabel: string, txRef: string): string {
-  return `🔗 *Your Secure Payment Link*
+  return `🔗 <b>Your Secure Payment Link</b>
 
 Plan: ${planLabel}
 
-👉 [Click here to pay securely](${link})
+👉 <a href="${link}">Click here to pay securely</a>
 
-_Payment powered by Flutterwave. Your access will be activated instantly after payment._
+<i>Payment powered by Flutterwave. Your access will be activated instantly after payment.</i>
 
-Reference: \`${txRef}\``;
+Reference: <code>${txRef}</code>`;
 }
 
 export function helpMessage(): string {
-  return `📖 *ExamBuddi Commands*
+  return `📖 <b>ExamBuddi Commands</b>
 
-*Practice:*
+<b>Practice:</b>
 /practice — Start a practice session
 /quiz — Take a 40-question timed mock exam
 /drill [topic] — Drill a specific topic
 
-*Account:*
+<b>Account:</b>
 /settings — Update your profile
 /stats — View your progress
 /subscribe — Upgrade to Premium
 
-*Other:*
+<b>Other:</b>
 /stop — Stop current session
 /help — Show this menu
 
-💡 *Tip:* During practice, tap ➡️ for the next question or 🚩 to flag a wrong explanation.
+💡 <b>Tip:</b> During practice, tap ➡️ for the next question or 🚩 to flag a wrong explanation.
 
 Questions? DM @ExamBuddiSupport`;
 }
@@ -501,11 +496,11 @@ export function subjectLimitMessage(subjectName: string, msLeft: number): string
   const hrs = Math.floor(msLeft / 3600000);
   const mins = Math.ceil((msLeft % 3600000) / 60000);
   const timeStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins} min`;
-  return `⏰ *Subject limit reached!*
+  return `⏰ <b>Subject limit reached!</b>
 
-You've used all ${SUBJECT_Q_LIMIT} free questions for *${subjectName}* in this ${SUBJECT_WINDOW_HRS}-hour window.
+You've used all ${SUBJECT_Q_LIMIT} free questions for <b>${subjectName}</b> in this ${SUBJECT_WINDOW_HRS}-hour window.
 
-Resets in *${timeStr}*.
+Resets in <b>${timeStr}</b>.
 
 Switch to another subject or upgrade to Premium for unlimited access 👇`;
 }

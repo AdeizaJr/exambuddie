@@ -20,7 +20,8 @@ async function checkLimit(ctx: any, user: User): Promise<boolean> {
   if (!check.allowed) {
     const msg = fmt.freeLimitMessage(0, check.limit);
     if (msg) {
-      await ctx.replyWithMarkdown(msg, {
+      await ctx.reply(msg, {
+        parse_mode: 'HTML',
         reply_markup: fmt.subscribeKeyboard(),
         disable_web_page_preview: true,
       });
@@ -35,9 +36,9 @@ async function checkSubjectLimit(ctx: any, user: User, subject: string): Promise
   const usage = await redis.getSubjectUsage(ctx.from.id, subject);
   if (usage.count >= fmt.SUBJECT_Q_LIMIT) {
     const msLeft = usage.expiresAt - Date.now();
-    await ctx.replyWithMarkdown(
+    await ctx.reply(
       fmt.subjectLimitMessage(fmt.SUBJECT_MAP[subject] || subject, msLeft),
-      { reply_markup: fmt.subjectLimitKeyboard(subject) }
+      { parse_mode: 'HTML', reply_markup: fmt.subjectLimitKeyboard(subject) }
     );
     return false;
   }
@@ -52,9 +53,9 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
   const hasOptionE = !!question.option_e;
   const keyboard = fmt.answerKeyboard(hasOptionE);
 
-  const sentMsg = await ctx.replyWithMarkdown(
+  const sentMsg = await ctx.reply(
     baseText + (timerSecs > 0 ? timerLine(timerSecs) : ''),
-    { reply_markup: keyboard },
+    { parse_mode: 'HTML', reply_markup: keyboard },
   );
 
   if (timerSecs > 0) {
@@ -71,7 +72,7 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
       timerSecs,
       (secsLeft) => {
         telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
           reply_markup: keyboard,
         }).catch(() => {});
       },
@@ -88,8 +89,8 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
 
         const explanation = q?.explanation ? `\n\n💡 ${q.explanation}` : '';
         await telegram.sendMessage(telegramId,
-          `⏱️ *Time's up!*\n\nThe correct answer was *${q?.correct_option}*.${explanation}`,
-          { parse_mode: 'Markdown', reply_markup: fmt.afterAnswerKeyboard(sess.mode) },
+          `⏱️ <b>Time's up!</b>\n\nThe correct answer was <b>${q?.correct_option}</b>.${explanation}`,
+          { parse_mode: 'HTML', reply_markup: fmt.afterAnswerKeyboard(sess.mode) },
         );
       },
     );
@@ -100,9 +101,9 @@ export async function handlePractice(ctx: any): Promise<void> {
   const user = await requireProfile(ctx);
   if (!user) return;
 
-  await ctx.replyWithMarkdown(
-    '📚 *Practice Mode*\n\nWhich subject would you like to practise?',
-    { reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+  await ctx.reply(
+    '📚 <b>Practice Mode</b>\n\nWhich subject would you like to practise?',
+    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
   );
 }
 
@@ -123,9 +124,9 @@ export async function handleYearPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const subject = ctx.callbackQuery.data.split(':')[2];
   const subjectName = fmt.SUBJECT_MAP[subject] || subject;
-  await ctx.replyWithMarkdown(
-    `📅 *${subjectName}*\n\nWhich year would you like to practise?`,
-    { reply_markup: fmt.yearPickerKeyboard(subject) }
+  await ctx.reply(
+    `📅 <b>${subjectName}</b>\n\nWhich year would you like to practise?`,
+    { parse_mode: 'HTML', reply_markup: fmt.yearPickerKeyboard(subject) }
   );
 }
 
@@ -137,18 +138,18 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     // Step 0: pick year
     if (year === undefined) {
       await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'practice' });
-      await ctx.replyWithMarkdown(
-        '📅 *Which exam year would you like to practise?*',
-        { reply_markup: fmt.flowYearKeyboard('practice') }
+      await ctx.reply(
+        '📅 <b>Which exam year would you like to practise?</b>',
+        { parse_mode: 'HTML', reply_markup: fmt.flowYearKeyboard('practice') }
       );
       return;
     }
     // Step 1: pick exam type
     if (sessionExamType === undefined) {
       await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'practice' });
-      await ctx.replyWithMarkdown(
-        '📋 *Which exam would you like to practise?*',
-        { reply_markup: fmt.examTypePickerKeyboard('practice') }
+      await ctx.reply(
+        '📋 <b>Which exam would you like to practise?</b>',
+        { parse_mode: 'HTML', reply_markup: fmt.examTypePickerKeyboard('practice') }
       );
       return;
     }
@@ -277,11 +278,12 @@ export async function handleAnswer(ctx: any): Promise<void> {
     await ctx.editMessageText(
       fmt.formatQuestion(q, session.qNum || 1, session.total || '?', session.mode)
       + fmt.answerOptions(q),
-      { parse_mode: 'Markdown' }
+      { parse_mode: 'HTML' }
     );
   } catch (_) {}
 
-  await ctx.replyWithMarkdown(resultText, {
+  await ctx.reply(resultText, {
+    parse_mode: 'HTML',
     reply_markup: fmt.afterAnswerKeyboard(session.mode),
   });
 
@@ -313,15 +315,15 @@ export async function handleNext(ctx: any): Promise<void> {
     timerService.clearQuestionTimer(ctx.from.id);
     await redis.updateSession(ctx.from.id, { questionTimerSecs: 0 });
     session.questionTimerSecs = 0;
-    await ctx.replyWithMarkdown('⚠️ _Your premium access has been revoked. The per-question timer has been removed._');
+    await ctx.reply('⚠️ <i>Your premium access has been revoked. The per-question timer has been removed.</i>', { parse_mode: 'HTML' });
   }
 
   const q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year);
   if (!q) {
     const yearStr = session.year ? ` for ${session.year}` : '';
-    await ctx.replyWithMarkdown(
+    await ctx.reply(
       `🎉 You've gone through all available questions for this subject${yearStr}! Try another year or subject.`,
-      { reply_markup: fmt.sessionKeyboard(session.subject || '', session.year) }
+      { parse_mode: 'HTML', reply_markup: fmt.sessionKeyboard(session.subject || '', session.year) }
     );
     return;
   }
@@ -355,7 +357,8 @@ export async function handleStop(ctx: any): Promise<void> {
   });
 
   await redis.clearSession(ctx.from.id);
-  await ctx.replyWithMarkdown(summary, {
+  await ctx.reply(summary, {
+    parse_mode: 'HTML',
     reply_markup: fmt.sessionKeyboard(session.subject || '', session.year),
   });
 }
@@ -373,9 +376,9 @@ export async function handleChangeSubject(ctx: any): Promise<void> {
     return;
   }
 
-  await ctx.replyWithMarkdown(
-    '📚 *Change Subject*\n\nWhich subject would you like to switch to?',
-    { reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+  await ctx.reply(
+    '📚 <b>Change Subject</b>\n\nWhich subject would you like to switch to?',
+    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
   );
 }
 
@@ -392,9 +395,10 @@ export async function handleDrill(ctx: any, topicOverride?: string): Promise<voi
   const subject = user.subjects[0]; // default to first subject
 
   if (!topic) {
-    await ctx.replyWithMarkdown(
-      `🎯 *Topic Drill*\n\nUsage: \`/drill [topic]\`\nExample: \`/drill Algebra\` or \`/drill Cell Biology\`\n\nOr tap below for your weakest topics:`,
+    await ctx.reply(
+      `🎯 <b>Topic Drill</b>\n\nUsage: <code>/drill [topic]</code>\nExample: <code>/drill Algebra</code> or <code>/drill Cell Biology</code>\n\nOr tap below for your weakest topics:`,
       {
+        parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: [
             [{ text: '🔍 Auto-detect weak topics', callback_data: 'drill:auto:' + subject }],
@@ -440,8 +444,9 @@ export async function handleAutoDrill(ctx: any): Promise<void> {
   const targetSubject = subject || user.subjects[0];
   const weakTopics = await db.getWeakTopics(user.id, targetSubject);
   if (weakTopics.length === 0) {
-    await ctx.replyWithMarkdown(
-      '📊 Not enough data yet to detect weak topics. Keep practising and I\'ll identify them for you!'
+    await ctx.reply(
+      '📊 Not enough data yet to detect weak topics. Keep practising and I\'ll identify them for you!',
+      { parse_mode: 'HTML' }
     );
     return;
   }
@@ -451,9 +456,9 @@ export async function handleAutoDrill(ctx: any): Promise<void> {
     callback_data: `drill:topic:${targetSubject}:${t.topic}`,
   }]));
 
-  await ctx.replyWithMarkdown(
-    `⚠️ *Your Weakest Topics in ${targetSubject}:*\n\nPick one to drill:`,
-    { reply_markup: { inline_keyboard: buttons } }
+  await ctx.reply(
+    `⚠️ <b>Your Weakest Topics in ${targetSubject}:</b>\n\nPick one to drill:`,
+    { parse_mode: 'HTML', reply_markup: { inline_keyboard: buttons } }
   );
 }
 

@@ -17,9 +17,9 @@ export async function handleQuiz(ctx: any): Promise<void> {
   }
 
   if (user.plan !== 'premium') {
-    await ctx.replyWithMarkdown(
-      `📋 *Quiz Mode — Premium Feature*\n\nQuiz mode gives you a real exam experience:\n• 40 questions back-to-back\n• 45-minute countdown timer\n• Full score breakdown at the end\n\nUpgrade to Premium to unlock this!`,
-      { reply_markup: fmt.subscribeKeyboard() }
+    await ctx.reply(
+      `📋 <b>Quiz Mode — Premium Feature</b>\n\nQuiz mode gives you a real exam experience:\n• 40 questions back-to-back\n• 45-minute countdown timer\n• Full score breakdown at the end\n\nUpgrade to Premium to unlock this!`,
+      { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() }
     );
     return;
   }
@@ -27,9 +27,9 @@ export async function handleQuiz(ctx: any): Promise<void> {
   if (user.subjects.length === 1) {
     await startQuiz(ctx, user, user.subjects[0]); // year=undefined → triggers year picker
   } else {
-    await ctx.replyWithMarkdown(
-      '📋 *Quiz Mode*\n\nWhich subject for your mock exam?',
-      { reply_markup: fmt.quizSubjectKeyboard(user.subjects) }
+    await ctx.reply(
+      '📋 <b>Quiz Mode</b>\n\nWhich subject for your mock exam?',
+      { parse_mode: 'HTML', reply_markup: fmt.quizSubjectKeyboard(user.subjects) }
     );
   }
 }
@@ -64,27 +64,27 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   // Step 0: pick year
   if (year === undefined) {
     await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'quiz' });
-    await ctx.replyWithMarkdown(
-      '📅 *Which exam year would you like to be quizzed on?*',
-      { reply_markup: fmt.flowYearKeyboard('quiz') }
+    await ctx.reply(
+      '📅 <b>Which exam year would you like to be quizzed on?</b>',
+      { parse_mode: 'HTML', reply_markup: fmt.flowYearKeyboard('quiz') }
     );
     return;
   }
   // Step 1: pick exam type
   if (sessionExamType === undefined) {
     await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'quiz' });
-    await ctx.replyWithMarkdown(
-      '📋 *Which exam would you like to be quizzed on?*',
-      { reply_markup: fmt.examTypePickerKeyboard('quiz') }
+    await ctx.reply(
+      '📋 <b>Which exam would you like to be quizzed on?</b>',
+      { parse_mode: 'HTML', reply_markup: fmt.examTypePickerKeyboard('quiz') }
     );
     return;
   }
   // Step 2: pick timer
   if (questionTimerSecs === undefined) {
     await redis.updateSession(ctx.from.id, { pendingExamType: sessionExamType });
-    await ctx.replyWithMarkdown(
-      '⏱️ *Set a per-question timer?*\n\nPick how long you want for each question, or tap No Timer to go at your own pace.',
-      { reply_markup: fmt.timerPickerKeyboard('quiz') }
+    await ctx.reply(
+      '⏱️ <b>Set a per-question timer?</b>\n\nPick how long you want for each question, or tap No Timer to go at your own pace.',
+      { parse_mode: 'HTML', reply_markup: fmt.timerPickerKeyboard('quiz') }
     );
     return;
   }
@@ -118,10 +118,11 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   await redis.setSession(ctx.from.id, { mode: 'quiz', subject, sessionId, questionTimerSecs: timerSecs });
   await db.updateStreak(ctx.from.id);
 
-  const timerNote = timerSecs > 0 ? ` with *${timerSecs}s per question*` : '';
-  const timeMsg = `⏱️ You have *45 minutes* to complete ${questions.length} questions${timerNote}.\nGood luck! 🍀`;
-  await ctx.replyWithMarkdown(
-    `📋 *Quiz Mode Started*\n${fmt.SUBJECT_MAP[subject] || subject}\n\n${timeMsg}\n\nTap /stop at any time to end early.`
+  const timerNote = timerSecs > 0 ? ` with <b>${timerSecs}s per question</b>` : '';
+  const timeMsg = `⏱️ You have <b>45 minutes</b> to complete ${questions.length} questions${timerNote}.\nGood luck! 🍀`;
+  await ctx.reply(
+    `📋 <b>Quiz Mode Started</b>\n${fmt.SUBJECT_MAP[subject] || subject}\n\n${timeMsg}\n\nTap /stop at any time to end early.`,
+    { parse_mode: 'HTML' }
   );
 
   await sendQuizQuestion(ctx, quizState);
@@ -160,7 +161,7 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
     timerSecs > 0 ? `\n\n⏱️ _${secsLeft}s remaining_` : '';
 
   const keyboard = fmt.answerKeyboard();
-  const sentMsg = await ctx.replyWithMarkdown(baseText + timerLine(timerSecs), { reply_markup: keyboard });
+  const sentMsg = await ctx.reply(baseText + timerLine(timerSecs), { parse_mode: 'HTML', reply_markup: keyboard });
 
   if (timerSecs > 0) {
     const deadline = Date.now() + timerSecs * 1000;
@@ -177,7 +178,7 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
       timerSecs,
       (secsLeft) => {
         telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
           reply_markup: keyboard,
         }).catch(() => {});
       },
@@ -190,9 +191,9 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
         state.qIndex++;
         await redis.saveQuizState(telegramId, state);
 
-        const timesUpText = `⏱️ *Time's up!*\n\n` + fmt.correctAnswer(q, '');
+        const timesUpText = `⏱️ <b>Time's up!</b>\n\n` + fmt.correctAnswer(q, '');
         await telegram.sendMessage(telegramId, timesUpText, {
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
           reply_markup: { inline_keyboard: [[{ text: '➡️ Next', callback_data: 'quiz:next' }]] },
         });
       },
@@ -239,7 +240,8 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
   quizState.answers.push({ qId: q.id, selected, correct: q.correct_option, isCorrect });
   if (isCorrect) quizState.correct++;
 
-  await ctx.replyWithMarkdown(fmt.correctAnswer(q, selected), {
+  await ctx.reply(fmt.correctAnswer(q, selected), {
+    parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [[
         { text: '➡️ Next', callback_data: 'quiz:next' },
@@ -288,8 +290,8 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
   const accuracy = quizState.total > 0
     ? Math.round((quizState.correct / quizState.total) * 100) : 0;
 
-  const reasonNote = reason === 'timeout' ? '\n⏰ _Time ran out!_'
-    : reason === 'revoked' ? '\n🔒 _Your premium access was revoked._'
+  const reasonNote = reason === 'timeout' ? '\n⏰ <i>Time ran out!</i>'
+    : reason === 'revoked' ? '\n🔒 <i>Your premium access was revoked.</i>'
     : '';
 
   const grade =
@@ -301,7 +303,7 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
   const mins = Math.floor(durationSecs / 60);
   const secs = durationSecs % 60;
 
-  const summary = `📋 *Quiz Complete!*${reasonNote}
+  const summary = `📋 <b>Quiz Complete!</b>${reasonNote}
 
 ${grade}
 
@@ -310,10 +312,11 @@ ${grade}
 🎯 Accuracy: ${accuracy}%
 ⏱️ Time: ${mins}m ${secs}s
 
-${accuracy < 50 ? '💡 _Tip: Use /drill to focus on your weak topics._' : ''}
+${accuracy < 50 ? '💡 <i>Tip: Use /drill to focus on your weak topics.</i>' : ''}
 ${accuracy >= 80 ? '🔥 You\'re exam-ready! Keep it consistent.' : ''}`;
 
-  await ctx.replyWithMarkdown(summary, {
+  await ctx.reply(summary, {
+    parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [
         [{ text: '🔄 Take Another Quiz', callback_data: 'quiz:pick' },

@@ -29,7 +29,7 @@ bot.use(async (ctx, next) => {
 
 // ── Commands ───────────────────────────────────────────────────────────────────
 bot.start(onboarding.handleStart);
-bot.command('help', ctx => ctx.replyWithMarkdown(fmt.helpMessage()));
+bot.command('help', ctx => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));
 bot.command('settings', onboarding.handleSettings);
 bot.command('stats', stats.handleStats);
 bot.command('subscribe', stats.handleSubscribe);
@@ -137,9 +137,10 @@ bot.on('callback_query', async (ctx: any) => {
     await ctx.answerCbQuery();
     const user = await db.getUser(ctx.from.id);
     if (!user) return;
-    await ctx.replyWithMarkdown(
-      `🏠 *Main Menu*\n\nWhat would you like to do, ${user.first_name}?`,
+    await ctx.reply(
+      `🏠 <b>Main Menu</b>\n\nWhat would you like to do, ${user.first_name}?`,
       {
+        parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: [
             [{ text: '📚 Practice', callback_data: 'practice:pick' },

@@ -8,16 +8,17 @@ export async function handleStart(ctx: any): Promise<void> {
 
   if (user.exam_type && user.subjects && user.subjects.length > 0) {
     // Returning user — show main menu
-    await ctx.replyWithMarkdown(
-      `👋 *Welcome back, ${user.first_name}!*\n\nReady to practise? Choose an option:`,
-      { reply_markup: fmt.mainMenuKeyboard() }
+    await ctx.reply(
+      `👋 <b>Welcome back, ${user.first_name}!</b>\n\nReady to practise? Choose an option:`,
+      { parse_mode: 'HTML', reply_markup: fmt.mainMenuKeyboard() }
     );
     return;
   }
 
   // New user — start onboarding at step 1: year selection
   await redis.setSession(ctx.from.id, { step: 'year', selectedSubjects: [] });
-  await ctx.replyWithMarkdown(fmt.welcome(user.first_name), {
+  await ctx.reply(fmt.welcome(user.first_name), {
+    parse_mode: 'HTML',
     reply_markup: fmt.onboardYearKeyboard(),
   });
 }
@@ -31,7 +32,7 @@ export async function handleOnboardYear(ctx: any): Promise<void> {
   await redis.updateSession(ctx.from.id, { step: 'exam_type', targetYear: year, selectedSubjects: ['english'] });
 
   await ctx.editMessageText(fmt.askExamType(year), {
-    parse_mode: 'Markdown',
+    parse_mode: 'HTML',
     reply_markup: fmt.examTypeKeyboard(),
   });
 }
@@ -46,7 +47,7 @@ export async function handleExamType(ctx: any): Promise<void> {
   await redis.updateSession(ctx.from.id, { step: 'subjects', examType, selectedSubjects: ['english'] });
 
   await ctx.editMessageText(fmt.askSubjects(examType), {
-    parse_mode: 'Markdown',
+    parse_mode: 'HTML',
     reply_markup: fmt.subjectKeyboard(['english']),
   });
 }
@@ -113,7 +114,7 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
   await redis.clearSession(ctx.from.id);
 
   await ctx.editMessageText(fmt.profileComplete(user), {
-    parse_mode: 'Markdown',
+    parse_mode: 'HTML',
     reply_markup: fmt.mainMenuKeyboard(),
   });
 }
@@ -123,9 +124,10 @@ export async function handleSettings(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
 
-  await ctx.replyWithMarkdown(
-    `⚙️ *Settings*\n\nWhat would you like to change?`,
+  await ctx.reply(
+    `⚙️ <b>Settings</b>\n\nWhat would you like to change?`,
     {
+      parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: [
           [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
@@ -159,8 +161,8 @@ export async function handleSettingsSubjects(ctx: any): Promise<void> {
     selectedSubjects: current,
   });
   await ctx.editMessageText(
-    `📚 *Edit Subjects*\n\nEnglish is compulsory. You can select up to ${fmt.MAX_SUBJECTS} subjects total.`,
-    { parse_mode: 'Markdown', reply_markup: fmt.subjectKeyboard(current) }
+    `📚 <b>Edit Subjects</b>\n\nEnglish is compulsory. You can select up to ${fmt.MAX_SUBJECTS} subjects total.`,
+    { parse_mode: 'HTML', reply_markup: fmt.subjectKeyboard(current) }
   );
 }
 

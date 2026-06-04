@@ -10,9 +10,9 @@ export async function handleStats(ctx: any): Promise<void> {
 
   if (ctx.callbackQuery) await ctx.answerCbQuery();
 
-  await ctx.replyWithMarkdown(
-    '📊 *Which exam would you like to see stats for?*',
-    { reply_markup: fmt.statsFilterKeyboard() }
+  await ctx.reply(
+    '📊 <b>Which exam would you like to see stats for?</b>',
+    { parse_mode: 'HTML', reply_markup: fmt.statsFilterKeyboard() }
   );
 }
 
@@ -31,11 +31,12 @@ export async function handleStatsFilter(ctx: any): Promise<void> {
       : Promise.resolve([]),
   ]);
 
-  await ctx.replyWithMarkdown(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats));
+  await ctx.reply(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats), { parse_mode: 'HTML' });
 }
 
 export async function handleSubscribe(ctx: any): Promise<void> {
-  await ctx.replyWithMarkdown(fmt.upgradeMessage(), {
+  await ctx.reply(fmt.upgradeMessage(), {
+    parse_mode: 'HTML',
     reply_markup: fmt.subscribeKeyboard(),
     disable_web_page_preview: true,
   });
@@ -51,9 +52,9 @@ export async function handleSubscribePlan(ctx: any): Promise<void> {
     const { link, txRef } = await payments.createPaymentLink(user, plan);
     const planInfo = payments.PLANS[plan];
 
-    await ctx.replyWithMarkdown(
+    await ctx.reply(
       fmt.paymentLinkMessage(link, planInfo.label, txRef),
-      { disable_web_page_preview: false }
+      { parse_mode: 'HTML', disable_web_page_preview: false }
     );
   } catch (err: any) {
     console.error('Payment link error:', err.message);

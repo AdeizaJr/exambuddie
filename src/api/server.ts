@@ -48,7 +48,7 @@ export default function createServer(bot: any) {
           `📅 Expires: ${expiry}\n\n` +
           `You now have *unlimited questions*, quiz mode, topic drills, and progress tracking.\n\n` +
           `Start now: /practice`,
-          { parse_mode: 'Markdown' }
+          { parse_mode: 'HTML' }
         );
       } catch (e: any) { console.error('Could not notify user:', e.message); }
 
@@ -385,7 +385,7 @@ export default function createServer(bot: any) {
 
     for (const user of users) {
       try {
-        await bot.telegram.sendMessage(user.telegram_id, message, { parse_mode: 'Markdown' });
+        await bot.telegram.sendMessage(user.telegram_id, message, { parse_mode: 'HTML' });
         sent++;
       } catch (err: any) {
         console.error(`[Broadcast] Failed to send to ${user.telegram_id}:`, err.message);
