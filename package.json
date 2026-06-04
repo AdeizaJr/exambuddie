@@ -14,7 +14,8 @@
     "import-explanations": "ts-node scripts/importExplanations.ts",
     "generate-explanations-to-json": "NODE_OPTIONS='--dns-result-order=ipv4first' ts-node scripts/generateExplanationsToJson.ts",
     "generate-explanations-cli": "ts-node scripts/generateExplanationsCLI.ts",
-    "migrate": "ts-node scripts/migrate.ts"
+    "migrate": "ts-node scripts/migrate.ts",
+    "mark-underlined": "ts-node scripts/markUnderlinedWords.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.97.1",
@@ -36,8 +37,10 @@
     "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.20.0",
     "@types/uuid": "^10.0.0",
+    "cmu-pronouncing-dictionary": "^3.0.0",
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wordpos": "^2.1.0"
   }
 }

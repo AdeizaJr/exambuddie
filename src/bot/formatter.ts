@@ -2,15 +2,19 @@
 import { Question, User } from '../types';
 
 // Telegram MarkdownV1 has no escape mechanism — sanitize all dynamic content
-// by replacing the four special chars that cause "can't parse entities" errors.
+// by replacing special chars that cause "can't parse entities" errors.
+// Exception: balanced *word* pairs are preserved as bold so "underlined word"
+// questions render the key term visibly instead of showing ×word×.
 function md(text: string | null | undefined): string {
   if (!text) return '';
   return text
-    .replace(/\*/g, '×')   // asterisk → multiplication sign
-    .replace(/_/g, '-')    // underscore → hyphen
-    .replace(/`/g, "'")    // backtick → apostrophe
-    .replace(/\[/g, '(')   // open bracket → paren
-    .replace(/\]/g, ')');  // close bracket → paren
+    .replace(/\*([^*\n]+)\*/g, '\x00$1\x00') // protect paired *word*
+    .replace(/\*/g, '×')                      // strip lone asterisks
+    .replace(/\x00([^\x00]+)\x00/g, '*$1*')   // restore as bold
+    .replace(/_/g, '-')
+    .replace(/`/g, "'")
+    .replace(/\[/g, '(')
+    .replace(/\]/g, ')');
 }
 
 export const SUBJECT_MAP: Record<string, string> = {
