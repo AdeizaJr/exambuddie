@@ -18,7 +18,7 @@ export default function createServer(bot: any) {
 
   // ── Health check ────────────────────────────────────────────────────────────
   app.get('/health', (req: Request, res: Response) => {
-    res.json({ status: 'ok', service: 'ExamBuddi Bot', ts: new Date().toISOString() });
+    res.json({ status: 'ok', service: 'ExamBuddie Bot', ts: new Date().toISOString() });
   });
 
   // ── Flutterwave payment callback (redirect after payment) ───────────────────
@@ -30,7 +30,7 @@ export default function createServer(bot: any) {
         <html><body style="font-family:sans-serif;text-align:center;padding:40px">
         <h2>❌ Payment not completed</h2>
         <p>Please try again or contact support.</p>
-        <p>Return to <a href="https://t.me/ExamBuddiBot">ExamBuddi on Telegram</a></p>
+        <p>Return to <a href="https://t.me/ExamBuddiBot">ExamBuddie on Telegram</a></p>
         </body></html>
       `);
     }
@@ -55,7 +55,7 @@ export default function createServer(bot: any) {
       res.send(`
         <html><body style="font-family:sans-serif;text-align:center;padding:40px;background:#f0fff8">
         <h2 style="color:#1A7A4A">🎉 Payment Successful!</h2>
-        <p>Your ExamBuddi Premium is now active.</p>
+        <p>Your ExamBuddie Premium is now active.</p>
         <p>Return to <a href="https://t.me/ExamBuddiBot">Telegram to start practising →</a></p>
         </body></html>
       `);

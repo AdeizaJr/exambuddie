@@ -34,7 +34,7 @@ export async function createPaymentLink(user: User, planType: string): Promise<{
   const plan = PLANS[planType];
   if (!plan) throw new Error(`Invalid plan: ${planType}`);
 
-  const txRef = `exambuddi-${user.telegram_id}-${Date.now()}-${uuidv4().slice(0, 8)}`;
+  const txRef = `exambuddie-${user.telegram_id}-${Date.now()}-${uuidv4().slice(0, 8)}`;
 
   // Save pending subscription to DB
   await db.query(
@@ -49,11 +49,11 @@ export async function createPaymentLink(user: User, planType: string): Promise<{
     currency: 'NGN',
     redirect_url: `${process.env.APP_URL}/payment/callback`,
     customer: {
-      email: `${user.telegram_id}@exambuddi.bot`,
+      email: `${user.telegram_id}@exambuddie.bot`,
       name: user.first_name || 'Student',
     },
     customizations: {
-      title: 'ExamBuddi Premium',
+      title: 'ExamBuddie Premium',
       description: `${plan.label} — Unlimited exam prep`,
       logo: `${process.env.APP_URL}/logo.png`,
     },

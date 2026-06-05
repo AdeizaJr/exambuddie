@@ -87,7 +87,7 @@ export const SUBJECT_EMOJI: Record<string, string> = {
 };
 
 export function welcome(firstName: string): string {
-  return `🎓 <b>Welcome to ExamBuddi, ${firstName}!</b>
+  return `🎓 <b>Welcome to ExamBuddie, ${firstName}!</b>
 
 I'm your personal WAEC &amp; JAMB exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
 
@@ -372,7 +372,7 @@ export function freeLimitMessage(remaining: number, limit: number): string | nul
 
 You've used all ${limit} free questions for today. Come back tomorrow, or upgrade to Premium for <b>unlimited access</b>.
 
-💎 <b>ExamBuddi Premium:</b>
+💎 <b>ExamBuddie Premium:</b>
 • Unlimited questions, every day
 • Quiz mode &amp; Topic drills
 • Progress tracking &amp; weak-topic detection
@@ -384,7 +384,7 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 }
 
 export function upgradeMessage(): string {
-  return `💎 <b>Upgrade to ExamBuddi Premium</b>
+  return `💎 <b>Upgrade to ExamBuddie Premium</b>
 
 Unlock everything you need to ace your exams:
 
@@ -425,7 +425,7 @@ Reference: <code>${txRef}</code>`;
 }
 
 export function helpMessage(): string {
-  return `📖 <b>ExamBuddi Commands</b>
+  return `📖 <b>ExamBuddie Commands</b>
 
 <b>Practice:</b>
 /practice — Start a practice session

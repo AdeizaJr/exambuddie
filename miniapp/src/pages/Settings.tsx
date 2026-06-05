@@ -80,7 +80,7 @@ export default function Settings() {
         <div className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl p-4 mb-5 text-white">
           <p className="font-bold mb-1">Upgrade to Premium</p>
           <p className="text-sm opacity-90 mb-3">Unlock quiz mode, timers, unlimited questions & more.</p>
-          <p className="text-xs opacity-75">Use /subscribe in the ExamBuddi bot to upgrade.</p>
+          <p className="text-xs opacity-75">Use /subscribe in the ExamBuddie bot to upgrade.</p>
         </div>
       )}
 

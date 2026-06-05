@@ -1,4 +1,4 @@
-# 🎓 ExamBuddi — AI Exam Prep Bot for Nigerian Students
+# 🎓 ExamBuddie — AI Exam Prep Bot for Nigerian Students
 
 > WAEC & JAMB past questions, AI-powered explanations, and progress tracking — right inside Telegram.
 
@@ -43,7 +43,7 @@ npm start          # Production (uses webhook if APP_URL is set)
 ## Project Structure
 
 ```
-exambuddi/
+exambuddie/
 ├── src/
 │   ├── index.js                  # Entry point — bot + server launch
 │   ├── bot/
@@ -174,4 +174,4 @@ npm run generate-explanations   # Claude generates explanations for new question
 
 ## License
 
-MIT © ExamBuddi 2026
+MIT © ExamBuddie 2026
