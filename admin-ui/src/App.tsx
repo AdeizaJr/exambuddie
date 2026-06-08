@@ -8,20 +8,31 @@ import Flags from './pages/Flags';
 import Subscriptions from './pages/Subscriptions';
 import AnalyticsPage from './pages/Analytics';
 import Broadcast from './pages/Broadcast';
-import { getFlags } from './api';
+import { getFlags, verifyAdmin } from './api';
 
 // ── Login page ──────────────────────────────────────────────────────────────
 function LoginPage({ onLogin }: { onLogin: (secret: string) => void }) {
   const [value, setValue] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const s = value.trim();
     if (!s) return;
-    localStorage.setItem('admin_secret', s);
-    onLogin(s);
-    navigate('/overview', { replace: true });
+    setError('');
+    setLoading(true);
+    try {
+      await verifyAdmin(s);
+      localStorage.setItem('admin_secret', s);
+      onLogin(s);
+      navigate('/overview', { replace: true });
+    } catch {
+      setError('Invalid admin secret. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -50,12 +61,15 @@ function LoginPage({ onLogin }: { onLogin: (secret: string) => void }) {
               className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
             />
           </div>
+          {error && (
+            <p className="text-xs text-red-400 text-center">{error}</p>
+          )}
           <button
             type="submit"
-            disabled={!value.trim()}
+            disabled={!value.trim() || loading}
             className="w-full py-2.5 bg-accent text-white font-medium text-sm rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-40"
           >
-            Sign In
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
       </div>
