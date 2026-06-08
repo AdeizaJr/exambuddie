@@ -2,8 +2,8 @@ import type { Stats, Flag, Question, User, Subscription, Analytics, PaginatedRes
 
 const BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/admin';
 
-function getSecret(): string {
-  return localStorage.getItem('admin_secret') || '';
+function getToken(): string {
+  return localStorage.getItem('admin_token') || '';
 }
 
 async function req<T>(
@@ -26,10 +26,16 @@ async function req<T>(
     method,
     headers: {
       'Content-Type': 'application/json',
-      'x-admin-secret': getSecret(),
+      'Authorization': `Bearer ${getToken()}`,
     },
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
+
+  if (res.status === 401) {
+    localStorage.removeItem('admin_token');
+    window.location.href = '/login';
+    throw new Error('Unauthorized');
+  }
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
@@ -39,14 +45,21 @@ async function req<T>(
   return res.json();
 }
 
-export async function verifyAdmin(secret: string): Promise<void> {
-  const res = await fetch(BASE + '/stats', {
-    headers: { 'Content-Type': 'application/json', 'x-admin-secret': secret },
+export async function loginAdmin(username: string, password: string): Promise<{ token: string }> {
+  const res = await fetch(BASE + '/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
     throw new Error(err.error || `HTTP ${res.status}`);
   }
+  return res.json();
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<{ ok: boolean }> {
+  return req<{ ok: boolean }>('PUT', '/password', { currentPassword, newPassword });
 }
 
 export async function getStats(): Promise<Stats> {
