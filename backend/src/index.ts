@@ -199,16 +199,29 @@ async function launchBot(attempt = 1): Promise<void> {
 
 async function launch() {
   const PORT = process.env.PORT || 3000;
+  const APP_URL = process.env.APP_URL;
 
-  // Start Express API — runs independently of bot connectivity
   const app = createServer(bot);
+
+  if (APP_URL && process.env.NODE_ENV === 'production') {
+    const webhookHandler = await bot.createWebhook({ domain: APP_URL, path: '/bot' });
+    app.use(webhookHandler);
+    console.log(`🤖 ExamBuddie Bot launched via webhook at ${APP_URL}/bot`);
+    console.log(`
+  ╔═══════════════════════════════════════╗
+  ║         ExamBuddie Bot is live! 🎓       ║
+  ║   WAEC & JAMB Prep — Nigeria          ║
+  ╚═══════════════════════════════════════╝
+    `);
+  }
+
   app.listen(PORT, () => console.log(`🌐 API server listening on port ${PORT}`));
 
-  // Start cron jobs
   startCrons(bot);
 
-  // Launch bot (retries automatically on network failure)
-  launchBot();
+  if (!(APP_URL && process.env.NODE_ENV === 'production')) {
+    launchBot();
+  }
 }
 
 // Graceful shutdown
