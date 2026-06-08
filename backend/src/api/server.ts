@@ -2,15 +2,28 @@
 import express, { Request, Response, NextFunction } from 'express';
 import * as payments from '../services/payments';
 import * as db from '../db';
-import path from 'path';
 import miniappRouter from './miniapp';
 
 export default function createServer(bot: any) {
   const app = express();
-  const adminPath = path.resolve(__dirname, '../../admin');
-  const miniappPath = path.resolve(__dirname, '../../dist/miniapp');
-  app.use('/admin', express.static(adminPath));
-  app.use('/app', express.static(miniappPath));
+
+  // CORS — allow admin-ui and miniapp origins
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(o => o.trim())
+    .filter(Boolean);
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const origin = req.headers.origin || '';
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type,x-admin-secret,Authorization');
+    }
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+  });
+
   app.use(express.json());
 
   // Mini App API routes

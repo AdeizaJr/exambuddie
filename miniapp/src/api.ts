@@ -1,7 +1,7 @@
 import { tg } from './telegram';
 import type { User, Question, Stats, QuizResult } from './types';
 
-const BASE = '/api/miniapp';
+const BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/miniapp';
 
 // In dev mode, send x-dev-user-id so the backend bypasses initData validation.
 // Set VITE_DEV_USER_ID in miniapp/.env.local to your Telegram user ID.
