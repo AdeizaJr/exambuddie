@@ -1,6 +1,6 @@
 import type { Stats, Flag, Question, User, Subscription, Analytics, PaginatedResponse } from './types';
 
-const BASE = '/api/admin';
+const BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/admin';
 
 function getSecret(): string {
   return localStorage.getItem('admin_secret') || '';

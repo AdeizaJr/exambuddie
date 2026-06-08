@@ -1,4 +1,14 @@
-.env
-dist/
-node_modules/
-dump.rdb
+# backend
+backend/.env
+backend/dist/
+backend/node_modules/
+backend/dump.rdb
+
+# admin-ui
+admin-ui/dist/
+admin-ui/node_modules/
+
+# miniapp
+miniapp/dist/
+miniapp/node_modules/
+miniapp/.env.local

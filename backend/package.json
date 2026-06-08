@@ -5,8 +5,7 @@
   "main": "dist/src/index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc && npm run build:miniapp",
-    "build:miniapp": "cd miniapp && npm run build",
+    "build": "tsc",
     "start": "NODE_OPTIONS='--dns-result-order=ipv4first' node dist/src/index.js",
     "dev": "NODE_OPTIONS='--dns-result-order=ipv4first' nodemon --exec ts-node src/index.ts",
     "seed": "ts-node scripts/seed.ts",
