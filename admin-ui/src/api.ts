@@ -39,6 +39,16 @@ async function req<T>(
   return res.json();
 }
 
+export async function verifyAdmin(secret: string): Promise<void> {
+  const res = await fetch(BASE + '/stats', {
+    headers: { 'Content-Type': 'application/json', 'x-admin-secret': secret },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+}
+
 export async function getStats(): Promise<Stats> {
   return req<Stats>('GET', '/stats');
 }
