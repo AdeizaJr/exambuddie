@@ -48,9 +48,9 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
 
   return (
     <div className="bg-surface border border-border rounded-xl p-5 space-y-4">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="text-xs font-medium text-muted bg-surface2 border border-border rounded px-2 py-0.5">
               {flag.subject}
             </span>
@@ -59,7 +59,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
           </div>
           <p className="text-sm text-white leading-relaxed">{flag.question_text}</p>
         </div>
-        <div className="text-xs text-muted whitespace-nowrap">{formatDate(flag.flagged_at)}</div>
+        <div className="text-xs text-muted sm:whitespace-nowrap">{formatDate(flag.flagged_at)}</div>
       </div>
 
       {flag.reason && (
@@ -133,7 +133,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
 
   return (
     <div className="p-6 space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold font-display text-white">Flagged Explanations</h1>
           <p className="text-sm text-muted mt-0.5">
@@ -142,7 +142,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
         </div>
         <button
           onClick={load}
-          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors"
+          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors shrink-0"
         >
           Refresh
         </button>
