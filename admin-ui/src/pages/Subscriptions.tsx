@@ -68,7 +68,7 @@ export default function Subscriptions() {
 
   return (
     <div className="p-6 space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold font-display text-white">Subscriptions</h1>
           <p className="text-sm text-muted mt-0.5">
@@ -77,7 +77,7 @@ export default function Subscriptions() {
             <span className="text-accent font-medium">₦{totalRevenue.toLocaleString()}</span>
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <select
             value={statusFilter}
             onChange={(e) => setFilter('status', e.target.value)}

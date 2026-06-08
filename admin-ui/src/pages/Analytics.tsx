@@ -90,21 +90,21 @@ export default function AnalyticsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-xl font-bold font-display text-white">Analytics</h1>
           <p className="text-sm text-muted mt-0.5">Performance data across subjects and time</p>
         </div>
         <button
           onClick={load}
-          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors"
+          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors shrink-0"
         >
           Refresh
         </button>
       </div>
 
       {/* Content Health */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="bg-surface border border-border rounded-xl p-5">
           <p className="text-xs text-muted uppercase tracking-wider font-medium mb-1">Missing Explanations</p>
           <p className={`text-2xl font-bold font-display ${analytics.contentHealth.missing_explanations > 0 ? 'text-amber-400' : 'text-accent'}`}>

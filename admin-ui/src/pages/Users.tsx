@@ -76,17 +76,17 @@ export default function Users() {
         <p className="text-sm text-muted mt-0.5">Manage user accounts and plans</p>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <input
           type="text"
           placeholder="Search by name, username, or Telegram ID..."
           value={search}
           onChange={(e) => setFilter('q', e.target.value)}
-          className="flex-1 bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent placeholder-muted"
+          className="flex-1 min-w-48 bg-surface border border-border text-sm text-white rounded-lg px-3 py-2 focus:outline-none focus:border-accent placeholder-muted"
         />
         <button
           onClick={load}
-          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors"
+          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors shrink-0"
         >
           Refresh
         </button>

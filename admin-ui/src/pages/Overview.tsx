@@ -137,7 +137,7 @@ export default function Overview() {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-surface border border-border rounded-xl p-5">
             <p className="text-xs text-muted uppercase tracking-wider font-medium mb-1">Total Questions</p>
             <p className="text-2xl font-bold font-display text-white">{stats.total_questions.toLocaleString()}</p>
