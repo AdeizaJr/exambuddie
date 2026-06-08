@@ -1,11 +1,82 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
 
-// HTML-escape dynamic DB content and convert *word* markup to <u>word</u> (underline).
-// Inline phonetics marks like b*ea*r become b<u>ea</u>r.
+// Convert LaTeX math notation to readable plain text for Telegram.
+function convertLatex(text: string): string {
+  return text
+    // fractions: \frac{a}{b} → a/b
+    .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1/$2)')
+    // sqrt: \sqrt{x} → √x
+    .replace(/\\sqrt\{([^}]+)\}/g, '√($1)')
+    .replace(/\\sqrt\b/g, '√')
+    // superscripts: ^{n} or ^n → unicode superscript where possible
+    .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
+    .replace(/\^(\w)/g, (_, e) => toSup(e))
+    // subscripts: _{n} → unicode subscript where possible
+    .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
+    .replace(/_(\w)/g, (_, e) => toSub(e))
+    // common symbols
+    .replace(/\\times/g, '×')
+    .replace(/\\div/g, '÷')
+    .replace(/\\pm/g, '±')
+    .replace(/\\geq/g, '≥')
+    .replace(/\\leq/g, '≤')
+    .replace(/\\neq/g, '≠')
+    .replace(/\\approx/g, '≈')
+    .replace(/\\infty/g, '∞')
+    .replace(/\\pi/g, 'π')
+    .replace(/\\theta/g, 'θ')
+    .replace(/\\alpha/g, 'α')
+    .replace(/\\beta/g, 'β')
+    .replace(/\\gamma/g, 'γ')
+    .replace(/\\delta/g, 'δ')
+    .replace(/\\sigma/g, 'σ')
+    .replace(/\\mu/g, 'μ')
+    .replace(/\\lambda/g, 'λ')
+    .replace(/\\cdot/g, '·')
+    .replace(/\\log/g, 'log')
+    .replace(/\\ln/g, 'ln')
+    .replace(/\\sin/g, 'sin')
+    .replace(/\\cos/g, 'cos')
+    .replace(/\\tan/g, 'tan')
+    // arrays/tables: strip LaTeX table markup, keep values
+    .replace(/\\begin\{array\}[\s\S]*?\\end\{array\}/g, (m) =>
+      m.replace(/\\begin\{array\}\{[^}]*\}|\\end\{array\}|\\hline|\\multicolumn\{[^}]+\}\{[^}]+\}/g, '')
+       .replace(/&/g, ' | ')
+       .replace(/\\\\/g, '\n')
+    )
+    // strip remaining LaTeX delimiters \( \) \[ \]
+    .replace(/\\\(|\\\)/g, '')
+    .replace(/\\\[|\\\]/g, '')
+    // strip remaining backslash commands
+    .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')
+    .replace(/\\[a-zA-Z]+/g, '')
+    // clean up extra spaces
+    .replace(/ {2,}/g, ' ')
+    .trim();
+}
+
+const SUP_MAP: Record<string, string> = {
+  '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
+  '+':'⁺','-':'⁻','n':'ⁿ','x':'ˣ',
+};
+const SUB_MAP: Record<string, string> = {
+  '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉',
+};
+function toSup(s: string): string {
+  const mapped = [...s].map(c => SUP_MAP[c] || c).join('');
+  return mapped === s ? `^${s}` : mapped;
+}
+function toSub(s: string): string {
+  const mapped = [...s].map(c => SUB_MAP[c] || c).join('');
+  return mapped === s ? `_${s}` : mapped;
+}
+
+// HTML-escape dynamic DB content, render LaTeX math, and convert *word* markup to <u>word</u>.
 function md(text: string | null | undefined): string {
   if (!text) return '';
-  return text
+  const mathConverted = convertLatex(text);
+  return mathConverted
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

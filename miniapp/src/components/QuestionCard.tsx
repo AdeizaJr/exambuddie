@@ -1,4 +1,34 @@
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import type { Question } from '../types';
+
+// Render LaTeX inline expressions \(...\) and display \[...\], fallback to plain text
+function renderMath(text: string): string {
+  // First handle *word* underline markup (protect from LaTeX processing)
+  let result = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Render display math \[...\]
+  result = result.replace(/\\\[([\s\S]*?)\\\]/g, (_, expr) => {
+    try {
+      return katex.renderToString(expr.trim(), { displayMode: true, throwOnError: false });
+    } catch { return expr; }
+  });
+
+  // Render inline math \(...\)
+  result = result.replace(/\\\(([\s\S]*?)\\\)/g, (_, expr) => {
+    try {
+      return katex.renderToString(expr.trim(), { displayMode: false, throwOnError: false });
+    } catch { return expr; }
+  });
+
+  // Convert *word* → underline
+  result = result.replace(/\*([^*\n]+)\*/g, '<u>$1</u>');
+
+  return result;
+}
 
 interface Props {
   question: Question;
@@ -52,13 +82,7 @@ export default function QuestionCard({ question, qNum, total, selected, revealed
       <div className="bg-white/70 rounded-2xl p-4 shadow-sm border border-gray-100">
         <p
           className="question-text text-sm font-medium text-[var(--tg-text)] leading-relaxed whitespace-pre-wrap"
-          dangerouslySetInnerHTML={{
-            __html: question.question_text
-              .replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/\*([^*\n]+)\*/g, '<u>$1</u>'),
-          }}
+          dangerouslySetInnerHTML={{ __html: renderMath(question.question_text) }}
         />
       </div>
 
@@ -72,7 +96,7 @@ export default function QuestionCard({ question, qNum, total, selected, revealed
             className={getOptionStyle(opt)}
           >
             <span className="font-bold mr-2">{opt}.</span>
-            {optionText(question, opt)}
+            <span dangerouslySetInnerHTML={{ __html: renderMath(optionText(question, opt)) }} />
           </button>
         ))}
       </div>
@@ -81,7 +105,7 @@ export default function QuestionCard({ question, qNum, total, selected, revealed
       {revealed && question.explanation && (
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-900">
           <span className="font-semibold">💡 Explanation: </span>
-          {question.explanation}
+          <span dangerouslySetInnerHTML={{ __html: renderMath(question.explanation || '') }} />
         </div>
       )}
     </div>
