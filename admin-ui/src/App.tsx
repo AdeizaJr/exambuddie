@@ -8,28 +8,28 @@ import Flags from './pages/Flags';
 import Subscriptions from './pages/Subscriptions';
 import AnalyticsPage from './pages/Analytics';
 import Broadcast from './pages/Broadcast';
-import { getFlags, verifyAdmin } from './api';
+import { getFlags, loginAdmin } from './api';
 
 // ── Login page ──────────────────────────────────────────────────────────────
-function LoginPage({ onLogin }: { onLogin: (secret: string) => void }) {
-  const [value, setValue] = useState('');
+function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const s = value.trim();
-    if (!s) return;
+    if (!username.trim() || !password.trim()) return;
     setError('');
     setLoading(true);
     try {
-      await verifyAdmin(s);
-      localStorage.setItem('admin_secret', s);
-      onLogin(s);
+      const { token } = await loginAdmin(username.trim(), password.trim());
+      localStorage.setItem('admin_token', token);
+      onLogin(token);
       navigate('/overview', { replace: true });
     } catch {
-      setError('Invalid admin secret. Please try again.');
+      setError('Invalid username or password. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -44,20 +44,34 @@ function LoginPage({ onLogin }: { onLogin: (secret: string) => void }) {
           </div>
           <div>
             <h1 className="text-lg font-bold font-display text-white">ExamBuddie Admin</h1>
-            <p className="text-xs text-muted">Enter your admin secret to continue</p>
+            <p className="text-xs text-muted">Sign in to continue</p>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
-              Admin Secret
+              Username
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="admin"
+              autoFocus
+              autoComplete="username"
+              className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
+              Password
             </label>
             <input
               type="password"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="sk-admin-..."
-              autoFocus
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              autoComplete="current-password"
               className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
             />
           </div>
@@ -66,7 +80,7 @@ function LoginPage({ onLogin }: { onLogin: (secret: string) => void }) {
           )}
           <button
             type="submit"
-            disabled={!value.trim() || loading}
+            disabled={!username.trim() || !password.trim() || loading}
             className="w-full py-2.5 bg-accent text-white font-medium text-sm rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-40"
           >
             {loading ? 'Signing in...' : 'Sign In'}
@@ -93,7 +107,7 @@ function ProtectedLayout({
 
 // ── Root app ────────────────────────────────────────────────────────────────
 export default function App() {
-  const [secret, setSecret] = useState<string | null>(() => localStorage.getItem('admin_secret'));
+  const [secret, setSecret] = useState<string | null>(() => localStorage.getItem('admin_token'));
   const [pendingFlags, setPendingFlags] = useState(0);
 
   const loadFlagCount = useCallback(async () => {
@@ -114,7 +128,7 @@ export default function App() {
   }, [secret, loadFlagCount]);
 
   function handleLogout() {
-    localStorage.removeItem('admin_secret');
+    localStorage.removeItem('admin_token');
     setSecret(null);
   }
 

@@ -14,6 +14,7 @@ import * as stats from './bot/handlers/stats';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
+import { hashPassword } from './services/auth';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '');
 
@@ -197,10 +198,27 @@ async function launchBot(attempt = 1): Promise<void> {
   }
 }
 
+async function seedAdminUser() {
+  const { rows } = await db.query('SELECT COUNT(*) as count FROM admin_users');
+  if (parseInt(rows[0].count) > 0) return;
+
+  const username = process.env.ADMIN_USERNAME;
+  const password = process.env.ADMIN_PASSWORD;
+  if (!username || !password) return;
+
+  const hash = await hashPassword(password);
+  await db.query(
+    'INSERT INTO admin_users (username, password_hash) VALUES ($1, $2)',
+    [username, hash]
+  );
+  console.log(`[Admin] Seeded admin user: ${username}`);
+}
+
 async function launch() {
   const PORT = process.env.PORT || 3000;
   const APP_URL = process.env.APP_URL;
 
+  await seedAdminUser();
   const app = createServer(bot);
 
   if (APP_URL && process.env.NODE_ENV === 'production') {

@@ -115,6 +115,14 @@ const migrations = [
     started_at TIMESTAMPTZ,
     expires_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+
+  // ── Admin users ───────────────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS admin_users (
+    id            SERIAL PRIMARY KEY,
+    username      TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at    TIMESTAMPTZ DEFAULT NOW()
   )`
 ];
 
