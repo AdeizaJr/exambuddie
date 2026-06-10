@@ -128,7 +128,21 @@ const migrations = [
   // ── Strip "explanation video available below" from explanations ────────────
   `UPDATE questions
    SET explanation = REGEXP_REPLACE(explanation, '\n?[Tt]here is an explanation video available below[^\n]*', '', 'g')
-   WHERE explanation ILIKE '%explanation video available below%'`
+   WHERE explanation ILIKE '%explanation video available below%'`,
+
+  // ── Flag questions that reference diagrams/images (unanswerable without visual) ──
+  `ALTER TABLE questions ADD COLUMN IF NOT EXISTS has_diagram BOOLEAN DEFAULT FALSE`,
+  `UPDATE questions SET has_diagram = TRUE WHERE
+    question_text ILIKE '%diagram%' OR
+    question_text ILIKE '%figure above%' OR
+    question_text ILIKE '%figure below%' OR
+    question_text ILIKE '%shown below%' OR
+    question_text ILIKE '%chart above%' OR
+    question_text ILIKE '%chart below%' OR
+    question_text ILIKE '%illustration above%' OR
+    question_text ILIKE '%illustration below%' OR
+    question_text ILIKE '%the diagram%' OR
+    question_text ILIKE '%use the%above%'`
 ];
 
 async function migrate(): Promise<void> {

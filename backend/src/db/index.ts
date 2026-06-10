@@ -103,6 +103,7 @@ export async function getRandomQuestion(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excludeFilter}
+     AND has_diagram = FALSE
      ORDER BY RANDOM() LIMIT 1`,
     params
   );
@@ -120,6 +121,7 @@ export async function getQuestionsByTopic(examType: string, subject: string, top
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} AND topic ILIKE $${topicIdx}
+     AND has_diagram = FALSE
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
@@ -144,6 +146,7 @@ export async function getQuizQuestions(examType: string, subject: string, limit 
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
+     AND has_diagram = FALSE
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
