@@ -170,7 +170,9 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   if (!q) {
     const yearStr = year ? ` for ${year}` : '';
     const topicStr = effectiveTopic ? ` on topic "${effectiveTopic}"` : '';
-    await ctx.reply(`No questions found for ${subject}${yearStr}${topicStr}. Try a different selection!`);
+    await ctx.reply(`Sorry, no questions found for this topic. Please select another topic to continue.`, {
+      reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Topic', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
     return;
   }
 
@@ -200,7 +202,12 @@ export async function handlePracticeTopicPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const topic = ctx.callbackQuery.data.split(':').slice(2).join(':'); // preserve colons in topic name
   const session = await redis.getSession(ctx.from.id);
-  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  if (!session?.pendingSubject) {
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📚 Pick a Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
+    return;
+  }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
   await startPractice(
@@ -219,7 +226,12 @@ export async function handlePracticeFlowYear(ctx: any): Promise<void> {
   const raw = ctx.callbackQuery.data.split(':')[2];
   const year = raw === 'any' ? null : parseInt(raw, 10);
   const session = await redis.getSession(ctx.from.id);
-  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  if (!session?.pendingSubject) {
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📚 Pick a Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
+    return;
+  }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
   await startPractice(ctx, user, session.pendingSubject, year, undefined, undefined);
@@ -229,7 +241,12 @@ export async function handlePracticeExamTypePick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const examType = ctx.callbackQuery.data.split(':')[2];
   const session = await redis.getSession(ctx.from.id);
-  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  if (!session?.pendingSubject) {
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📚 Pick a Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
+    return;
+  }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
   await startPractice(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType);
@@ -240,7 +257,9 @@ export async function handlePracticeTimerPick(ctx: any): Promise<void> {
   const timerSecs = parseInt(ctx.callbackQuery.data.split(':')[2], 10);
   const session = await redis.getSession(ctx.from.id);
   if (!session?.pendingSubject) {
-    await ctx.reply('Session expired. Please start again.');
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📚 Pick a Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
     return;
   }
 
@@ -323,7 +342,12 @@ export async function handleAnswer(ctx: any): Promise<void> {
 export async function handleNext(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
-  if (!session) { await ctx.reply('Session expired. Use /practice to start again.'); return; }
+  if (!session) {
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📚 Pick a Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
+    return;
+  }
 
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
@@ -435,7 +459,9 @@ export async function handleDrill(ctx: any, topicOverride?: string): Promise<voi
 
   const questions = await db.getQuestionsByTopic(user.exam_type || '', subject, topic, 10);
   if (questions.length === 0) {
-    await ctx.reply(`No questions found for topic "${topic}". Try a different topic or subject.`);
+    await ctx.reply(`Sorry, no questions found for this topic. Please select another topic to continue.`, {
+      reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Topic', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
     return;
   }
 
