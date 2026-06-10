@@ -123,7 +123,12 @@ const migrations = [
     username      TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     created_at    TIMESTAMPTZ DEFAULT NOW()
-  )`
+  )`,
+
+  // ── Strip "explanation video available below" from explanations ────────────
+  `UPDATE questions
+   SET explanation = REGEXP_REPLACE(explanation, '\n?[Tt]here is an explanation video available below[^\n]*', '', 'g')
+   WHERE explanation ILIKE '%explanation video available below%'`
 ];
 
 async function migrate(): Promise<void> {
