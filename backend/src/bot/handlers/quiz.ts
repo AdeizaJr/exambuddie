@@ -51,7 +51,12 @@ export async function handleQuizFlowYear(ctx: any): Promise<void> {
   const raw = ctx.callbackQuery.data.split(':')[2];
   const year = raw === 'any' ? null : parseInt(raw, 10);
   const session = await redis.getSession(ctx.from.id);
-  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  if (!session?.pendingSubject) {
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📋 Pick a Subject', callback_data: 'quiz:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
+    return;
+  }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
   await startQuiz(ctx, user, session.pendingSubject, year, undefined, undefined);
@@ -94,7 +99,9 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   const questions = await db.getQuizQuestions(examType, subject, QUIZ_QUESTIONS, effectiveYear);
 
   if (questions.length < 5) {
-    await ctx.reply('Not enough questions available for a full quiz. Try again soon!');
+    await ctx.reply('Sorry, no questions found for this topic. Please select another topic to continue.', {
+      reply_markup: { inline_keyboard: [[{ text: '📋 Pick Another Topic', callback_data: 'quiz:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
     return;
   }
 
@@ -132,7 +139,12 @@ export async function handleQuizExamTypePick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const examType = ctx.callbackQuery.data.split(':')[2];
   const session = await redis.getSession(ctx.from.id);
-  if (!session?.pendingSubject) { await ctx.reply('Session expired. Please start again.'); return; }
+  if (!session?.pendingSubject) {
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📋 Pick a Subject', callback_data: 'quiz:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
+    return;
+  }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
   await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType);
@@ -143,7 +155,9 @@ export async function handleQuizTimerPick(ctx: any): Promise<void> {
   const timerSecs = parseInt(ctx.callbackQuery.data.split(':')[2], 10);
   const session = await redis.getSession(ctx.from.id);
   if (!session?.pendingSubject) {
-    await ctx.reply('Session expired. Please start again.');
+    await ctx.reply('Session expired.', {
+      reply_markup: { inline_keyboard: [[{ text: '📋 Pick a Subject', callback_data: 'quiz:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+    });
     return;
   }
 
