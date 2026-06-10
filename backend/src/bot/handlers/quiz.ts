@@ -170,7 +170,13 @@ export async function handleQuizTimerPick(ctx: any): Promise<void> {
 export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<void> {
   const q = quizState.questions[quizState.qIndex];
   const timerSecs = quizState.questionTimerSecs && quizState.questionTimerSecs > 0 ? quizState.questionTimerSecs : 0;
-  const baseText = fmt.formatQuestion(q, quizState.qIndex + 1, quizState.total, 'quiz') + fmt.answerOptions(q);
+
+  const overallSecsLeft = Math.max(0, Math.floor((quizState.deadline - Date.now()) / 1000));
+  const mins = Math.floor(overallSecsLeft / 60);
+  const secs = overallSecsLeft % 60;
+  const overallTimeLine = `\n⏳ <b>${mins}:${secs.toString().padStart(2, '0')}</b> overall time left`;
+
+  const baseText = fmt.formatQuestion(q, quizState.qIndex + 1, quizState.total, 'quiz') + fmt.answerOptions(q) + overallTimeLine;
   const timerLine = (secsLeft: number) =>
     timerSecs > 0 ? `\n\n⏱️ _${secsLeft}s remaining_` : '';
 
