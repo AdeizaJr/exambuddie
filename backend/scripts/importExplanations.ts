@@ -30,56 +30,53 @@ async function run(): Promise<void> {
 
   console.log(`\nFound ${files.length} files in explanations/\n`);
 
-  const client = await pool.connect();
   let totalUpdated = 0;
   let totalSkipped = 0;
 
-  try {
-    for (const file of files) {
-      const filePath = path.join(EXPLANATIONS_DIR, file);
-      const raw = fs.readFileSync(filePath, 'utf-8');
+  for (const file of files) {
+    const filePath = path.join(EXPLANATIONS_DIR, file);
+    const raw = fs.readFileSync(filePath, 'utf-8');
 
-      let records: ExplanationRecord[];
-      try {
-        records = JSON.parse(raw);
-      } catch {
-        console.warn(`  ✗ Invalid JSON: ${file} — skipping`);
-        continue;
-      }
+    let records: ExplanationRecord[];
+    try {
+      records = JSON.parse(raw);
+    } catch {
+      console.warn(`  ✗ Invalid JSON: ${file} — skipping`);
+      continue;
+    }
 
-      if (!Array.isArray(records) || records.length === 0) {
-        console.log(`  ⏭  ${file}: empty — skipping`);
-        continue;
-      }
+    if (!Array.isArray(records) || records.length === 0) {
+      console.log(`  ⏭  ${file}: empty — skipping`);
+      continue;
+    }
 
-      process.stdout.write(`  ${file} (${records.length} records) ... `);
+    const valid = records.filter((r) => r.id && r.explanation);
+    totalSkipped += records.length - valid.length;
 
-      let fileUpdated = 0;
-      for (const rec of records) {
-        if (!rec.id || !rec.explanation) {
-          totalSkipped++;
-          continue;
-        }
+    process.stdout.write(`  ${file} (${records.length} records) ... `);
 
-        const result = await client.query(
-          `UPDATE questions SET explanation = $1 WHERE id = $2`,
-          [rec.explanation, rec.id],
-        );
-
-        if (result.rowCount && result.rowCount > 0) {
-          fileUpdated++;
-        } else {
-          totalSkipped++;
-        }
-      }
-
+    // reconnect per file — avoids Railway proxy timeout on long-held connections
+    const client = await pool.connect();
+    try {
+      const ids = valid.map((r) => r.id);
+      const explanations = valid.map((r) => r.explanation);
+      const result = await client.query(
+        `UPDATE questions SET explanation = data.explanation
+         FROM unnest($1::int[], $2::text[]) AS data(id, explanation)
+         WHERE questions.id = data.id`,
+        [ids, explanations],
+      );
+      const fileUpdated = result.rowCount ?? 0;
       totalUpdated += fileUpdated;
       console.log(`✓ ${fileUpdated} updated`);
+    } catch (err: any) {
+      console.log(`✗ failed: ${err.message}`);
+    } finally {
+      client.release();
     }
-  } finally {
-    client.release();
-    await pool.end();
   }
+
+  await pool.end();
 
   console.log(`\n✅ Done: ${totalUpdated} updated, ${totalSkipped} skipped.\n`);
 }
