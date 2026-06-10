@@ -239,15 +239,15 @@ ${md(q.question_text)}`;
 export function answerKeyboard(hasOptionE = false) {
   const rows: any[][] = [
     [
-      { text: '🅰️  A', callback_data: 'answer:A' },
-      { text: '🅱️  B', callback_data: 'answer:B' },
+      { text: 'A', callback_data: 'answer:A' },
+      { text: 'B', callback_data: 'answer:B' },
     ],
     [
-      { text: '🅲  C', callback_data: 'answer:C' },
-      { text: '🅳  D', callback_data: 'answer:D' },
+      { text: 'C', callback_data: 'answer:C' },
+      { text: 'D', callback_data: 'answer:D' },
     ],
   ];
-  if (hasOptionE) rows.push([{ text: '🅴  E', callback_data: 'answer:E' }]);
+  if (hasOptionE) rows.push([{ text: 'E', callback_data: 'answer:E' }]);
   return { inline_keyboard: rows };
 }
 
