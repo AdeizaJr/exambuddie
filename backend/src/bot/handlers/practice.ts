@@ -132,7 +132,11 @@ export async function handleMultiSubjectToggle(ctx: any): Promise<void> {
   }
 
   await redis.updateSession(ctx.from.id, { selectedSubjects: selected });
-  await ctx.editMessageReplyMarkup(fmt.practiceMultiSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP), selected));
+  try {
+    await ctx.editMessageReplyMarkup(fmt.practiceMultiSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP), selected));
+  } catch (err: any) {
+    // ignore "message is not modified" and similar transient errors
+  }
 }
 
 export async function handleMultiSubjectStart(ctx: any): Promise<void> {
