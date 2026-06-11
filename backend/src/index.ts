@@ -160,6 +160,27 @@ bot.on('callback_query', async (ctx: any) => {
   await ctx.answerCbQuery('Something went wrong. Please try again.', { show_alert: false });
 });
 
+// ── Free-text handler — keeps conversation alive ───────────────────────────────
+bot.on('text', async (ctx: any) => {
+  const session = await redis.getSession(ctx.from.id);
+  if (session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill') return;
+
+  const text: string = ctx.message?.text?.trim() || '';
+  const user = await db.getUser(ctx.from.id);
+
+  if (!user?.exam_type) return onboarding.handleStart(ctx);
+
+  if (text === '📚 Practice') return practice.handlePractice(ctx);
+  if (text === '📋 Quiz')     return quiz.handleQuiz(ctx);
+  if (text === '📊 My Stats') return stats.handleStats(ctx);
+  if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
+
+  await ctx.reply(`What would you like to do, ${user.first_name}?`, {
+    parse_mode: 'HTML',
+    reply_markup: fmt.persistentMenuKeyboard(),
+  });
+});
+
 // ── Error handler ──────────────────────────────────────────────────────────────
 bot.catch((err: any, ctx: any) => {
   const msg: string = err.message || '';

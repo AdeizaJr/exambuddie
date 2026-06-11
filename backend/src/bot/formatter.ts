@@ -223,6 +223,17 @@ export function mainMenuKeyboard() {
   };
 }
 
+export function persistentMenuKeyboard() {
+  return {
+    keyboard: [
+      [{ text: '📚 Practice' }, { text: '📋 Quiz' }],
+      [{ text: '📊 My Stats' }, { text: '⚙️ Settings' }],
+    ],
+    resize_keyboard: true,
+    persistent: true,
+  };
+}
+
 export function formatQuestion(q: Question, number: number, total: number | string, mode?: string): string {
   const modeTag = mode === 'quiz'
     ? `📋 <b>Question ${number}/${total}</b>`

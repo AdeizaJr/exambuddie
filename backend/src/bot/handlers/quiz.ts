@@ -341,7 +341,8 @@ ${accuracy >= 80 ? '🔥 You\'re exam-ready! Keep it consistent.' : ''}`;
       inline_keyboard: [
         [{ text: '🔄 Take Another Quiz', callback_data: 'quiz:pick' },
          { text: '🎯 Drill Weak Topics', callback_data: `drill:auto:${quizState.subject}` }],
-        [{ text: '📊 My Stats', callback_data: 'stats:show' }],
+        [{ text: '📊 My Stats', callback_data: 'stats:show' },
+         { text: '🏠 Main Menu', callback_data: 'menu:main' }],
       ],
     },
   });

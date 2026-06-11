@@ -7,10 +7,9 @@ export async function handleStart(ctx: any): Promise<void> {
   const user = await db.upsertUser(ctx);
 
   if (user.exam_type && user.subjects && user.subjects.length > 0) {
-    // Returning user — show main menu
     await ctx.reply(
-      `👋 <b>Welcome back, ${user.first_name}!</b>\n\nReady to practise? Choose an option:`,
-      { parse_mode: 'HTML', reply_markup: fmt.mainMenuKeyboard() }
+      `👋 <b>Welcome back, ${user.first_name}!</b>\n\nReady to practise? Tap a button below or choose from the menu:`,
+      { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() }
     );
     return;
   }
@@ -113,9 +112,9 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
 
   await redis.clearSession(ctx.from.id);
 
-  await ctx.editMessageText(fmt.profileComplete(user), {
-    parse_mode: 'HTML',
-    reply_markup: fmt.mainMenuKeyboard(),
+  await ctx.editMessageText(fmt.profileComplete(user), { parse_mode: 'HTML' });
+  await ctx.reply('Use the menu below to get started 👇', {
+    reply_markup: fmt.persistentMenuKeyboard(),
   });
 }
 
