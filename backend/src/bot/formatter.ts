@@ -314,12 +314,14 @@ export function sessionSummary({
   correct,
   total,
   subject,
+  subjects,
   mode,
   durationSecs,
 }: {
   correct: number;
   total: number;
-  subject: string;
+  subject?: string;
+  subjects?: string[];
   mode: string;
   durationSecs?: number;
 }): string {
@@ -327,12 +329,17 @@ export function sessionSummary({
   const grade = accuracy >= 70 ? '🌟 Excellent!' : accuracy >= 50 ? '👍 Good effort!' : '💪 Keep practising!';
   const minutes = durationSecs ? Math.round(durationSecs / 60) : null;
 
+  const subjectList = subjects && subjects.length > 0 ? subjects : (subject ? [subject] : []);
+  const subjectLabel = subjectList.length > 1
+    ? subjectList.map(s => SUBJECT_MAP[s] || s).join(', ')
+    : SUBJECT_MAP[subjectList[0] || ''] || subjectList[0] || '';
+
   return `📊 <b>Session Summary</b>
 
 ${grade}
 
 📌 Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}
-📚 Subject: ${SUBJECT_MAP[subject] || subject}
+📚 Subject${subjectList.length > 1 ? 's' : ''}: ${subjectLabel}
 ✅ Correct: ${correct}/${total}
 🎯 Accuracy: ${accuracy}%${minutes ? `\n⏱️ Time: ${minutes} min` : ''}
 
@@ -607,6 +614,25 @@ export function practiceSubjectKeyboard(subjects: string[]) {
     { text: '➕ Add / Remove Subjects', callback_data: 'practice:add_subject' },
     { text: '🔄 Change Exam Type', callback_data: 'practice:change_exam' },
   ]);
+  return { inline_keyboard: rows };
+}
+
+export function practiceMultiSubjectKeyboard(allSubjects: string[], selected: string[]) {
+  const buttons = allSubjects.map(s => {
+    const isSelected = selected.includes(s);
+    return {
+      text: `${isSelected ? '✅ ' : ''}${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s}`,
+      callback_data: `practice:multisubject:toggle:${s}`,
+    };
+  });
+  const rows: any[][] = [];
+  for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
+  rows.push([{
+    text: selected.length > 0
+      ? `▶️ Start Practice (${selected.length} subject${selected.length > 1 ? 's' : ''})`
+      : '⚠️ Select at least one subject',
+    callback_data: 'practice:multisubject:start',
+  }]);
   return { inline_keyboard: rows };
 }
 

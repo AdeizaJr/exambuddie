@@ -101,10 +101,57 @@ export async function handlePractice(ctx: any): Promise<void> {
   const user = await requireProfile(ctx);
   if (!user) return;
 
-  await ctx.reply(
-    '📚 <b>Practice Mode</b>\n\nWhich subject would you like to practise?',
-    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
-  );
+  if (user.plan === 'premium') {
+    const allSubjects = Object.keys(fmt.SUBJECT_MAP);
+    await redis.setSession(ctx.from.id, { step: 'picking_multisubject', selectedSubjects: [...user.subjects] });
+    await ctx.reply(
+      '📚 <b>Practice Mode</b>\n\nSelect any subjects to practise (your profile subjects are pre-selected):',
+      { parse_mode: 'HTML', reply_markup: fmt.practiceMultiSubjectKeyboard(allSubjects, [...user.subjects]) }
+    );
+  } else {
+    await ctx.reply(
+      '📚 <b>Practice Mode</b>\n\nWhich subject would you like to practise?',
+      { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+    );
+  }
+}
+
+export async function handleMultiSubjectToggle(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const subject = ctx.callbackQuery.data.split(':')[3];
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  const session = await redis.getSession(ctx.from.id);
+  let selected: string[] = session?.selectedSubjects || [...user.subjects];
+
+  if (selected.includes(subject)) {
+    selected = selected.filter(s => s !== subject);
+  } else {
+    selected = [...selected, subject];
+  }
+
+  await redis.updateSession(ctx.from.id, { selectedSubjects: selected });
+  try {
+    await ctx.editMessageReplyMarkup(fmt.practiceMultiSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP), selected));
+  } catch (err: any) {
+    // ignore "message is not modified" and similar transient errors
+  }
+}
+
+export async function handleMultiSubjectStart(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const session = await redis.getSession(ctx.from.id);
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  const selected: string[] = session?.selectedSubjects || [];
+  if (selected.length === 0) {
+    await ctx.answerCbQuery('Select at least one subject first!', { show_alert: true });
+    return;
+  }
+
+  await startPractice(ctx, user, selected[0], undefined, undefined, undefined, undefined, selected);
 }
 
 // Subject tapped from the subject picker
@@ -130,7 +177,7 @@ export async function handleYearPick(ctx: any): Promise<void> {
   );
 }
 
-export async function startPractice(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string, topic?: string | null): Promise<void> {
+export async function startPractice(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string, topic?: string | null, practiceSubjects?: string[]): Promise<void> {
   if (!user) user = await requireProfile(ctx);
   if (!user) return;
 
@@ -178,9 +225,18 @@ export async function startPractice(ctx: any, user: User | null, subject: string
 
   const timerSecs = questionTimerSecs ?? 0;
   const sessionId = uuidv4();
+
+  // Carry cumulative stats from previous subjects in this session
+  const existing = await redis.getSession(ctx.from.id);
+  const carry = existing?.sessionCarry ?? null;
+
+  // Multi-subject: preserve the full subjects list; single-subject: just this subject
+  const effectivePracticeSubjects = practiceSubjects && practiceSubjects.length > 1 ? practiceSubjects : undefined;
+
   await redis.setSession(ctx.from.id, {
     mode: 'practice',
     subject,
+    practiceSubjects: effectivePracticeSubjects,
     examType,
     year: effectiveYear,
     topic: effectiveTopic,
@@ -190,6 +246,10 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     total: 0,
     currentQuestion: q,
     startTime: Date.now(),
+    sessionStartTime: carry?.sessionStartTime ?? Date.now(),
+    cumulativeCorrect: carry?.cumulativeCorrect ?? 0,
+    cumulativeTotal: carry?.cumulativeTotal ?? 0,
+    sessionSubjects: carry ? [...carry.sessionSubjects, subject] : [subject],
     usedIds: [q.id],
     questionTimerSecs: timerSecs,
   });
@@ -364,12 +424,28 @@ export async function handleNext(ctx: any): Promise<void> {
     await ctx.reply('⚠️ <i>Your premium access has been revoked. The per-question timer has been removed.</i>', { parse_mode: 'HTML' });
   }
 
-  const q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic);
+  let q = null;
+  let pickedSubject = session.subject || '';
+
+  if (session.practiceSubjects && session.practiceSubjects.length > 1) {
+    // Multi-subject: try subjects in random order until one yields a question
+    const shuffled = [...session.practiceSubjects].sort(() => Math.random() - 0.5);
+    for (const subj of shuffled) {
+      q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic);
+      if (q) { pickedSubject = subj; break; }
+    }
+  } else {
+    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic);
+  }
+
   if (!q) {
     const yearStr = session.year ? ` for ${session.year}` : '';
     const topicStr = session.topic ? ` on topic "${session.topic}"` : '';
+    const subjectLabel = session.practiceSubjects && session.practiceSubjects.length > 1
+      ? 'all selected subjects'
+      : `this subject${yearStr}${topicStr}`;
     await ctx.reply(
-      `🎉 You've gone through all available questions for this subject${yearStr}${topicStr}! Try another year or subject.`,
+      `🎉 You've gone through all available questions for ${subjectLabel}! Try another year or subject.`,
       { parse_mode: 'HTML', reply_markup: fmt.sessionKeyboard(session.subject || '', session.year) }
     );
     return;
@@ -378,6 +454,7 @@ export async function handleNext(ctx: any): Promise<void> {
   const newQNum = (session.qNum || 1) + 1;
   await redis.updateSession(ctx.from.id, {
     qNum: newQNum,
+    subject: pickedSubject,
     currentQuestion: q,
     lastQuestionTime: Date.now(),
     awaitingNext: false,
@@ -394,11 +471,15 @@ export async function handleStop(ctx: any): Promise<void> {
   const session = await redis.getSession(ctx.from.id);
   if (!session) { await ctx.reply('No active session.'); return; }
 
-  const durationSecs = Math.round((Date.now() - (session.startTime || Date.now())) / 1000);
+  const totalCorrect = (session.cumulativeCorrect || 0) + (session.correct || 0);
+  const totalTotal   = (session.cumulativeTotal   || 0) + (session.total   || 0);
+  const durationSecs = Math.round((Date.now() - (session.sessionStartTime || session.startTime || Date.now())) / 1000);
+  const subjects: string[] = session.practiceSubjects || session.sessionSubjects || [session.subject].filter(Boolean);
+
   const summary = fmt.sessionSummary({
-    correct: session.correct || 0,
-    total: session.total || 0,
-    subject: session.subject || '',
+    correct: totalCorrect,
+    total: totalTotal,
+    subjects,
     mode: session.mode || 'practice',
     durationSecs,
   });
@@ -410,10 +491,20 @@ export async function handleStop(ctx: any): Promise<void> {
   });
 }
 
-// Switch to a different subject — clears current session and shows subject picker
+// Switch to a different subject — preserves cumulative stats across subjects
 export async function handleChangeSubject(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
-  await redis.clearSession(ctx.from.id);
+
+  const session = await redis.getSession(ctx.from.id);
+  const carry = session ? {
+    cumulativeCorrect: (session.cumulativeCorrect || 0) + (session.correct || 0),
+    cumulativeTotal: (session.cumulativeTotal || 0) + (session.total || 0),
+    sessionStartTime: session.sessionStartTime || session.startTime || Date.now(),
+    sessionSubjects: [...(session.sessionSubjects || (session.subject ? [session.subject] : []))],
+  } : null;
+
+  // Store carry so startPractice can merge it into the new session
+  await redis.setSession(ctx.from.id, { sessionCarry: carry });
 
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
