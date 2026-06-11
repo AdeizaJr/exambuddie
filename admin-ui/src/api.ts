@@ -105,8 +105,10 @@ export async function getUsers(filter: UsersFilter = {}): Promise<PaginatedRespo
   return req<PaginatedResponse<User>>('GET', '/users', undefined, filter as Record<string, string | number | undefined>);
 }
 
-export async function deleteUsers(ids: number[]): Promise<{ ok: boolean; deleted: number }> {
-  return req<{ ok: boolean; deleted: number }>('DELETE', '/users', { ids });
+export async function deleteUsers(
+  payload: { ids: number[] } | { all: true; search?: string },
+): Promise<{ ok: boolean; deleted: number }> {
+  return req<{ ok: boolean; deleted: number }>('DELETE', '/users', payload);
 }
 
 export async function updateUserPlan(
