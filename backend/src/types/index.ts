@@ -92,6 +92,7 @@ export interface SessionState {
   questionTimerSecs?: number;
   questionDeadline?: number;
   pendingSubject?: string;
+  pendingSubjects?: string[];
   pendingYear?: number | null;
   pendingMode?: 'practice' | 'quiz';
   pendingExamType?: string;
@@ -107,6 +108,7 @@ export interface QuizAnswer {
 export interface QuizState {
   mode: 'quiz';
   subject: string;
+  subjects?: string[];
   sessionId: string;
   questions: Question[];
   qIndex: number;

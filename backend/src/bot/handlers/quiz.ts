@@ -24,14 +24,50 @@ export async function handleQuiz(ctx: any): Promise<void> {
     return;
   }
 
-  if (user.subjects.length === 1) {
-    await startQuiz(ctx, user, user.subjects[0]); // year=undefined → triggers year picker
+  const allSubjects = Object.keys(fmt.SUBJECT_MAP);
+  await redis.setSession(ctx.from.id, { step: 'picking_multisubject', selectedSubjects: [...user.subjects] });
+  await ctx.reply(
+    '📋 <b>Quiz Mode</b>\n\nSelect subjects for your mock exam (your profile subjects are pre-selected):',
+    { parse_mode: 'HTML', reply_markup: fmt.quizMultiSubjectKeyboard(allSubjects, [...user.subjects]) }
+  );
+}
+
+export async function handleQuizMultiSubjectToggle(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const subject = ctx.callbackQuery.data.split(':')[3];
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  const session = await redis.getSession(ctx.from.id);
+  let selected: string[] = session?.selectedSubjects || [...user.subjects];
+
+  if (selected.includes(subject)) {
+    selected = selected.filter(s => s !== subject);
   } else {
-    await ctx.reply(
-      '📋 <b>Quiz Mode</b>\n\nWhich subject for your mock exam?',
-      { parse_mode: 'HTML', reply_markup: fmt.quizSubjectKeyboard(user.subjects) }
-    );
+    selected = [...selected, subject];
   }
+
+  await redis.updateSession(ctx.from.id, { selectedSubjects: selected });
+  try {
+    await ctx.editMessageReplyMarkup(fmt.quizMultiSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP), selected));
+  } catch (err: any) {
+    // ignore "message is not modified" and similar transient errors
+  }
+}
+
+export async function handleQuizMultiSubjectStart(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const session = await redis.getSession(ctx.from.id);
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  const selected: string[] = session?.selectedSubjects || [];
+  if (selected.length === 0) {
+    await ctx.answerCbQuery('Select at least one subject first!', { show_alert: true });
+    return;
+  }
+
+  await startQuiz(ctx, user, selected[0], undefined, undefined, undefined, selected);
 }
 
 // Subject tapped from the quiz subject picker
@@ -59,16 +95,18 @@ export async function handleQuizFlowYear(ctx: any): Promise<void> {
   }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
-  await startQuiz(ctx, user, session.pendingSubject, year, undefined, undefined);
+  await startQuiz(ctx, user, session.pendingSubject, year, undefined, undefined, session.pendingSubjects);
 }
 
-export async function startQuiz(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string): Promise<void> {
+export async function startQuiz(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string, quizSubjects?: string[]): Promise<void> {
   if (!user) user = await db.getUser(ctx.from.id);
   if (!user) return;
 
+  const pendingSubjectsField = quizSubjects && quizSubjects.length > 1 ? { pendingSubjects: quizSubjects } : {};
+
   // Step 0: pick year
   if (year === undefined) {
-    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'quiz' });
+    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'quiz', ...pendingSubjectsField });
     await ctx.reply(
       '📅 <b>Which exam year would you like to be quizzed on?</b>',
       { parse_mode: 'HTML', reply_markup: fmt.flowYearKeyboard('quiz') }
@@ -77,7 +115,7 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   }
   // Step 1: pick exam type
   if (sessionExamType === undefined) {
-    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'quiz' });
+    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'quiz', ...pendingSubjectsField });
     await ctx.reply(
       '📋 <b>Which exam would you like to be quizzed on?</b>',
       { parse_mode: 'HTML', reply_markup: fmt.examTypePickerKeyboard('quiz') }
@@ -96,7 +134,10 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
 
   const examType = sessionExamType || user.exam_type || '';
   const effectiveYear = year !== undefined ? year : (user.target_year ?? null);
-  const questions = await db.getQuizQuestions(examType, subject, QUIZ_QUESTIONS, effectiveYear);
+  const isMulti = quizSubjects && quizSubjects.length > 1;
+  const questions = isMulti
+    ? await db.getQuizQuestionsMulti(examType, quizSubjects!, QUIZ_QUESTIONS, effectiveYear)
+    : await db.getQuizQuestions(examType, subject, QUIZ_QUESTIONS, effectiveYear);
 
   if (questions.length < 5) {
     await ctx.reply('Sorry, no questions found for this topic. Please select another topic to continue.', {
@@ -110,6 +151,7 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   const quizState: QuizState = {
     mode: 'quiz',
     subject,
+    ...(isMulti ? { subjects: quizSubjects } : {}),
     sessionId,
     questions,
     qIndex: 0,
@@ -127,8 +169,11 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
 
   const timerNote = timerSecs > 0 ? ` with <b>${timerSecs}s per question</b>` : '';
   const timeMsg = `⏱️ You have <b>45 minutes</b> to complete ${questions.length} questions${timerNote}.\nGood luck! 🍀`;
+  const subjectLine = isMulti
+    ? quizSubjects!.map(s => fmt.SUBJECT_MAP[s] || s).join(', ')
+    : (fmt.SUBJECT_MAP[subject] || subject);
   await ctx.reply(
-    `📋 <b>Quiz Mode Started</b>\n${fmt.SUBJECT_MAP[subject] || subject}\n\n${timeMsg}\n\nTap /stop at any time to end early.`,
+    `📋 <b>Quiz Mode Started</b>\n${subjectLine}\n\n${timeMsg}\n\nTap /stop at any time to end early.`,
     { parse_mode: 'HTML' }
   );
 
@@ -147,7 +192,7 @@ export async function handleQuizExamTypePick(ctx: any): Promise<void> {
   }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
-  await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType);
+  await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType, session.pendingSubjects);
 }
 
 export async function handleQuizTimerPick(ctx: any): Promise<void> {
@@ -164,7 +209,7 @@ export async function handleQuizTimerPick(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
 
-  await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, timerSecs, session.pendingExamType);
+  await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, timerSecs, session.pendingExamType, session.pendingSubjects);
 }
 
 export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<void> {
@@ -323,11 +368,15 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
   const mins = Math.floor(durationSecs / 60);
   const secs = durationSecs % 60;
 
+  const subjectDisplay = quizState.subjects && quizState.subjects.length > 1
+    ? quizState.subjects.map(s => fmt.SUBJECT_MAP[s] || s).join(', ')
+    : (fmt.SUBJECT_MAP[quizState.subject] || quizState.subject);
+
   const summary = `📋 <b>Quiz Complete!</b>${reasonNote}
 
 ${grade}
 
-📚 Subject: ${fmt.SUBJECT_MAP[quizState.subject] || quizState.subject}
+📚 Subject${quizState.subjects && quizState.subjects.length > 1 ? 's' : ''}: ${subjectDisplay}
 ✅ Score: ${quizState.correct}/${quizState.total}
 🎯 Accuracy: ${accuracy}%
 ⏱️ Time: ${mins}m ${secs}s
