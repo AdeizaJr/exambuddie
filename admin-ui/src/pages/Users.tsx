@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getUsers, updateUserPlan } from '../api';
+import { getUsers, updateUserPlan, deleteUsers } from '../api';
 import type { User, PaginatedResponse } from '../types';
 import Spinner from '../components/Spinner';
 import Badge from '../components/Badge';
@@ -18,16 +18,19 @@ function formatDate(dateStr: string | null): string {
 export default function Users() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Derive filter values from URL
   const search = searchParams.get('q')    ?? '';
   const page   = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
 
-  const [result, setResult]         = useState<PaginatedResponse<User> | null>(null);
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState<string | null>(null);
+  const [result, setResult]           = useState<PaginatedResponse<User> | null>(null);
+  const [loading, setLoading]         = useState(true);
+  const [error, setError]             = useState<string | null>(null);
   const [grantTarget, setGrantTarget] = useState<User | null>(null);
-  const [months, setMonths]         = useState(1);
-  const [saving, setSaving]         = useState(false);
+  const [months, setMonths]           = useState(1);
+  const [saving, setSaving]           = useState(false);
+
+  const [selected, setSelected]       = useState<Set<number>>(new Set());
+  const [deleting, setDeleting]       = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   function setFilter(key: string, value: string, keepPage = false) {
     setSearchParams(
@@ -47,6 +50,7 @@ export default function Users() {
       const data = await getUsers({ page, limit: 50, search: search || undefined });
       setResult(data);
       setError(null);
+      setSelected(new Set());
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to load users');
     } finally {
@@ -67,6 +71,43 @@ export default function Users() {
     } finally {
       setSaving(false);
     }
+  }
+
+  async function handleDeleteSelected() {
+    setDeleting(true);
+    try {
+      await deleteUsers(Array.from(selected));
+      setConfirmDelete(false);
+      load();
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : 'Failed to delete users');
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  const pageIds = result?.data.map((u) => u.telegram_id) ?? [];
+  const allOnPageSelected = pageIds.length > 0 && pageIds.every((id) => selected.has(id));
+  const someOnPageSelected = pageIds.some((id) => selected.has(id));
+
+  function toggleAll() {
+    if (allOnPageSelected) {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        pageIds.forEach((id) => next.delete(id));
+        return next;
+      });
+    } else {
+      setSelected((prev) => new Set([...prev, ...pageIds]));
+    }
+  }
+
+  function toggleOne(id: number) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
   }
 
   return (
@@ -90,6 +131,14 @@ export default function Users() {
         >
           Refresh
         </button>
+        {selected.size > 0 && (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="px-4 py-2 bg-red-500/10 border border-red-500/30 text-sm text-red-400 rounded-lg hover:bg-red-500/20 transition-colors shrink-0"
+          >
+            Delete {selected.size} user{selected.size > 1 ? 's' : ''}
+          </button>
+        )}
       </div>
 
       <div className="bg-surface border border-border rounded-xl overflow-hidden">
@@ -105,6 +154,15 @@ export default function Users() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
+                    <th className="px-4 py-3 w-8">
+                      <input
+                        type="checkbox"
+                        checked={allOnPageSelected}
+                        ref={(el) => { if (el) el.indeterminate = someOnPageSelected && !allOnPageSelected; }}
+                        onChange={toggleAll}
+                        className="rounded border-border bg-surface2 text-accent focus:ring-accent focus:ring-offset-0 cursor-pointer"
+                      />
+                    </th>
                     <th className="text-left px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider">Name</th>
                     <th className="text-left px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider">Username</th>
                     <th className="text-left px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider">Telegram ID</th>
@@ -119,7 +177,18 @@ export default function Users() {
                 </thead>
                 <tbody className="divide-y divide-border">
                   {result?.data.map((u) => (
-                    <tr key={u.telegram_id} className="hover:bg-surface2 transition-colors">
+                    <tr
+                      key={u.telegram_id}
+                      className={`hover:bg-surface2 transition-colors ${selected.has(u.telegram_id) ? 'bg-surface2' : ''}`}
+                    >
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(u.telegram_id)}
+                          onChange={() => toggleOne(u.telegram_id)}
+                          className="rounded border-border bg-surface2 text-accent focus:ring-accent focus:ring-offset-0 cursor-pointer"
+                        />
+                      </td>
                       <td className="px-4 py-3 text-white font-medium">{u.first_name}</td>
                       <td className="px-4 py-3 text-muted text-xs">{u.username ? `@${u.username}` : '—'}</td>
                       <td className="px-4 py-3 font-mono text-xs text-muted">{u.telegram_id}</td>
@@ -235,6 +304,34 @@ export default function Users() {
               >
                 {saving && <Spinner size="sm" />}
                 Grant {months} Month{months > 1 ? 's' : ''}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {confirmDelete && (
+        <Modal title="Delete Users" onClose={() => setConfirmDelete(false)}>
+          <div className="space-y-5">
+            <p className="text-sm text-muted">
+              Permanently delete{' '}
+              <strong className="text-white">{selected.size} user{selected.size > 1 ? 's' : ''}</strong>?
+              This cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="px-4 py-2 text-sm bg-surface2 border border-border text-white rounded-lg hover:bg-border transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteSelected}
+                disabled={deleting}
+                className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {deleting && <Spinner size="sm" />}
+                Delete {selected.size} User{selected.size > 1 ? 's' : ''}
               </button>
             </div>
           </div>

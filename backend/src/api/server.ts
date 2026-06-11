@@ -458,6 +458,23 @@ export default function createServer(bot: any) {
 		},
 	);
 
+	// ── DELETE /api/admin/users ─────────────────────────────────────────────────
+	app.delete(
+		"/api/admin/users",
+		adminAuth,
+		async (req: Request, res: Response) => {
+			const { ids } = req.body;
+			if (!Array.isArray(ids) || ids.length === 0) {
+				return res.status(400).json({ error: "ids must be a non-empty array" });
+			}
+			const { rowCount } = await db.query(
+				`DELETE FROM users WHERE telegram_id = ANY($1::bigint[])`,
+				[ids],
+			);
+			res.json({ ok: true, deleted: rowCount });
+		},
+	);
+
 	// ── PUT /api/admin/users/:telegramId/plan ───────────────────────────────────
 	app.put(
 		"/api/admin/users/:telegramId/plan",
