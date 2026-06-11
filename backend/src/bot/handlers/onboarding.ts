@@ -7,6 +7,7 @@ export async function handleStart(ctx: any): Promise<void> {
   const user = await db.upsertUser(ctx);
 
   if (user.exam_type && user.subjects && user.subjects.length > 0) {
+    await redis.clearSession(ctx.from.id);
     await ctx.reply(
       `👋 <b>Welcome back, ${user.first_name}!</b>\n\nReady to practise? Tap a button below or choose from the menu:`,
       { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() }
