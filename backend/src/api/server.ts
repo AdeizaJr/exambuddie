@@ -463,7 +463,22 @@ export default function createServer(bot: any) {
 		"/api/admin/users",
 		adminAuth,
 		async (req: Request, res: Response) => {
-			const { ids } = req.body;
+			const { ids, all, search } = req.body;
+
+			if (all) {
+				const conditions: string[] = [];
+				const params: any[] = [];
+				if (search) {
+					params.push(`%${search}%`);
+					conditions.push(
+						`(first_name ILIKE $1 OR username ILIKE $1 OR CAST(telegram_id AS TEXT) ILIKE $1)`,
+					);
+				}
+				const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+				const { rowCount } = await db.query(`DELETE FROM users ${where}`, params);
+				return res.json({ ok: true, deleted: rowCount });
+			}
+
 			if (!Array.isArray(ids) || ids.length === 0) {
 				return res.status(400).json({ error: "ids must be a non-empty array" });
 			}
