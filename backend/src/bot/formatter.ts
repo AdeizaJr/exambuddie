@@ -636,6 +636,25 @@ export function practiceMultiSubjectKeyboard(allSubjects: string[], selected: st
   return { inline_keyboard: rows };
 }
 
+export function quizMultiSubjectKeyboard(allSubjects: string[], selected: string[]) {
+  const buttons = allSubjects.map(s => {
+    const isSelected = selected.includes(s);
+    return {
+      text: `${isSelected ? '✅ ' : ''}${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s}`,
+      callback_data: `quiz:multisubject:toggle:${s}`,
+    };
+  });
+  const rows: any[][] = [];
+  for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
+  rows.push([{
+    text: selected.length > 0
+      ? `▶️ Start Quiz (${selected.length} subject${selected.length > 1 ? 's' : ''})`
+      : '⚠️ Select at least one subject',
+    callback_data: 'quiz:multisubject:start',
+  }]);
+  return { inline_keyboard: rows };
+}
+
 export function flowYearKeyboard(mode: 'practice' | 'quiz') {
   const rows: any[][] = [
     [{ text: '📅 Any Year', callback_data: `${mode}:flow_year:any` }],

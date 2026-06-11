@@ -153,6 +153,42 @@ export async function getQuizQuestions(examType: string, subject: string, limit 
   return rows;
 }
 
+export async function getQuizQuestionsMulti(examType: string, subjects: string[], limit = 40, year?: number | null): Promise<Question[]> {
+  const perSubject = Math.ceil(limit / subjects.length);
+  const all = isAllExams(examType);
+  const combined: Question[] = [];
+
+  for (const subject of subjects) {
+    const params: any[] = all ? [subject] : [examType, subject];
+    const subjectIdx = all ? 1 : 2;
+    const examFilter = all ? '' : 'AND exam_type = $1';
+
+    let yearFilter = '';
+    if (year) {
+      params.push(year);
+      yearFilter = `AND year = $${params.length}`;
+    }
+    params.push(perSubject);
+    const limitIdx = params.length;
+
+    const { rows } = await pool.query<Question>(
+      `SELECT * FROM questions
+       WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
+       AND has_diagram = FALSE
+       ORDER BY RANDOM() LIMIT $${limitIdx}`,
+      params
+    );
+    combined.push(...rows);
+  }
+
+  // Shuffle the combined pool
+  for (let i = combined.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [combined[i], combined[j]] = [combined[j], combined[i]];
+  }
+  return combined.slice(0, limit);
+}
+
 export async function logAttempt({ userId, questionId, selectedOption, isCorrect, sessionId, timeTakenMs }: AttemptLog): Promise<void> {
   await pool.query(
     `INSERT INTO attempts (user_id, question_id, selected_option, is_correct, session_id, time_taken_ms)
