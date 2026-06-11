@@ -162,18 +162,30 @@ bot.on('callback_query', async (ctx: any) => {
 
 // ── Free-text handler — keeps conversation alive ───────────────────────────────
 bot.on('text', async (ctx: any) => {
-  const session = await redis.getSession(ctx.from.id);
-  if (session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill') return;
-
   const text: string = ctx.message?.text?.trim() || '';
   const user = await db.getUser(ctx.from.id);
 
   if (!user?.exam_type) return onboarding.handleStart(ctx);
 
-  if (text === '📚 Practice') return practice.handlePractice(ctx);
-  if (text === '📋 Quiz')     return quiz.handleQuiz(ctx);
+  // Stats and Settings always work, even mid-session
   if (text === '📊 My Stats') return stats.handleStats(ctx);
   if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
+
+  const session = await redis.getSession(ctx.from.id);
+  const activeSession = session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill';
+
+  if (activeSession && (text === '📚 Practice' || text === '📋 Quiz')) {
+    await ctx.reply(
+      `You have an active ${session.mode} session running.\n\nTap <b>⏹ Stop</b> to end it first, or use /stop.`,
+      { parse_mode: 'HTML' }
+    );
+    return;
+  }
+
+  if (activeSession) return; // mid-session free text — ignore
+
+  if (text === '📚 Practice') return practice.handlePractice(ctx);
+  if (text === '📋 Quiz')     return quiz.handleQuiz(ctx);
 
   await ctx.reply(`What would you like to do, ${user.first_name}?`, {
     parse_mode: 'HTML',
