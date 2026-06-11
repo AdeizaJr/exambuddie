@@ -10,15 +10,36 @@ import { Pool } from 'pg';
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const MODE = process.argv[2] === 'update' ? 'update' : 'analyse';
 
-const PATTERNS = [
-  /questions?\s+(?:is|are)\s+based\s+on\s+.+?'s\s+(.+?)(?:\.|$)/i,          // based on Author's Title
-  /questions?\s+(?:is|are)\s+based\s+on\s+(.+?)\s+by\s+.+?(?:\.|$)/i,       // based on Title by Author
-  /(?:this\s+)?question\s+is\s+from\s+the\s+(?:novel|book)\s+['"]?(.+?)['"]?(?:\.|$)/i, // from the novel 'Title'
-  /in\s+the\s+(?:novel|book)\s+['"](.+?)['"](?:\s|,|\.|$)/i,                 // in the novel "Title"
-  /(?:the\s+)?(?:novel|book)\s+['"](.+?)['"](?:\s+is|\s+was|\s+by|,|\.|$)/i, // novel "Title" is/was/by
+const Q = `['"‘’“”]`; // any quote char (straight or curly)
+
+const PATTERNS: RegExp[] = [
+  // ── Attribution-style (explicit) ──────────────────────────────────────────
+  /questions?\s+(?:is|are|i)\s+based\s+on\s+.+?'s\s+(.+?)(?:\.|$)/i,
+  /questions?\s+(?:is|are|i)\s+based\s+on\s+(.+?)\s+by\s+.+?(?:\.|$)/i,
+  /questions?\s+(?:is|are|i)\s+based\s+on\s+([A-Z][A-Z\s]{2,30}?)(?:\.|,|$)/,
+  /(?:this\s+)?question\s+is\s+from\s+the\s+(?:novel|book)\s+['""]?(.+?)['""]?(?:\.|$)/i,
+  /in\s+the\s+(?:novel|book|play|fiction|poem)\s+['""]?([A-Z].+?)['""]?\s+(?:by|because|,|\.|$)/i,
+  /(?:the\s+)?(?:novel|book)\s+["'](.+?)["'](?:\s+is|\s+was|\s+by|,|\.|$)/i,
+
+  // ── Author's 'Title' (possessive + single-quoted title) ───────────────────
+  /[A-Z][a-z'.]+(?:\s+[A-Z]\.){0,2}\s*'s\s+(?:poem\s*,?\s*)?'([^']{3,50})'/,
+
+  // ── In 'Title' or In "Title" ─────────────────────────────────────────────
+  /\bIn\s+'([A-Z][^']{3,60})'(?:\s|,|\.|$)/,
+  /\bIn\s+"([A-Z][^"]{3,60})"(?:\s|,|\.|$)/,
+  /\bIn\s+''([A-Z][^']{3,50})''/,
+
+  // ── In Title, [Capital...] (unquoted title before comma + capital) ────────
+  /\bIn\s+([A-Z][A-Za-z\s']{3,45}),\s+[A-Z]/,
+
+  // ── Title, by Author ─────────────────────────────────────────────────────
+  new RegExp(`^([A-Z][A-Za-z\\s']{4,40}?),\\s*by\\s+[A-Z][a-z]`, 'm'),
 ];
 
-const TRAILING_JUNK = /\b(is|are|was|were|a|an|of|in|on|by|the|from|with|to|and|that|which|as)\s*$/i;
+const TRAILING_JUNK = /\b(is|are|was|were|a|an|of|in|on|by|the|from|with|to|and|that|which|as|show|shows|depicts|suggest|suggests|symbolises|symbolizes|portray|portrays|constitute|constitutes|basically|generally)\s*$/i;
+
+// Titles that are false positives — too generic or are geographic/common nouns
+const BLOCKLIST = new Set(['africa', 'south africa', 'north africa', 'west africa', 'east africa']);
 
 const CANONICAL: Record<string, string> = {
   "romeo's and juliet":                    'Romeo and Juliet',
@@ -40,23 +61,42 @@ const CANONICAL: Record<string, string> = {
   "'the beautiful ones are not yet born'": 'The Beautiful Ones Are Not Yet Born',
   "'the beautiful ones are not yet born":  'The Beautiful Ones Are Not Yet Born',
   'facesless':                             'Faceless',
-  "piggy's":                               'Lord of the Flies', // mislabelled in source data
+  "piggy's":                               'Lord of the Flies',
+  "piggy''s":                              'Lord of the Flies',
+  'wuthering height':                      'Wuthering Heights',
+  'the journey of the magi':               'Journey of the Magi',
+  'journey of the magi':                   'Journey of the Magi',
+  "the marriage of anansewa":              'The Marriage of Anansewa',
+  'marriage of anansewa':                  'The Marriage of Anansewa',
+  "buchi emecheta's the joys of motherhood": 'The Joys of Motherhood',
+  "morris' the proud king":                'The Proud King',
+  'the narrow parth':                      'The Narrow Path',
+  'olukun':                                'Olokun',
+  'the panic of growing old':              'The Panic of Growing Older',
   "arrow of god ''":                       'Arrow of God',
   "so long a letter '":                    'So Long a Letter',
   "so long a letter ''":                   'So Long a Letter',
 };
 
 function canonicalize(title: string): string {
-  const cleaned = title.replace(/^['"""''(]+/, '').replace(/['"""'']+$/, '').trim();
+  let cleaned = title.replace(/^['"""''(]+/, '').replace(/['"""'']+$/, '').trim();
+  // Strip leading "Author's " or "Author' " when followed by a capital word (The/A/An etc.)
+  // e.g. "Buchi Emecheta's The Joys of Motherhood" → "The Joys of Motherhood"
+  // e.g. "Morris' The Proud King" → "The Proud King"
+  // But NOT "Kongi's Harvest" — Kongi is part of the title
+  cleaned = cleaned.replace(/^[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*'s?\s+(?=(?:The|A|An)\s)/i, '');
   return CANONICAL[cleaned.toLowerCase()] ?? CANONICAL[title.toLowerCase()] ?? cleaned;
 }
 
 function isPlausibleTitle(title: string): boolean {
   if (title.split(' ').length > 7) return false;
   if (!/^[A-Z'"]/.test(title)) return false;
-  if (/\?$/.test(title)) return false;
-  if (/[:(]/.test(title)) return false;
+  if (/[?!]$/.test(title)) return false;              // ends with ? or ! — it's a question/exclamation
+  if (/[:(]/.test(title)) return false;               // bibliographic chars
+  if (/,\s+[a-z]/.test(title)) return false;          // comma + lowercase = sentence ran past title
+  if (/['"]$/.test(title.trim())) return false;       // dangling quote at end
   if (TRAILING_JUNK.test(title)) return false;
+  if (BLOCKLIST.has(title.toLowerCase())) return false;
   return true;
 }
 
