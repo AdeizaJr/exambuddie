@@ -206,9 +206,19 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   const effectiveTopic = topic === '__all__' ? null : topic;
   const q = await db.getRandomQuestion(examType, subject, [], effectiveYear, effectiveTopic);
   if (!q) {
-    await ctx.reply(`Sorry, no questions found for this topic. Please select another topic to continue.`, {
-      reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Topic', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
-    });
+    const availability = await db.getSubjectAvailability(subject);
+    const subjectName = fmt.SUBJECT_MAP[subject] || subject;
+    const examStr = examType && !['ALL', 'BOTH'].includes(examType) ? ` under ${examType}` : '';
+    if (availability.length === 0) {
+      await ctx.reply(`No questions available for ${subjectName}. Please pick another subject.`, {
+        reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+      });
+    } else {
+      await ctx.reply(
+        `No questions found for <b>${subjectName}</b>${examStr}.\n\nAvailable options for ${subjectName}:`,
+        { parse_mode: 'HTML', reply_markup: fmt.subjectAvailabilityKeyboard(subject, availability, 'practice') }
+      );
+    }
     return;
   }
 
@@ -266,6 +276,18 @@ export async function handlePracticeTopicPick(ctx: any): Promise<void> {
     session.pendingExamType,
     topic,
   );
+}
+
+export async function handlePracticeAvail(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  // practice:avail:<subject>:<examType>:<year>
+  const parts = ctx.callbackQuery.data.split(':');
+  const subject = parts[2];
+  const examType = parts[3];
+  const year = parts[4] && parts[4] !== 'any' ? parseInt(parts[4], 10) : null;
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await startPractice(ctx, user, subject, year, 0, examType, undefined);
 }
 
 // Step 0 callback — year selected in premium practice flow

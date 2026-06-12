@@ -716,6 +716,24 @@ export function topicKeyboard(topics: string[]) {
   return { inline_keyboard: rows };
 }
 
+export function subjectAvailabilityKeyboard(
+  subject: string,
+  availability: { examType: string; years: number[] }[],
+  mode: 'quiz' | 'practice'
+) {
+  const rows: any[][] = [];
+  for (const { examType, years } of availability) {
+    for (const year of years) {
+      rows.push([{ text: `${examType} — ${year}`, callback_data: `${mode}:avail:${subject}:${examType}:${year}` }]);
+    }
+  }
+  rows.push([
+    { text: '📚 Pick Another Subject', callback_data: `${mode}:pick` },
+    { text: '🏠 Main Menu', callback_data: 'menu:main' },
+  ]);
+  return { inline_keyboard: rows };
+}
+
 export function yearPickerKeyboard(subject: string) {
   const rows: any[][] = [
     [{ text: '📅 Any Year', callback_data: `practice:start:${subject}:any` }],
