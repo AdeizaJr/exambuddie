@@ -225,6 +225,43 @@ export async function logAttempt({
   );
 }
 
+export async function saveQuizSession({
+  sessionId,
+  userId,
+  subject,
+  totalQuestions,
+  correctCount,
+  startTime,
+  endTime,
+}: {
+  sessionId: string;
+  userId: number;
+  subject: string;
+  totalQuestions: number;
+  correctCount: number;
+  startTime: number;
+  endTime: number;
+}): Promise<void> {
+  await pool.query(
+    `INSERT INTO sessions (id, user_id, mode, subject, total_questions, correct_count, started_at, ended_at, time_limit_secs)
+     VALUES ($1, $2, 'quiz', $3, $4, $5, to_timestamp($6 / 1000.0), to_timestamp($7 / 1000.0), 2700)
+     ON CONFLICT (id) DO NOTHING`,
+    [sessionId, userId, subject, totalQuestions, correctCount, startTime, endTime]
+  );
+}
+
+export async function getQuizHistory(userId: number, limit = 10): Promise<any[]> {
+  const { rows } = await pool.query(
+    `SELECT id, subject, total_questions, correct_count, started_at, ended_at
+     FROM sessions
+     WHERE user_id = $1 AND mode = 'quiz' AND ended_at IS NOT NULL
+     ORDER BY started_at DESC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return rows;
+}
+
 export async function getUserStats(userId: number, examType?: string): Promise<UserStats> {
   if (examType && examType !== 'all') {
     const { rows } = await pool.query<UserStats>(
