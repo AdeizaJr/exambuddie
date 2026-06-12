@@ -61,13 +61,12 @@ export default function startCrons(bot: any): void {
   cron.schedule('0 9 * * 0', async () => {
     console.log('[CRON] Sending weekly summaries...');
 
-    // Get active users from last 7 days with notifications on
+    // Get active users from last 7 days — weekly summary sends regardless of notification preference
     const { rows: users } = await db.query(
-      `SELECT DISTINCT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.notifications_enabled
+      `SELECT DISTINCT u.id, u.telegram_id, u.first_name, u.subjects, u.streak
        FROM users u
        JOIN attempts a ON a.user_id = u.id
-       WHERE a.attempted_at > NOW() - INTERVAL '7 days'
-       AND u.notifications_enabled = true`
+       WHERE a.attempted_at > NOW() - INTERVAL '7 days'`
     );
 
     let sent = 0;
