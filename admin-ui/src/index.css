@@ -8,9 +8,9 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #0D1117;
-  color: #E6EDF3;
+  font-family: "Inter", sans-serif;
+  background-color: #0d1117;
+  color: #e6edf3;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -20,14 +20,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #161B22;
+  background: #161b22;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #30363D;
+  background: #30363d;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #484F58;
+  background: #484f58;
 }
