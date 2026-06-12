@@ -33,7 +33,7 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
   const timerSecs = session.questionTimerSecs || 0;
   const baseText = fmt.formatQuestion(question, session.qNum, session.total || '?', session.mode)
     + fmt.answerOptions(question);
-  const timerLine = (secs: number) => `\n\n⏱️ _${secs}s remaining_`;
+  const timerLine = (secs: number) => `\n\n⏱️ <i>${secs}s remaining</i>`;
   const hasOptionE = !!question.option_e;
   const keyboard = fmt.answerKeyboard(hasOptionE);
 
