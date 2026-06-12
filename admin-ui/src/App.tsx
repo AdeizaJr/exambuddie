@@ -37,14 +37,14 @@ function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg p-4">
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-surface p-8 shadow-2xl">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent font-display text-lg font-bold text-white">
-            E
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-surface p-8 shadow-card-hover">
+        <div className="mb-8 flex flex-col items-center gap-3 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-accent shadow-glow">
+            <span className="font-display text-2xl font-bold text-white">E</span>
           </div>
           <div>
-            <h1 className="font-display text-lg font-bold text-white">ExamBuddie Admin</h1>
-            <p className="text-xs text-muted">Sign in to continue</p>
+            <h1 className="font-display text-xl font-bold text-white">ExamBuddie Admin</h1>
+            <p className="mt-0.5 text-sm text-muted">Sign in to your dashboard</p>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,7 +79,7 @@ function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
           <button
             type="submit"
             disabled={!username.trim() || !password.trim() || loading}
-            className="w-full rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:opacity-40"
+            className="w-full rounded-lg bg-gradient-accent py-2.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
