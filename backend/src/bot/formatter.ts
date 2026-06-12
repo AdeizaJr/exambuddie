@@ -242,10 +242,24 @@ export function formatQuestion(q: Question, number: number, total: number | stri
     ? `🎯 <b>Topic Drill: ${q.topic || 'Mixed'}</b>`
     : `📚 <b>Practice Mode</b>`;
 
+  let questionText = q.question_text || '';
+
+  // Inject novel title when "From the novel;" header is present but title is missing from the text
+  if (
+    questionText.trimStart().startsWith('From the novel;') &&
+    q.topic &&
+    !questionText.toLowerCase().includes(q.topic.toLowerCase())
+  ) {
+    questionText = questionText.replace(
+      /From the novel;/,
+      `From the novel: ${q.topic}`
+    );
+  }
+
   return `${modeTag}
 <i>${q.exam_type} ${q.subject.charAt(0).toUpperCase() + q.subject.slice(1)} ${q.year}</i>
 
-${md(q.question_text)}`;
+${md(questionText)}`;
 }
 
 export function answerKeyboard(hasOptionE = false) {
