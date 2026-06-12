@@ -291,10 +291,13 @@ ${md(q.explanation) || '<i>Explanation not yet available.</i>'}`;
 export function afterAnswerKeyboard(mode?: string) {
   if (mode === 'quiz') {
     return {
-      inline_keyboard: [[
-        { text: '➡️  Next Question', callback_data: 'quiz:next' },
-        { text: '🚩 Flag', callback_data: 'flag:question' },
-      ]],
+      inline_keyboard: [
+        [
+          { text: '➡️  Next Question', callback_data: 'quiz:next' },
+          { text: '🚩 Flag', callback_data: 'flag:question' },
+        ],
+        [{ text: '⏹ End Quiz', callback_data: 'quiz:stop' }],
+      ],
     };
   }
   return {
