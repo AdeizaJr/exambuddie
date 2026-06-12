@@ -30,7 +30,7 @@ bot.use(async (ctx, next) => {
 
 // ── Commands ───────────────────────────────────────────────────────────────────
 bot.start(onboarding.handleStart);
-bot.command('help', ctx => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));
+bot.command('help', (ctx) => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));
 bot.command('settings', onboarding.handleSettings);
 bot.command('stats', stats.handleStats);
 bot.command('subscribe', stats.handleSubscribe);
@@ -41,16 +41,23 @@ bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
     reply_markup: {
-      inline_keyboard: [[{
-        text: '📱 Open ExamBuddie App',
-        web_app: { url: `${APP_URL}/app` },
-      }]],
+      inline_keyboard: [
+        [
+          {
+            text: '📱 Open ExamBuddie App',
+            web_app: { url: `${APP_URL}/app` },
+          },
+        ],
+      ],
     },
   });
 });
 bot.command('stop', async (ctx) => {
   const session = await redis.getSession(ctx.from.id);
-  if (!session) { await ctx.reply('No active session.'); return; }
+  if (!session) {
+    await ctx.reply('No active session.');
+    return;
+  }
   if (session.mode === 'quiz') {
     const quizState = await redis.getQuizState(ctx.from.id);
     if (quizState) await quiz.endQuiz(ctx, quizState, 'stopped');
@@ -65,23 +72,27 @@ bot.on('callback_query', async (ctx: any) => {
   if (!data) return;
 
   // Onboarding
-  if (data.startsWith('onboard:year:'))       return onboarding.handleOnboardYear(ctx);
-  if (data.startsWith('onboard:exam:'))       return onboarding.handleExamType(ctx);
-  if (data.startsWith('onboard:subject:'))    return onboarding.handleSubjectToggle(ctx);
-  if (data === 'onboard:subjects:done')       return onboarding.handleSubjectsDone(ctx);
+  if (data.startsWith('onboard:year:')) return onboarding.handleOnboardYear(ctx);
+  if (data.startsWith('onboard:exam:')) return onboarding.handleExamType(ctx);
+  if (data.startsWith('onboard:subject:')) return onboarding.handleSubjectToggle(ctx);
+  if (data === 'onboard:subjects:done') return onboarding.handleSubjectsDone(ctx);
 
   // Settings
-  if (data === 'settings:exam')               return onboarding.handleSettingsExam(ctx);
-  if (data === 'settings:subjects')           return onboarding.handleSettingsSubjects(ctx);
-  if (data === 'settings:notifications')      return onboarding.handleSettingsNotifications(ctx);
+  if (data === 'settings:exam') return onboarding.handleSettingsExam(ctx);
+  if (data === 'settings:subjects') return onboarding.handleSettingsSubjects(ctx);
+  if (data === 'settings:notifications') return onboarding.handleSettingsNotifications(ctx);
+  if (data === 'settings:delete') return onboarding.handleSettingsDelete(ctx);
+  if (data === 'settings:delete:confirm') return onboarding.handleSettingsDeleteConfirm(ctx);
+  if (data === 'settings:back') return onboarding.handleSettingsBack(ctx);
 
   // Practice
-  if (data === 'practice:pick')                          return practice.handlePractice(ctx);
-  if (data.startsWith('practice:multisubject:toggle:')) return practice.handleMultiSubjectToggle(ctx);
-  if (data === 'practice:multisubject:start')            return practice.handleMultiSubjectStart(ctx);
-  if (data.startsWith('practice:subject:'))              return practice.handleSubjectPick(ctx);
+  if (data === 'practice:pick') return practice.handlePractice(ctx);
+  if (data.startsWith('practice:multisubject:toggle:'))
+    return practice.handleMultiSubjectToggle(ctx);
+  if (data === 'practice:multisubject:start') return practice.handleMultiSubjectStart(ctx);
+  if (data.startsWith('practice:subject:')) return practice.handleSubjectPick(ctx);
   if (data.startsWith('practice:flow_year:')) return practice.handlePracticeFlowYear(ctx);
-  if (data.startsWith('practice:year:'))      return practice.handleYearPick(ctx);
+  if (data.startsWith('practice:year:')) return practice.handleYearPick(ctx);
   if (data.startsWith('practice:start:')) {
     const parts = data.split(':');
     const subject = parts[2];
@@ -91,14 +102,14 @@ bot.on('callback_query', async (ctx: any) => {
     await ctx.answerCbQuery();
     return practice.startPractice(ctx, user, subject, year);
   }
-  if (data.startsWith('practice:examtype:'))  return practice.handlePracticeExamTypePick(ctx);
-  if (data.startsWith('practice:topic:'))     return practice.handlePracticeTopicPick(ctx);
-  if (data.startsWith('practice:timer:'))     return practice.handlePracticeTimerPick(ctx);
-  if (data === 'practice:next')               return practice.handleNext(ctx);
-  if (data === 'practice:stop')               return practice.handleStop(ctx);
-  if (data === 'practice:change_subject')     return practice.handleChangeSubject(ctx);
-  if (data === 'practice:add_subject')        return onboarding.handleSettingsSubjects(ctx);
-  if (data === 'practice:change_exam')        return onboarding.handleSettingsExam(ctx);
+  if (data.startsWith('practice:examtype:')) return practice.handlePracticeExamTypePick(ctx);
+  if (data.startsWith('practice:topic:')) return practice.handlePracticeTopicPick(ctx);
+  if (data.startsWith('practice:timer:')) return practice.handlePracticeTimerPick(ctx);
+  if (data === 'practice:next') return practice.handleNext(ctx);
+  if (data === 'practice:stop') return practice.handleStop(ctx);
+  if (data === 'practice:change_subject') return practice.handleChangeSubject(ctx);
+  if (data === 'practice:add_subject') return onboarding.handleSettingsSubjects(ctx);
+  if (data === 'practice:change_exam') return onboarding.handleSettingsExam(ctx);
 
   // Answer (shared by practice + quiz)
   if (data.startsWith('answer:')) {
@@ -108,55 +119,56 @@ bot.on('callback_query', async (ctx: any) => {
   }
 
   // Quiz
-  if (data === 'quiz:pick')                          return quiz.handleQuiz(ctx);
-  if (data.startsWith('quiz:multisubject:toggle:'))  return quiz.handleQuizMultiSubjectToggle(ctx);
-  if (data === 'quiz:multisubject:start')            return quiz.handleQuizMultiSubjectStart(ctx);
-  if (data.startsWith('quiz:subject:'))              return quiz.handleQuizSubjectPick(ctx);
-  if (data.startsWith('quiz:flow_year:'))            return quiz.handleQuizFlowYear(ctx);
+  if (data === 'quiz:pick') return quiz.handleQuiz(ctx);
+  if (data.startsWith('quiz:multisubject:toggle:')) return quiz.handleQuizMultiSubjectToggle(ctx);
+  if (data === 'quiz:multisubject:start') return quiz.handleQuizMultiSubjectStart(ctx);
+  if (data.startsWith('quiz:subject:')) return quiz.handleQuizSubjectPick(ctx);
+  if (data.startsWith('quiz:flow_year:')) return quiz.handleQuizFlowYear(ctx);
   if (data.startsWith('quiz:start:')) {
     const subject = data.split(':')[2];
     const user = await db.getUser(ctx.from.id);
     await ctx.answerCbQuery();
     return quiz.startQuiz(ctx, user, subject);
   }
-  if (data.startsWith('quiz:examtype:'))       return quiz.handleQuizExamTypePick(ctx);
-  if (data.startsWith('quiz:timer:'))         return quiz.handleQuizTimerPick(ctx);
-  if (data === 'quiz:next')                   return quiz.handleQuizNext(ctx);
+  if (data.startsWith('quiz:examtype:')) return quiz.handleQuizExamTypePick(ctx);
+  if (data.startsWith('quiz:timer:')) return quiz.handleQuizTimerPick(ctx);
+  if (data === 'quiz:next') return quiz.handleQuizNext(ctx);
 
   // Drill
-  if (data.startsWith('drill:auto:'))         return practice.handleAutoDrill(ctx);
-  if (data.startsWith('drill:topic:'))        return practice.handleDrillTopic(ctx);
+  if (data.startsWith('drill:auto:')) return practice.handleAutoDrill(ctx);
+  if (data.startsWith('drill:topic:')) return practice.handleDrillTopic(ctx);
 
   // Stats
-  if (data === 'stats:show')                  return stats.handleStats(ctx);
-  if (data.startsWith('stats:filter:'))       return stats.handleStatsFilter(ctx);
+  if (data === 'stats:show') return stats.handleStats(ctx);
+  if (data.startsWith('stats:filter:')) return stats.handleStatsFilter(ctx);
 
   // Subscribe
-  if (data === 'menu:subscribe')              return stats.handleSubscribe(ctx);
-  if (data.startsWith('subscribe:'))          return stats.handleSubscribePlan(ctx);
+  if (data === 'menu:subscribe') return stats.handleSubscribe(ctx);
+  if (data.startsWith('subscribe:')) return stats.handleSubscribePlan(ctx);
 
   // Flag
-  if (data === 'flag:question')               return stats.handleFlagQuestion(ctx);
+  if (data === 'flag:question') return stats.handleFlagQuestion(ctx);
 
   // Main menu
   if (data === 'menu:main') {
     await ctx.answerCbQuery();
     const user = await db.getUser(ctx.from.id);
     if (!user) return;
-    await ctx.reply(
-      `🏠 <b>Main Menu</b>\n\nWhat would you like to do, ${user.first_name}?`,
-      {
-        parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '📚 Practice', callback_data: 'practice:pick' },
-             { text: '📋 Quiz', callback_data: 'quiz:pick' }],
-            [{ text: '📊 Stats', callback_data: 'stats:show' },
-             { text: '💎 Subscribe', callback_data: 'menu:subscribe' }],
+    await ctx.reply(`🏠 <b>Main Menu</b>\n\nWhat would you like to do, ${user.first_name}?`, {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: '📚 Practice', callback_data: 'practice:pick' },
+            { text: '📋 Quiz', callback_data: 'quiz:pick' },
           ],
-        },
-      }
-    );
+          [
+            { text: '📊 Stats', callback_data: 'stats:show' },
+            { text: '💎 Subscribe', callback_data: 'menu:subscribe' },
+          ],
+        ],
+      },
+    });
     return;
   }
 
@@ -176,7 +188,8 @@ bot.on('text', async (ctx: any) => {
   if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
 
   const session = await redis.getSession(ctx.from.id);
-  const activeSession = session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill';
+  const activeSession =
+    session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill';
 
   if (activeSession && (text === '📚 Practice' || text === '📋 Quiz')) {
     await ctx.reply(
@@ -189,7 +202,7 @@ bot.on('text', async (ctx: any) => {
   if (activeSession) return; // mid-session free text — ignore
 
   if (text === '📚 Practice') return practice.handlePractice(ctx);
-  if (text === '📋 Quiz')     return quiz.handleQuiz(ctx);
+  if (text === '📋 Quiz') return quiz.handleQuiz(ctx);
 
   await ctx.reply(`What would you like to do, ${user.first_name}?`, {
     parse_mode: 'HTML',
@@ -244,10 +257,10 @@ async function seedAdminUser() {
   if (!username || !password) return;
 
   const hash = await hashPassword(password);
-  await db.query(
-    'INSERT INTO admin_users (username, password_hash) VALUES ($1, $2)',
-    [username, hash]
-  );
+  await db.query('INSERT INTO admin_users (username, password_hash) VALUES ($1, $2)', [
+    username,
+    hash,
+  ]);
   console.log(`[Admin] Seeded admin user: ${username}`);
 }
 
@@ -280,10 +293,10 @@ async function launch() {
 }
 
 // Graceful shutdown
-process.once('SIGINT',  () => bot.stop('SIGINT'));
+process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
-launch().catch(err => {
+launch().catch((err) => {
   console.error('Fatal startup error:', err);
   process.exit(1);
 });
