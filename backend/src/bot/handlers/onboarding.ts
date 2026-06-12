@@ -128,6 +128,19 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
 }
 
 // /settings command
+function settingsKeyboard(notificationsEnabled: boolean) {
+  const notifLabel = notificationsEnabled ? '🔔 Bot Messages: ON' : '🔕 Bot Messages: OFF';
+  return {
+    inline_keyboard: [
+      [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
+      [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
+      [{ text: notifLabel, callback_data: 'settings:notifications' }],
+      [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
+      [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+    ],
+  };
+}
+
 export async function handleSettings(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) {
@@ -137,15 +150,7 @@ export async function handleSettings(ctx: any): Promise<void> {
 
   await ctx.reply(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
-        [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
-        [{ text: '🔔 Toggle Notifications', callback_data: 'settings:notifications' }],
-        [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
-        [{ text: '❌ Cancel', callback_data: 'menu:main' }],
-      ],
-    },
+    reply_markup: settingsKeyboard(user.notifications_enabled),
   });
 }
 
@@ -176,14 +181,17 @@ export async function handleSettingsSubjects(ctx: any): Promise<void> {
 }
 
 export async function handleSettingsNotifications(ctx: any): Promise<void> {
-  await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
   const newVal = !user.notifications_enabled;
   await db.updateUser(ctx.from.id, { notifications_enabled: newVal });
-  await ctx.answerCbQuery(`Notifications ${newVal ? 'enabled ✅' : 'disabled 🔕'}`, {
-    show_alert: true,
-  });
+  await ctx.editMessageReplyMarkup(settingsKeyboard(newVal));
+  await ctx.answerCbQuery(
+    newVal
+      ? "Bot messages enabled ✅"
+      : "Bot messages disabled 🔕",
+    { show_alert: false }
+  );
 }
 
 export async function handleSettingsDelete(ctx: any): Promise<void> {
@@ -219,14 +227,7 @@ export async function handleSettingsBack(ctx: any): Promise<void> {
   if (!user) return;
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
-        [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
-        [{ text: '🔔 Toggle Notifications', callback_data: 'settings:notifications' }],
-        [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
-        [{ text: '❌ Cancel', callback_data: 'menu:main' }],
-      ],
-    },
+    reply_markup: settingsKeyboard(user.notifications_enabled),
   });
 }
+
