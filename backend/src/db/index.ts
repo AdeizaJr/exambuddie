@@ -20,9 +20,9 @@ export async function query(text: string, params?: any[]) {
 
 // Helpers
 export async function getUser(telegramId: number | string): Promise<User | null> {
-  const { rows } = await pool.query<User>(
-    'SELECT * FROM users WHERE telegram_id = $1', [telegramId]
-  );
+  const { rows } = await pool.query<User>('SELECT * FROM users WHERE telegram_id = $1', [
+    telegramId,
+  ]);
   return rows[0] || null;
 }
 
@@ -39,7 +39,10 @@ export async function upsertUser(ctx: any): Promise<User> {
   return rows[0];
 }
 
-export async function updateUser(telegramId: number | string, fields: Partial<User>): Promise<User> {
+export async function updateUser(
+  telegramId: number | string,
+  fields: Partial<User>
+): Promise<User> {
   const keys = Object.keys(fields);
   const values = Object.values(fields);
   const setClause = keys.map((k, i) => `${k} = $${i + 2}`).join(', ');
@@ -75,7 +78,7 @@ export async function getRandomQuestion(
   subject: string,
   excludeIds: number[] = [],
   year?: number | null,
-  topic?: string | null,
+  topic?: string | null
 ): Promise<Question | null> {
   const all = isAllExams(examType);
   const params: any[] = all ? [subject] : [examType, subject];
@@ -95,9 +98,10 @@ export async function getRandomQuestion(
   }
 
   const excludeStart = params.length + 1;
-  const excludeFilter = excludeIds.length > 0
-    ? `AND id NOT IN (${excludeIds.map((_, i) => `$${excludeStart + i}`).join(',')})`
-    : '';
+  const excludeFilter =
+    excludeIds.length > 0
+      ? `AND id NOT IN (${excludeIds.map((_, i) => `$${excludeStart + i}`).join(',')})`
+      : '';
   params.push(...excludeIds);
 
   const { rows } = await pool.query<Question>(
@@ -110,9 +114,16 @@ export async function getRandomQuestion(
   return rows[0] || null;
 }
 
-export async function getQuestionsByTopic(examType: string, subject: string, topic: string, limit = 10): Promise<Question[]> {
+export async function getQuestionsByTopic(
+  examType: string,
+  subject: string,
+  topic: string,
+  limit = 10
+): Promise<Question[]> {
   const all = isAllExams(examType);
-  const params: any[] = all ? [subject, `%${topic}%`, limit] : [examType, subject, `%${topic}%`, limit];
+  const params: any[] = all
+    ? [subject, `%${topic}%`, limit]
+    : [examType, subject, `%${topic}%`, limit];
   const subjectIdx = all ? 1 : 2;
   const topicIdx = subjectIdx + 1;
   const limitIdx = topicIdx + 1;
@@ -128,7 +139,12 @@ export async function getQuestionsByTopic(examType: string, subject: string, top
   return rows;
 }
 
-export async function getQuizQuestions(examType: string, subject: string, limit = 40, year?: number | null): Promise<Question[]> {
+export async function getQuizQuestions(
+  examType: string,
+  subject: string,
+  limit = 40,
+  year?: number | null
+): Promise<Question[]> {
   const all = isAllExams(examType);
   const params: any[] = all ? [subject] : [examType, subject];
   const subjectIdx = all ? 1 : 2;
@@ -153,7 +169,12 @@ export async function getQuizQuestions(examType: string, subject: string, limit 
   return rows;
 }
 
-export async function getQuizQuestionsMulti(examType: string, subjects: string[], limit = 40, year?: number | null): Promise<Question[]> {
+export async function getQuizQuestionsMulti(
+  examType: string,
+  subjects: string[],
+  limit = 40,
+  year?: number | null
+): Promise<Question[]> {
   const perSubject = Math.ceil(limit / subjects.length);
   const all = isAllExams(examType);
   const combined: Question[] = [];
@@ -189,7 +210,14 @@ export async function getQuizQuestionsMulti(examType: string, subjects: string[]
   return combined.slice(0, limit);
 }
 
-export async function logAttempt({ userId, questionId, selectedOption, isCorrect, sessionId, timeTakenMs }: AttemptLog): Promise<void> {
+export async function logAttempt({
+  userId,
+  questionId,
+  selectedOption,
+  isCorrect,
+  sessionId,
+  timeTakenMs,
+}: AttemptLog): Promise<void> {
   await pool.query(
     `INSERT INTO attempts (user_id, question_id, selected_option, is_correct, session_id, time_taken_ms)
      VALUES ($1, $2, $3, $4, $5, $6)`,
@@ -222,7 +250,11 @@ export async function getUserStats(userId: number, examType?: string): Promise<U
   return rows[0];
 }
 
-export async function getWeakTopics(userId: number, subject: string, examType?: string): Promise<WeakTopic[]> {
+export async function getWeakTopics(
+  userId: number,
+  subject: string,
+  examType?: string
+): Promise<WeakTopic[]> {
   const filtered = examType && examType !== 'all';
   const params: any[] = filtered ? [userId, subject, examType] : [userId, subject];
   const { rows } = await pool.query<WeakTopic>(
@@ -259,7 +291,9 @@ export async function getSubjectStats(userId: number, examType?: string): Promis
   return rows;
 }
 
-export async function checkDailyLimit(user: User): Promise<{ allowed: boolean; remaining: number; limit: number }> {
+export async function checkDailyLimit(
+  user: User
+): Promise<{ allowed: boolean; remaining: number; limit: number }> {
   if (user.plan === 'premium') return { allowed: true, remaining: 999, limit: 999 };
 
   // Reset count if it's a new day
@@ -278,10 +312,9 @@ export async function checkDailyLimit(user: User): Promise<{ allowed: boolean; r
 }
 
 export async function incrementDailyCount(telegramId: number | string): Promise<void> {
-  await pool.query(
-    `UPDATE users SET daily_count = daily_count + 1 WHERE telegram_id = $1`,
-    [telegramId]
-  );
+  await pool.query(`UPDATE users SET daily_count = daily_count + 1 WHERE telegram_id = $1`, [
+    telegramId,
+  ]);
 }
 
 export async function updateStreak(telegramId: number | string): Promise<number | undefined> {
@@ -291,14 +324,26 @@ export async function updateStreak(telegramId: number | string): Promise<number 
   if (!user) return;
   if (user.last_active_date === today) return user.streak; // already counted today
   const newStreak = user.last_active_date === yesterday ? user.streak + 1 : 1;
-  await pool.query(
-    `UPDATE users SET streak = $1, last_active_date = $2 WHERE telegram_id = $3`,
-    [newStreak, today, telegramId]
-  );
+  await pool.query(`UPDATE users SET streak = $1, last_active_date = $2 WHERE telegram_id = $3`, [
+    newStreak,
+    today,
+    telegramId,
+  ]);
   return newStreak;
 }
 
 export async function getSubjects(): Promise<any[]> {
   const { rows } = await pool.query('SELECT * FROM subjects ORDER BY name');
   return rows;
+}
+
+export async function deleteUser(telegramId: number | string): Promise<void> {
+  const { rows } = await pool.query('SELECT id FROM users WHERE telegram_id = $1', [telegramId]);
+  if (!rows[0]) return;
+  const userId = rows[0].id;
+  await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
+  await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
+  await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
+  await pool.query('DELETE FROM subscriptions WHERE user_id = $1', [userId]);
+  await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 }

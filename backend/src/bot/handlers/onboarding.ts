@@ -29,7 +29,11 @@ export async function handleOnboardYear(ctx: any): Promise<void> {
   const year = raw === 'any' ? null : parseInt(raw, 10);
   await ctx.answerCbQuery();
 
-  await redis.updateSession(ctx.from.id, { step: 'exam_type', targetYear: year, selectedSubjects: ['english'] });
+  await redis.updateSession(ctx.from.id, {
+    step: 'exam_type',
+    targetYear: year,
+    selectedSubjects: ['english'],
+  });
 
   await ctx.editMessageText(fmt.askExamType(year), {
     parse_mode: 'HTML',
@@ -42,9 +46,13 @@ export async function handleExamType(ctx: any): Promise<void> {
   const examType = ctx.callbackQuery.data.split(':')[2];
   await ctx.answerCbQuery();
 
-  const session = await redis.getSession(ctx.from.id) || {};
+  const session = (await redis.getSession(ctx.from.id)) || {};
   // English is always compulsory — pre-select it
-  await redis.updateSession(ctx.from.id, { step: 'subjects', examType, selectedSubjects: ['english'] });
+  await redis.updateSession(ctx.from.id, {
+    step: 'subjects',
+    examType,
+    selectedSubjects: ['english'],
+  });
 
   await ctx.editMessageText(fmt.askSubjects(examType), {
     parse_mode: 'HTML',
@@ -64,7 +72,7 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
 
   await ctx.answerCbQuery();
 
-  const session = await redis.getSession(ctx.from.id) || { selectedSubjects: ['english'] };
+  const session = (await redis.getSession(ctx.from.id)) || { selectedSubjects: ['english'] };
   let selected: string[] = session.selectedSubjects || ['english'];
 
   // Always keep English in the list
@@ -122,22 +130,23 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
 // /settings command
 export async function handleSettings(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
-  if (!user) { await ctx.reply('Please use /start first.'); return; }
+  if (!user) {
+    await ctx.reply('Please use /start first.');
+    return;
+  }
 
-  await ctx.reply(
-    `⚙️ <b>Settings</b>\n\nWhat would you like to change?`,
-    {
-      parse_mode: 'HTML',
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
-          [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
-          [{ text: '🔔 Toggle Notifications', callback_data: 'settings:notifications' }],
-          [{ text: '❌ Cancel', callback_data: 'menu:main' }],
-        ],
-      },
-    }
-  );
+  await ctx.reply(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
+        [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
+        [{ text: '🔔 Toggle Notifications', callback_data: 'settings:notifications' }],
+        [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
+        [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+      ],
+    },
+  });
 }
 
 export async function handleSettingsExam(ctx: any): Promise<void> {
@@ -172,8 +181,52 @@ export async function handleSettingsNotifications(ctx: any): Promise<void> {
   if (!user) return;
   const newVal = !user.notifications_enabled;
   await db.updateUser(ctx.from.id, { notifications_enabled: newVal });
-  await ctx.answerCbQuery(
-    `Notifications ${newVal ? 'enabled ✅' : 'disabled 🔕'}`,
-    { show_alert: true }
+  await ctx.answerCbQuery(`Notifications ${newVal ? 'enabled ✅' : 'disabled 🔕'}`, {
+    show_alert: true,
+  });
+}
+
+export async function handleSettingsDelete(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  await ctx.editMessageText(
+    `🗑️ <b>Delete Account</b>\n\n⚠️ This will permanently delete your account and all your data:\n\n• Practice history & stats\n• Progress tracking\n• Subscription info\n\nThis cannot be undone.`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '⚠️ Yes, delete everything', callback_data: 'settings:delete:confirm' }],
+          [{ text: '← Back to Settings', callback_data: 'settings:back' }],
+        ],
+      },
+    }
   );
+}
+
+export async function handleSettingsDeleteConfirm(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const telegramId = ctx.from.id;
+  await redis.deleteUserData(telegramId);
+  await db.deleteUser(telegramId);
+  await ctx.editMessageText(
+    `✅ <b>Account deleted.</b>\n\nAll your data has been permanently removed. Use /start anytime to create a new account.`,
+    { parse_mode: 'HTML' }
+  );
+}
+
+export async function handleSettingsBack(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
+        [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
+        [{ text: '🔔 Toggle Notifications', callback_data: 'settings:notifications' }],
+        [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
+        [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+      ],
+    },
+  });
 }
