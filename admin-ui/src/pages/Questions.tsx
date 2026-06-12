@@ -7,43 +7,45 @@ import Modal from "../components/Modal";
 import Badge from "../components/Badge";
 
 const ALL_SUBJECTS: { code: string; label: string }[] = [
-  { code: "english", label: "English Language" },
-  { code: "math", label: "Mathematics" },
-  { code: "biology", label: "Biology" },
-  { code: "chemistry", label: "Chemistry" },
-  { code: "physics", label: "Physics" },
-  { code: "economics", label: "Economics" },
-  { code: "government", label: "Government" },
-  { code: "literature", label: "Literature In English" },
-  { code: "geography", label: "Geography" },
-  { code: "accounts", label: "Accounts" },
-  { code: "crk", label: "Christian Religious Knowledge" },
-  { code: "commerce", label: "Commerce" },
-  { code: "agric", label: "Agricultural Science" },
-  { code: "irk", label: "Islamic Religious Knowledge" },
-  { code: "computer", label: "Computer Studies" },
-  { code: "history", label: "History" },
-  { code: "further-math", label: "Further Mathematics" },
-  { code: "civic-education", label: "Civic Education" },
-  { code: "yoruba", label: "Yoruba" },
-  { code: "marketing", label: "Marketing" },
-  { code: "data-processing", label: "Data Processing" },
-  { code: "hausa", label: "Hausa" },
-  { code: "home-economics", label: "Home Economics" },
-  { code: "catering", label: "Catering Craft Practice" },
-  { code: "pe", label: "Physical Education" },
+  { code: "accounts",         label: "Accounts" },
+  { code: "agric",            label: "Agricultural Science" },
   { code: "animal-husbandry", label: "Animal Husbandry" },
-  { code: "igbo", label: "Igbo" },
-  { code: "french", label: "French" },
-  { code: "office-practice", label: "Office Practice" },
-  { code: "insurance", label: "Insurance" },
-  { code: "fine-arts", label: "Fine Arts" },
-  { code: "music", label: "Music" },
-  { code: "arabic", label: "Arabic" },
-  { code: "book-keeping", label: "Book Keeping" },
+  { code: "arabic",           label: "Arabic" },
+  { code: "biology",          label: "Biology" },
+  { code: "book-keeping",     label: "Book Keeping" },
+  { code: "catering",         label: "Catering Craft Practice" },
+  { code: "chemistry",        label: "Chemistry" },
+  { code: "crk",              label: "Christian Religious Knowledge" },
+  { code: "civic-education",  label: "Civic Education" },
+  { code: "commerce",         label: "Commerce" },
+  { code: "computer",         label: "Computer Studies" },
+  { code: "data-processing",  label: "Data Processing" },
+  { code: "economics",        label: "Economics" },
+  { code: "english",          label: "English Language" },
+  { code: "fine-arts",        label: "Fine Arts" },
+  { code: "french",           label: "French" },
+  { code: "further-math",     label: "Further Mathematics" },
+  { code: "geography",        label: "Geography" },
+  { code: "government",       label: "Government" },
+  { code: "hausa",            label: "Hausa" },
+  { code: "history",          label: "History" },
+  { code: "home-economics",   label: "Home Economics" },
+  { code: "igbo",             label: "Igbo" },
+  { code: "insurance",        label: "Insurance" },
+  { code: "irk",              label: "Islamic Religious Knowledge" },
+  { code: "literature",       label: "Literature In English" },
+  { code: "marketing",        label: "Marketing" },
+  { code: "math",             label: "Mathematics" },
+  { code: "music",            label: "Music" },
+  { code: "office-practice",  label: "Office Practice" },
+  { code: "pe",               label: "Physical Education" },
+  { code: "physics",          label: "Physics" },
+  { code: "yoruba",           label: "Yoruba" },
 ];
 
-const YEARS = Array.from({ length: 16 }, (_, i) => 2025 - i);
+const EXAM_TYPES = ["JAMB", "NECO", "WAEC"];
+
+const YEARS = Array.from({ length: 16 }, (_, i) => 2010 + i);
 
 interface EditState {
   question_text: string;
@@ -187,9 +189,9 @@ export default function Questions() {
           className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
         >
           <option value="">All Exams</option>
-          <option value="WAEC">WAEC</option>
-          <option value="JAMB">JAMB</option>
-          <option value="NECO">NECO</option>
+          {EXAM_TYPES.map((e) => (
+            <option key={e} value={e}>{e}</option>
+          ))}
         </select>
 
         <select
