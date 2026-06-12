@@ -1,6 +1,7 @@
 // src/bot/handlers/stats.ts
 import * as db from '../../db';
 import * as fmt from '../formatter';
+import { SUBJECT_MAP } from '../formatter';
 import * as payments from '../../services/payments';
 import * as redis from '../../services/redis';
 
@@ -60,6 +61,58 @@ export async function handleSubscribePlan(ctx: any): Promise<void> {
     console.error('Payment link error:', err.message);
     await ctx.reply('Sorry, we could not generate a payment link right now. Please try again in a moment.');
   }
+}
+
+export async function handleQuizHistory(ctx: any): Promise<void> {
+  if (ctx.callbackQuery) await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  const history = await db.getQuizHistory(user.id);
+
+  if (history.length === 0) {
+    await ctx.reply(
+      '📜 <b>Quiz History</b>\n\nNo quizzes completed yet. Take your first quiz!',
+      {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '📋 Take a Quiz', callback_data: 'quiz:pick' }],
+            [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
+          ],
+        },
+      }
+    );
+    return;
+  }
+
+  let text = '📜 <b>Quiz History</b> (last 10)\n\n';
+  for (const s of history) {
+    const accuracy =
+      s.total_questions > 0 ? Math.round((s.correct_count / s.total_questions) * 100) : 0;
+    const date = new Date(s.started_at).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+    const durationMs = new Date(s.ended_at).getTime() - new Date(s.started_at).getTime();
+    const durationMins = Math.round(durationMs / 60000);
+    const subject = SUBJECT_MAP[s.subject] || s.subject;
+    const grade =
+      accuracy >= 80 ? '🏆' : accuracy >= 65 ? '🌟' : accuracy >= 50 ? '👍' : '💪';
+    text += `${grade} <b>${subject}</b>\n   ${s.correct_count}/${s.total_questions} • ${accuracy}% • ${durationMins}m • ${date}\n\n`;
+  }
+
+  await ctx.reply(text, {
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: '🔄 Take Another Quiz', callback_data: 'quiz:pick' }],
+        [{ text: '📊 My Stats', callback_data: 'stats:show' },
+         { text: '🏠 Main Menu', callback_data: 'menu:main' }],
+      ],
+    },
+  });
 }
 
 export async function handleFlagQuestion(ctx: any): Promise<void> {

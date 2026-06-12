@@ -412,6 +412,7 @@ export function statsFilterKeyboard() {
         { text: 'JAMB', callback_data: 'stats:filter:JAMB' },
       ],
       [{ text: 'All Exams', callback_data: 'stats:filter:all' }],
+      [{ text: '📜 Quiz History', callback_data: 'quiz:history' }],
     ],
   };
 }

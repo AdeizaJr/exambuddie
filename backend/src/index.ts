@@ -131,6 +131,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('quiz:examtype:')) return quiz.handleQuizExamTypePick(ctx);
   if (data.startsWith('quiz:timer:')) return quiz.handleQuizTimerPick(ctx);
   if (data === 'quiz:next') return quiz.handleQuizNext(ctx);
+  if (data === 'quiz:history') return stats.handleQuizHistory(ctx);
   if (data === 'quiz:stop') return quiz.handleQuizStop(ctx);
   if (data === 'quiz:stop:confirm') return quiz.handleQuizStopConfirm(ctx);
   if (data === 'quiz:stop:cancel') { await ctx.answerCbQuery('Continuing quiz!'); return; }
