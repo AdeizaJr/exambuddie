@@ -46,7 +46,6 @@ export async function handleExamType(ctx: any): Promise<void> {
   const examType = ctx.callbackQuery.data.split(':')[2];
   await ctx.answerCbQuery();
 
-  const session = (await redis.getSession(ctx.from.id)) || {};
   // English is always compulsory — pre-select it
   await redis.updateSession(ctx.from.id, {
     step: 'subjects',

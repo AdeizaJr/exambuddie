@@ -179,7 +179,7 @@ router.post('/quiz/start', requireAuth, async (req: Request, res: Response) => {
 
 // ── POST /api/miniapp/quiz/complete ───────────────────────────────────────────
 router.post('/quiz/complete', requireAuth, async (req: Request, res: Response) => {
-  const { sessionId, subject, answers, durationSecs } = req.body;
+  const { sessionId, answers, durationSecs } = req.body;
   const user = await db.getUser((req as any).telegramId);
   if (!user) return res.status(404).json({ error: 'User not found' });
 

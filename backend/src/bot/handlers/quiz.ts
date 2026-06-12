@@ -4,7 +4,7 @@ import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
-import { User, Question, QuizState } from '../../types';
+import { User, QuizState } from '../../types';
 
 const QUIZ_QUESTIONS = 40;
 const QUIZ_TIME_SECS = 45 * 60; // 45 minutes

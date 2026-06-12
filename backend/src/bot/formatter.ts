@@ -592,7 +592,6 @@ export function subjectKeyboard(selectedSubjects: string[] = []) {
     rows.push(buttons.slice(i, i + 2));
   }
   // Show done button as soon as english is selected (always)
-  const nonEnglish = selectedSubjects.filter(s => s !== 'english').length;
   rows.push([{
     text: `✅ Done (${selectedSubjects.length} selected, ${MAX_SUBJECTS - selectedSubjects.length} slots left)`,
     callback_data: 'onboard:subjects:done',
