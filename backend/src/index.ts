@@ -164,7 +164,7 @@ bot.on('callback_query', async (ctx: any) => {
           ],
           [
             { text: '📊 Stats', callback_data: 'stats:show' },
-            { text: '💎 Subscribe', callback_data: 'menu:subscribe' },
+            ...(user.plan === 'premium' ? [] : [{ text: '💎 Subscribe', callback_data: 'menu:subscribe' }]),
           ],
         ],
       },

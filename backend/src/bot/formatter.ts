@@ -208,7 +208,8 @@ export function profileComplete(user: User): string {
 What would you like to do?`;
 }
 
-export function mainMenuKeyboard() {
+export function mainMenuKeyboard(plan?: string) {
+  const isPremium = plan === 'premium';
   return {
     inline_keyboard: [
       [
@@ -217,7 +218,7 @@ export function mainMenuKeyboard() {
       ],
       [
         { text: '📊 My Stats',   callback_data: 'stats:show' },
-        { text: '💎 Subscribe',  callback_data: 'menu:subscribe' },
+        ...(isPremium ? [] : [{ text: '💎 Subscribe', callback_data: 'menu:subscribe' }]),
       ],
     ],
   };
@@ -594,11 +595,12 @@ Resets in <b>${timeStr}</b>.
 Switch to another subject or upgrade to Premium for unlimited access 👇`;
 }
 
-export function subjectLimitKeyboard(subject: string) {
+export function subjectLimitKeyboard(subject: string, plan?: string) {
+  const isPremium = plan === 'premium';
   return {
     inline_keyboard: [
       [{ text: '📚 Switch Subject', callback_data: 'practice:change_subject' }],
-      [{ text: '💎 Upgrade to Premium', callback_data: 'menu:subscribe' }],
+      ...(isPremium ? [] : [[{ text: '💎 Upgrade to Premium', callback_data: 'menu:subscribe' }]]),
     ],
   };
 }
