@@ -19,7 +19,10 @@ export default [
     rules: {
       ...tsPlugin.configs.recommended.rules,
       ...Object.fromEntries(
-        Object.entries(reactHooks.configs.recommended.rules).map(([k, v]) => [k, v === "error" ? "warn" : v])
+        Object.entries(reactHooks.configs.recommended.rules).map(([k, v]) => [
+          k,
+          v === "error" ? "warn" : v,
+        ])
       ),
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],

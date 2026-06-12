@@ -1,55 +1,55 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Layout from './components/Layout';
-import Overview from './pages/Overview';
-import Questions from './pages/Questions';
-import Users from './pages/Users';
-import Flags from './pages/Flags';
-import Subscriptions from './pages/Subscriptions';
-import AnalyticsPage from './pages/Analytics';
-import Broadcast from './pages/Broadcast';
-import { getFlags, loginAdmin } from './api';
+import React, { useState, useEffect, useCallback } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import Layout from "./components/Layout";
+import Overview from "./pages/Overview";
+import Questions from "./pages/Questions";
+import Users from "./pages/Users";
+import Flags from "./pages/Flags";
+import Subscriptions from "./pages/Subscriptions";
+import AnalyticsPage from "./pages/Analytics";
+import Broadcast from "./pages/Broadcast";
+import { getFlags, loginAdmin } from "./api";
 
 // ── Login page ──────────────────────────────────────────────────────────────
 function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!username.trim() || !password.trim()) return;
-    setError('');
+    setError("");
     setLoading(true);
     try {
       const { token } = await loginAdmin(username.trim(), password.trim());
-      localStorage.setItem('admin_token', token);
+      localStorage.setItem("admin_token", token);
       onLogin(token);
-      navigate('/overview', { replace: true });
+      navigate("/overview", { replace: true });
     } catch {
-      setError('Invalid username or password. Please try again.');
+      setError("Invalid username or password. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4">
-      <div className="bg-surface border border-border rounded-2xl p-8 w-full max-w-sm shadow-2xl">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-white font-bold font-display text-lg">
+    <div className="flex min-h-screen items-center justify-center bg-bg p-4">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-surface p-8 shadow-2xl">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent font-display text-lg font-bold text-white">
             E
           </div>
           <div>
-            <h1 className="text-lg font-bold font-display text-white">ExamBuddie Admin</h1>
+            <h1 className="font-display text-lg font-bold text-white">ExamBuddie Admin</h1>
             <p className="text-xs text-muted">Sign in to continue</p>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
+            <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
               Username
             </label>
             <input
@@ -59,11 +59,11 @@ function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
               placeholder="admin"
               autoFocus
               autoComplete="username"
-              className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
+              className="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
+            <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
               Password
             </label>
             <input
@@ -72,18 +72,16 @@ function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               autoComplete="current-password"
-              className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
+              className="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
             />
           </div>
-          {error && (
-            <p className="text-xs text-red-400 text-center">{error}</p>
-          )}
+          {error && <p className="text-center text-xs text-red-400">{error}</p>}
           <button
             type="submit"
             disabled={!username.trim() || !password.trim() || loading}
-            className="w-full py-2.5 bg-accent text-white font-medium text-sm rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-40"
+            className="w-full rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:opacity-40"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
       </div>
@@ -107,7 +105,7 @@ function ProtectedLayout({
 
 // ── Root app ────────────────────────────────────────────────────────────────
 export default function App() {
-  const [secret, setSecret] = useState<string | null>(() => localStorage.getItem('admin_token'));
+  const [secret, setSecret] = useState<string | null>(() => localStorage.getItem("admin_token"));
   const [pendingFlags, setPendingFlags] = useState(0);
 
   const loadFlagCount = useCallback(async () => {
@@ -128,7 +126,7 @@ export default function App() {
   }, [secret, loadFlagCount]);
 
   function handleLogout() {
-    localStorage.removeItem('admin_token');
+    localStorage.removeItem("admin_token");
     setSecret(null);
   }
 
@@ -141,7 +139,7 @@ export default function App() {
       <Route
         element={
           <ProtectedLayout
-            secret={secret ?? ''}
+            secret={secret ?? ""}
             pendingFlags={pendingFlags}
             onLogout={handleLogout}
           />
@@ -151,20 +149,14 @@ export default function App() {
         <Route path="/overview" element={<Overview />} />
         <Route path="/questions" element={<Questions />} />
         <Route path="/users" element={<Users />} />
-        <Route
-          path="/flags"
-          element={<Flags onFlagsResolved={loadFlagCount} />}
-        />
+        <Route path="/flags" element={<Flags onFlagsResolved={loadFlagCount} />} />
         <Route path="/subscriptions" element={<Subscriptions />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/broadcast" element={<Broadcast />} />
       </Route>
 
       {/* Fallback */}
-      <Route
-        path="*"
-        element={<Navigate to={secret ? '/overview' : '/login'} replace />}
-      />
+      <Route path="*" element={<Navigate to={secret ? "/overview" : "/login"} replace />} />
     </Routes>
   );
 }

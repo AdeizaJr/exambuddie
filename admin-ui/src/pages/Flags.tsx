@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { getFlags, resolveFlag } from '../api';
-import type { Flag } from '../types';
-import Spinner from '../components/Spinner';
+import React, { useState, useEffect, useCallback } from "react";
+import { getFlags, resolveFlag } from "../api";
+import type { Flag } from "../types";
+import Spinner from "../components/Spinner";
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('en-NG', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  return new Date(dateStr).toLocaleDateString("en-NG", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -19,7 +19,7 @@ interface FlagCardProps {
 }
 
 function FlagCard({ flag, onResolved }: FlagCardProps) {
-  const [explanation, setExplanation] = useState(flag.explanation || '');
+  const [explanation, setExplanation] = useState(flag.explanation || "");
   const [saving, setSaving] = useState(false);
 
   async function handleSaveAndResolve() {
@@ -28,7 +28,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
       await resolveFlag(flag.id, explanation);
       onResolved();
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Failed to resolve');
+      alert(e instanceof Error ? e.message : "Failed to resolve");
     } finally {
       setSaving(false);
     }
@@ -40,30 +40,32 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
       await resolveFlag(flag.id);
       onResolved();
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Failed to resolve');
+      alert(e instanceof Error ? e.message : "Failed to resolve");
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <div className="bg-surface border border-border rounded-xl p-5 space-y-4">
+    <div className="space-y-4 rounded-xl border border-border bg-surface p-5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="text-xs font-medium text-muted bg-surface2 border border-border rounded px-2 py-0.5">
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <span className="rounded border border-border bg-surface2 px-2 py-0.5 text-xs font-medium text-muted">
               {flag.subject}
             </span>
-            <span className="text-xs text-muted">Correct: <strong className="text-white">{flag.correct_option}</strong></span>
+            <span className="text-xs text-muted">
+              Correct: <strong className="text-white">{flag.correct_option}</strong>
+            </span>
             <span className="text-xs text-muted">Q#{flag.question_id}</span>
           </div>
-          <p className="text-sm text-white leading-relaxed">{flag.question_text}</p>
+          <p className="text-sm leading-relaxed text-white">{flag.question_text}</p>
         </div>
         <div className="text-xs text-muted sm:whitespace-nowrap">{formatDate(flag.flagged_at)}</div>
       </div>
 
       {flag.reason && (
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2">
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2">
           <p className="text-xs text-amber-400">
             <strong>Flag reason:</strong> {flag.reason}
           </p>
@@ -71,14 +73,14 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
       )}
 
       <div>
-        <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
-          Explanation {!flag.explanation && <span className="text-red-400 ml-1">(missing)</span>}
+        <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
+          Explanation {!flag.explanation && <span className="ml-1 text-red-400">(missing)</span>}
         </label>
         <textarea
           rows={4}
           value={explanation}
           onChange={(e) => setExplanation(e.target.value)}
-          className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-accent resize-y"
+          className="w-full resize-y rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
           placeholder="Write or update the explanation for this question..."
         />
       </div>
@@ -87,14 +89,14 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
         <button
           onClick={handleResolveOnly}
           disabled={saving}
-          className="px-3 py-2 text-sm bg-surface2 border border-border text-white rounded-lg hover:bg-border transition-colors disabled:opacity-50"
+          className="rounded-lg border border-border bg-surface2 px-3 py-2 text-sm text-white transition-colors hover:bg-border disabled:opacity-50"
         >
           Resolve Only
         </button>
         <button
           onClick={handleSaveAndResolve}
           disabled={saving}
-          className="px-3 py-2 text-sm bg-accent text-white rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-50 flex items-center gap-2"
+          className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-50"
         >
           {saving && <Spinner size="sm" />}
           Save & Resolve
@@ -121,7 +123,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
       setError(null);
       onFlagsResolved?.();
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to load flags');
+      setError(e instanceof Error ? e.message : "Failed to load flags");
     } finally {
       setLoading(false);
     }
@@ -132,17 +134,19 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
   }, [load]);
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="space-y-5 p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold font-display text-white">Flagged Explanations</h1>
-          <p className="text-sm text-muted mt-0.5">
-            {flags.length > 0 ? `${flags.length} unresolved flag${flags.length === 1 ? '' : 's'}` : 'All clear'}
+          <h1 className="font-display text-xl font-bold text-white">Flagged Explanations</h1>
+          <p className="mt-0.5 text-sm text-muted">
+            {flags.length > 0
+              ? `${flags.length} unresolved flag${flags.length === 1 ? "" : "s"}`
+              : "All clear"}
           </p>
         </div>
         <button
           onClick={load}
-          className="px-4 py-2 bg-surface2 border border-border text-sm text-white rounded-lg hover:bg-border transition-colors shrink-0"
+          className="shrink-0 rounded-lg border border-border bg-surface2 px-4 py-2 text-sm text-white transition-colors hover:bg-border"
         >
           Refresh
         </button>
@@ -153,12 +157,14 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
           <Spinner size="lg" />
         </div>
       ) : error ? (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-400">{error}</div>
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-400">
+          {error}
+        </div>
       ) : flags.length === 0 ? (
-        <div className="bg-surface border border-border rounded-xl p-12 text-center">
-          <div className="text-4xl mb-3">✅</div>
-          <p className="text-white font-medium">No pending flags</p>
-          <p className="text-sm text-muted mt-1">All flagged explanations have been resolved</p>
+        <div className="rounded-xl border border-border bg-surface p-12 text-center">
+          <div className="mb-3 text-4xl">✅</div>
+          <p className="font-medium text-white">No pending flags</p>
+          <p className="mt-1 text-sm text-muted">All flagged explanations have been resolved</p>
         </div>
       ) : (
         <div className="space-y-4">

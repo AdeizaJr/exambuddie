@@ -2,9 +2,9 @@ export interface User {
   telegram_id: number;
   first_name: string;
   username: string | null;
-  exam_type: 'WAEC' | 'JAMB' | 'NECO' | 'ALL' | 'BOTH' | null;
+  exam_type: "WAEC" | "JAMB" | "NECO" | "ALL" | "BOTH" | null;
   subjects: string[];
-  plan: 'free' | 'premium';
+  plan: "free" | "premium";
   plan_expires_at: string | null;
   streak: number;
   joined_at: string;
@@ -14,7 +14,7 @@ export interface User {
 
 export interface Question {
   id: number;
-  exam_type: 'WAEC' | 'JAMB' | 'NECO';
+  exam_type: "WAEC" | "JAMB" | "NECO";
   subject: string;
   year: number;
   question_text: string;
@@ -23,7 +23,7 @@ export interface Question {
   option_c: string;
   option_d: string;
   option_e: string | null;
-  correct_option: 'A' | 'B' | 'C' | 'D' | 'E';
+  correct_option: "A" | "B" | "C" | "D" | "E";
   explanation: string | null;
   explanation_reviewed: boolean;
   flag_count: number;

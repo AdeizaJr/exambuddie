@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import Modal from './Modal';
-import { changePassword } from '../api';
+import React, { useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import Modal from "./Modal";
+import { changePassword } from "../api";
 
 interface NavItem {
   path: string;
@@ -15,36 +15,36 @@ interface LayoutProps {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { path: '/overview',      label: 'Overview',      icon: '📊' },
-  { path: '/questions',     label: 'Questions',     icon: '❓' },
-  { path: '/users',         label: 'Users',         icon: '👥' },
-  { path: '/flags',         label: 'Flags',         icon: '🚩' },
-  { path: '/subscriptions', label: 'Subscriptions', icon: '💳' },
-  { path: '/analytics',     label: 'Analytics',     icon: '📈' },
-  { path: '/broadcast',     label: 'Broadcast',     icon: '📢' },
+  { path: "/overview", label: "Overview", icon: "📊" },
+  { path: "/questions", label: "Questions", icon: "❓" },
+  { path: "/users", label: "Users", icon: "👥" },
+  { path: "/flags", label: "Flags", icon: "🚩" },
+  { path: "/subscriptions", label: "Subscriptions", icon: "💳" },
+  { path: "/analytics", label: "Analytics", icon: "📈" },
+  { path: "/broadcast", label: "Broadcast", icon: "📢" },
 ];
 
 function ChangePasswordModal({ onClose }: { onClose: () => void }) {
-  const [current, setCurrent] = useState('');
-  const [next, setNext] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (next !== confirm) {
-      setError('New passwords do not match.');
+      setError("New passwords do not match.");
       return;
     }
-    setError('');
+    setError("");
     setLoading(true);
     try {
       await changePassword(current, next);
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || 'Failed to change password.');
+      setError(err.message || "Failed to change password.");
     } finally {
       setLoading(false);
     }
@@ -53,11 +53,11 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   if (success) {
     return (
       <Modal title="Change Password" onClose={onClose}>
-        <div className="text-center space-y-4">
-          <p className="text-green-400 font-medium">Password updated successfully.</p>
+        <div className="space-y-4 text-center">
+          <p className="font-medium text-green-400">Password updated successfully.</p>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-accent text-white text-sm rounded-lg hover:bg-accent-dark transition-colors"
+            className="rounded-lg bg-accent px-4 py-2 text-sm text-white transition-colors hover:bg-accent-dark"
           >
             Done
           </button>
@@ -70,7 +70,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
     <Modal title="Change Password" onClose={onClose}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
+          <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
             Current Password
           </label>
           <input
@@ -79,11 +79,11 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
             onChange={(e) => setCurrent(e.target.value)}
             autoFocus
             autoComplete="current-password"
-            className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
+            className="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
           />
         </div>
         <div>
-          <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
+          <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
             New Password
           </label>
           <input
@@ -91,11 +91,11 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
             value={next}
             onChange={(e) => setNext(e.target.value)}
             autoComplete="new-password"
-            className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
+            className="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
           />
         </div>
         <div>
-          <label className="block text-xs text-muted uppercase tracking-wider font-medium mb-2">
+          <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
             Confirm New Password
           </label>
           <input
@@ -103,7 +103,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             autoComplete="new-password"
-            className="w-full bg-bg border border-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent placeholder-muted"
+            className="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
           />
         </div>
         {error && <p className="text-xs text-red-400">{error}</p>}
@@ -111,16 +111,16 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm text-muted hover:text-white transition-colors"
+            className="px-4 py-2 text-sm text-muted transition-colors hover:text-white"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={!current || !next || !confirm || loading}
-            className="px-4 py-2 bg-accent text-white text-sm rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-40"
+            className="rounded-lg bg-accent px-4 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-40"
           >
-            {loading ? 'Updating...' : 'Update Password'}
+            {loading ? "Updating..." : "Update Password"}
           </button>
         </div>
       </form>
@@ -139,41 +139,47 @@ export default function Layout({ pendingFlags, onLogout }: LayoutProps) {
   const sidebarContent = (
     <>
       {/* Logo */}
-      <div className="px-5 py-5 border-b border-border flex items-center justify-between">
+      <div className="flex items-center justify-between border-b border-border px-5 py-5">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-sm font-bold font-display text-white">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent font-display text-sm font-bold text-white">
             E
           </div>
           <div>
-            <p className="text-sm font-bold font-display text-white leading-tight">ExamBuddie</p>
-            <p className="text-xs text-muted leading-tight">Admin Panel</p>
+            <p className="font-display text-sm font-bold leading-tight text-white">ExamBuddie</p>
+            <p className="text-xs leading-tight text-muted">Admin Panel</p>
           </div>
         </div>
         <button
           onClick={closeMobile}
-          className="lg:hidden p-1 text-muted hover:text-white transition-colors"
+          className="p-1 text-muted transition-colors hover:text-white lg:hidden"
           aria-label="Close menu"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
         {NAV_ITEMS.map((item) => {
-          const badge = item.path === '/flags' && pendingFlags > 0 ? pendingFlags : 0;
+          const badge = item.path === "/flags" && pendingFlags > 0 ? pendingFlags : 0;
           return (
             <NavLink
               key={item.path}
               to={item.path}
               onClick={closeMobile}
               className={({ isActive }) =>
-                `w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group ${
+                `group flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? 'bg-accent/15 text-accent'
-                    : 'text-muted hover:text-white hover:bg-surface2'
+                    ? "bg-accent/15 text-accent"
+                    : "text-muted hover:bg-surface2 hover:text-white"
                 }`
               }
             >
@@ -182,8 +188,8 @@ export default function Layout({ pendingFlags, onLogout }: LayoutProps) {
                 <span className="font-medium">{item.label}</span>
               </span>
               {badge > 0 && (
-                <span className="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
-                  {badge > 9 ? '9+' : badge}
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold leading-none text-white">
+                  {badge > 9 ? "9+" : badge}
                 </span>
               )}
             </NavLink>
@@ -192,21 +198,24 @@ export default function Layout({ pendingFlags, onLogout }: LayoutProps) {
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-3 border-t border-border space-y-1">
+      <div className="space-y-1 border-t border-border px-3 py-3">
         <div className="flex items-center gap-2 px-2 py-1">
-          <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <div className="h-2 w-2 animate-pulse rounded-full bg-accent" />
           <span className="text-xs text-muted">Live · v1.0.0</span>
         </div>
         <button
-          onClick={() => { setShowChangePassword(true); closeMobile(); }}
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted hover:text-white hover:bg-surface2 transition-colors"
+          onClick={() => {
+            setShowChangePassword(true);
+            closeMobile();
+          }}
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-surface2 hover:text-white"
         >
           <span className="text-base leading-none">🔑</span>
           <span className="font-medium">Change Password</span>
         </button>
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-red-500/10 hover:text-red-400"
         >
           <span className="text-base leading-none">🚪</span>
           <span className="font-medium">Log Out</span>
@@ -218,43 +227,43 @@ export default function Layout({ pendingFlags, onLogout }: LayoutProps) {
   return (
     <div className="flex h-screen overflow-hidden bg-bg text-white">
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 h-14 bg-surface border-b border-border flex items-center px-4 gap-3">
+      <div className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-surface px-4 lg:hidden">
         <button
           onClick={() => setMobileOpen(true)}
-          className="p-1.5 text-muted hover:text-white transition-colors"
+          className="p-1.5 text-muted transition-colors hover:text-white"
           aria-label="Open menu"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-accent flex items-center justify-center text-xs font-bold font-display text-white">E</div>
-          <p className="text-sm font-bold font-display text-white">ExamBuddie Admin</p>
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-accent font-display text-xs font-bold text-white">
+            E
+          </div>
+          <p className="font-display text-sm font-bold text-white">ExamBuddie Admin</p>
         </div>
         {pendingFlags > 0 && (
-          <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-            {pendingFlags > 9 ? '9+' : pendingFlags}
+          <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+            {pendingFlags > 9 ? "9+" : pendingFlags}
           </span>
         )}
       </div>
 
       {/* Mobile backdrop */}
       {mobileOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/60"
-          onClick={closeMobile}
-        />
+        <div className="fixed inset-0 z-40 bg-black/60 lg:hidden" onClick={closeMobile} />
       )}
 
       {/* Sidebar — drawer on mobile, static on desktop */}
       <aside
-        className={`
-          fixed inset-y-0 left-0 z-50 w-64 flex-shrink-0 bg-surface border-r border-border flex flex-col
-          transition-transform duration-200 ease-in-out
-          lg:static lg:w-56 lg:translate-x-0 lg:z-auto
-          ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-shrink-0 flex-col border-r border-border bg-surface transition-transform duration-200 ease-in-out lg:static lg:z-auto lg:w-56 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} `}
       >
         {sidebarContent}
       </aside>
@@ -264,9 +273,7 @@ export default function Layout({ pendingFlags, onLogout }: LayoutProps) {
         <Outlet />
       </main>
 
-      {showChangePassword && (
-        <ChangePasswordModal onClose={() => setShowChangePassword(false)} />
-      )}
+      {showChangePassword && <ChangePasswordModal onClose={() => setShowChangePassword(false)} />}
     </div>
   );
 }
