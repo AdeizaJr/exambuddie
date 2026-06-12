@@ -6,27 +6,33 @@ import * as fmt from '../bot/formatter';
 
 export default function startCrons(bot: any): void {
   // ── Every midnight WAT (UTC+1) — reset daily counts ─────────────────────
-  cron.schedule('0 23 * * *', async () => {
-    // WAT midnight = 23:00 UTC
-    console.log('[CRON] Resetting daily question counts...');
-    await db.query(
-      `UPDATE users SET daily_count = 0, daily_reset_at = CURRENT_DATE`
-    );
-  }, { timezone: 'UTC' } as any);
+  cron.schedule(
+    '0 23 * * *',
+    async () => {
+      // WAT midnight = 23:00 UTC
+      console.log('[CRON] Resetting daily question counts...');
+      await db.query(`UPDATE users SET daily_count = 0, daily_reset_at = CURRENT_DATE`);
+    },
+    { timezone: 'UTC' } as any
+  );
 
   // ── Every hour — check expired subscriptions ──────────────────────────────
   cron.schedule('0 * * * *', async () => {
     const expired = await payments.checkExpiredSubscriptions();
     for (const user of expired) {
+      if (!user.notifications_enabled) continue;
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
           `⏰ *Your ExamBuddie Premium has expired, ${user.first_name}!*\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
           { parse_mode: 'HTML' }
         );
-      } catch (e) { /* user may have blocked the bot */ }
+      } catch (e) {
+        /* user may have blocked the bot */
+      }
     }
-    if (expired.length > 0) console.log(`[CRON] Downgraded ${expired.length} expired subscriptions`);
+    if (expired.length > 0)
+      console.log(`[CRON] Downgraded ${expired.length} expired subscriptions`);
   });
 
   // ── 3-day expiry reminders — runs daily at 9am WAT (8am UTC) ──────────────
@@ -35,7 +41,8 @@ export default function startCrons(bot: any): void {
       `SELECT telegram_id, first_name, plan_expires_at
        FROM users
        WHERE plan = 'premium'
-       AND plan_expires_at BETWEEN NOW() AND NOW() + INTERVAL '3 days'`
+       AND plan_expires_at BETWEEN NOW() AND NOW() + INTERVAL '3 days'
+       AND notifications_enabled = true`
     );
 
     for (const user of rows) {
@@ -79,10 +86,12 @@ export default function startCrons(bot: any): void {
           return rows[0]?.acc || 0;
         })();
 
-        const weakSection = weakTopics.length > 0
-          ? `\n⚠️ *Weak Topics to Focus On:*\n${weakTopics.map(t =>
-              `  • ${t.topic}: ${t.accuracy}% accuracy`).join('\n')}`
-          : '';
+        const weakSection =
+          weakTopics.length > 0
+            ? `\n⚠️ *Weak Topics to Focus On:*\n${weakTopics
+                .map((t) => `  • ${t.topic}: ${t.accuracy}% accuracy`)
+                .join('\n')}`
+            : '';
 
         const msg = `📊 *Your Week in Review, ${user.first_name}!*
 
@@ -97,7 +106,9 @@ Ready to practise? /practice`;
 
         await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
         sent++;
-      } catch (e) { /* user blocked or unavailable */ }
+      } catch (e) {
+        /* user blocked or unavailable */
+      }
     }
 
     console.log(`[CRON] Weekly summaries sent to ${sent} users`);

@@ -30,7 +30,10 @@ export const PLANS: Record<string, PlanDetails> = {
   },
 };
 
-export async function createPaymentLink(user: User, planType: string): Promise<{ link: string; txRef: string }> {
+export async function createPaymentLink(
+  user: User,
+  planType: string
+): Promise<{ link: string; txRef: string }> {
   const plan = PLANS[planType];
   if (!plan) throw new Error(`Invalid plan: ${planType}`);
 
@@ -74,14 +77,15 @@ export async function createPaymentLink(user: User, planType: string): Promise<{
 }
 
 export async function verifyPayment(txRef: string): Promise<any> {
-  const res = await axios.get(
-    `${FLW_BASE}/transactions/verify_by_reference?tx_ref=${txRef}`,
-    { headers: headers() }
-  );
+  const res = await axios.get(`${FLW_BASE}/transactions/verify_by_reference?tx_ref=${txRef}`, {
+    headers: headers(),
+  });
   return res.data.data;
 }
 
-export async function activateSubscription(txRef: string): Promise<{ user: User; expiresAt: Date; planType: string }> {
+export async function activateSubscription(
+  txRef: string
+): Promise<{ user: User; expiresAt: Date; planType: string }> {
   const txData = await verifyPayment(txRef);
   if (txData.status !== 'successful') {
     throw new Error(`Payment not successful: ${txData.status}`);
@@ -128,7 +132,7 @@ export async function checkExpiredSubscriptions(): Promise<any[]> {
   const { rows } = await db.query(
     `UPDATE users SET plan = 'free'
      WHERE plan = 'premium' AND plan_expires_at < NOW()
-     RETURNING telegram_id, first_name`
+     RETURNING telegram_id, first_name, notifications_enabled`
   );
   return rows;
 }
