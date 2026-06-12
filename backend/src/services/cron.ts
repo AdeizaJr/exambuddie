@@ -2,7 +2,6 @@
 import cron from 'node-cron';
 import * as db from '../db';
 import * as payments from './payments';
-import * as fmt from '../bot/formatter';
 
 export default function startCrons(bot: any): void {
   // ── Every midnight WAT (UTC+1) — reset daily counts ─────────────────────
@@ -24,10 +23,10 @@ export default function startCrons(bot: any): void {
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `⏰ *Your ExamBuddie Premium has expired, ${user.first_name}!*\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
+          `⏰ <b>Your ExamBuddie Premium has expired, ${user.first_name}!</b>\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
           { parse_mode: 'HTML' }
         );
-      } catch (e) {
+      } catch {
         /* user may have blocked the bot */
       }
     }
@@ -50,10 +49,10 @@ export default function startCrons(bot: any): void {
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `⚠️ *Reminder, ${user.first_name}!*\n\nYour ExamBuddie Premium expires on *${expiryDate}*. Renew now to keep uninterrupted access to unlimited questions.\n\n/subscribe`,
+          `⚠️ <b>Reminder, ${user.first_name}!</b>\n\nYour ExamBuddie Premium expires on <b>${expiryDate}</b>. Renew now to keep uninterrupted access to unlimited questions.\n\n/subscribe`,
           { parse_mode: 'HTML' }
         );
-      } catch (e) {}
+      } catch { /* user blocked or unavailable */ }
     }
   });
 
@@ -72,7 +71,6 @@ export default function startCrons(bot: any): void {
     let sent = 0;
     for (const user of users) {
       try {
-        const stats = await db.getUserStats(user.id);
         const subject = user.subjects?.[0];
         const weakTopics = subject ? await db.getWeakTopics(user.id, subject) : [];
 
@@ -87,12 +85,12 @@ export default function startCrons(bot: any): void {
 
         const weakSection =
           weakTopics.length > 0
-            ? `\n⚠️ *Weak Topics to Focus On:*\n${weakTopics
+            ? `\n⚠️ <b>Weak Topics to Focus On:</b>\n${weakTopics
                 .map((t) => `  • ${t.topic}: ${t.accuracy}% accuracy`)
                 .join('\n')}`
             : '';
 
-        const msg = `📊 *Your Week in Review, ${user.first_name}!*
+        const msg = `📊 <b>Your Week in Review, ${user.first_name}!</b>
 
 This week:
 🎯 Accuracy: ${weeklyAccuracy}%
@@ -105,7 +103,7 @@ Ready to practise? /practice`;
 
         await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
         sent++;
-      } catch (e) {
+      } catch {
         /* user blocked or unavailable */
       }
     }

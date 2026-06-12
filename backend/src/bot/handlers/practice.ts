@@ -118,7 +118,7 @@ export async function handleMultiSubjectToggle(ctx: any): Promise<void> {
   await redis.updateSession(ctx.from.id, { selectedSubjects: selected });
   try {
     await ctx.editMessageReplyMarkup(fmt.practiceMultiSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP), selected));
-  } catch (err: any) {
+  } catch {
     // ignore "message is not modified" and similar transient errors
   }
 }
@@ -206,8 +206,6 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   const effectiveTopic = topic === '__all__' ? null : topic;
   const q = await db.getRandomQuestion(examType, subject, [], effectiveYear, effectiveTopic);
   if (!q) {
-    const yearStr = year ? ` for ${year}` : '';
-    const topicStr = effectiveTopic ? ` on topic "${effectiveTopic}"` : '';
     await ctx.reply(`Sorry, no questions found for this topic. Please select another topic to continue.`, {
       reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Topic', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
     });
@@ -372,7 +370,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
       + fmt.answerOptions(q),
       { parse_mode: 'HTML' }
     );
-  } catch (_) {}
+  } catch { /* message already deleted or not modified */ }
 
   await ctx.reply(resultText, {
     parse_mode: 'HTML',
@@ -593,7 +591,6 @@ export async function handleAutoDrill(ctx: any): Promise<void> {
 export async function handleDrillTopic(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const parts = ctx.callbackQuery.data.split(':');
-  const subject = parts[2];
   const topic = parts.slice(3).join(':');
   await handleDrill(ctx, topic);
 }
