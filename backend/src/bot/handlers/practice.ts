@@ -126,8 +126,6 @@ export async function handleMultiSubjectToggle(ctx: any): Promise<void> {
 export async function handleMultiSubjectStart(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
-  const user = await db.getUser(ctx.from.id);
-  if (!user) return;
 
   const selected: string[] = session?.selectedSubjects || [];
   if (selected.length === 0) {
@@ -135,7 +133,17 @@ export async function handleMultiSubjectStart(ctx: any): Promise<void> {
     return;
   }
 
-  await startPractice(ctx, user, selected[0], undefined, undefined, undefined, undefined, selected);
+  if (selected.length === 1) {
+    const user = await db.getUser(ctx.from.id);
+    if (!user) return;
+    await startPractice(ctx, user, selected[0]);
+    return;
+  }
+
+  await ctx.reply(
+    '📚 <b>Which subject would you like to practise?</b>',
+    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(selected) }
+  );
 }
 
 // Subject tapped from the subject picker
