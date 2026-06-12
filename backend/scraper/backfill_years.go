@@ -104,12 +104,12 @@ func main() {
 		SELECT id, source_id, subject
 		FROM questions
 		WHERE year = 2010
-		  AND subject IN (
-		    SELECT subject FROM questions
-		    GROUP BY subject
+		  AND (subject, exam_type) IN (
+		    SELECT subject, exam_type FROM questions
+		    GROUP BY subject, exam_type
 		    HAVING COUNT(DISTINCT year) = 1 AND MIN(year) = 2010
 		  )
-		ORDER BY subject, id`)
+		ORDER BY subject, exam_type, id`)
 	if err != nil {
 		log.Fatalf("query: %v", err)
 	}
