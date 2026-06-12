@@ -1,5 +1,6 @@
 # backend
 backend/.env
+backend/scraper/scraper
 backend/dist/
 backend/node_modules/
 backend/dump.rdb
