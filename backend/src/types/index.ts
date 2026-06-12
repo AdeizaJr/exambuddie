@@ -108,7 +108,6 @@ export interface QuizAnswer {
 export interface QuizState {
   mode: 'quiz';
   subject: string;
-  subjects?: string[];
   sessionId: string;
   questions: Question[];
   qIndex: number;

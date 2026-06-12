@@ -120,8 +120,6 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Quiz
   if (data === 'quiz:pick') return quiz.handleQuiz(ctx);
-  if (data.startsWith('quiz:multisubject:toggle:')) return quiz.handleQuizMultiSubjectToggle(ctx);
-  if (data === 'quiz:multisubject:start') return quiz.handleQuizMultiSubjectStart(ctx);
   if (data.startsWith('quiz:subject:')) return quiz.handleQuizSubjectPick(ctx);
   if (data.startsWith('quiz:flow_year:')) return quiz.handleQuizFlowYear(ctx);
   if (data.startsWith('quiz:start:')) {
