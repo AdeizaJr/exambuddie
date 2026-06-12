@@ -22,7 +22,7 @@ async function checkSubjectLimit(ctx: any, user: User, subject: string): Promise
     const msLeft = usage.expiresAt - Date.now();
     await ctx.reply(
       fmt.subjectLimitMessage(fmt.SUBJECT_MAP[subject] || subject, msLeft),
-      { parse_mode: 'HTML', reply_markup: fmt.subjectLimitKeyboard(subject) }
+      { parse_mode: 'HTML', reply_markup: fmt.subjectLimitKeyboard(subject, user.plan) }
     );
     return false;
   }
