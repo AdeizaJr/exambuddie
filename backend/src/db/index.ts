@@ -58,6 +58,18 @@ function isAllExams(examType: string): boolean {
   return examType === 'ALL' || examType === 'BOTH';
 }
 
+export async function getSubjectAvailability(subject: string): Promise<{ examType: string; years: number[] }[]> {
+  const { rows } = await pool.query(
+    `SELECT exam_type, ARRAY_AGG(DISTINCT year ORDER BY year) AS years
+     FROM questions
+     WHERE subject = $1 AND year IS NOT NULL
+     GROUP BY exam_type
+     ORDER BY exam_type`,
+    [subject]
+  );
+  return rows.map((r: any) => ({ examType: r.exam_type as string, years: r.years as number[] }));
+}
+
 export async function getTopicsForSubject(examType: string, subject: string): Promise<string[]> {
   const all = isAllExams(examType);
   const params: any[] = all ? [subject] : [examType, subject];

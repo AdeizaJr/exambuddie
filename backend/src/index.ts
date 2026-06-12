@@ -102,6 +102,7 @@ bot.on('callback_query', async (ctx: any) => {
     await ctx.answerCbQuery();
     return practice.startPractice(ctx, user, subject, year);
   }
+  if (data.startsWith('practice:avail:')) return practice.handlePracticeAvail(ctx);
   if (data.startsWith('practice:examtype:')) return practice.handlePracticeExamTypePick(ctx);
   if (data.startsWith('practice:topic:')) return practice.handlePracticeTopicPick(ctx);
   if (data.startsWith('practice:timer:')) return practice.handlePracticeTimerPick(ctx);
@@ -128,6 +129,7 @@ bot.on('callback_query', async (ctx: any) => {
     await ctx.answerCbQuery();
     return quiz.startQuiz(ctx, user, subject);
   }
+  if (data.startsWith('quiz:avail:')) return quiz.handleQuizAvail(ctx);
   if (data.startsWith('quiz:examtype:')) return quiz.handleQuizExamTypePick(ctx);
   if (data.startsWith('quiz:timer:')) return quiz.handleQuizTimerPick(ctx);
   if (data === 'quiz:next') return quiz.handleQuizNext(ctx);

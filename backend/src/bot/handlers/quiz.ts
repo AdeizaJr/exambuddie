@@ -95,9 +95,20 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   const questions = await db.getQuizQuestions(examType, subject, QUIZ_QUESTIONS, effectiveYear);
 
   if (questions.length < 5) {
-    await ctx.reply('Sorry, no questions found for this subject/year. Please pick another.', {
-      reply_markup: { inline_keyboard: [[{ text: '📋 Pick Another Subject', callback_data: 'quiz:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
-    });
+    const availability = await db.getSubjectAvailability(subject);
+    const subjectName = fmt.SUBJECT_MAP[subject] || subject;
+    const yearStr = effectiveYear ? ` — ${effectiveYear}` : '';
+    const examStr = examType && !['ALL', 'BOTH'].includes(examType) ? ` (${examType}${yearStr})` : yearStr;
+    if (availability.length === 0) {
+      await ctx.reply(`No questions available for ${subjectName}. Please pick another subject.`, {
+        reply_markup: { inline_keyboard: [[{ text: '📋 Pick Another Subject', callback_data: 'quiz:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+      });
+    } else {
+      await ctx.reply(
+        `No questions found for <b>${subjectName}</b>${examStr}.\n\nAvailable options for ${subjectName}:`,
+        { parse_mode: 'HTML', reply_markup: fmt.subjectAvailabilityKeyboard(subject, availability, 'quiz') }
+      );
+    }
     return;
   }
 
@@ -160,6 +171,18 @@ export async function handleQuizTimerPick(ctx: any): Promise<void> {
   if (!user) return;
 
   await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, timerSecs, session.pendingExamType);
+}
+
+export async function handleQuizAvail(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  // quiz:avail:<subject>:<examType>:<year>
+  const parts = ctx.callbackQuery.data.split(':');
+  const subject = parts[2];
+  const examType = parts[3];
+  const year = parts[4] && parts[4] !== 'any' ? parseInt(parts[4], 10) : null;
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await startQuiz(ctx, user, subject, year, undefined, examType);
 }
 
 export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<void> {
