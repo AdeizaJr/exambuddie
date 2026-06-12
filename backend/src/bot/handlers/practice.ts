@@ -15,22 +15,6 @@ async function requireProfile(ctx: any): Promise<User | null> {
   return user;
 }
 
-async function checkLimit(ctx: any, user: User): Promise<boolean> {
-  const check = await db.checkDailyLimit(user);
-  if (!check.allowed) {
-    const msg = fmt.freeLimitMessage(0, check.limit);
-    if (msg) {
-      await ctx.reply(msg, {
-        parse_mode: 'HTML',
-        reply_markup: fmt.subscribeKeyboard(),
-        disable_web_page_preview: true,
-      });
-    }
-    return false;
-  }
-  return true;
-}
-
 async function checkSubjectLimit(ctx: any, user: User, subject: string): Promise<boolean> {
   if (user.plan === 'premium') return true;
   const usage = await redis.getSubjectUsage(ctx.from.id, subject);
@@ -207,7 +191,6 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     topic = null; // no topics available — skip filter
   }
 
-  if (!(await checkLimit(ctx, user))) return;
   if (!(await checkSubjectLimit(ctx, user, subject))) return;
 
   // For non-premium, year may be undefined here — fall back to their saved target_year
@@ -412,8 +395,7 @@ export async function handleNext(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
 
-  // Check daily and per-subject limits
-  if (!(await checkLimit(ctx, user))) return;
+  // Check per-subject limit
   if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
 
   // If premium was revoked mid-session, cancel the per-question timer
@@ -524,8 +506,6 @@ export async function handleChangeSubject(ctx: any): Promise<void> {
 export async function handleDrill(ctx: any, topicOverride?: string): Promise<void> {
   const user = await requireProfile(ctx);
   if (!user) return;
-  if (!(await checkLimit(ctx, user))) return;
-
   // Get topic from command args or auto-detect weak topic
   const args = ctx.message?.text?.split(' ').slice(1).join(' ');
   const topic = topicOverride || args;
