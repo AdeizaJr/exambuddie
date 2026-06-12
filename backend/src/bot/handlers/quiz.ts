@@ -173,7 +173,7 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
 
   const baseText = fmt.formatQuestion(q, quizState.qIndex + 1, quizState.total, 'quiz') + fmt.answerOptions(q) + overallTimeLine;
   const timerLine = (secsLeft: number) =>
-    timerSecs > 0 ? `\n\n⏱️ _${secsLeft}s remaining_` : '';
+    timerSecs > 0 ? `\n\n⏱️ <i>${secsLeft}s remaining</i>` : '';
 
   const keyboard = fmt.answerKeyboard();
   const sentMsg = await ctx.reply(baseText + timerLine(timerSecs), { parse_mode: 'HTML', reply_markup: keyboard });
