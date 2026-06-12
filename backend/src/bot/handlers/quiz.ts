@@ -308,12 +308,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(fmt.correctAnswer(q, selected), {
     parse_mode: 'HTML',
-    reply_markup: {
-      inline_keyboard: [[
-        { text: '➡️ Next', callback_data: 'quiz:next' },
-        { text: '🚩 Flag', callback_data: 'flag:question' },
-      ]],
-    },
+    reply_markup: fmt.afterAnswerKeyboard('quiz'),
   });
 
   quizState.qIndex++;
@@ -347,6 +342,56 @@ export async function handleQuizNext(ctx: any): Promise<void> {
   await sendQuizQuestion(ctx, quizState);
 }
 
+export async function handleQuizStop(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const quizState = await redis.getQuizState(ctx.from.id);
+  if (!quizState) {
+    await ctx.reply('No active quiz.');
+    return;
+  }
+
+  const remaining = quizState.total - quizState.qIndex;
+  await ctx.reply(
+    `⚠️ <b>End Quiz Early?</b>\n\nYou have <b>${remaining} question${remaining === 1 ? '' : 's'}</b> remaining.\n\nIf you stop now, all unanswered questions will be recorded as <b>incorrect</b>.`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [[
+          { text: '✅ Yes, end quiz', callback_data: 'quiz:stop:confirm' },
+          { text: '❌ No, continue', callback_data: 'quiz:stop:cancel' },
+        ]],
+      },
+    }
+  );
+}
+
+export async function handleQuizStopConfirm(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const quizState = await redis.getQuizState(ctx.from.id);
+  if (!quizState) {
+    await ctx.reply('No active quiz.');
+    return;
+  }
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  for (let i = quizState.qIndex; i < quizState.questions.length; i++) {
+    const q = quizState.questions[i];
+    await db.logAttempt({
+      userId: user.id,
+      questionId: q.id,
+      selectedOption: '',
+      isCorrect: false,
+      sessionId: quizState.sessionId,
+    });
+    quizState.answers.push({ qId: q.id, selected: '', correct: q.correct_option, isCorrect: false });
+  }
+
+  quizState.qIndex = quizState.total;
+  await endQuiz(ctx, quizState, 'stopped');
+}
+
 export async function endQuiz(ctx: any, quizState: QuizState, reason: string): Promise<void> {
   timerService.clearQuestionTimer(ctx.from.id);
   await redis.clearQuizState(ctx.from.id);
@@ -358,6 +403,7 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
 
   const reasonNote = reason === 'timeout' ? '\n⏰ <i>Time ran out!</i>'
     : reason === 'revoked' ? '\n🔒 <i>Your premium access was revoked.</i>'
+    : reason === 'stopped' ? '\n⏹ <i>Quiz ended early.</i>'
     : '';
 
   const grade =
