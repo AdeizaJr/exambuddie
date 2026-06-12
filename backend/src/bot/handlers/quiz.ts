@@ -165,7 +165,7 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
 
   await redis.saveQuizState(ctx.from.id, quizState);
   await redis.setSession(ctx.from.id, { mode: 'quiz', subject, sessionId, questionTimerSecs: timerSecs });
-  await db.updateStreak(ctx.from.id);
+
 
   const timerNote = timerSecs > 0 ? ` with <b>${timerSecs}s per question</b>` : '';
   const timeMsg = `⏱️ You have <b>45 minutes</b> to complete ${questions.length} questions${timerNote}.\nGood luck! 🍀`;
@@ -301,6 +301,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     isCorrect,
     sessionId: quizState.sessionId,
   });
+  await db.updateStreak(ctx.from.id);
 
   quizState.answers.push({ qId: q.id, selected, correct: q.correct_option, isCorrect });
   if (isCorrect) quizState.correct++;

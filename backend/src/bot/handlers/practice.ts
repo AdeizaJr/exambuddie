@@ -237,7 +237,6 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     questionTimerSecs: timerSecs,
   });
 
-  await db.updateStreak(ctx.from.id);
   await sendQuestion(ctx, q, { mode: 'practice', qNum: 1, questionTimerSecs: timerSecs });
 }
 
@@ -336,7 +335,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   const isCorrect = selected === q.correct_option;
 
-  // Log attempt
+  // Log attempt and update streak on first real answer of the day
   await db.logAttempt({
     userId: user.id,
     questionId: q.id,
@@ -345,6 +344,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
     sessionId: session.sessionId || '',
     timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
   });
+  await db.updateStreak(ctx.from.id);
 
   // Update daily count and per-subject usage (free users)
   if (user.plan !== 'premium') {
