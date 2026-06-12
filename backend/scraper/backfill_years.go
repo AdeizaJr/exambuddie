@@ -1,6 +1,6 @@
 //go:build ignore
 
-// Backfill correct years for JAMB language questions that were all tagged 2010.
+// Backfill correct years for all questions incorrectly tagged year=2010.
 // The scraper stored the discovery-loop year, not the page's actual year.
 // This script fetches each question page, reads the year from the badge, and updates the DB.
 //
@@ -40,6 +40,44 @@ var (
 	bfExamYearRe = regexp.MustCompile(`exam_year=(\d{4})`)
 )
 
+// DB subject code → myschool.ng URL slug
+var subjectSlug = map[string]string{
+	"math":             "mathematics",
+	"english":          "english-language",
+	"chemistry":        "chemistry",
+	"physics":          "physics",
+	"biology":          "biology",
+	"geography":        "geography",
+	"literature":       "literature-in-english",
+	"economics":        "economics",
+	"commerce":         "commerce",
+	"accounts":         "accounts-principles-of-accounts",
+	"government":       "government",
+	"crk":              "christian-religious-knowledge-crk",
+	"agric":            "agricultural-science",
+	"irk":              "islamic-religious-knowledge-irk",
+	"history":          "history",
+	"fine-arts":        "fine-arts",
+	"music":            "music",
+	"french":           "french",
+	"animal-husbandry": "animal-husbandry",
+	"insurance":        "insurance",
+	"civic-education":  "civic-education",
+	"further-math":     "further-mathematics",
+	"yoruba":           "yoruba",
+	"igbo":             "igbo",
+	"arabic":           "arabic",
+	"home-economics":   "home-economics",
+	"hausa":            "hausa",
+	"book-keeping":     "book-keeping",
+	"data-processing":  "data-processing",
+	"catering":         "catering-craft-practice",
+	"computer":         "computer-studies",
+	"marketing":        "marketing",
+	"pe":               "physical-education",
+	"office-practice":  "office-practice",
+}
+
 type bfRow struct {
 	id       int
 	sourceID string
@@ -65,10 +103,13 @@ func main() {
 	rows, err := pool.Query(ctx, `
 		SELECT id, source_id, subject
 		FROM questions
-		WHERE exam_type = 'JAMB'
-		  AND subject IN ('igbo', 'hausa', 'arabic', 'yoruba')
-		  AND year = 2010
-		ORDER BY id`)
+		WHERE year = 2010
+		  AND subject IN (
+		    SELECT subject FROM questions
+		    GROUP BY subject
+		    HAVING COUNT(DISTINCT year) = 1 AND MIN(year) = 2010
+		  )
+		ORDER BY subject, id`)
 	if err != nil {
 		log.Fatalf("query: %v", err)
 	}
@@ -103,7 +144,11 @@ func main() {
 			defer wg.Done()
 			for q := range ch {
 				numID := strings.TrimPrefix(q.sourceID, "ms_")
-				url := fmt.Sprintf("https://myschool.ng/classroom/%s/%s", q.subject, numID)
+				slug, ok := subjectSlug[q.subject]
+				if !ok {
+					slug = q.subject
+				}
+				url := fmt.Sprintf("https://myschool.ng/classroom/%s/%s", slug, numID)
 
 				year, err := fetchPageYear(ctx, client, limiter, url)
 				if err != nil {
