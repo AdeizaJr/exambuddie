@@ -209,13 +209,14 @@ export async function startPractice(ctx: any, user: User | null, subject: string
     const availability = await db.getSubjectAvailability(subject);
     const subjectName = fmt.SUBJECT_MAP[subject] || subject;
     const examStr = examType && !['ALL', 'BOTH'].includes(examType) ? ` under ${examType}` : '';
+    const topicStr = effectiveTopic ? ` on topic "<b>${effectiveTopic}</b>"` : '';
     if (availability.length === 0) {
       await ctx.reply(`No questions available for ${subjectName}. Please pick another subject.`, {
         reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
       });
     } else {
       await ctx.reply(
-        `No questions found for <b>${subjectName}</b>${examStr}.\n\nAvailable options for ${subjectName}:`,
+        `No questions found for <b>${subjectName}</b>${topicStr}${examStr}.\n\nAvailable options for ${subjectName}:`,
         { parse_mode: 'HTML', reply_markup: fmt.subjectAvailabilityKeyboard(subject, availability, 'practice') }
       );
     }
@@ -260,7 +261,9 @@ export async function handlePracticeTopicPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const topic = ctx.callbackQuery.data.split(':').slice(2).join(':'); // preserve colons in topic name
   const session = await redis.getSession(ctx.from.id);
-  if (!session?.pendingSubject) {
+  // pendingSubject set during setup flow; fall back to active session subject when tapping old topic keyboard
+  const subject = session?.pendingSubject ?? session?.subject;
+  if (!subject) {
     await ctx.reply('Session expired.', {
       reply_markup: { inline_keyboard: [[{ text: '📚 Pick a Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
     });
@@ -270,10 +273,10 @@ export async function handlePracticeTopicPick(ctx: any): Promise<void> {
   if (!user) return;
   await startPractice(
     ctx, user,
-    session.pendingSubject,
-    session.pendingYear ?? null,
-    session.pendingTimerSecs ?? 0,
-    session.pendingExamType,
+    subject,
+    session?.pendingYear ?? session?.year ?? null,
+    session?.pendingTimerSecs ?? session?.questionTimerSecs ?? 0,
+    session?.pendingExamType ?? session?.examType,
     topic,
   );
 }

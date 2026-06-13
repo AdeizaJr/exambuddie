@@ -166,7 +166,7 @@ Let's set up your profile in 3 quick steps so I can tailor questions to your exa
 
 📅 <b>Step 1 of 3:</b> Which exam year are you preparing for?
 
-<i>By continuing, you agree to our <a href="https://exambuddie.com/terms">Terms of Use</a> and <a href="https://exambuddie.com/privacy">Privacy Policy</a>.</i>`;
+<i>By continuing, you agree to our <a href="https://exambuddie.app/terms">Terms of Use</a> and <a href="https://exambuddie.app/privacy">Privacy Policy</a>.</i>`;
 }
 
 export function onboardYearKeyboard() {
@@ -533,7 +533,7 @@ Plan: ${planLabel}
 
 Reference: <code>${txRef}</code>
 
-<i>By paying, you agree to our <a href="https://exambuddie.com/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
+<i>By paying, you agree to our <a href="https://exambuddie.app/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
 }
 
 export function helpMessage(): string {

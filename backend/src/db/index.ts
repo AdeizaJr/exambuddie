@@ -386,6 +386,76 @@ export async function getSubjects(): Promise<any[]> {
   return rows;
 }
 
+export interface WeeklyReport {
+  thisWeek: { attempts: number; accuracy: number };
+  lastWeek: { attempts: number; accuracy: number };
+  subjectBreakdown: { subject: string; attempts: number; accuracy: number }[];
+  weakTopics: { subject: string; topic: string; accuracy: number; attempts: number }[];
+}
+
+export async function getWeeklyReport(userId: number): Promise<WeeklyReport> {
+  const [thisWeekRes, lastWeekRes, subjectRes, weakRes] = await Promise.all([
+    pool.query(
+      `SELECT COUNT(*) as attempts,
+              ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+       FROM attempts WHERE user_id = $1 AND attempted_at > NOW() - INTERVAL '7 days'`,
+      [userId]
+    ),
+    pool.query(
+      `SELECT COUNT(*) as attempts,
+              ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+       FROM attempts WHERE user_id = $1
+         AND attempted_at > NOW() - INTERVAL '14 days'
+         AND attempted_at <= NOW() - INTERVAL '7 days'`,
+      [userId]
+    ),
+    pool.query(
+      `SELECT q.subject,
+              COUNT(*) as attempts,
+              ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+       FROM attempts a
+       JOIN questions q ON a.question_id = q.id
+       WHERE a.user_id = $1 AND a.attempted_at > NOW() - INTERVAL '7 days'
+       GROUP BY q.subject ORDER BY attempts DESC`,
+      [userId]
+    ),
+    pool.query(
+      `SELECT q.subject, q.topic,
+              COUNT(*) as attempts,
+              ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+       FROM attempts a
+       JOIN questions q ON a.question_id = q.id
+       WHERE a.user_id = $1 AND a.attempted_at > NOW() - INTERVAL '7 days'
+         AND q.topic IS NOT NULL
+       GROUP BY q.subject, q.topic HAVING COUNT(*) >= 3
+       ORDER BY accuracy ASC LIMIT 5`,
+      [userId]
+    ),
+  ]);
+
+  return {
+    thisWeek: {
+      attempts: parseInt(thisWeekRes.rows[0]?.attempts || '0'),
+      accuracy: parseFloat(thisWeekRes.rows[0]?.accuracy || '0'),
+    },
+    lastWeek: {
+      attempts: parseInt(lastWeekRes.rows[0]?.attempts || '0'),
+      accuracy: parseFloat(lastWeekRes.rows[0]?.accuracy || '0'),
+    },
+    subjectBreakdown: subjectRes.rows.map((r: any) => ({
+      subject: r.subject,
+      attempts: parseInt(r.attempts),
+      accuracy: parseFloat(r.accuracy),
+    })),
+    weakTopics: weakRes.rows.map((r: any) => ({
+      subject: r.subject,
+      topic: r.topic,
+      attempts: parseInt(r.attempts),
+      accuracy: parseFloat(r.accuracy),
+    })),
+  };
+}
+
 export async function deleteUser(telegramId: number | string): Promise<void> {
   const { rows } = await pool.query('SELECT id FROM users WHERE telegram_id = $1', [telegramId]);
   if (!rows[0]) return;

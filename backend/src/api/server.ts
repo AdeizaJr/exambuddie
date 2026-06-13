@@ -390,17 +390,16 @@ export default function createServer(bot: any) {
         );
       }
       const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
-      const { rowCount } = await db.query(`DELETE FROM users ${where}`, params);
-      return res.json({ ok: true, deleted: rowCount });
+      const { rows: targets } = await db.query(`SELECT telegram_id FROM users ${where}`, params);
+      await Promise.all(targets.map((r: any) => db.deleteUser(r.telegram_id)));
+      return res.json({ ok: true, deleted: targets.length });
     }
 
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ error: 'ids must be a non-empty array' });
     }
-    const { rowCount } = await db.query(`DELETE FROM users WHERE telegram_id = ANY($1::bigint[])`, [
-      ids,
-    ]);
-    res.json({ ok: true, deleted: rowCount });
+    await Promise.all(ids.map((id: any) => db.deleteUser(id)));
+    res.json({ ok: true, deleted: ids.length });
   });
 
   // ── PUT /api/admin/users/:telegramId/plan ───────────────────────────────────

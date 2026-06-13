@@ -2,6 +2,7 @@
 import cron from 'node-cron';
 import * as db from '../db';
 import * as payments from './payments';
+import { SUBJECT_MAP, SUBJECT_EMOJI } from '../bot/formatter';
 
 export default function startCrons(bot: any): void {
   // ── Every midnight WAT (UTC+1) — reset daily counts ─────────────────────
@@ -60,9 +61,8 @@ export default function startCrons(bot: any): void {
   cron.schedule('0 9 * * 0', async () => {
     console.log('[CRON] Sending weekly summaries...');
 
-    // Get active users from last 7 days — weekly summary sends regardless of notification preference
     const { rows: users } = await db.query(
-      `SELECT DISTINCT u.id, u.telegram_id, u.first_name, u.subjects, u.streak
+      `SELECT DISTINCT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan
        FROM users u
        JOIN attempts a ON a.user_id = u.id
        WHERE a.attempted_at > NOW() - INTERVAL '7 days'`
@@ -71,26 +71,62 @@ export default function startCrons(bot: any): void {
     let sent = 0;
     for (const user of users) {
       try {
-        const subject = user.subjects?.[0];
-        const weakTopics = subject ? await db.getWeakTopics(user.id, subject) : [];
+        let msg: string;
 
-        const weeklyAccuracy = await (async () => {
+        if (user.plan === 'premium') {
+          const report = await db.getWeeklyReport(user.id);
+          const { thisWeek, lastWeek, subjectBreakdown, weakTopics } = report;
+
+          const delta = lastWeek.attempts > 0
+            ? thisWeek.accuracy - lastWeek.accuracy
+            : null;
+          const deltaStr = delta !== null
+            ? (delta >= 0 ? ` ↑ +${delta.toFixed(1)}%` : ` ↓ ${delta.toFixed(1)}%`)
+            : '';
+
+          const subjectLines = subjectBreakdown.map((s) => {
+            const name = SUBJECT_MAP[s.subject] || s.subject;
+            const emoji = SUBJECT_EMOJI[s.subject] || '📖';
+            const warn = s.accuracy < 50 ? ' ⚠️' : '';
+            return `  ${emoji} ${name}: ${s.accuracy}% (${s.attempts} questions)${warn}`;
+          }).join('\n');
+
+          const weakLines = weakTopics.map((t) => {
+            const subjectName = SUBJECT_MAP[t.subject] || t.subject;
+            return `  • ${t.topic} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${t.topic}`;
+          }).join('\n');
+
+          msg = `💎 <b>Your Weekly Report, ${user.first_name}!</b>
+
+📅 <b>This Week's Performance:</b>
+📝 Questions answered: ${thisWeek.attempts}
+🎯 Accuracy: ${thisWeek.accuracy}%${deltaStr}
+🔥 Streak: ${user.streak || 0} days${subjectBreakdown.length > 0 ? `
+
+📚 <b>Subject Breakdown:</b>
+${subjectLines}` : ''}${weakTopics.length > 0 ? `
+
+⚠️ <b>Focus Areas (drill these to improve fast):</b>
+${weakLines}` : '\n\n✅ No weak topics detected this week — great work!'}
+
+Keep pushing — consistency is what wins exams. 💪
+Ready? /practice`;
+        } else {
+          const subject = user.subjects?.[0];
+          const weakTopics = subject ? await db.getWeakTopics(user.id, subject) : [];
+
           const { rows } = await db.query(
             `SELECT ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) as acc
              FROM attempts WHERE user_id = $1 AND attempted_at > NOW() - INTERVAL '7 days'`,
             [user.id]
           );
-          return rows[0]?.acc || 0;
-        })();
+          const weeklyAccuracy = rows[0]?.acc || 0;
 
-        const weakSection =
-          weakTopics.length > 0
-            ? `\n⚠️ <b>Weak Topics to Focus On:</b>\n${weakTopics
-                .map((t) => `  • ${t.topic}: ${t.accuracy}% accuracy`)
-                .join('\n')}`
+          const weakSection = weakTopics.length > 0
+            ? `\n⚠️ <b>Weak Topics to Focus On:</b>\n${weakTopics.map((t) => `  • ${t.topic}: ${t.accuracy}% accuracy`).join('\n')}`
             : '';
 
-        const msg = `📊 <b>Your Week in Review, ${user.first_name}!</b>
+          msg = `📊 <b>Your Week in Review, ${user.first_name}!</b>
 
 This week:
 🎯 Accuracy: ${weeklyAccuracy}%
@@ -99,7 +135,10 @@ ${weakSection}
 
 Keep up the momentum — exams reward consistency! 💪
 
+💎 <i>Upgrade to Premium for full subject breakdowns, week-over-week tracking, and personalised drill suggestions.</i> /subscribe
+
 Ready to practise? /practice`;
+        }
 
         await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
         sent++;
