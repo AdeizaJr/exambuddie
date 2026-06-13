@@ -164,7 +164,9 @@ I'm your personal WAEC &amp; JAMB exam prep assistant. I'll give you past questi
 
 Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
 
-📅 <b>Step 1 of 3:</b> Which exam year are you preparing for?`;
+📅 <b>Step 1 of 3:</b> Which exam year are you preparing for?
+
+<i>By continuing, you agree to our <a href="https://exambuddie.com/terms">Terms of Use</a> and <a href="https://exambuddie.com/privacy">Privacy Policy</a>.</i>`;
 }
 
 export function onboardYearKeyboard() {
@@ -529,7 +531,9 @@ Plan: ${planLabel}
 
 <i>Payment powered by Flutterwave. Your access will be activated instantly after payment.</i>
 
-Reference: <code>${txRef}</code>`;
+Reference: <code>${txRef}</code>
+
+<i>By paying, you agree to our <a href="https://exambuddie.com/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
 }
 
 export function helpMessage(): string {
