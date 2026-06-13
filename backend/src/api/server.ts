@@ -1,4 +1,5 @@
 // src/api/server.ts
+import path from 'path';
 import express, { Request, Response, NextFunction } from 'express';
 import * as payments from '../services/payments';
 import * as db from '../db';
@@ -29,6 +30,13 @@ export default function createServer(bot: any) {
 
   // Mini App API routes
   app.use('/api/miniapp', miniappRouter);
+
+  // Serve miniapp static files (built to backend/dist/miniapp/)
+  const miniappDir = path.join(__dirname, '../../miniapp');
+  app.use('/app', express.static(miniappDir));
+  app.get('/app/*', (_req: Request, res: Response) => {
+    res.sendFile(path.join(miniappDir, 'index.html'));
+  });
 
   // ── Health check ────────────────────────────────────────────────────────────
   app.get('/health', (req: Request, res: Response) => {
