@@ -430,7 +430,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl space-y-4">
           <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-400 sm:gap-4 sm:text-sm md:flex-row md:text-left">
             <span className="text-sm font-bold text-slate-700 sm:text-base">ExamBuddie</span>
-            <span>© {new Date().getFullYear()} ExamBuddie. Built for Nigerian students.</span>
+            <span>© {new Date().getFullYear()} ExamBuddie. Built with ❤️ for Nigerian students.</span>
             <a
               href={BOT_URL}
               target="_blank"
@@ -440,10 +440,10 @@ export default function Home() {
               Open in Telegram →
             </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400 md:justify-start">
-            <a href="/privacy" className="hover:text-slate-600 hover:underline">Privacy Policy</a>
-            <a href="/terms" className="hover:text-slate-600 hover:underline">Terms of Use</a>
-            <a href="/refunds" className="hover:text-slate-600 hover:underline">Refund Policy</a>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 md:justify-start">
+            <a href="/privacy" className="hover:text-blue-600 hover:underline">Privacy Policy</a>
+            <a href="/terms" className="hover:text-blue-600 hover:underline">Terms of Use</a>
+            <a href="/refunds" className="hover:text-blue-600 hover:underline">Refund Policy</a>
           </div>
         </div>
       </footer>
