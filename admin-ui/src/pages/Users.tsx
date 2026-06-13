@@ -56,6 +56,7 @@ export default function Users() {
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
 
   const [toast, setToast] = useState<Toast | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -127,6 +128,7 @@ export default function Users() {
       }
       setConfirmOpen(false);
       setDeleteTarget(null);
+      setConfirmText("");
       load();
     } catch (e: unknown) {
       showToast(e instanceof Error ? e.message : "Delete failed", "error");
@@ -309,7 +311,7 @@ export default function Users() {
                   {result?.data.map((u) => (
                     <tr
                       key={u.telegram_id}
-                      className={`transition-colors hover:bg-surface2 ${selected.has(u.telegram_id) ? "bg-surface2" : ""}`}
+                      className={`group transition-colors hover:bg-surface2 ${selected.has(u.telegram_id) ? "bg-surface2" : ""}`}
                     >
                       <td className="px-4 py-3">
                         <input
@@ -361,17 +363,18 @@ export default function Users() {
                           ) : (
                             <button
                               onClick={() => handlePlanChange(u, "free")}
-                              className="rounded border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs text-red-400 transition-colors hover:bg-red-500/20"
+                              className="rounded border border-border bg-surface2 px-2.5 py-1 text-xs text-muted transition-colors hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
                             >
                               Revoke
                             </button>
                           )}
+                          <div className="h-4 w-px bg-border" />
                           <button
                             onClick={() => {
                               setDeleteTarget(u);
                               setConfirmOpen(true);
                             }}
-                            className="rounded p-1.5 text-muted transition-colors hover:bg-red-500/10 hover:text-red-400"
+                            className="rounded p-1.5 text-muted opacity-0 transition-all group-hover:opacity-100 hover:bg-red-500/10 hover:text-red-400"
                             title="Delete user"
                           >
                             <TrashIcon />
@@ -469,45 +472,117 @@ export default function Users() {
       {/* Delete confirm modal */}
       {confirmOpen && (
         <Modal
-          title="Delete Users"
+          title="Confirm Deletion"
           onClose={() => {
             setConfirmOpen(false);
             setDeleteTarget(null);
+            setConfirmText("");
           }}
         >
           <div className="space-y-5">
-            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4">
-              <p className="text-sm font-medium text-red-300">
-                Permanently delete {deleteLabel()}?
-              </p>
-              {!selectAllPages && confirmBodyNames() && (
-                <p className="mt-1 text-xs text-red-400/70">{confirmBodyNames()}</p>
-              )}
-              {selectAllPages && search && (
-                <p className="mt-1 text-xs text-red-400/70">Filtered by: "{search}"</p>
-              )}
+            {/* Icon + heading */}
+            <div className="flex flex-col items-center gap-3 pt-1 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-500/15 ring-4 ring-red-500/8">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14H6L5 6" />
+                  <path d="M10 11v6M14 11v6" />
+                  <path d="M9 6V4h6v2" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white">
+                  Delete {deleteLabel()}?
+                </h3>
+                <p className="mt-0.5 text-xs text-muted">This action is permanent and cannot be undone.</p>
+              </div>
             </div>
-            <p className="text-xs text-muted">
-              This cannot be undone. All practice history, stats, and session data for these users
-              will be lost.
-            </p>
-            <div className="flex justify-end gap-3 pt-2">
+
+            {/* User chips */}
+            {!selectAllPages && pendingUsers.length > 0 && (
+              <div className="flex flex-wrap gap-2 rounded-lg border border-border bg-surface2 p-3">
+                {pendingUsers.slice(0, 5).map((u) => (
+                  <span
+                    key={u.telegram_id}
+                    className="flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-300"
+                  >
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-red-500/30 text-[9px] font-bold text-red-200">
+                      {u.first_name[0].toUpperCase()}
+                    </span>
+                    {u.first_name}
+                  </span>
+                ))}
+                {pendingUsers.length > 5 && (
+                  <span className="flex items-center rounded-full border border-border bg-surface px-2.5 py-1 text-xs text-muted">
+                    +{pendingUsers.length - 5} more
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* All-pages filter label */}
+            {selectAllPages && search && (
+              <div className="rounded-lg border border-border bg-surface2 px-3 py-2 text-xs text-muted">
+                Filtered by: <span className="font-medium text-white">"{search}"</span>
+              </div>
+            )}
+
+            {/* Warning */}
+            <div className="flex gap-2.5 rounded-lg border border-red-500/20 bg-red-500/8 p-3">
+              <svg className="mt-0.5 shrink-0 text-red-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <p className="text-xs text-red-400">
+                All practice history, stats, and session data for {selectAllPages ? "these" : pendingUsers.length === 1 ? "this" : "these"} user{pendingUsers.length !== 1 || selectAllPages ? "s" : ""} will be permanently lost.
+              </p>
+            </div>
+
+            {/* Type-to-confirm for bulk deletes */}
+            {(selectAllPages || selected.size > 5) && (
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted">
+                  Type <span className="font-mono font-bold text-red-400">DELETE</span> to confirm
+                </label>
+                <input
+                  type="text"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  placeholder="DELETE"
+                  className="w-full rounded-lg border border-border bg-surface2 px-3 py-2 text-sm text-white placeholder-muted focus:border-red-500/50 focus:outline-none"
+                />
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex gap-3 pt-1">
               <button
                 onClick={() => {
                   setConfirmOpen(false);
                   setDeleteTarget(null);
+                  setConfirmText("");
                 }}
-                className="rounded-lg border border-border bg-surface2 px-4 py-2 text-sm text-white transition-colors hover:bg-border"
+                className="flex-1 rounded-lg border border-border bg-surface2 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-border"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                disabled={deleting}
-                className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+                disabled={deleting || ((selectAllPages || selected.size > 5) && confirmText !== "DELETE")}
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {deleting && <Spinner size="sm" />}
-                Delete
+                {deleting ? (
+                  <Spinner size="sm" />
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v6M14 11v6" />
+                    <path d="M9 6V4h6v2" />
+                  </svg>
+                )}
+                {deleting ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
