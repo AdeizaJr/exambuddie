@@ -47,6 +47,14 @@ button:active {
   transition: transform 0.1s;
 }
 
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* Question text LaTeX-like formatting */
 .question-text {
   line-height: 1.6;
