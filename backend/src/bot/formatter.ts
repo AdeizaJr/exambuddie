@@ -160,7 +160,7 @@ export const SUBJECT_EMOJI: Record<string, string> = {
 export function welcome(firstName: string): string {
   return `🎓 <b>Welcome to ExamBuddie, ${firstName}!</b>
 
-I'm your personal WAEC &amp; JAMB exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
+I'm your AI-powered WAEC, JAMB &amp; NECO exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
 
 Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
 

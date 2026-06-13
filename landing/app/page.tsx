@@ -159,7 +159,7 @@ export default function Home() {
             <span className="text-blue-600">Study on Telegram.</span>
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl">
-            Over 41,000 past WAEC, JAMB and NECO questions. Timed quizzes, instant explanations, and
+            AI-powered exam prep with over 41,000 past WAEC, JAMB and NECO questions. Timed quizzes, instant explanations, and
             progress tracking — all inside Telegram. No app to download.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">

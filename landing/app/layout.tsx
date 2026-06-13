@@ -7,11 +7,11 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 export const metadata: Metadata = {
   title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
   description:
-    "Practice WAEC, JAMB and NECO past questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
+    "AI-powered exam prep for WAEC, JAMB and NECO — practice past questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
   openGraph: {
     title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
     description:
-      "Practice WAEC, JAMB and NECO past questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
+      "AI-powered exam prep for WAEC, JAMB and NECO — practice past questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
     type: "website",
   },
 };
