@@ -368,7 +368,26 @@ export default function Home() {
       {/* Nav */}
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <span className="text-lg font-bold text-blue-600 sm:text-xl">ExamBuddie</span>
+          <span className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-8 w-8 shrink-0">
+              <defs>
+                <linearGradient id="nav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#1D4ED8"/>
+                  <stop offset="100%" stopColor="#6D28D9"/>
+                </linearGradient>
+              </defs>
+              <rect width="32" height="32" rx="7" fill="url(#nav-bg)"/>
+              <path d="M16,8 L5,11 L5,23 L16,22 Z" fill="white"/>
+              <path d="M16,8 L27,11 L27,23 L16,22 Z" fill="white" opacity="0.82"/>
+              <line x1="16" y1="8" x2="16" y2="22" stroke="#818CF8" strokeWidth="0.75"/>
+              <line x1="7.5" y1="14.5" x2="13.5" y2="14" stroke="rgba(147,197,253,0.65)" strokeWidth="0.9" strokeLinecap="round"/>
+              <line x1="7.5" y1="17" x2="13.5" y2="16.5" stroke="rgba(147,197,253,0.65)" strokeWidth="0.9" strokeLinecap="round"/>
+              <line x1="18.5" y1="14" x2="24.5" y2="14.5" stroke="rgba(147,197,253,0.45)" strokeWidth="0.9" strokeLinecap="round"/>
+              <line x1="18.5" y1="16.5" x2="24.5" y2="17" stroke="rgba(147,197,253,0.45)" strokeWidth="0.9" strokeLinecap="round"/>
+              <path d="M27,3.5 L27.7,5.8 L30,6.5 L27.7,7.2 L27,9.5 L26.3,7.2 L24,6.5 L26.3,5.8 Z" fill="#FDE68A"/>
+            </svg>
+            <span className="text-lg font-bold text-blue-600 sm:text-xl">ExamBuddie</span>
+          </span>
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
             <a href="#features" className="transition-colors hover:text-slate-900">Features</a>
             <a href="#subjects" className="transition-colors hover:text-slate-900">Subjects</a>
