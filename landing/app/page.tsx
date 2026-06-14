@@ -377,14 +377,11 @@ export default function Home() {
                 </linearGradient>
               </defs>
               <rect width="32" height="32" rx="7" fill="url(#nav-bg)"/>
-              <path d="M16,8 L5,11 L5,23 L16,22 Z" fill="white"/>
-              <path d="M16,8 L27,11 L27,23 L16,22 Z" fill="white" opacity="0.82"/>
-              <line x1="16" y1="8" x2="16" y2="22" stroke="#818CF8" strokeWidth="0.75"/>
-              <line x1="7.5" y1="14.5" x2="13.5" y2="14" stroke="rgba(147,197,253,0.65)" strokeWidth="0.9" strokeLinecap="round"/>
-              <line x1="7.5" y1="17" x2="13.5" y2="16.5" stroke="rgba(147,197,253,0.65)" strokeWidth="0.9" strokeLinecap="round"/>
-              <line x1="18.5" y1="14" x2="24.5" y2="14.5" stroke="rgba(147,197,253,0.45)" strokeWidth="0.9" strokeLinecap="round"/>
-              <line x1="18.5" y1="16.5" x2="24.5" y2="17" stroke="rgba(147,197,253,0.45)" strokeWidth="0.9" strokeLinecap="round"/>
-              <path d="M27,3.5 L27.7,5.8 L30,6.5 L27.7,7.2 L27,9.5 L26.3,7.2 L24,6.5 L26.3,5.8 Z" fill="#FDE68A"/>
+              <rect x="6" y="6" width="4" height="20" rx="1" fill="white"/>
+              <rect x="6" y="6" width="18" height="5" rx="1" fill="white"/>
+              <rect x="6" y="13.5" width="13" height="4" rx="1" fill="white"/>
+              <rect x="6" y="21" width="18" height="5" rx="1" fill="white"/>
+              <path d="M26,22 L26.8,24.5 L29.5,25.2 L26.8,26 L26,28.5 L25.2,26 L22.5,25.2 L25.2,24.5 Z" fill="#FDE68A"/>
             </svg>
             <span className="text-lg font-bold text-blue-600 sm:text-xl">ExamBuddie</span>
           </span>
