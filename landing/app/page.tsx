@@ -817,7 +817,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-100 px-4 py-8 sm:px-6 sm:py-10">
+      <footer className="border-t border-slate-100 px-4 py-8 pb-24 sm:px-6 sm:py-10 md:pb-10">
         <div className="mx-auto max-w-6xl space-y-4">
           <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-400 sm:gap-4 sm:text-sm md:flex-row md:text-left">
             <span className="text-sm font-bold text-slate-700 sm:text-base">ExamBuddie</span>
