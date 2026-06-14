@@ -105,6 +105,22 @@ const faqs = [
     q: "How do I upgrade to Premium?",
     a: "Send /subscribe inside the bot and follow the prompts. Upgrades are instant.",
   },
+  {
+    q: "Is my data safe?",
+    a: "Yes. ExamBuddie only stores your Telegram ID, name, exam type, subjects, and practice history. We never access your Telegram messages or contacts.",
+  },
+  {
+    q: "Can I change my exam type or subjects later?",
+    a: "Yes. Send /settings in the bot at any time to update your exam type or add and remove subjects.",
+  },
+  {
+    q: "Does ExamBuddie work without internet?",
+    a: "No — you need an internet connection since ExamBuddie runs inside Telegram. However, it works on any network including mobile data.",
+  },
+  {
+    q: "Can I cancel my Premium subscription?",
+    a: "Premium is a one-time payment per period — monthly or yearly. It does not auto-renew, so there is nothing to cancel.",
+  },
 ];
 
 const mockQuestions = [
@@ -306,6 +322,7 @@ function BotMockup() {
 
 export default function Home() {
   const [billingYearly, setBillingYearly] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const plans = [
     {
@@ -358,16 +375,45 @@ export default function Home() {
             <a href="#pricing" className="transition-colors hover:text-slate-900">Pricing</a>
             <a href="#faq" className="transition-colors hover:text-slate-900">FAQ</a>
           </div>
-          <a
-            href={BOT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-blue-600 px-3 py-2 text-xs font-semibold whitespace-nowrap text-white transition-colors hover:bg-blue-700 sm:px-4 sm:text-sm"
-          >
-            <span className="sm:hidden">Open Bot</span>
-            <span className="hidden sm:inline">Open in Telegram</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href={BOT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-blue-600 px-3 py-2 text-xs font-semibold whitespace-nowrap text-white transition-colors hover:bg-blue-700 sm:px-4 sm:text-sm"
+            >
+              <span className="md:hidden">Open Bot</span>
+              <span className="hidden md:inline">Open in Telegram</span>
+            </a>
+            {/* Hamburger — mobile only */}
+            <button
+              onClick={() => setMenuOpen((o) => !o)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-100 md:hidden"
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
+        {/* Mobile menu dropdown */}
+        {menuOpen && (
+          <div className="border-t border-slate-100 bg-white px-4 py-4 md:hidden">
+            <div className="flex flex-col gap-4 text-sm font-medium text-slate-600">
+              <a href="#features" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">Features</a>
+              <a href="#subjects" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">Subjects</a>
+              <a href="#pricing" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">Pricing</a>
+              <a href="#faq" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">FAQ</a>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
@@ -661,6 +707,57 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Compare */}
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-10 text-center sm:mb-16">
+            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+              Why ExamBuddie beats the alternatives
+            </h2>
+            <p className="text-base text-slate-500 sm:text-lg">
+              Compare how students prepare — and why the bot wins.
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-2xl border border-slate-200">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6">Feature</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-blue-600 sm:px-6">ExamBuddie</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-400 sm:px-6">Textbooks</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-400 sm:px-6">YouTube</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {[
+                  ["Past questions (WAEC, JAMB, NECO)", true, true, false],
+                  ["Instant answer explanations", true, false, false],
+                  ["Progress tracking", true, false, false],
+                  ["Timed mock exams", true, false, false],
+                  ["Works on any phone", true, false, true],
+                  ["No download required", true, false, true],
+                  ["AI-powered insights", true, false, false],
+                  ["Free to start", true, false, true],
+                ].map(([feature, eb, tb, yt]) => (
+                  <tr key={String(feature)} className="hover:bg-slate-50">
+                    <td className="px-4 py-3.5 font-medium text-slate-700 sm:px-6">{feature}</td>
+                    <td className="px-4 py-3.5 text-center sm:px-6">
+                      {eb ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300">—</span>}
+                    </td>
+                    <td className="px-4 py-3.5 text-center sm:px-6">
+                      {tb ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300">—</span>}
+                    </td>
+                    <td className="px-4 py-3.5 text-center sm:px-6">
+                      {yt ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300">—</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-3xl">
@@ -725,6 +822,18 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Sticky mobile CTA */}
+      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
+        <a
+          href={BOT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full rounded-full bg-blue-600 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700"
+        >
+          Start Practising Free →
+        </a>
+      </div>
     </div>
   );
 }
