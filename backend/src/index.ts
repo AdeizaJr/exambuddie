@@ -136,7 +136,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'quiz:history') return stats.handleQuizHistory(ctx);
   if (data === 'quiz:stop') return quiz.handleQuizStop(ctx);
   if (data === 'quiz:stop:confirm') return quiz.handleQuizStopConfirm(ctx);
-  if (data === 'quiz:stop:cancel') { await ctx.answerCbQuery('Continuing quiz!'); return; }
+  if (data === 'quiz:stop:cancel') return quiz.handleQuizStopCancel(ctx);
 
   // Drill
   if (data.startsWith('drill:auto:')) return practice.handleAutoDrill(ctx);
