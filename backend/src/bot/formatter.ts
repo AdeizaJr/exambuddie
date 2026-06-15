@@ -575,10 +575,13 @@ export const SUBJECT_Q_LIMIT = 5; // questions per subject per 6-hour window
 export const SUBJECT_WINDOW_HRS = 6;
 
 export function subjectKeyboard(selectedSubjects: string[] = []) {
-  const subjects = Object.entries(SUBJECT_MAP).map(([code, name]) => ({
-    code,
-    label: `${SUBJECT_EMOJI[code] || '📖'} ${name}`,
-  }));
+  const subjects = Object.entries(SUBJECT_MAP)
+    .map(([code, name]) => ({ code, label: `${SUBJECT_EMOJI[code] || '📖'} ${name}`, name }))
+    .sort((a, b) => {
+      if (a.code === 'english') return -1;
+      if (b.code === 'english') return 1;
+      return a.name.localeCompare(b.name);
+    });
 
   const buttons = subjects.map(s => {
     const isEnglish = s.code === 'english';
