@@ -142,7 +142,20 @@ const migrations = [
     question_text ILIKE '%illustration above%' OR
     question_text ILIKE '%illustration below%' OR
     question_text ILIKE '%the diagram%' OR
-    question_text ILIKE '%use the%above%'`
+    question_text ILIKE '%use the%above%'`,
+
+  // ── Normalize "From the novel;" questions: trim indentation + collapse blank lines ──
+  // Pass 1: strip leading whitespace from each line (e.g. "    This question..." → "This question...")
+  // Pass 2: collapse 3+ consecutive newlines to 2
+  // Result: stored data is clean for bot, miniapp, and admin-ui
+  `UPDATE questions
+   SET question_text = TRIM(
+     REGEXP_REPLACE(
+       REGEXP_REPLACE(question_text, E'\\n[ \\t]+', E'\\n', 'g'),
+       E'\\n{3,}', E'\\n\\n', 'g'
+     )
+   )
+   WHERE question_text LIKE 'From the novel;%'`
 ];
 
 async function migrate(): Promise<void> {
