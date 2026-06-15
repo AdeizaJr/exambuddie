@@ -148,6 +148,9 @@ const migrations = [
     question_text ~* 'Figure\s+[0-9]' OR
     question_text ILIKE '%table above%' OR
     question_text ILIKE '%table below%' OR
+    question_text ~* 'Table\s+[0-9]' OR
+    question_text ILIKE '%use the table%' OR
+    question_text ILIKE '%shown in the table%' OR
     question_text ILIKE '%the figure%' OR
     question_text ILIKE '%venn diagram%' OR
     question_text ILIKE '%circuit above%' OR
