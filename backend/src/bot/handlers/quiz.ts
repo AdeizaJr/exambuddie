@@ -295,6 +295,15 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     reply_markup: fmt.afterAnswerKeyboard('quiz', q.question_text.includes('*')),
   });
 
+  if (!isCorrect) {
+    const totalWrong = await db.getTotalWrongAttempts(user.id);
+    if (totalWrong === 1) {
+      await ctx.reply(
+        "💪 Don't let that stop you — getting it wrong is part of the process. Every question you attempt makes you sharper. Keep going!"
+      );
+    }
+  }
+
   const totalAttempts = await db.getTotalAttempts(user.id);
   const milestone = fmt.totalMilestone(totalAttempts);
   if (milestone) {
