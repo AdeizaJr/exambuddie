@@ -292,7 +292,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(fmt.correctAnswer(q, selected), {
     parse_mode: 'HTML',
-    reply_markup: fmt.afterAnswerKeyboard('quiz'),
+    reply_markup: fmt.afterAnswerKeyboard('quiz', q.question_text.includes('*')),
   });
 
   const totalAttempts = await db.getTotalAttempts(user.id);

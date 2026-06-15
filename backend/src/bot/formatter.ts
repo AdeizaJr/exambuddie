@@ -321,30 +321,30 @@ export function correctAnswer(q: Question, selected: string): string {
 ${md(q.explanation) || '<i>Explanation not yet available.</i>'}`;
 }
 
-export function afterAnswerKeyboard(mode?: string) {
+export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
   if (mode === 'quiz') {
-    return {
-      inline_keyboard: [
-        [
-          { text: '➡️  Next Question', callback_data: 'quiz:next' },
-          { text: '🚩 Flag', callback_data: 'flag:question' },
-        ],
-        [{ text: '⏹ End Quiz', callback_data: 'quiz:stop' }],
-      ],
-    };
-  }
-  return {
-    inline_keyboard: [
+    const rows: any[] = [
       [
-        { text: '➡️  Next Question', callback_data: 'practice:next' },
+        { text: '➡️  Next Question', callback_data: 'quiz:next' },
         { text: '🚩 Flag', callback_data: 'flag:question' },
       ],
-      [
-        { text: '📚 Change Subject', callback_data: 'practice:change_subject' },
-        { text: '⏹  Stop', callback_data: 'practice:stop' },
-      ],
+      [{ text: '⏹ End Quiz', callback_data: 'quiz:stop' }],
+    ];
+    if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
+    return { inline_keyboard: rows };
+  }
+  const rows: any[] = [
+    [
+      { text: '➡️  Next Question', callback_data: 'practice:next' },
+      { text: '🚩 Flag', callback_data: 'flag:question' },
     ],
-  };
+    [
+      { text: '📚 Change Subject', callback_data: 'practice:change_subject' },
+      { text: '⏹  Stop', callback_data: 'practice:stop' },
+    ],
+  ];
+  if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
+  return { inline_keyboard: rows };
 }
 
 export function sessionSummary({

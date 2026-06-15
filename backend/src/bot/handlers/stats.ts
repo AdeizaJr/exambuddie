@@ -115,6 +115,29 @@ export async function handleQuizHistory(ctx: any): Promise<void> {
   });
 }
 
+export async function handleFlagUnderline(ctx: any): Promise<void> {
+  const s = await redis.getSession(ctx.from.id);
+  const quizState = await redis.getQuizState(ctx.from.id);
+  const q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+
+  if (!q || !q.question_text.includes('*')) {
+    await ctx.answerCbQuery('Nothing to flag right now.', { show_alert: false });
+    return;
+  }
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  await ctx.answerCbQuery('🔤 Underline flagged — we\'ll fix it!', { show_alert: true });
+
+  await db.query(
+    `INSERT INTO flagged_explanations (question_id, user_id, reason)
+     VALUES ($1, $2, 'wrong_underline')`,
+    [q.id, user.id]
+  );
+  await db.query(`UPDATE questions SET flag_count = flag_count + 1 WHERE id = $1`, [q.id]);
+}
+
 export async function handleFlagQuestion(ctx: any): Promise<void> {
   const s = await redis.getSession(ctx.from.id);
   const quizState = await redis.getQuizState(ctx.from.id);
