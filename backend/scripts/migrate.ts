@@ -142,7 +142,14 @@ const migrations = [
     question_text ILIKE '%illustration above%' OR
     question_text ILIKE '%illustration below%' OR
     question_text ILIKE '%the diagram%' OR
-    question_text ILIKE '%use the%above%'`,
+    question_text ILIKE '%use the%above%' OR
+    question_text ~* 'Fig\.\s*[0-9]' OR
+    question_text ILIKE '%table above%' OR
+    question_text ILIKE '%table below%' OR
+    question_text ILIKE '%the figure%' OR
+    question_text ILIKE '%venn diagram%' OR
+    question_text ILIKE '%circuit above%' OR
+    question_text ILIKE '%circuit below%'`,
 
   // ── Normalize "From the novel;" questions: trim indentation + collapse blank lines ──
   // Pass 1: strip leading whitespace from each line (e.g. "    This question..." → "This question...")
