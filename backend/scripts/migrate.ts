@@ -138,6 +138,8 @@ const migrations = [
     question_text ILIKE '%figure above%' OR
     question_text ILIKE '%figure below%' OR
     question_text ILIKE '%shown below%' OR
+    question_text ILIKE '%shown above%' OR
+    question_text ILIKE '%above shows%' OR
     question_text ILIKE '%chart above%' OR
     question_text ILIKE '%chart below%' OR
     question_text ILIKE '%illustration above%' OR

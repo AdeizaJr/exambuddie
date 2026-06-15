@@ -8,8 +8,17 @@ export async function handleStart(ctx: any): Promise<void> {
 
   if (user.exam_type && user.subjects && user.subjects.length > 0) {
     await redis.clearSession(ctx.from.id);
+    const stats = await db.getUserStats(user.id);
+    const total = Number(stats.total_attempts);
+    const accuracy = total > 0 ? `${Math.round((Number(stats.correct) / total) * 100)}%` : null;
+    const streakLine = user.streak > 0 ? `🔥 ${user.streak}-day streak` : null;
+    const statsLine = total > 0
+      ? `📊 ${total.toLocaleString()} questions answered${accuracy ? ` · ${accuracy} accuracy` : ''}`
+      : null;
+    const subLines = [streakLine, statsLine].filter(Boolean).join('\n');
+    const body = subLines ? `\n\n${subLines}` : '';
     await ctx.reply(
-      `👋 <b>Welcome back, ${user.first_name}!</b>\n\nReady to practise? Tap a button below or choose from the menu:`,
+      `👋 <b>Welcome back, ${user.first_name}!</b>${body}\n\nReady to practise?`,
       { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() }
     );
     return;
