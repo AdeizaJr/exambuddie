@@ -417,7 +417,10 @@ export async function handleAnswer(ctx: any): Promise<void> {
     reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*')),
   });
 
-  if (hyped) await ctx.reply(hyped);
+  if (hyped) {
+    if (newConsecutive === 10) await ctx.replyWithDice({ emoji: '🎉' });
+    await ctx.reply(hyped);
+  }
   if (milestone) {
     await ctx.replyWithDice({ emoji: '🎉' });
     await ctx.reply(milestone);
