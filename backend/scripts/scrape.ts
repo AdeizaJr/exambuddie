@@ -138,8 +138,20 @@ function parseQuestionPage(html: string, id: string, subject: string, examType: 
   // Question text: strip the badge links, grab remaining text
   const descDiv = section.find('.question-desc').first();
   descDiv.find('a').remove(); // remove subject/year badge links
-  const questionText = descDiv.text().trim();
+  let questionText = descDiv.text().trim();
   if (!questionText) return null;
+
+  // For "From the novel;" questions, the passage/context lives in a sibling
+  // element that .question-desc doesn't contain. Capture it and prepend.
+  if (questionText.startsWith('From the novel;')) {
+    const passageEl = section.find('.question-passage, .passage, blockquote').first();
+    const passageText = passageEl.text().trim();
+    if (passageText) {
+      questionText = `From the novel;\n\n${passageText}\n\n${questionText.replace(/^From the novel;\s*/i, '')}`;
+    }
+    // Collapse excessive blank lines from source whitespace
+    questionText = questionText.replace(/\n{3,}/g, '\n\n').trim();
+  }
 
   // Options from ul.list-unstyled > li
   const options: Record<string, string> = {};
