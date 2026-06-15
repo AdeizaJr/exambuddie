@@ -184,6 +184,22 @@ export function onboardYearKeyboard() {
   return { inline_keyboard: rows };
 }
 
+export function settingsYearKeyboard() {
+  const rows: any[][] = [
+    [{ text: '📅 Any Year', callback_data: 'settings:year:any' }],
+  ];
+  const years: number[] = [];
+  for (let y = 2025; y >= 2010; y--) years.push(y);
+  for (let i = 0; i < years.length; i += 4) {
+    rows.push(years.slice(i, i + 4).map(y => ({
+      text: `${y}`,
+      callback_data: `settings:year:${y}`,
+    })));
+  }
+  rows.push([{ text: '← Back to Settings', callback_data: 'settings:back' }]);
+  return { inline_keyboard: rows };
+}
+
 export function askExamType(year: number | null): string {
   const yearLabel = year ? `📅 Year: <b>${year}</b>` : `📅 Year: <b>Any</b>`;
   return `✅ ${yearLabel}

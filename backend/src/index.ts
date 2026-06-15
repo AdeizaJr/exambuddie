@@ -80,6 +80,8 @@ bot.on('callback_query', async (ctx: any) => {
   // Settings
   if (data === 'settings:exam') return onboarding.handleSettingsExam(ctx);
   if (data === 'settings:subjects') return onboarding.handleSettingsSubjects(ctx);
+  if (data === 'settings:year') return onboarding.handleSettingsYear(ctx);
+  if (data.startsWith('settings:year:')) return onboarding.handleSettingsYearPick(ctx);
   if (data === 'settings:notifications') return onboarding.handleSettingsNotifications(ctx);
   if (data === 'settings:delete') return onboarding.handleSettingsDelete(ctx);
   if (data === 'settings:delete:confirm') return onboarding.handleSettingsDeleteConfirm(ctx);

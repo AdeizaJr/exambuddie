@@ -133,6 +133,7 @@ function settingsKeyboard(notificationsEnabled: boolean) {
     inline_keyboard: [
       [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
       [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
+      [{ text: '📅 Change Target Year', callback_data: 'settings:year' }],
       [{ text: notifLabel, callback_data: 'settings:notifications' }],
       [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
       [{ text: '❌ Cancel', callback_data: 'menu:main' }],
@@ -218,6 +219,31 @@ export async function handleSettingsDeleteConfirm(ctx: any): Promise<void> {
     `✅ <b>Account deleted.</b>\n\nAll your data has been permanently removed. Use /start anytime to create a new account.`,
     { parse_mode: 'HTML' }
   );
+}
+
+export async function handleSettingsYear(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  const current = user.target_year ? `Currently: <b>${user.target_year}</b>` : 'Currently: <b>Any Year</b>';
+  await ctx.editMessageText(
+    `📅 <b>Change Target Year</b>\n\n${current}\n\nSelect the year you're preparing for, or choose Any Year to practice all years.`,
+    { parse_mode: 'HTML', reply_markup: fmt.settingsYearKeyboard() }
+  );
+}
+
+export async function handleSettingsYearPick(ctx: any): Promise<void> {
+  const raw = ctx.callbackQuery.data.split(':')[2];
+  const year = raw === 'any' ? null : parseInt(raw, 10);
+  await db.updateUser(ctx.from.id, { target_year: year });
+  const label = year ? `${year}` : 'Any Year';
+  await ctx.answerCbQuery(`Target year set to ${label} ✅`, { show_alert: false });
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
+    parse_mode: 'HTML',
+    reply_markup: settingsKeyboard(user.notifications_enabled),
+  });
 }
 
 export async function handleSettingsBack(ctx: any): Promise<void> {
