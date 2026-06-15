@@ -81,7 +81,7 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
         const explanation = q?.explanation ? `\n\n💡 ${q.explanation}` : '';
         await telegram.sendMessage(telegramId,
           `⏱️ <b>Time's up!</b>\n\nThe correct answer was <b>${q?.correct_option}</b>.${explanation}`,
-          { parse_mode: 'HTML', reply_markup: fmt.afterAnswerKeyboard(sess.mode) },
+          { parse_mode: 'HTML', reply_markup: fmt.afterAnswerKeyboard(sess.mode, q?.question_text?.includes('*') ?? false) },
         );
       },
     );
@@ -414,7 +414,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(resultText, {
     parse_mode: 'HTML',
-    reply_markup: fmt.afterAnswerKeyboard(session.mode),
+    reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*')),
   });
 
   if (hyped) await ctx.reply(hyped);

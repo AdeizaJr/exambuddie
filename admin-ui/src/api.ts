@@ -82,8 +82,12 @@ export async function getFlags(): Promise<Flag[]> {
   return req<Flag[]>("GET", "/flags");
 }
 
-export async function resolveFlag(id: number, explanation?: string): Promise<{ ok: boolean }> {
-  return req<{ ok: boolean }>("POST", `/flags/${id}/resolve`, { explanation });
+export async function resolveFlag(
+  id: number,
+  explanation?: string,
+  question_text?: string
+): Promise<{ ok: boolean }> {
+  return req<{ ok: boolean }>("POST", `/flags/${id}/resolve`, { explanation, question_text });
 }
 
 export interface QuestionsFilter {

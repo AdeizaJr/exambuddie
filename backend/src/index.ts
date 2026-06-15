@@ -154,6 +154,7 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Flag
   if (data === 'flag:question') return stats.handleFlagQuestion(ctx);
+  if (data === 'flag:underline') return stats.handleFlagUnderline(ctx);
 
   // Main menu
   if (data === 'menu:main') {

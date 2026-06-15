@@ -212,24 +212,24 @@ export default function createServer(bot: any) {
 
   // ── POST /api/admin/flags/:id/resolve ──────────────────────────────────────
   app.post('/api/admin/flags/:id/resolve', adminAuth, async (req: Request, res: Response) => {
-    const { explanation } = req.body;
-    // If explanation provided, also update the question
-    if (explanation !== undefined) {
-      // First get the question_id from this flag
-      const { rows: flagRows } = await db.query(
-        `SELECT question_id FROM flagged_explanations WHERE id = $1`,
-        [req.params.id]
-      );
-      if (flagRows.length > 0) {
+    const { explanation, question_text } = req.body;
+    const { rows: flagRows } = await db.query(
+      `SELECT question_id FROM flagged_explanations WHERE id = $1`,
+      [req.params.id]
+    );
+    if (flagRows.length > 0) {
+      const qid = flagRows[0].question_id;
+      if (explanation !== undefined) {
         await db.query(
           `UPDATE questions SET explanation = $1, explanation_reviewed = true WHERE id = $2`,
-          [explanation, flagRows[0].question_id]
+          [explanation, qid]
         );
       }
+      if (question_text !== undefined) {
+        await db.query(`UPDATE questions SET question_text = $1 WHERE id = $2`, [question_text, qid]);
+      }
     }
-    await db.query(`UPDATE flagged_explanations SET resolved = true WHERE id = $1`, [
-      req.params.id,
-    ]);
+    await db.query(`UPDATE flagged_explanations SET resolved = true WHERE id = $1`, [req.params.id]);
     res.json({ ok: true });
   });
 

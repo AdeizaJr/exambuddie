@@ -19,13 +19,19 @@ interface FlagCardProps {
 }
 
 function FlagCard({ flag, onResolved }: FlagCardProps) {
+  const isUnderline = flag.reason === "wrong_underline";
   const [explanation, setExplanation] = useState(flag.explanation || "");
+  const [questionText, setQuestionText] = useState(flag.question_text || "");
   const [saving, setSaving] = useState(false);
 
   async function handleSaveAndResolve() {
     setSaving(true);
     try {
-      await resolveFlag(flag.id, explanation);
+      if (isUnderline) {
+        await resolveFlag(flag.id, undefined, questionText);
+      } else {
+        await resolveFlag(flag.id, explanation);
+      }
       onResolved();
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
@@ -47,7 +53,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
   }
 
   return (
-    <div className="space-y-4 rounded-xl border border-border bg-surface p-5">
+    <div className={`space-y-4 rounded-xl border bg-surface p-5 ${isUnderline ? "border-blue-500/30" : "border-border"}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -58,13 +64,18 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
               Correct: <strong className="text-white">{flag.correct_option}</strong>
             </span>
             <span className="text-xs text-muted">Q#{flag.question_id}</span>
+            {isUnderline && (
+              <span className="rounded border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-400">
+                🔤 Wrong Underline
+              </span>
+            )}
           </div>
           <p className="text-sm leading-relaxed text-white">{flag.question_text}</p>
         </div>
         <div className="text-xs text-muted sm:whitespace-nowrap">{formatDate(flag.flagged_at)}</div>
       </div>
 
-      {flag.reason && (
+      {flag.reason && !isUnderline && (
         <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2">
           <p className="text-xs text-amber-400">
             <strong>Flag reason:</strong> {flag.reason}
@@ -72,18 +83,33 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
         </div>
       )}
 
-      <div>
-        <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
-          Explanation {!flag.explanation && <span className="ml-1 text-red-400">(missing)</span>}
-        </label>
-        <textarea
-          rows={4}
-          value={explanation}
-          onChange={(e) => setExplanation(e.target.value)}
-          className="w-full resize-y rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
-          placeholder="Write or update the explanation for this question..."
-        />
-      </div>
+      {isUnderline ? (
+        <div>
+          <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
+            Fix Question Text{" "}
+            <span className="ml-1 normal-case text-blue-400">(use *word* for underlined word)</span>
+          </label>
+          <textarea
+            rows={4}
+            value={questionText}
+            onChange={(e) => setQuestionText(e.target.value)}
+            className="w-full resize-y rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+      ) : (
+        <div>
+          <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
+            Explanation {!flag.explanation && <span className="ml-1 text-red-400">(missing)</span>}
+          </label>
+          <textarea
+            rows={4}
+            value={explanation}
+            onChange={(e) => setExplanation(e.target.value)}
+            className="w-full resize-y rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+            placeholder="Write or update the explanation for this question..."
+          />
+        </div>
+      )}
 
       <div className="flex items-center justify-end gap-3">
         <button
@@ -99,7 +125,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
           className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-50"
         >
           {saving && <Spinner size="sm" />}
-          Save & Resolve
+          {isUnderline ? "Fix & Resolve" : "Save & Resolve"}
         </button>
       </div>
     </div>
