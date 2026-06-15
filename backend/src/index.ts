@@ -221,7 +221,7 @@ bot.catch((err: any, ctx: any) => {
   if (msg.includes('query is too old') || msg.includes('query ID is invalid')) return;
   if (msg.includes('request to') && msg.includes('failed, reason:')) return;
   console.error(`[Bot Error] Update ${ctx.update.update_id}:`, msg);
-  ctx.reply('Something went wrong on our end. Please try again in a moment.').catch(() => {});
+  ctx.reply('⚠️ Oops! We hit a snag. Tap /start to get back on track.').catch(() => {});
 });
 
 // ── Launch ─────────────────────────────────────────────────────────────────────
