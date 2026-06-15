@@ -386,6 +386,14 @@ export async function getTotalAttempts(userId: number): Promise<number> {
   return parseInt(rows[0].cnt, 10);
 }
 
+export async function getTotalWrongAttempts(userId: number): Promise<number> {
+  const { rows } = await pool.query(
+    'SELECT COUNT(*) as cnt FROM attempts WHERE user_id = $1 AND is_correct = false',
+    [userId]
+  );
+  return parseInt(rows[0].cnt, 10);
+}
+
 export async function getSubjectQuestionCounts(subjects: string[]): Promise<Record<string, number>> {
   if (!subjects.length) return {};
   const { rows } = await pool.query(

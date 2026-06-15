@@ -417,6 +417,15 @@ export async function handleAnswer(ctx: any): Promise<void> {
     reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*')),
   });
 
+  if (!isCorrect) {
+    const totalWrong = await db.getTotalWrongAttempts(user.id);
+    if (totalWrong === 1) {
+      await ctx.reply(
+        "💪 Don't let that stop you — getting it wrong is part of the process. Every question you attempt makes you sharper. Keep going!"
+      );
+    }
+  }
+
   if (hyped) {
     if (newConsecutive === 10) await ctx.replyWithDice({ emoji: '🎉' });
     await ctx.reply(hyped);
