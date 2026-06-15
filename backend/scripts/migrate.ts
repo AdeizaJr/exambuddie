@@ -63,6 +63,7 @@ const migrations = [
   `ALTER TABLE questions ADD COLUMN IF NOT EXISTS source_id VARCHAR(30)`,
   `DROP INDEX IF EXISTS idx_questions_source_id`,
   `CREATE UNIQUE INDEX IF NOT EXISTS idx_questions_source_id ON questions(source_id)`,
+  `ALTER TABLE questions ADD COLUMN IF NOT EXISTS image_url TEXT`,
 
   // ── Flagged explanations ─────────────────────────────────────────────────────
   `CREATE TABLE IF NOT EXISTS flagged_explanations (
@@ -144,6 +145,7 @@ const migrations = [
     question_text ILIKE '%the diagram%' OR
     question_text ILIKE '%use the%above%' OR
     question_text ~* 'Fig\.\s*[0-9]' OR
+    question_text ~* 'Figure\s+[0-9]' OR
     question_text ILIKE '%table above%' OR
     question_text ILIKE '%table below%' OR
     question_text ILIKE '%the figure%' OR

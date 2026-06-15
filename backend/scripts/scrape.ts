@@ -70,6 +70,7 @@ interface Question {
   options: Record<string, string>;
   correctAnswer: string;
   explanation: string;
+  imageUrl: string | null;
 }
 
 // ─── HTTP helpers ───────────────────────────────────────────────────────────
@@ -153,6 +154,16 @@ function parseQuestionPage(html: string, id: string, subject: string, examType: 
     questionText = questionText.replace(/\n{3,}/g, '\n\n').trim();
   }
 
+  // Capture first diagram image inside .question-desc
+  const imgEl = descDiv.find('img').first();
+  let imageUrl: string | null = null;
+  if (imgEl.length) {
+    const src = imgEl.attr('src') || '';
+    if (src && !src.includes('logo')) {
+      imageUrl = src.startsWith('http') ? src : `${BASE_URL}${src}`;
+    }
+  }
+
   // Options from ul.list-unstyled > li
   const options: Record<string, string> = {};
   section.find('ul.list-unstyled li').each((_, el) => {
@@ -183,6 +194,7 @@ function parseQuestionPage(html: string, id: string, subject: string, examType: 
     options,
     correctAnswer,
     explanation,
+    imageUrl,
   };
 }
 

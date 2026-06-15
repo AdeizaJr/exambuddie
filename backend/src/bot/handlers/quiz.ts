@@ -199,7 +199,10 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
     timerSecs > 0 ? `\n\n⏱️ <i>${secsLeft}s remaining</i>` : '';
 
   const keyboard = fmt.answerKeyboard();
-  const sentMsg = await ctx.reply(baseText + timerLine(timerSecs), { parse_mode: 'HTML', reply_markup: keyboard });
+  const msgText = baseText + timerLine(timerSecs);
+  const sentMsg = q.image_url
+    ? await ctx.replyWithPhoto(q.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
+    : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
 
   if (timerSecs > 0) {
     const deadline = Date.now() + timerSecs * 1000;
@@ -215,10 +218,17 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
       telegramId,
       timerSecs,
       (secsLeft) => {
-        telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-          parse_mode: 'HTML',
-          reply_markup: keyboard,
-        }).catch(() => {});
+        if (q.image_url) {
+          telegram.editMessageCaption(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
+            parse_mode: 'HTML',
+            reply_markup: keyboard,
+          }).catch(() => {});
+        } else {
+          telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
+            parse_mode: 'HTML',
+            reply_markup: keyboard,
+          }).catch(() => {});
+        }
       },
       async () => {
         const state = await redis.getQuizState(telegramId);

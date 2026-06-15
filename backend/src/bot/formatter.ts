@@ -631,9 +631,14 @@ export function subjectLimitKeyboard(subject: string, plan?: string) {
 }
 
 export function practiceSubjectKeyboard(subjects: string[]) {
-  const buttons = subjects.map(s => ({
+  const sorted = [...subjects].sort((a, b) => {
+    if (a === 'english') return -1;
+    if (b === 'english') return 1;
+    return (SUBJECT_MAP[a] || a).localeCompare(SUBJECT_MAP[b] || b);
+  });
+  const buttons = sorted.map(s => ({
     text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1)}`,
-    callback_data: `practice:subject:${s}`, // → uses saved target_year directly
+    callback_data: `practice:subject:${s}`,
   }));
   const rows: any[][] = [];
   for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
@@ -645,7 +650,12 @@ export function practiceSubjectKeyboard(subjects: string[]) {
 }
 
 export function practiceMultiSubjectKeyboard(allSubjects: string[], selected: string[]) {
-  const buttons = allSubjects.map(s => {
+  const sorted = [...allSubjects].sort((a, b) => {
+    if (a === 'english') return -1;
+    if (b === 'english') return 1;
+    return (SUBJECT_MAP[a] || a).localeCompare(SUBJECT_MAP[b] || b);
+  });
+  const buttons = sorted.map(s => {
     const isSelected = selected.includes(s);
     return {
       text: `${isSelected ? '✅ ' : ''}${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s}`,
@@ -664,7 +674,12 @@ export function practiceMultiSubjectKeyboard(allSubjects: string[], selected: st
 }
 
 export function quizMultiSubjectKeyboard(allSubjects: string[], selected: string[]) {
-  const buttons = allSubjects.map(s => {
+  const sorted = [...allSubjects].sort((a, b) => {
+    if (a === 'english') return -1;
+    if (b === 'english') return 1;
+    return (SUBJECT_MAP[a] || a).localeCompare(SUBJECT_MAP[b] || b);
+  });
+  const buttons = sorted.map(s => {
     const isSelected = selected.includes(s);
     return {
       text: `${isSelected ? '✅ ' : ''}${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s}`,
@@ -698,9 +713,14 @@ export function flowYearKeyboard(mode: 'practice' | 'quiz') {
 }
 
 export function quizSubjectKeyboard(subjects: string[]) {
-  const buttons = subjects.map(s => ({
+  const sorted = [...subjects].sort((a, b) => {
+    if (a === 'english') return -1;
+    if (b === 'english') return 1;
+    return (SUBJECT_MAP[a] || a).localeCompare(SUBJECT_MAP[b] || b);
+  });
+  const buttons = sorted.map(s => ({
     text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1)}`,
-    callback_data: `quiz:subject:${s}`, // → uses saved target_year directly
+    callback_data: `quiz:subject:${s}`,
   }));
   const rows: any[][] = [];
   for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
