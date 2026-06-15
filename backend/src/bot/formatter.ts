@@ -553,6 +553,30 @@ Reference: <code>${txRef}</code>
 <i>By paying, you agree to our <a href="https://exambuddie.app/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
 }
 
+const CONSECUTIVE_HYPE: Record<number, string> = {
+  3:  '🔥 3 in a row! You\'re on a roll — keep it up!',
+  5:  '🔥🔥 5 correct in a row! You\'re on fire!',
+  10: '🏆 10 in a row! Absolute genius energy — don\'t stop now!',
+};
+
+const TOTAL_MILESTONE: Record<number, string> = {
+  10:   '🚀 10 questions answered! The journey has begun.',
+  25:   '💪 25 questions done! You\'re building real momentum.',
+  50:   '🎯 50 questions! Halfway to your first century.',
+  100:  '🏆 100 questions answered! You\'re dead serious about this.',
+  250:  '💎 250 questions! You\'re in the top tier now.',
+  500:  '🎓 500 questions! Exam-ready energy.',
+  1000: '🌟 1,000 questions! You\'ve reached legend status.',
+};
+
+export function consecutiveHype(count: number): string | null {
+  return CONSECUTIVE_HYPE[count] ?? null;
+}
+
+export function totalMilestone(total: number): string | null {
+  return TOTAL_MILESTONE[total] ?? null;
+}
+
 export function helpMessage(): string {
   return `📖 <b>ExamBuddie Help</b>
 

@@ -394,6 +394,12 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   const newTotal = (session.total || 0) + 1;
   const newCorrect = (session.correct || 0) + (isCorrect ? 1 : 0);
+  const newConsecutive = isCorrect ? (session.consecutiveCorrect || 0) + 1 : 0;
+
+  // Check milestones
+  const [totalAttempts] = await Promise.all([db.getTotalAttempts(user.id)]);
+  const hyped = fmt.consecutiveHype(newConsecutive);
+  const milestone = fmt.totalMilestone(totalAttempts);
 
   // Show result — edit message to remove answer buttons
   const resultText = fmt.correctAnswer(q, selected);
@@ -411,10 +417,14 @@ export async function handleAnswer(ctx: any): Promise<void> {
     reply_markup: fmt.afterAnswerKeyboard(session.mode),
   });
 
+  if (hyped) await ctx.reply(hyped);
+  if (milestone) await ctx.reply(milestone);
+
   // Update session
   await redis.updateSession(ctx.from.id, {
     total: newTotal,
     correct: newCorrect,
+    consecutiveCorrect: newConsecutive,
     lastAnswer: selected,
     lastQuestionTime: Date.now(),
     awaitingNext: true,
