@@ -295,6 +295,10 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     reply_markup: fmt.afterAnswerKeyboard('quiz'),
   });
 
+  const totalAttempts = await db.getTotalAttempts(user.id);
+  const milestone = fmt.totalMilestone(totalAttempts);
+  if (milestone) await ctx.reply(milestone);
+
   quizState.qIndex++;
   await redis.saveQuizState(ctx.from.id, quizState);
 }

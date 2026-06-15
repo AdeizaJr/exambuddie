@@ -86,6 +86,7 @@ export interface SessionState {
   startTime?: number;
   usedIds?: number[];
   lastQuestionTime?: number;
+  consecutiveCorrect?: number;
   awaitingNext?: boolean;
   lastAnswer?: string;
   questions?: number[];
