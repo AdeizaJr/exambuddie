@@ -204,7 +204,7 @@ export function profileComplete(user: User): string {
 
 📋 <b>Your Profile:</b>
 • 📅 Exam Year: ${yearLabel}
-• 📋 Exam: <b>${user.exam_type}</b>
+• 📋 Exam: <b>${user.exam_type || 'Not set'}</b>
 • 📚 Subjects: ${subjects}
 
 What would you like to do?`;
