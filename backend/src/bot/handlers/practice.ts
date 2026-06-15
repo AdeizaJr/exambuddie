@@ -353,12 +353,11 @@ export async function handlePracticeTimerPick(ctx: any): Promise<void> {
 
 // Handles answer:A/B/C/D callback
 export async function handleAnswer(ctx: any): Promise<void> {
-  await ctx.answerCbQuery();
   const selected = ctx.callbackQuery.data.split(':')[1];
   const session = await redis.getSession(ctx.from.id);
 
   if (!session || !session.currentQuestion) {
-    await ctx.reply('No active session. Use /practice to start.');
+    await ctx.answerCbQuery('No active session.', { show_alert: false });
     return;
   }
 
@@ -369,11 +368,16 @@ export async function handleAnswer(ctx: any): Promise<void> {
   // Timer already fired automatically — ignore late tap
   if (session.awaitingNext && !session.questionDeadline) return;
 
+  const isCorrect = selected === q.correct_option;
+  const newConsecutive = isCorrect ? (session.consecutiveCorrect || 0) + 1 : 0;
+  const hyped = fmt.consecutiveHype(newConsecutive);
+
+  // Streak milestone → popup; otherwise silent dismiss
+  await ctx.answerCbQuery(hyped ?? '', { show_alert: !!hyped });
+
   // Cancel the per-question timer since user answered in time
   timerService.clearQuestionTimer(ctx.from.id);
   await redis.updateSession(ctx.from.id, { questionDeadline: undefined });
-
-  const isCorrect = selected === q.correct_option;
 
   // Log attempt and update streak on first real answer of the day
   await db.logAttempt({
@@ -394,11 +398,8 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   const newTotal = (session.total || 0) + 1;
   const newCorrect = (session.correct || 0) + (isCorrect ? 1 : 0);
-  const newConsecutive = isCorrect ? (session.consecutiveCorrect || 0) + 1 : 0;
 
-  // Check milestones
-  const [totalAttempts] = await Promise.all([db.getTotalAttempts(user.id)]);
-  const hyped = fmt.consecutiveHype(newConsecutive);
+  const totalAttempts = await db.getTotalAttempts(user.id);
   const milestone = fmt.totalMilestone(totalAttempts);
 
   // Show result — edit message to remove answer buttons
@@ -417,8 +418,10 @@ export async function handleAnswer(ctx: any): Promise<void> {
     reply_markup: fmt.afterAnswerKeyboard(session.mode),
   });
 
-  if (hyped) await ctx.reply(hyped);
-  if (milestone) await ctx.reply(milestone);
+  if (milestone) {
+    await ctx.replyWithDice({ emoji: '🎉' });
+    await ctx.reply(milestone);
+  }
 
   // Update session
   await redis.updateSession(ctx.from.id, {
