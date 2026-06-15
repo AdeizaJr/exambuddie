@@ -90,6 +90,34 @@ export interface Analytics {
   };
 }
 
+export interface UserActivitySummary {
+  total_attempts: number;
+  correct: number;
+  accuracy: number;
+}
+
+export interface UserActivitySubject {
+  subject: string;
+  attempts: number;
+  correct: number;
+  accuracy: number;
+}
+
+export interface UserActivityAttempt {
+  is_correct: boolean;
+  selected_option: string;
+  attempted_at: string;
+  subject: string;
+  year: number;
+  exam_type: string;
+}
+
+export interface UserActivity {
+  summary: UserActivitySummary;
+  subjects: UserActivitySubject[];
+  recent: UserActivityAttempt[];
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;

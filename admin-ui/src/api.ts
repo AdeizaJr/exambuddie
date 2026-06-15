@@ -3,6 +3,7 @@ import type {
   Flag,
   Question,
   User,
+  UserActivity,
   Subscription,
   Analytics,
   PaginatedResponse,
@@ -140,6 +141,10 @@ export async function updateUserPlan(
   months?: number
 ): Promise<User> {
   return req<User>("PUT", `/users/${telegramId}/plan`, { plan, months });
+}
+
+export async function getUserActivity(telegramId: number): Promise<UserActivity> {
+  return req<UserActivity>("GET", `/users/${telegramId}/activity`);
 }
 
 export async function getSubscriptions(): Promise<Subscription[]> {

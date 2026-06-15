@@ -434,6 +434,53 @@ export default function createServer(bot: any) {
     res.json(rows[0]);
   });
 
+  // ── GET /api/admin/users/:telegramId/activity ──────────────────────────────
+  app.get('/api/admin/users/:telegramId/activity', adminAuth, async (req: Request, res: Response) => {
+    const tid = parseInt(req.params.telegramId as string, 10);
+
+    const [summaryRes, subjectsRes, recentRes] = await Promise.all([
+      db.query(`
+        SELECT
+          COUNT(*) as total_attempts,
+          SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) as correct,
+          ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+        FROM attempts a
+        JOIN users u ON a.user_id = u.id
+        WHERE u.telegram_id = $1
+      `, [tid]),
+      db.query(`
+        SELECT
+          q.subject,
+          COUNT(*) as attempts,
+          SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) as correct,
+          ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+        FROM attempts a
+        JOIN users u ON a.user_id = u.id
+        JOIN questions q ON a.question_id = q.id
+        WHERE u.telegram_id = $1
+        GROUP BY q.subject
+        ORDER BY attempts DESC
+      `, [tid]),
+      db.query(`
+        SELECT
+          a.is_correct, a.selected_option, a.attempted_at,
+          q.subject, q.year, q.exam_type
+        FROM attempts a
+        JOIN users u ON a.user_id = u.id
+        JOIN questions q ON a.question_id = q.id
+        WHERE u.telegram_id = $1
+        ORDER BY a.attempted_at DESC
+        LIMIT 50
+      `, [tid]),
+    ]);
+
+    res.json({
+      summary: summaryRes.rows[0] ?? { total_attempts: 0, correct: 0, accuracy: 0 },
+      subjects: subjectsRes.rows,
+      recent: recentRes.rows,
+    });
+  });
+
   // ── GET /api/admin/subscriptions ────────────────────────────────────────────
   app.get('/api/admin/subscriptions', adminAuth, async (req: Request, res: Response) => {
     const { rows } = await db.query(`
