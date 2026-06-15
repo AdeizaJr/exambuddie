@@ -375,6 +375,15 @@ export async function handleQuizStopConfirm(ctx: any): Promise<void> {
   await endQuiz(ctx, quizState, 'stopped');
 }
 
+export async function handleQuizStopCancel(ctx: any): Promise<void> {
+  await ctx.answerCbQuery('Continuing quiz!');
+  const quizState = await redis.getQuizState(ctx.from.id);
+  if (!quizState) return;
+  // Delete the "End Quiz?" confirmation message and resend current question
+  await ctx.deleteMessage().catch(() => {});
+  await sendQuizQuestion(ctx, quizState);
+}
+
 export async function endQuiz(ctx: any, quizState: QuizState, reason: string): Promise<void> {
   timerService.clearQuestionTimer(ctx.from.id);
 
