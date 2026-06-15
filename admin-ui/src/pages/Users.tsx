@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getUsers, updateUserPlan, deleteUsers } from "../api";
-import type { User, PaginatedResponse } from "../types";
+import { getUsers, updateUserPlan, deleteUsers, getUserActivity } from "../api";
+import type { User, UserActivity, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
 import Badge from "../components/Badge";
 import Modal from "../components/Modal";
@@ -58,6 +58,10 @@ export default function Users() {
   const [deleting, setDeleting] = useState(false);
   const [confirmText, setConfirmText] = useState("");
 
+  const [activityUser, setActivityUser] = useState<User | null>(null);
+  const [activity, setActivity] = useState<UserActivity | null>(null);
+  const [activityLoading, setActivityLoading] = useState(false);
+
   const [toast, setToast] = useState<Toast | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
 
@@ -98,6 +102,18 @@ export default function Users() {
   useEffect(() => {
     load();
   }, [load]);
+
+  async function openActivity(user: User) {
+    setActivityUser(user);
+    setActivity(null);
+    setActivityLoading(true);
+    try {
+      const data = await getUserActivity(user.telegram_id);
+      setActivity(data);
+    } finally {
+      setActivityLoading(false);
+    }
+  }
 
   async function handlePlanChange(user: User, plan: "premium" | "free", m?: number) {
     setSaving(true);
@@ -350,6 +366,13 @@ export default function Users() {
                       <td className="px-4 py-3 text-xs text-muted">{formatDate(u.joined_at)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => openActivity(u)}
+                            className="whitespace-nowrap rounded border border-border bg-surface2 px-2.5 py-1 text-xs text-muted transition-colors hover:border-accent/30 hover:bg-accent/10 hover:text-accent"
+                          >
+                            Activity
+                          </button>
+                          <div className="h-4 w-px bg-border" />
                           {u.plan === "free" ? (
                             <button
                               onClick={() => {
@@ -416,6 +439,102 @@ export default function Users() {
           </>
         )}
       </div>
+
+      {/* Activity modal */}
+      {activityUser && (
+        <Modal
+          title={`Activity — ${activityUser.first_name}`}
+          onClose={() => { setActivityUser(null); setActivity(null); }}
+        >
+          {activityLoading || !activity ? (
+            <div className="flex items-center justify-center py-12"><Spinner size="lg" /></div>
+          ) : (
+            <div className="space-y-6">
+              {/* Summary stats */}
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: "Total Questions", value: Number(activity.summary.total_attempts).toLocaleString() },
+                  { label: "Correct", value: Number(activity.summary.correct).toLocaleString() },
+                  { label: "Accuracy", value: `${activity.summary.accuracy ?? 0}%` },
+                ].map(({ label, value }) => (
+                  <div key={label} className="rounded-lg border border-border bg-surface2 p-3 text-center">
+                    <p className="text-lg font-bold text-white">{value}</p>
+                    <p className="mt-0.5 text-xs text-muted">{label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Subject breakdown */}
+              {activity.subjects.length > 0 && (
+                <div>
+                  <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">By Subject</h3>
+                  <div className="overflow-hidden rounded-lg border border-border">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="border-b border-border bg-surface2">
+                          <th className="px-3 py-2 text-left font-medium text-muted">Subject</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Attempts</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Correct</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Accuracy</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {activity.subjects.map((s) => (
+                          <tr key={s.subject} className="hover:bg-surface2">
+                            <td className="px-3 py-2 capitalize text-white">{s.subject.replace(/-/g, " ")}</td>
+                            <td className="px-3 py-2 text-right text-muted">{Number(s.attempts).toLocaleString()}</td>
+                            <td className="px-3 py-2 text-right text-muted">{Number(s.correct).toLocaleString()}</td>
+                            <td className="px-3 py-2 text-right font-medium text-white">{s.accuracy}%</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Recent attempts */}
+              {activity.recent.length > 0 && (
+                <div>
+                  <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Recent Attempts (last 50)</h3>
+                  <div className="max-h-56 overflow-y-auto rounded-lg border border-border">
+                    <table className="w-full text-xs">
+                      <thead className="sticky top-0 bg-surface">
+                        <tr className="border-b border-border">
+                          <th className="px-3 py-2 text-left font-medium text-muted">Subject</th>
+                          <th className="px-3 py-2 text-left font-medium text-muted">Exam / Year</th>
+                          <th className="px-3 py-2 text-left font-medium text-muted">Result</th>
+                          <th className="px-3 py-2 text-left font-medium text-muted">Time</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {activity.recent.map((a, i) => (
+                          <tr key={i} className="hover:bg-surface2">
+                            <td className="px-3 py-2 capitalize text-white">{a.subject.replace(/-/g, " ")}</td>
+                            <td className="px-3 py-2 text-muted">{a.exam_type} {a.year}</td>
+                            <td className="px-3 py-2">
+                              <span className={`font-medium ${a.is_correct ? "text-green-400" : "text-red-400"}`}>
+                                {a.is_correct ? "✓" : "✗"} {a.selected_option}
+                              </span>
+                            </td>
+                            <td className="px-3 py-2 text-muted">
+                              {new Date(a.attempted_at).toLocaleDateString("en-NG", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {activity.summary.total_attempts === 0 && (
+                <p className="py-4 text-center text-sm text-muted">No activity yet</p>
+              )}
+            </div>
+          )}
+        </Modal>
+      )}
 
       {/* Grant Premium modal */}
       {grantTarget && (

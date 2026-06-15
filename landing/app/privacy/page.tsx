@@ -52,6 +52,7 @@ export default function PrivacyPage() {
               <li>To enforce daily question limits for free accounts</li>
               <li>To activate and verify premium subscriptions</li>
               <li>To detect weak topics and surface targeted drills</li>
+              <li>Your progress is stored to track your performance and help you improve over time</li>
               <li>To send scheduled study reminders (if enabled)</li>
             </ul>
             <p className="mt-3">We do not use your data for advertising or sell it to third parties.</p>
