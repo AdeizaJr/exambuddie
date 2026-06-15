@@ -62,6 +62,7 @@ interface ScrapedQuestion {
   options: Record<string, string>;
   correctAnswer: string;
   explanation: string;
+  imageUrl?: string | null;
 }
 
 function collectJsonFiles(dir: string): string[] {
@@ -112,17 +113,20 @@ async function importFile(client: any, filePath: string): Promise<{ inserted: nu
     // Treat bare heading text as no explanation — Claude will generate it
     const explanation = raw && raw !== 'Explanation' && raw.length > 10 ? raw : null;
 
+    const imageUrl = q.imageUrl || null;
+
     try {
       const result = await client.query(
         `INSERT INTO questions
            (exam_type, subject, year, question_text,
             option_a, option_b, option_c, option_d, option_e,
-            correct_option, explanation, source_id)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-         ON CONFLICT (source_id) DO NOTHING`,
+            correct_option, explanation, source_id, image_url)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+         ON CONFLICT (source_id) DO UPDATE SET image_url = EXCLUDED.image_url
+         WHERE questions.image_url IS NULL`,
         [examType, subjectCode, q.year, q.questionText,
          optA, optB, optC, optD, optE,
-         q.correctAnswer, explanation, sourceId]
+         q.correctAnswer, explanation, sourceId, imageUrl]
       );
       if (result.rowCount && result.rowCount > 0) inserted++;
       else skipped++;

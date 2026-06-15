@@ -37,10 +37,10 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
   const hasOptionE = !!question.option_e;
   const keyboard = fmt.answerKeyboard(hasOptionE);
 
-  const sentMsg = await ctx.reply(
-    baseText + (timerSecs > 0 ? timerLine(timerSecs) : ''),
-    { parse_mode: 'HTML', reply_markup: keyboard },
-  );
+  const msgText = baseText + (timerSecs > 0 ? timerLine(timerSecs) : '');
+  const sentMsg = question.image_url
+    ? await ctx.replyWithPhoto(question.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
+    : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
 
   if (timerSecs > 0) {
     const deadline = Date.now() + timerSecs * 1000;
@@ -55,10 +55,17 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
       telegramId,
       timerSecs,
       (secsLeft) => {
-        telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-          parse_mode: 'HTML',
-          reply_markup: keyboard,
-        }).catch(() => {});
+        if (question.image_url) {
+          telegram.editMessageCaption(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
+            parse_mode: 'HTML',
+            reply_markup: keyboard,
+          }).catch(() => {});
+        } else {
+          telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
+            parse_mode: 'HTML',
+            reply_markup: keyboard,
+          }).catch(() => {});
+        }
       },
       async () => {
         const sess = await redis.getSession(telegramId);

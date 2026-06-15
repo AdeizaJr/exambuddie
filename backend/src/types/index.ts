@@ -36,6 +36,7 @@ export interface Question {
   explanation_reviewed: boolean;
   flag_count: number;
   source_id: string | null;
+  image_url: string | null;
   created_at: string;
 }
 
