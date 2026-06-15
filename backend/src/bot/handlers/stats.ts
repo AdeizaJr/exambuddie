@@ -116,22 +116,30 @@ export async function handleQuizHistory(ctx: any): Promise<void> {
 }
 
 export async function handleFlagQuestion(ctx: any): Promise<void> {
-  await ctx.answerCbQuery('Thanks for the flag! We\'ll review this explanation. 🙏', { show_alert: true });
-
   const s = await redis.getSession(ctx.from.id);
-  if (!s || !s.currentQuestion) return;
+  const quizState = await redis.getQuizState(ctx.from.id);
+
+  const q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+
+  if (!q) {
+    await ctx.answerCbQuery('Nothing to flag right now.', { show_alert: false });
+    return;
+  }
 
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
+  const subjectName = q.subject.charAt(0).toUpperCase() + q.subject.slice(1).replace(/-/g, ' ');
+  const toast = `🚩 Flagged: ${subjectName} ${q.exam_type} ${q.year}. We'll review it — thanks!`;
+  await ctx.answerCbQuery(toast, { show_alert: true });
 
   await db.query(
     `INSERT INTO flagged_explanations (question_id, user_id, reason)
      VALUES ($1, $2, 'User flagged as incorrect')`,
-    [s.currentQuestion.id, user.id]
+    [q.id, user.id]
   );
 
   await db.query(
     `UPDATE questions SET flag_count = flag_count + 1 WHERE id = $1`,
-    [s.currentQuestion.id]
+    [q.id]
   );
 }

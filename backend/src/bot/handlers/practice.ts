@@ -100,9 +100,10 @@ export async function handlePractice(ctx: any): Promise<void> {
       { parse_mode: 'HTML', reply_markup: fmt.practiceMultiSubjectKeyboard(allSubjects, [...user.subjects]) }
     );
   } else {
+    const counts = await db.getSubjectQuestionCounts(user.subjects);
     await ctx.reply(
       '📚 <b>Practice Mode</b>\n\nWhich subject would you like to practise?',
-      { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+      { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects, counts) }
     );
   }
 }
@@ -147,9 +148,10 @@ export async function handleMultiSubjectStart(ctx: any): Promise<void> {
     return;
   }
 
+  const counts = await db.getSubjectQuestionCounts(selected);
   await ctx.reply(
     '📚 <b>Which subject would you like to practise?</b>',
-    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(selected) }
+    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(selected, counts) }
   );
 }
 
@@ -534,9 +536,10 @@ export async function handleChangeSubject(ctx: any): Promise<void> {
     return;
   }
 
+  const counts = await db.getSubjectQuestionCounts(user.subjects);
   await ctx.reply(
     '📚 <b>Change Subject</b>\n\nWhich subject would you like to switch to?',
-    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects) }
+    { parse_mode: 'HTML', reply_markup: fmt.practiceSubjectKeyboard(user.subjects, counts) }
   );
 }
 

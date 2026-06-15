@@ -24,9 +24,10 @@ export async function handleQuiz(ctx: any): Promise<void> {
     return;
   }
 
+  const counts = await db.getSubjectQuestionCounts(user.subjects);
   await ctx.reply(
     '📋 <b>Quiz Mode</b>\n\nPick a subject to start your mock exam:',
-    { parse_mode: 'HTML', reply_markup: fmt.quizSubjectKeyboard(user.subjects) }
+    { parse_mode: 'HTML', reply_markup: fmt.quizSubjectKeyboard(user.subjects, counts) }
   );
 }
 

@@ -554,25 +554,35 @@ Reference: <code>${txRef}</code>
 }
 
 export function helpMessage(): string {
-  return `📖 <b>ExamBuddie Commands</b>
+  return `📖 <b>ExamBuddie Help</b>
 
-<b>Practice:</b>
-/practice — Start a practice session
-/quiz — Take a 40-question timed mock exam
-/drill [topic] — Drill a specific topic
+<b>📚 Practice Mode</b>
+/practice — Answer questions one at a time, pick subject and year
+<i>Best for daily revision and building topic confidence</i>
 
-<b>Account:</b>
-/settings — Update your profile
-/stats — View your progress
-/subscribe — Upgrade to Premium
+<b>📋 Quiz Mode</b>
+/quiz — 40-question timed mock exam, scored at the end
+<i>Best for simulating real exam conditions</i>
 
-<b>Other:</b>
-/stop — Stop current session
-/help — Show this menu
+<b>🎯 Drill Mode</b>
+/drill — Focus on a specific weak topic
+<i>Best for fixing gaps after you see your stats</i>
 
-💡 <b>Tip:</b> During practice, tap ➡️ for the next question or 🚩 to flag a wrong explanation.
+<b>📊 Account</b>
+/stats — Your accuracy, streak, and subject breakdown
+/settings — Change exam type, subjects, or target year
+/subscribe — Unlock unlimited questions with Premium
 
-Questions? DM @ExamBuddiSupport`;
+<b>⏹ Other</b>
+/stop — End your current session
+/help — Show this message
+
+<b>During a session:</b>
+• Tap <b>A / B / C / D</b> to answer
+• Tap <b>➡️ Next</b> after seeing the explanation
+• Tap <b>🚩 Flag</b> if an explanation looks wrong
+
+Questions or issues? DM @ExamBuddiSupport`;
 }
 
 export function examTypeKeyboard() {
@@ -646,16 +656,18 @@ export function subjectLimitKeyboard(subject: string, plan?: string) {
   };
 }
 
-export function practiceSubjectKeyboard(subjects: string[]) {
+export function practiceSubjectKeyboard(subjects: string[], counts: Record<string, number> = {}) {
   const sorted = [...subjects].sort((a, b) => {
     if (a === 'english') return -1;
     if (b === 'english') return 1;
     return (SUBJECT_MAP[a] || a).localeCompare(SUBJECT_MAP[b] || b);
   });
-  const buttons = sorted.map(s => ({
-    text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1)}`,
-    callback_data: `practice:subject:${s}`,
-  }));
+  const buttons = sorted.map(s => {
+    const label = SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1);
+    const count = counts[s];
+    const countStr = count !== undefined ? ` (${count.toLocaleString()})` : '';
+    return { text: `${SUBJECT_EMOJI[s] || '📖'} ${label}${countStr}`, callback_data: `practice:subject:${s}` };
+  });
   const rows: any[][] = [];
   for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
   rows.push([
@@ -728,16 +740,18 @@ export function flowYearKeyboard(mode: 'practice' | 'quiz') {
   return { inline_keyboard: rows };
 }
 
-export function quizSubjectKeyboard(subjects: string[]) {
+export function quizSubjectKeyboard(subjects: string[], counts: Record<string, number> = {}) {
   const sorted = [...subjects].sort((a, b) => {
     if (a === 'english') return -1;
     if (b === 'english') return 1;
     return (SUBJECT_MAP[a] || a).localeCompare(SUBJECT_MAP[b] || b);
   });
-  const buttons = sorted.map(s => ({
-    text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1)}`,
-    callback_data: `quiz:subject:${s}`,
-  }));
+  const buttons = sorted.map(s => {
+    const label = SUBJECT_MAP[s] || s.charAt(0).toUpperCase() + s.slice(1);
+    const count = counts[s];
+    const countStr = count !== undefined ? ` (${count.toLocaleString()})` : '';
+    return { text: `${SUBJECT_EMOJI[s] || '📖'} ${label}${countStr}`, callback_data: `quiz:subject:${s}` };
+  });
   const rows: any[][] = [];
   for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
   rows.push([

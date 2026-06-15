@@ -381,6 +381,19 @@ export async function updateStreak(telegramId: number | string): Promise<number 
   return newStreak;
 }
 
+export async function getSubjectQuestionCounts(subjects: string[]): Promise<Record<string, number>> {
+  if (!subjects.length) return {};
+  const { rows } = await pool.query(
+    `SELECT subject, COUNT(*) as count FROM questions
+     WHERE subject = ANY($1) AND (has_diagram = FALSE OR image_url IS NOT NULL)
+     GROUP BY subject`,
+    [subjects]
+  );
+  const map: Record<string, number> = {};
+  for (const row of rows) map[row.subject] = parseInt(row.count, 10);
+  return map;
+}
+
 export async function getSubjects(): Promise<any[]> {
   const { rows } = await pool.query('SELECT * FROM subjects ORDER BY name');
   return rows;
