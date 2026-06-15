@@ -368,12 +368,11 @@ export async function handleAnswer(ctx: any): Promise<void> {
   // Timer already fired automatically — ignore late tap
   if (session.awaitingNext && !session.questionDeadline) return;
 
+  await ctx.answerCbQuery();
+
   const isCorrect = selected === q.correct_option;
   const newConsecutive = isCorrect ? (session.consecutiveCorrect || 0) + 1 : 0;
   const hyped = fmt.consecutiveHype(newConsecutive);
-
-  // Streak milestone → popup; otherwise silent dismiss
-  await ctx.answerCbQuery(hyped ?? '', { show_alert: !!hyped });
 
   // Cancel the per-question timer since user answered in time
   timerService.clearQuestionTimer(ctx.from.id);
@@ -418,6 +417,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
     reply_markup: fmt.afterAnswerKeyboard(session.mode),
   });
 
+  if (hyped) await ctx.reply(hyped);
   if (milestone) {
     await ctx.replyWithDice({ emoji: '🎉' });
     await ctx.reply(milestone);
