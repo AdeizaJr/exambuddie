@@ -156,7 +156,19 @@ const migrations = [
     question_text ILIKE '%the figure%' OR
     question_text ILIKE '%venn diagram%' OR
     question_text ILIKE '%circuit above%' OR
-    question_text ILIKE '%circuit below%'`,
+    question_text ILIKE '%circuit below%' OR
+    explanation ILIKE '%chart provided%' OR
+    explanation ILIKE '%diagram provided%' OR
+    explanation ILIKE '%graph provided%' OR
+    explanation ILIKE '%from the chart%' OR
+    explanation ILIKE '%from the diagram%' OR
+    explanation ILIKE '%from the graph%' OR
+    explanation ILIKE '%from the figure%' OR
+    explanation ILIKE '%shown in the chart%' OR
+    explanation ILIKE '%shown in the diagram%' OR
+    explanation ILIKE '%shown in the figure%' OR
+    explanation ILIKE '%pie chart%' OR
+    explanation ILIKE '%bar chart%'`,
 
   // ── Normalize "From the novel;" questions: trim indentation + collapse blank lines ──
   // Pass 1: strip leading whitespace from each line (e.g. "    This question..." → "This question...")
