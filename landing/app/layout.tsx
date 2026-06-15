@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     description:
       "AI-powered exam prep for WAEC, JAMB and NECO — practice past questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
     type: "website",
+    url: "https://exambuddie.app",
+    siteName: "ExamBuddie",
   },
 };
 
