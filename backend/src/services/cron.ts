@@ -10,8 +10,15 @@ export default function startCrons(bot: any): void {
     '0 23 * * *',
     async () => {
       // WAT midnight = 23:00 UTC
-      console.log('[CRON] Resetting daily question counts...');
+      console.log('[CRON] Resetting daily question counts and broken streaks...');
       await db.query(`UPDATE users SET daily_count = 0, daily_reset_at = CURRENT_DATE`);
+      // Reset streak for users who missed yesterday — last_active_date is stored in UTC
+      const { rowCount } = await db.query(`
+        UPDATE users SET streak = 0
+        WHERE streak > 0
+          AND (last_active_date IS NULL OR last_active_date < CURRENT_DATE - INTERVAL '1 day')
+      `);
+      console.log(`[CRON] Broke streaks for ${rowCount} inactive users`);
     },
     { timezone: 'UTC' } as any
   );
