@@ -246,16 +246,17 @@ export function formatQuestion(q: Question, number: number, total: number | stri
 
   let questionText = q.question_text || '';
 
-  // Inject novel title when "From the novel;" header is present but title is missing from the text
-  if (
-    questionText.trimStart().startsWith('From the novel;') &&
-    q.topic &&
-    !questionText.toLowerCase().includes(q.topic.toLowerCase())
-  ) {
-    questionText = questionText.replace(
-      /From the novel;/,
-      `From the novel: ${q.topic}`
-    );
+  if (questionText.trimStart().startsWith('From the novel;')) {
+    // Inject topic/novel name when missing from question text
+    if (q.topic && !questionText.toLowerCase().includes(q.topic.toLowerCase())) {
+      questionText = questionText.replace(/From the novel;/, `From the novel: ${q.topic};`);
+    }
+    // Trim indentation and collapse excessive blank lines
+    questionText = questionText
+      .split('\n')
+      .map(line => line.trim())
+      .join('\n')
+      .replace(/\n{3,}/g, '\n\n');
   }
 
   return `${modeTag}
