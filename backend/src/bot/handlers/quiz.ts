@@ -201,9 +201,16 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
 
   const keyboard = fmt.answerKeyboard();
   const msgText = baseText + timerLine(timerSecs);
-  const sentMsg = q.image_url
-    ? await ctx.replyWithPhoto(q.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
-    : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
+  let sentMsg;
+  try {
+    sentMsg = q.image_url
+      ? await ctx.replyWithPhoto(q.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
+      : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
+  } catch (err) {
+    // Dead image link or blocked user — fall back to text so the question still gets sent
+    console.error(`[quiz] failed to send question ${q.id} to ${ctx.from.id}:`, (err as Error).message);
+    sentMsg = await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
+  }
 
   if (timerSecs > 0) {
     const deadline = Date.now() + timerSecs * 1000;
@@ -244,7 +251,7 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
         await telegram.sendMessage(telegramId, timesUpText, {
           parse_mode: 'HTML',
           reply_markup: { inline_keyboard: [[{ text: '➡️ Next', callback_data: 'quiz:next' }]] },
-        });
+        }).catch((err: any) => console.error(`[quiz] timer expiry sendMessage failed for ${telegramId}:`, err.message));
       },
     );
   }
@@ -266,6 +273,11 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
   }
 
   const q = quizState.questions[quizState.qIndex];
+  if (!q) {
+    // Timer race already advanced qIndex past the end, or quiz already finished
+    await ctx.reply('That question already moved on. Use /quiz to start a new one.');
+    return;
+  }
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
 

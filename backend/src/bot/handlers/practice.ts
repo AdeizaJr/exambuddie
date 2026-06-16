@@ -38,9 +38,16 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
   const keyboard = fmt.answerKeyboard(hasOptionE);
 
   const msgText = baseText + (timerSecs > 0 ? timerLine(timerSecs) : '');
-  const sentMsg = question.image_url
-    ? await ctx.replyWithPhoto(question.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
-    : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
+  let sentMsg;
+  try {
+    sentMsg = question.image_url
+      ? await ctx.replyWithPhoto(question.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
+      : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
+  } catch (err) {
+    // Dead image link or blocked user — fall back to text so the question still gets sent
+    console.error(`[practice] failed to send question ${question.id} to ${ctx.from.id}:`, (err as Error).message);
+    sentMsg = await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
+  }
 
   if (timerSecs > 0) {
     const deadline = Date.now() + timerSecs * 1000;
@@ -82,7 +89,7 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
         await telegram.sendMessage(telegramId,
           `⏱️ <b>Time's up!</b>\n\nThe correct answer was <b>${q?.correct_option}</b>.${explanation}`,
           { parse_mode: 'HTML', reply_markup: fmt.afterAnswerKeyboard(sess.mode, q?.question_text?.includes('*') ?? false) },
-        );
+        ).catch((err: any) => console.error(`[practice] timer expiry sendMessage failed for ${telegramId}:`, err.message));
       },
     );
   }

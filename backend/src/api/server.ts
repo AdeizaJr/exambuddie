@@ -394,9 +394,15 @@ export default function createServer(bot: any) {
 
   // ── DELETE /api/admin/users ─────────────────────────────────────────────────
   app.delete('/api/admin/users', adminAuth, async (req: Request, res: Response) => {
-    const { ids, all, search } = req.body;
+    const { ids, all, search, confirmAll } = req.body;
 
     if (all) {
+      // Wiping the entire users table needs an explicit, unmistakable confirmation
+      if (!search && confirmAll !== 'DELETE_ALL_USERS') {
+        return res.status(400).json({
+          error: 'Deleting all users with no search filter requires { confirmAll: "DELETE_ALL_USERS" } in the request body',
+        });
+      }
       const conditions: string[] = [];
       const params: any[] = [];
       if (search) {

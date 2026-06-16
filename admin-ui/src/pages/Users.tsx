@@ -136,7 +136,11 @@ export default function Users() {
         result = await deleteUsers({ ids: [deleteTarget.telegram_id] });
         showToast(`Deleted ${deleteTarget.first_name}`);
       } else if (selectAllPages) {
-        result = await deleteUsers({ all: true, search: search || undefined });
+        result = await deleteUsers({
+          all: true,
+          search: search || undefined,
+          confirmAll: search ? undefined : 'DELETE_ALL_USERS',
+        });
         showToast(`Deleted ${result.deleted} users`);
       } else {
         result = await deleteUsers({ ids: Array.from(selected) });
