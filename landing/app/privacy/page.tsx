@@ -4,6 +4,13 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy — ExamBuddie",
   description: "How ExamBuddie collects, uses, and protects your data.",
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: "Privacy Policy — ExamBuddie",
+    description: "How ExamBuddie collects, uses, and protects your data.",
+    type: "website",
+    url: "https://exambuddie.app/privacy",
+  },
 };
 
 export default function PrivacyPage() {

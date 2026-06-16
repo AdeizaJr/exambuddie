@@ -4,6 +4,13 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Use — ExamBuddie",
   description: "Terms and conditions for using ExamBuddie.",
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: "Terms of Use — ExamBuddie",
+    description: "Terms and conditions for using ExamBuddie.",
+    type: "website",
+    url: "https://exambuddie.app/terms",
+  },
 };
 
 export default function TermsPage() {
