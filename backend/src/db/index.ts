@@ -371,8 +371,12 @@ export async function updateStreak(telegramId: number | string): Promise<number 
   const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
   const user = await getUser(telegramId);
   if (!user) return;
-  if (user.last_active_date === today) return user.streak; // already counted today
-  const newStreak = user.last_active_date === yesterday ? user.streak + 1 : 1;
+  // pg returns DATE columns as JS Date objects, not strings — normalize before comparing
+  const lastActive = user.last_active_date
+    ? new Date(user.last_active_date).toISOString().split('T')[0]
+    : null;
+  if (lastActive === today) return user.streak; // already counted today
+  const newStreak = lastActive === yesterday ? user.streak + 1 : 1;
   await pool.query(`UPDATE users SET streak = $1, last_active_date = $2 WHERE telegram_id = $3`, [
     newStreak,
     today,
