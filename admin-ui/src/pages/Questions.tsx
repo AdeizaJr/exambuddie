@@ -209,7 +209,7 @@ export default function Questions() {
 
         <input
           type="text"
-          placeholder="Search question text..."
+          placeholder="Search by ID, source ID, or question text..."
           value={search}
           onChange={(e) => setFilter("q", e.target.value)}
           className="min-w-48 flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"

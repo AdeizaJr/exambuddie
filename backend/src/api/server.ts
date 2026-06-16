@@ -255,8 +255,16 @@ export default function createServer(bot: any) {
       conditions.push(`year = $${params.length}`);
     }
     if (req.query.search) {
-      params.push(`%${req.query.search}%`);
-      conditions.push(`question_text ILIKE $${params.length}`);
+      const search = req.query.search as string;
+      const asId = parseInt(search, 10);
+      if (!isNaN(asId) && String(asId) === search.trim()) {
+        params.push(asId);
+        conditions.push(`id = $${params.length}`);
+      } else {
+        params.push(`%${search}%`);
+        const idx = params.length;
+        conditions.push(`(question_text ILIKE $${idx} OR source_id ILIKE $${idx})`);
+      }
     }
 
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
