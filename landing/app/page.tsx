@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { faqs } from "./data/faqs";
+import { ThemeToggle } from "./theme-toggle";
 
 const BOT_URL = "https://t.me/ExamBuddieBot";
 
@@ -302,7 +303,7 @@ export default function Home() {
     {
       name: "Premium",
       price: billingYearly ? "₦7,000" : "₦800",
-      period: billingYearly ? "per year" : "per month",
+      period: billingYearly ? "year" : "month",
       description: billingYearly
         ? "Save ₦2,600 vs monthly — best value."
         : "Everything you need to top the exam.",
@@ -324,7 +325,7 @@ export default function Home() {
   return (
     <div className="font-[var(--font-geist)]">
       {/* Nav */}
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur">
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <span className="flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-8 w-8 shrink-0">
@@ -341,15 +342,16 @@ export default function Home() {
               <rect x="6" y="21" width="18" height="5" rx="1" fill="white"/>
               <path d="M26,22 L26.8,24.5 L29.5,25.2 L26.8,26 L26,28.5 L25.2,26 L22.5,25.2 L25.2,24.5 Z" fill="#FDE68A"/>
             </svg>
-            <span className="text-lg font-bold text-blue-700 sm:text-xl">ExamBuddie</span>
+            <span className="text-lg font-bold text-blue-700 sm:text-xl dark:text-blue-400">ExamBuddie</span>
           </span>
-          <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-            <a href="#features" className="transition-colors hover:text-slate-900">Features</a>
-            <a href="#subjects" className="transition-colors hover:text-slate-900">Subjects</a>
-            <a href="#pricing" className="transition-colors hover:text-slate-900">Pricing</a>
-            <a href="#faq" className="transition-colors hover:text-slate-900">FAQ</a>
+          <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex dark:text-slate-300">
+            <a href="#features" className="transition-colors hover:text-slate-900 dark:hover:text-white">Features</a>
+            <a href="#subjects" className="transition-colors hover:text-slate-900 dark:hover:text-white">Subjects</a>
+            <a href="#pricing" className="transition-colors hover:text-slate-900 dark:hover:text-white">Pricing</a>
+            <a href="#faq" className="transition-colors hover:text-slate-900 dark:hover:text-white">FAQ</a>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <a
               href={BOT_URL}
               target="_blank"
@@ -362,7 +364,7 @@ export default function Home() {
             {/* Hamburger — mobile only */}
             <button
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-100 md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-100 md:hidden dark:text-slate-300 dark:hover:bg-slate-800"
               aria-label="Toggle menu"
             >
               {menuOpen ? (
@@ -379,32 +381,32 @@ export default function Home() {
         </div>
         {/* Mobile menu dropdown */}
         {menuOpen && (
-          <div className="border-t border-slate-100 bg-white px-4 py-4 md:hidden">
-            <div className="flex flex-col gap-4 text-sm font-medium text-slate-600">
-              <a href="#features" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">Features</a>
-              <a href="#subjects" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">Subjects</a>
-              <a href="#pricing" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">Pricing</a>
-              <a href="#faq" onClick={() => setMenuOpen(false)} className="hover:text-slate-900">FAQ</a>
+          <div className="border-t border-slate-100 bg-white px-4 py-4 md:hidden dark:border-slate-800 dark:bg-slate-950">
+            <div className="flex flex-col gap-4 text-sm font-medium text-slate-600 dark:text-slate-300">
+              <a href="#features" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Features</a>
+              <a href="#subjects" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Subjects</a>
+              <a href="#pricing" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Pricing</a>
+              <a href="#faq" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">FAQ</a>
             </div>
           </div>
         )}
       </nav>
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24">
+      <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
             {/* Text */}
             <div className="flex-1 text-center lg:text-left">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
                 🎓 WAEC, JAMB &amp; NECO Prep — Nigeria
               </div>
-              <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl">
+              <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
                 Pass your exam.
                 <br />
-                <span className="text-blue-700">Study on Telegram.</span>
+                <span className="text-blue-700 dark:text-blue-400">Study on Telegram.</span>
               </h1>
-              <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0">
+              <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0 dark:text-slate-400">
                 AI-powered exam prep with over 41,000 past WAEC, JAMB and NECO questions. Timed
                 quizzes, instant explanations, and progress tracking — all inside Telegram. No app
                 to download.
@@ -414,18 +416,18 @@ export default function Home() {
                   href={BOT_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg"
+                  className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
                   Start Practising Free →
                 </a>
                 <a
                   href="#features"
-                  className="rounded-full border border-slate-200 px-6 py-3.5 text-base font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:px-8 sm:py-4 sm:text-lg"
+                  className="rounded-full border border-slate-200 px-6 py-3.5 text-base font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:px-8 sm:py-4 sm:text-lg dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
                 >
                   See how it works
                 </a>
               </div>
-              <p className="mt-5 text-xs text-slate-400 sm:mt-6 sm:text-sm">
+              <p className="mt-5 text-xs text-slate-400 sm:mt-6 sm:text-sm dark:text-slate-500">
                 Free to start · No download required · Works on any device
               </p>
             </div>
@@ -439,7 +441,7 @@ export default function Home() {
       </section>
 
       {/* Stats bar */}
-      <section className="bg-blue-700 py-8 sm:py-10">
+      <section className="bg-blue-700 py-8 sm:py-10 dark:bg-blue-900">
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-4 text-center text-white sm:gap-8 sm:px-6 md:grid-cols-4">
           {[
             { value: "41,000+", label: "Past Questions", nowrap: false },
@@ -461,10 +463,10 @@ export default function Home() {
       <section id="features" className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Everything you need to prepare
             </h2>
-            <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg">
+            <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
               Built for Nigerian students. Designed to be fast, focused, and effective.
             </p>
           </div>
@@ -472,11 +474,11 @@ export default function Home() {
             {features.map(({ icon, title, description }) => (
               <div
                 key={title}
-                className="rounded-2xl bg-slate-50 p-6 transition-shadow hover:shadow-md sm:p-8"
+                className="rounded-2xl bg-slate-50 p-6 transition-shadow hover:shadow-md sm:p-8 dark:bg-slate-900 dark:hover:shadow-none"
               >
                 <div className="mb-3 text-3xl sm:mb-4 sm:text-4xl">{icon}</div>
-                <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg">{title}</h3>
-                <p className="text-sm leading-relaxed text-slate-600 sm:text-base">{description}</p>
+                <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg dark:text-white">{title}</h3>
+                <p className="text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-400">{description}</p>
               </div>
             ))}
           </div>
@@ -484,13 +486,13 @@ export default function Home() {
       </section>
 
       {/* Why Telegram? */}
-      <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24">
+      <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Why Telegram?
             </h2>
-            <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg">
+            <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
               No new app. No login. Just open Telegram — which you already have.
             </p>
           </div>
@@ -498,14 +500,14 @@ export default function Home() {
             {whyTelegram.map(({ icon, title, desc }) => (
               <div
                 key={title}
-                className="flex flex-col items-start gap-3 rounded-2xl border border-slate-200 bg-white p-6"
+                className="flex flex-col items-start gap-3 rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-2xl">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-2xl dark:bg-slate-800">
                   {icon}
                 </span>
                 <div>
-                  <h3 className="mb-1 text-sm font-bold text-slate-900 sm:text-base">{title}</h3>
-                  <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">{desc}</p>
+                  <h3 className="mb-1 text-sm font-bold text-slate-900 sm:text-base dark:text-white">{title}</h3>
+                  <p className="text-xs leading-relaxed text-slate-600 sm:text-sm dark:text-slate-400">{desc}</p>
                 </div>
               </div>
             ))}
@@ -516,10 +518,10 @@ export default function Home() {
       {/* How it works */}
       <section className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+          <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
             Up and running in 30 seconds
           </h2>
-          <p className="mb-12 text-base text-slate-600 sm:mb-16 sm:text-lg">
+          <p className="mb-12 text-base text-slate-600 sm:mb-16 sm:text-lg dark:text-slate-400">
             No sign-up forms. No app stores. Just Telegram.
           </p>
           <div className="grid gap-8 sm:grid-cols-3 sm:gap-10">
@@ -541,11 +543,11 @@ export default function Home() {
               },
             ].map(({ step, title, desc }) => (
               <div key={step} className="flex flex-col items-center">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-700 text-xl font-extrabold text-white shadow-lg shadow-blue-200 sm:h-14 sm:w-14 sm:text-2xl">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-700 text-xl font-extrabold text-white shadow-lg shadow-blue-200 sm:h-14 sm:w-14 sm:text-2xl dark:shadow-none">
                   {step}
                 </div>
-                <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg">{title}</h3>
-                <p className="text-sm text-slate-600 sm:text-base">{desc}</p>
+                <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg dark:text-white">{title}</h3>
+                <p className="text-sm text-slate-600 sm:text-base dark:text-slate-400">{desc}</p>
               </div>
             ))}
           </div>
@@ -553,7 +555,7 @@ export default function Home() {
             href={BOT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-10 inline-block rounded-full bg-blue-700 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:mt-12 sm:px-8 sm:py-4 sm:text-lg"
+            className="mt-10 inline-block rounded-full bg-blue-700 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:mt-12 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
           >
             Open ExamBuddie →
           </a>
@@ -561,13 +563,13 @@ export default function Home() {
       </section>
 
       {/* Subjects */}
-      <section id="subjects" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24">
+      <section id="subjects" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               All major subjects covered
             </h2>
-            <p className="text-base text-slate-600 sm:text-lg">
+            <p className="text-base text-slate-600 sm:text-lg dark:text-slate-400">
               WAEC, JAMB and NECO past questions across every core subject.
             </p>
           </div>
@@ -575,10 +577,10 @@ export default function Home() {
             {subjects.map(({ icon, name }) => (
               <div
                 key={name}
-                className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center transition-colors hover:bg-blue-50 sm:p-4 border border-slate-100"
+                className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center transition-colors hover:bg-blue-50 sm:p-4 border border-slate-100 dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-800"
               >
                 <span className="text-2xl sm:text-3xl">{icon}</span>
-                <span className="text-xs font-medium text-slate-700 sm:text-sm">{name}</span>
+                <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
               </div>
             ))}
           </div>
@@ -589,21 +591,21 @@ export default function Home() {
       <section id="pricing" className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center sm:mb-12">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Simple pricing
             </h2>
-            <p className="mb-6 text-base text-slate-600 sm:text-lg">
+            <p className="mb-6 text-base text-slate-600 sm:text-lg dark:text-slate-400">
               Start free. Upgrade when you need more.
             </p>
 
             {/* Billing toggle */}
-            <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 p-1">
+            <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 p-1 dark:border-slate-700 dark:bg-slate-800">
               <button
                 onClick={() => setBillingYearly(false)}
                 className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
                   !billingYearly
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-600 hover:text-slate-700"
+                    ? "bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white"
+                    : "text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                 }`}
               >
                 Monthly
@@ -612,12 +614,12 @@ export default function Home() {
                 onClick={() => setBillingYearly(true)}
                 className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
                   billingYearly
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-600 hover:text-slate-700"
+                    ? "bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white"
+                    : "text-slate-600 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                 }`}
               >
                 Yearly
-                <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
+                <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 dark:bg-green-900 dark:text-green-300">
                   Save 27%
                 </span>
               </button>
@@ -630,8 +632,8 @@ export default function Home() {
                 key={name}
                 className={`relative flex flex-col rounded-2xl p-6 sm:p-8 ${
                   highlight
-                    ? "bg-blue-700 text-white shadow-2xl ring-2 shadow-blue-200 ring-blue-700"
-                    : "border border-slate-200 bg-white"
+                    ? "bg-blue-700 text-white shadow-2xl ring-2 shadow-blue-200 ring-blue-700 dark:bg-blue-900 dark:shadow-none dark:ring-blue-800"
+                    : "border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
                 }`}
               >
                 {badge && (
@@ -640,26 +642,26 @@ export default function Home() {
                   </span>
                 )}
                 <div className="mb-5 sm:mb-6">
-                  <div className={`mb-1 text-xs font-semibold tracking-wide uppercase sm:text-sm ${highlight ? "text-blue-200" : "text-blue-700"}`}>
+                  <div className={`mb-1 text-xs font-semibold tracking-wide uppercase sm:text-sm ${highlight ? "text-blue-200" : "text-blue-700 dark:text-blue-400"}`}>
                     {name}
                   </div>
                   <div className="mb-2 flex items-end gap-1">
-                    <span className={`text-3xl font-extrabold sm:text-4xl ${highlight ? "text-white" : "text-slate-900"}`}>
+                    <span className={`text-3xl font-extrabold sm:text-4xl ${highlight ? "text-white" : "text-slate-900 dark:text-white"}`}>
                       {price}
                     </span>
-                    <span className={`mb-1.5 text-xs sm:text-sm ${highlight ? "text-blue-200" : "text-slate-500"}`}>
+                    <span className={`mb-1.5 text-xs sm:text-sm ${highlight ? "text-blue-200" : "text-slate-500 dark:text-slate-400"}`}>
                       /{period}
                     </span>
                   </div>
-                  <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-600"}`}>
+                  <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-600 dark:text-slate-400"}`}>
                     {description}
                   </p>
                 </div>
                 <ul className="mb-6 flex-1 space-y-3 sm:mb-8">
                   {planFeatures.map((f) => (
                     <li key={f} className="flex items-start gap-3 text-xs sm:text-sm">
-                      <span className={highlight ? "text-green-300" : "text-green-600"}>✓</span>
-                      <span className={highlight ? "text-blue-50" : "text-slate-600"}>{f}</span>
+                      <span className={highlight ? "text-green-300" : "text-green-600 dark:text-green-400"}>✓</span>
+                      <span className={highlight ? "text-blue-50" : "text-slate-600 dark:text-slate-400"}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -685,24 +687,24 @@ export default function Home() {
       <section className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Why ExamBuddie beats the alternatives
             </h2>
-            <p className="text-base text-slate-600 sm:text-lg">
+            <p className="text-base text-slate-600 sm:text-lg dark:text-slate-400">
               Compare how students prepare — and why the bot wins.
             </p>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-slate-200">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6">Feature</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-blue-700 sm:px-6">ExamBuddie</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6">Textbooks</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6">YouTube</th>
+                <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6 dark:text-slate-400">Feature</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-blue-700 sm:px-6 dark:text-blue-400">ExamBuddie</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6 dark:text-slate-400">Textbooks</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6 dark:text-slate-400">YouTube</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {[
                   ["Past questions (WAEC, JAMB, NECO)", true, true, false],
                   ["Instant answer explanations", true, false, false],
@@ -713,16 +715,16 @@ export default function Home() {
                   ["AI-powered insights", true, false, false],
                   ["Free to start", true, false, true],
                 ].map(([feature, eb, tb, yt]) => (
-                  <tr key={String(feature)} className="hover:bg-slate-50">
-                    <td className="px-4 py-3.5 font-medium text-slate-700 sm:px-6">{feature}</td>
+                  <tr key={String(feature)} className="hover:bg-slate-50 dark:hover:bg-slate-900 dark:bg-slate-950">
+                    <td className="px-4 py-3.5 font-medium text-slate-700 sm:px-6 dark:text-slate-300">{feature}</td>
                     <td className="px-4 py-3.5 text-center sm:px-6">
-                      {eb ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300">—</span>}
+                      {eb ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300 dark:text-slate-700">—</span>}
                     </td>
                     <td className="px-4 py-3.5 text-center sm:px-6">
-                      {tb ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300">—</span>}
+                      {tb ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300 dark:text-slate-700">—</span>}
                     </td>
                     <td className="px-4 py-3.5 text-center sm:px-6">
-                      {yt ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300">—</span>}
+                      {yt ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300 dark:text-slate-700">—</span>}
                     </td>
                   </tr>
                 ))}
@@ -733,18 +735,18 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24">
+      <section id="faq" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
+            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Frequently asked questions
             </h2>
           </div>
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-slate-200 dark:divide-slate-800">
             {faqs.map(({ q, a }) => (
               <div key={q} className="py-5 sm:py-6">
-                <h3 className="mb-2 text-sm font-semibold text-slate-900 sm:text-base">{q}</h3>
-                <p className="text-sm leading-relaxed text-slate-600 sm:text-base">{a}</p>
+                <h3 className="mb-2 text-sm font-semibold text-slate-900 sm:text-base dark:text-white">{q}</h3>
+                <p className="text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-400">{a}</p>
               </div>
             ))}
           </div>
@@ -752,7 +754,7 @@ export default function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24">
+      <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24 dark:bg-blue-900">
         <div className="mx-auto max-w-2xl">
           <h2 className="mb-3 text-2xl font-extrabold sm:mb-4 sm:text-3xl md:text-4xl">
             Ready to ace your exam?
@@ -775,30 +777,30 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-100 px-4 py-8 pb-24 sm:px-6 sm:py-10 md:pb-10">
+      <footer className="border-t border-slate-100 px-4 py-8 pb-24 sm:px-6 sm:py-10 md:pb-10 dark:border-slate-800">
         <div className="mx-auto max-w-6xl space-y-4">
-          <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left">
-            <span className="text-sm font-bold text-slate-700 sm:text-base">ExamBuddie</span>
+          <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left dark:text-slate-400">
+            <span className="text-sm font-bold text-slate-700 sm:text-base dark:text-slate-200">ExamBuddie</span>
             <span>© {new Date().getFullYear()} ExamBuddie. Built with ❤️ for Nigerian students.</span>
             <a
               href={BOT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-blue-700 hover:underline"
+              className="font-medium text-blue-700 hover:underline dark:text-blue-400"
             >
               Open in Telegram →
             </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 md:justify-start">
-            <a href="/privacy" className="hover:text-blue-700 hover:underline">Privacy Policy</a>
-            <a href="/terms" className="hover:text-blue-700 hover:underline">Terms of Use</a>
-            <a href="/refunds" className="hover:text-blue-700 hover:underline">Refund Policy</a>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 md:justify-start dark:text-slate-400">
+            <a href="/privacy" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Privacy Policy</a>
+            <a href="/terms" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Terms of Use</a>
+            <a href="/refunds" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Refund Policy</a>
           </div>
         </div>
       </footer>
 
       {/* Sticky mobile CTA */}
-      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden">
+      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden dark:border-slate-800 dark:bg-slate-950/95">
         <a
           href={BOT_URL}
           target="_blank"
