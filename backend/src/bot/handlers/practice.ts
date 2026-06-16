@@ -54,26 +54,11 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
     await redis.updateSession(ctx.from.id, { questionDeadline: deadline });
 
     const telegramId = ctx.from.id;
-    const chatId = ctx.chat.id;
-    const messageId = sentMsg.message_id;
-    const telegram = ctx.telegram;
 
-    timerService.setQuestionTimer(
+    timerService.startDisplayTimer(
       telegramId,
       timerSecs,
-      (secsLeft) => {
-        if (question.image_url) {
-          telegram.editMessageCaption(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-            parse_mode: 'HTML',
-            reply_markup: keyboard,
-          }).catch(() => {});
-        } else {
-          telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-            parse_mode: 'HTML',
-            reply_markup: keyboard,
-          }).catch(() => {});
-        }
-      },
+      { telegram: ctx.telegram, chatId: ctx.chat.id, messageId: sentMsg.message_id, imageUrl: question.image_url, baseText, timerLine, keyboard },
       async () => {
         const sess = await redis.getSession(telegramId);
         if (!sess?.questionDeadline || sess.questionDeadline !== deadline) return;
@@ -86,7 +71,7 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
         });
 
         const explanation = q?.explanation ? `\n\n💡 ${q.explanation}` : '';
-        await telegram.sendMessage(telegramId,
+        await ctx.telegram.sendMessage(telegramId,
           `⏱️ <b>Time's up!</b>\n\nThe correct answer was <b>${q?.correct_option}</b>.${explanation}`,
           { parse_mode: 'HTML', reply_markup: fmt.afterAnswerKeyboard(sess.mode, q?.question_text?.includes('*') ?? false) },
         ).catch((err: any) => console.error(`[practice] timer expiry sendMessage failed for ${telegramId}:`, err.message));
@@ -107,6 +92,7 @@ export async function handlePractice(ctx: any): Promise<void> {
       { parse_mode: 'HTML', reply_markup: fmt.practiceMultiSubjectKeyboard(allSubjects, [...user.subjects]) }
     );
   } else {
+    await redis.clearSession(ctx.from.id);
     const counts = await db.getSubjectQuestionCounts(user.subjects);
     await ctx.reply(
       '📚 <b>Practice Mode</b>\n\nWhich subject would you like to practise?',
@@ -119,7 +105,7 @@ export async function handleMultiSubjectToggle(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const subject = ctx.callbackQuery.data.split(':')[3];
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   const session = await redis.getSession(ctx.from.id);
   let selected: string[] = session?.selectedSubjects || [...user.subjects];
@@ -140,6 +126,17 @@ export async function handleMultiSubjectToggle(ctx: any): Promise<void> {
 
 export async function handleMultiSubjectStart(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
+  if (user.plan !== 'premium') {
+    await ctx.reply(
+      `📚 <b>Multi-Subject Practice — Premium Feature</b>\n\nUpgrade to Premium to practise multiple subjects in one session!`,
+      { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() }
+    );
+    return;
+  }
+
   const session = await redis.getSession(ctx.from.id);
 
   const selected: string[] = session?.selectedSubjects || [];
@@ -149,8 +146,6 @@ export async function handleMultiSubjectStart(ctx: any): Promise<void> {
   }
 
   if (selected.length === 1) {
-    const user = await db.getUser(ctx.from.id);
-    if (!user) return;
     await startPractice(ctx, user, selected[0]);
     return;
   }
@@ -167,7 +162,7 @@ export async function handleSubjectPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const subject = ctx.callbackQuery.data.split(':')[2];
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   // Premium: year=undefined triggers the year picker step inside startPractice
   // Free: use saved target_year directly (no extra steps)
   const year = user.plan === 'premium' ? undefined : (user.target_year ?? null);
@@ -203,8 +198,7 @@ export async function startPractice(ctx: any, user: User | null, subject: string
         pendingSubject: subject,
         pendingYear: year ?? null,
         pendingExamType: sessionExamType,
-        pendingMode: 'practice',
-        pendingTimerSecs: questionTimerSecs ?? 0,
+pendingTimerSecs: questionTimerSecs ?? 0,
       });
       await ctx.reply(
         '🎯 <b>Which topic would you like to practise?</b>',
@@ -286,7 +280,7 @@ export async function handlePracticeTopicPick(ctx: any): Promise<void> {
     return;
   }
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await startPractice(
     ctx, user,
     subject,
@@ -305,7 +299,7 @@ export async function handlePracticeAvail(ctx: any): Promise<void> {
   const examType = parts[3];
   const year = parts[4] && parts[4] !== 'any' ? parseInt(parts[4], 10) : null;
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await startPractice(ctx, user, subject, year, 0, examType, undefined);
 }
 
@@ -322,7 +316,7 @@ export async function handlePracticeFlowYear(ctx: any): Promise<void> {
     return;
   }
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await startPractice(ctx, user, session.pendingSubject, year, undefined, undefined);
 }
 
@@ -337,7 +331,7 @@ export async function handlePracticeExamTypePick(ctx: any): Promise<void> {
     return;
   }
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await startPractice(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType);
 }
 
@@ -353,7 +347,7 @@ export async function handlePracticeTimerPick(ctx: any): Promise<void> {
   }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   await startPractice(ctx, user, session.pendingSubject, session.pendingYear ?? null, timerSecs, session.pendingExamType);
 }
@@ -369,7 +363,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
   }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   const q = session.currentQuestion;
 
   // Timer already fired automatically — ignore late tap
@@ -465,10 +459,7 @@ export async function handleNext(ctx: any): Promise<void> {
   }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
-
-  // Check per-subject limit
-  if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   // If premium was revoked mid-session, cancel the per-question timer
   if (session.questionTimerSecs && user.plan !== 'premium') {
@@ -482,13 +473,22 @@ export async function handleNext(ctx: any): Promise<void> {
   let pickedSubject = session.subject || '';
 
   if (session.practiceSubjects && session.practiceSubjects.length > 1) {
-    // Multi-subject: try subjects in random order until one yields a question
+    // Multi-subject: try subjects in random order until one yields a question, skipping any subject that's hit its daily limit
     const shuffled = [...session.practiceSubjects].sort(() => Math.random() - 0.5);
     for (const subj of shuffled) {
+      if (user.plan !== 'premium') {
+        const usage = await redis.getSubjectUsage(ctx.from.id, subj);
+        if (usage.count >= fmt.SUBJECT_Q_LIMIT) continue;
+      }
       q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic);
       if (q) { pickedSubject = subj; break; }
     }
+    if (!q) {
+      // Either no questions left or every subject is at its daily limit — report against current subject
+      if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
+    }
   } else {
+    if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
     q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic);
   }
 
@@ -561,7 +561,7 @@ export async function handleChangeSubject(ctx: any): Promise<void> {
   await redis.setSession(ctx.from.id, { sessionCarry: carry });
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   if (user.subjects.length === 1) {
     await startPractice(ctx, user, user.subjects[0]);
@@ -632,7 +632,7 @@ export async function handleAutoDrill(ctx: any): Promise<void> {
   const parts = ctx.callbackQuery.data.split(':');
   const subject = parts[2] || null;
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   const targetSubject = subject || user.subjects[0];
   const weakTopics = await db.getWeakTopics(user.id, targetSubject);

@@ -36,7 +36,7 @@ export async function handleQuizSubjectPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const subject = ctx.callbackQuery.data.split(':')[2];
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   // Premium: year=undefined triggers year picker step inside startQuiz
   // Free: n/a (quiz is premium-only, but kept consistent)
   await startQuiz(ctx, user, subject);
@@ -55,17 +55,17 @@ export async function handleQuizFlowYear(ctx: any): Promise<void> {
     return;
   }
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await startQuiz(ctx, user, session.pendingSubject, year);
 }
 
 export async function startQuiz(ctx: any, user: User | null, subject: string, year?: number | null, questionTimerSecs?: number, sessionExamType?: string): Promise<void> {
   if (!user) user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   // Step 0: pick year
   if (year === undefined) {
-    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingMode: 'quiz' });
+    await redis.setSession(ctx.from.id, { pendingSubject: subject });
     await ctx.reply(
       '📅 <b>Which exam year would you like to be quizzed on?</b>',
       { parse_mode: 'HTML', reply_markup: fmt.flowYearKeyboard('quiz') }
@@ -74,7 +74,7 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   }
   // Step 1: pick exam type
   if (sessionExamType === undefined) {
-    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null, pendingMode: 'quiz' });
+    await redis.setSession(ctx.from.id, { pendingSubject: subject, pendingYear: year ?? null });
     await ctx.reply(
       '📋 <b>Which exam would you like to be quizzed on?</b>',
       { parse_mode: 'HTML', reply_markup: fmt.examTypePickerKeyboard('quiz') }
@@ -153,7 +153,7 @@ export async function handleQuizExamTypePick(ctx: any): Promise<void> {
     return;
   }
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, undefined, examType);
 }
 
@@ -169,7 +169,7 @@ export async function handleQuizTimerPick(ctx: any): Promise<void> {
   }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   await startQuiz(ctx, user, session.pendingSubject, session.pendingYear ?? null, timerSecs, session.pendingExamType);
 }
@@ -182,7 +182,7 @@ export async function handleQuizAvail(ctx: any): Promise<void> {
   const examType = parts[3];
   const year = parts[4] && parts[4] !== 'any' ? parseInt(parts[4], 10) : null;
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await startQuiz(ctx, user, subject, year, undefined, examType);
 }
 
@@ -218,37 +218,28 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
     await redis.saveQuizState(ctx.from.id, quizState);
 
     const telegramId = ctx.from.id;
-    const chatId = ctx.chat.id;
-    const messageId = sentMsg.message_id;
-    const telegram = ctx.telegram;
 
-    timerService.setQuestionTimer(
+    timerService.startDisplayTimer(
       telegramId,
       timerSecs,
-      (secsLeft) => {
-        if (q.image_url) {
-          telegram.editMessageCaption(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-            parse_mode: 'HTML',
-            reply_markup: keyboard,
-          }).catch(() => {});
-        } else {
-          telegram.editMessageText(chatId, messageId, undefined, baseText + timerLine(secsLeft), {
-            parse_mode: 'HTML',
-            reply_markup: keyboard,
-          }).catch(() => {});
-        }
-      },
+      { telegram: ctx.telegram, chatId: ctx.chat.id, messageId: sentMsg.message_id, imageUrl: q.image_url, baseText, timerLine, keyboard },
       async () => {
         const state = await redis.getQuizState(telegramId);
         if (!state || state.questionDeadline !== deadline) return;
 
-        state.answers.push({ qId: q.id, selected: '', correct: q.correct_option, isCorrect: false });
-        state.questionDeadline = undefined;
-        state.qIndex++;
-        await redis.saveQuizState(telegramId, state);
+        // Clear deadline first so a concurrent answer tap sees it gone and bails
+        await redis.saveQuizState(telegramId, { ...state, questionDeadline: undefined });
+
+        // Re-read to confirm no concurrent answer already claimed this question
+        const fresh = await redis.getQuizState(telegramId);
+        if (!fresh || fresh.qIndex !== state.qIndex) return;
+
+        fresh.answers.push({ qId: q.id, selected: '', correct: q.correct_option, isCorrect: false });
+        fresh.qIndex++;
+        await redis.saveQuizState(telegramId, fresh);
 
         const timesUpText = `⏱️ <b>Time's up!</b>\n\n` + fmt.correctAnswer(q, '');
-        await telegram.sendMessage(telegramId, timesUpText, {
+        await ctx.telegram.sendMessage(telegramId, timesUpText, {
           parse_mode: 'HTML',
           reply_markup: { inline_keyboard: [[{ text: '➡️ Next', callback_data: 'quiz:next' }]] },
         }).catch((err: any) => console.error(`[quiz] timer expiry sendMessage failed for ${telegramId}:`, err.message));
@@ -279,7 +270,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     return;
   }
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   // Timer already fired and auto-advanced — ignore late tap
   if (!quizState.questionDeadline && quizState.questionTimerSecs) return;
@@ -351,6 +342,7 @@ export async function handleQuizNext(ctx: any): Promise<void> {
     return;
   }
 
+  timerService.clearQuestionTimer(ctx.from.id);
   await sendQuizQuestion(ctx, quizState);
 }
 
@@ -386,7 +378,7 @@ export async function handleQuizStopConfirm(ctx: any): Promise<void> {
   }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   for (let i = quizState.qIndex; i < quizState.questions.length; i++) {
     const q = quizState.questions[i];

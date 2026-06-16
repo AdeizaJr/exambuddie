@@ -22,15 +22,18 @@ export async function handleStatsFilter(ctx: any): Promise<void> {
   const examType = ctx.callbackQuery.data.split(':')[2]; // 'WAEC' | 'NECO' | 'JAMB' | 'all'
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
-  const [stats, subjectStats, weakTopics] = await Promise.all([
+  const subjects = user.subjects && user.subjects.length > 0 ? user.subjects : [];
+  const [stats, subjectStats, ...perSubjectWeakTopics] = await Promise.all([
     db.getUserStats(user.id, examType),
     db.getSubjectStats(user.id, examType),
-    user.subjects && user.subjects.length > 0
-      ? db.getWeakTopics(user.id, user.subjects[0], examType)
-      : Promise.resolve([]),
+    ...subjects.map(s => db.getWeakTopics(user.id, s, examType)),
   ]);
+  const weakTopics = (perSubjectWeakTopics as any[][])
+    .flat()
+    .sort((a: any, b: any) => a.accuracy - b.accuracy)
+    .slice(0, 3);
 
   await ctx.reply(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats), { parse_mode: 'HTML' });
 }
@@ -47,7 +50,7 @@ export async function handleSubscribePlan(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const plan = ctx.callbackQuery.data.split(':')[1]; // 'monthly' | 'yearly'
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   try {
     const { link, txRef } = await payments.createPaymentLink(user, plan);
@@ -66,7 +69,7 @@ export async function handleSubscribePlan(ctx: any): Promise<void> {
 export async function handleQuizHistory(ctx: any): Promise<void> {
   if (ctx.callbackQuery) await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   const history = await db.getQuizHistory(user.id);
 
@@ -126,7 +129,7 @@ export async function handleFlagUnderline(ctx: any): Promise<void> {
   }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   await ctx.answerCbQuery('🔤 Underline flagged — we\'ll fix it!', { show_alert: true });
 
@@ -172,7 +175,7 @@ export async function handleFlagReason(ctx: any, reasonCode: string): Promise<vo
   }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   await ctx.answerCbQuery('🚩 Flagged — we\'ll review it. Thanks!', { show_alert: true });
 
