@@ -80,6 +80,7 @@ function md(text: string | null | undefined): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
+    .replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>')
     .replace(/\*([^*\n]+)\*/g, '<u>$1</u>');
 }
 
@@ -179,35 +180,28 @@ export function welcome(firstName: string): string {
 📅 <b>Step 1 of 3:</b> Which exam year do you want to practice?`;
 }
 
-export function onboardYearKeyboard() {
+function buildYearKeyboard(prefix: string, backButton?: { text: string; callback_data: string }) {
   const rows: any[][] = [
-    [{ text: '📅 Any Year', callback_data: 'onboard:year:any' }],
+    [{ text: '📅 Any Year', callback_data: `${prefix}:any` }],
   ];
   const years: number[] = [];
   for (let y = 2025; y >= 2010; y--) years.push(y);
   for (let i = 0; i < years.length; i += 4) {
     rows.push(years.slice(i, i + 4).map(y => ({
       text: `${y}`,
-      callback_data: `onboard:year:${y}`,
+      callback_data: `${prefix}:${y}`,
     })));
   }
+  if (backButton) rows.push([backButton]);
   return { inline_keyboard: rows };
 }
 
+export function onboardYearKeyboard() {
+  return buildYearKeyboard('onboard:year');
+}
+
 export function settingsYearKeyboard() {
-  const rows: any[][] = [
-    [{ text: '📅 Any Year', callback_data: 'settings:year:any' }],
-  ];
-  const years: number[] = [];
-  for (let y = 2025; y >= 2010; y--) years.push(y);
-  for (let i = 0; i < years.length; i += 4) {
-    rows.push(years.slice(i, i + 4).map(y => ({
-      text: `${y}`,
-      callback_data: `settings:year:${y}`,
-    })));
-  }
-  rows.push([{ text: '← Back to Settings', callback_data: 'settings:back' }]);
-  return { inline_keyboard: rows };
+  return buildYearKeyboard('settings:year', { text: '← Back to Settings', callback_data: 'settings:back' });
 }
 
 export function askExamType(year: number | null): string {

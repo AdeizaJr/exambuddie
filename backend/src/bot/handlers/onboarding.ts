@@ -191,7 +191,7 @@ export async function handleSettingsExam(ctx: any): Promise<void> {
 export async function handleSettingsSubjects(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   // Always ensure English is in the selection
   const current = user.subjects?.includes('english')
     ? user.subjects
@@ -208,7 +208,7 @@ export async function handleSettingsSubjects(ctx: any): Promise<void> {
 
 export async function handleSettingsNotifications(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   const newVal = !user.notifications_enabled;
   await db.updateUser(ctx.from.id, { notifications_enabled: newVal });
   await ctx.editMessageReplyMarkup(settingsKeyboard(newVal));
@@ -250,7 +250,7 @@ export async function handleSettingsDeleteConfirm(ctx: any): Promise<void> {
 export async function handleSettingsYear(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   const current = user.target_year ? `Currently: <b>${user.target_year}</b>` : 'Currently: <b>Any Year</b>';
   await ctx.editMessageText(
     `📅 <b>Change Target Year</b>\n\n${current}\n\nSelect the year you're preparing for, or choose Any Year to practice all years.`,
@@ -265,7 +265,7 @@ export async function handleSettingsYearPick(ctx: any): Promise<void> {
   const label = year ? `${year}` : 'Any Year';
   await ctx.answerCbQuery(`Target year set to ${label} ✅`, { show_alert: false });
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
     reply_markup: settingsKeyboard(user.notifications_enabled),
@@ -275,7 +275,7 @@ export async function handleSettingsYearPick(ctx: any): Promise<void> {
 export async function handleSettingsBack(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
     reply_markup: settingsKeyboard(user.notifications_enabled),

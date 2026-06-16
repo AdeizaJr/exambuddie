@@ -96,7 +96,6 @@ export interface SessionState {
   pendingSubject?: string;
   pendingSubjects?: string[];
   pendingYear?: number | null;
-  pendingMode?: 'practice' | 'quiz';
   pendingExamType?: string;
 }
 
