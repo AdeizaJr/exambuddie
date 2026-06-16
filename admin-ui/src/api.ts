@@ -134,7 +134,7 @@ export async function getUsers(filter: UsersFilter = {}): Promise<PaginatedRespo
 }
 
 export async function deleteUsers(
-  payload: { ids: number[] } | { all: true; search?: string }
+  payload: { ids: number[] } | { all: true; search?: string; confirmAll?: string }
 ): Promise<{ ok: boolean; deleted: number }> {
   return req<{ ok: boolean; deleted: number }>("DELETE", "/users", payload);
 }

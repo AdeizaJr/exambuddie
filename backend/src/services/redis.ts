@@ -1,20 +1,42 @@
-// src/services/redis.ts — In-memory fallback (no Redis required)
-const store = new Map<string, any>();
+// src/services/redis.ts — Redis-backed session/state store
+import { createClient, RedisClientType } from 'redis';
 
-const SUBJECT_WINDOW_MS = 6 * 60 * 60 * 1000; // 6 hours
+const client: RedisClientType = createClient({ url: process.env.REDIS_URL });
+client.on('error', (err) => console.error('[redis] client error:', err.message));
+client.connect().catch((err) => console.error('[redis] failed to connect:', err.message));
+
+const SUBJECT_WINDOW_SECS = 6 * 60 * 60; // 6 hours
+const SESSION_TTL_SECS = 6 * 60 * 60; // abandoned sessions/quizzes expire after 6 hours
+const BURST_WINDOW_SECS = 3;
+const BURST_MAX_ACTIONS = 8;
 
 interface SubjectUsage {
   count: number;
   expiresAt: number;
 }
 
+async function getJson<T>(key: string): Promise<T | null> {
+  const raw = await client.get(key);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
+
+async function setJson(key: string, value: unknown, ttlSecs: number): Promise<void> {
+  await client.set(key, JSON.stringify(value), { EX: ttlSecs });
+}
+
 export const getSubjectUsage = async (
   telegramId: number | string,
   subject: string
 ): Promise<SubjectUsage> => {
-  const entry: SubjectUsage | undefined = store.get(`sublimit:${telegramId}:${subject}`);
-  if (!entry || Date.now() > entry.expiresAt) {
-    return { count: 0, expiresAt: Date.now() + SUBJECT_WINDOW_MS };
+  const key = `sublimit:${telegramId}:${subject}`;
+  const entry = await getJson<SubjectUsage>(key);
+  if (!entry) {
+    return { count: 0, expiresAt: Date.now() + SUBJECT_WINDOW_SECS * 1000 };
   }
   return entry;
 };
@@ -24,62 +46,62 @@ export const incrementSubjectUsage = async (
   subject: string
 ): Promise<SubjectUsage> => {
   const key = `sublimit:${telegramId}:${subject}`;
-  let entry: SubjectUsage = store.get(key);
-  if (!entry || Date.now() > entry.expiresAt) {
-    entry = { count: 0, expiresAt: Date.now() + SUBJECT_WINDOW_MS };
-  }
-  entry = { ...entry, count: entry.count + 1 };
-  store.set(key, entry);
+  const existing = await getJson<SubjectUsage>(key);
+  const entry: SubjectUsage = existing
+    ? { ...existing, count: existing.count + 1 }
+    : { count: 1, expiresAt: Date.now() + SUBJECT_WINDOW_SECS * 1000 };
+  const ttlSecs = Math.max(1, Math.ceil((entry.expiresAt - Date.now()) / 1000));
+  await setJson(key, entry, ttlSecs);
   return entry;
 };
 
 export const getSession = async (telegramId: number | string): Promise<any> => {
-  return store.get(`session:${telegramId}`) || null;
+  return getJson(`session:${telegramId}`);
 };
 
 export const setSession = async (telegramId: number | string, data: any): Promise<void> => {
-  store.set(`session:${telegramId}`, data);
+  await setJson(`session:${telegramId}`, data, SESSION_TTL_SECS);
 };
 
 export const clearSession = async (telegramId: number | string): Promise<void> => {
-  store.delete(`session:${telegramId}`);
+  await client.del(`session:${telegramId}`);
 };
 
 export const updateSession = async (telegramId: number | string, updates: any): Promise<any> => {
-  const current = store.get(`session:${telegramId}`) || {};
+  const current = (await getJson<any>(`session:${telegramId}`)) || {};
   const updated = { ...current, ...updates };
-  store.set(`session:${telegramId}`, updated);
+  await setJson(`session:${telegramId}`, updated, SESSION_TTL_SECS);
   return updated;
 };
 
-export const checkBurst = async (_telegramId: number | string): Promise<boolean> => {
-  return false; // no burst limiting without Redis
+// Returns true when the user has exceeded BURST_MAX_ACTIONS within BURST_WINDOW_SECS
+export const checkBurst = async (telegramId: number | string): Promise<boolean> => {
+  const key = `burst:${telegramId}`;
+  const count = await client.incr(key);
+  if (count === 1) await client.expire(key, BURST_WINDOW_SECS);
+  return count > BURST_MAX_ACTIONS;
 };
 
 export const saveQuizState = async (telegramId: number | string, quizData: any): Promise<void> => {
-  store.set(`quiz:${telegramId}`, quizData);
+  await setJson(`quiz:${telegramId}`, quizData, SESSION_TTL_SECS);
 };
 
 export const getQuizState = async (telegramId: number | string): Promise<any> => {
-  return store.get(`quiz:${telegramId}`) || null;
+  return getJson(`quiz:${telegramId}`);
 };
 
 export const clearQuizState = async (telegramId: number | string): Promise<void> => {
-  store.delete(`quiz:${telegramId}`);
+  await client.del(`quiz:${telegramId}`);
 };
 
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
-  for (const key of store.keys()) {
-    if (
+  const keys = await client.keys(`*${telegramId}*`);
+  const toDelete = keys.filter(
+    (key) =>
       key === `session:${telegramId}` ||
       key === `quiz:${telegramId}` ||
+      key === `burst:${telegramId}` ||
       key.startsWith(`sublimit:${telegramId}:`)
-    ) {
-      store.delete(key);
-    }
-  }
-};
-
-export const getClient = async (): Promise<null> => {
-  return null;
+  );
+  if (toDelete.length) await client.del(toDelete);
 };

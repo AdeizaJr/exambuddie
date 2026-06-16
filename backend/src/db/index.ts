@@ -39,11 +39,20 @@ export async function upsertUser(ctx: any): Promise<User> {
   return rows[0];
 }
 
+const USER_UPDATABLE_COLUMNS = new Set<string>([
+  'username', 'first_name', 'exam_type', 'subjects', 'target_year', 'plan',
+  'plan_expires_at', 'daily_count', 'daily_reset_at', 'streak',
+  'last_active_date', 'notifications_enabled',
+]);
+
 export async function updateUser(
   telegramId: number | string,
   fields: Partial<User>
 ): Promise<User> {
   const keys = Object.keys(fields);
+  for (const k of keys) {
+    if (!USER_UPDATABLE_COLUMNS.has(k)) throw new Error(`updateUser: column "${k}" is not updatable`);
+  }
   const values = Object.values(fields);
   const setClause = keys.map((k, i) => `${k} = $${i + 2}`).join(', ');
   const { rows } = await pool.query<User>(
