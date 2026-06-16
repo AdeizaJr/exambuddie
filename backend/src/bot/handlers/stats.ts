@@ -149,20 +149,45 @@ export async function handleFlagQuestion(ctx: any): Promise<void> {
     return;
   }
 
+  await ctx.answerCbQuery();
+  await ctx.reply('🚩 What\'s wrong with this question?', {
+    reply_markup: fmt.flagReasonKeyboard(),
+  });
+}
+
+export async function handleFlagReason(ctx: any, reasonCode: string): Promise<void> {
+  const s = await redis.getSession(ctx.from.id);
+  const quizState = await redis.getQuizState(ctx.from.id);
+  const q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+
+  if (!q) {
+    await ctx.answerCbQuery('Nothing to flag right now.', { show_alert: false });
+    return;
+  }
+
+  const reasonLabel = fmt.FLAG_REASONS[reasonCode];
+  if (!reasonLabel) {
+    await ctx.answerCbQuery('Unknown reason.', { show_alert: false });
+    return;
+  }
+
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
-  const subjectName = q.subject.charAt(0).toUpperCase() + q.subject.slice(1).replace(/-/g, ' ');
-  const toast = `🚩 Flagged: ${subjectName} ${q.exam_type} ${q.year}. We'll review it — thanks!`;
-  await ctx.answerCbQuery(toast, { show_alert: true });
+
+  await ctx.answerCbQuery('🚩 Flagged — we\'ll review it. Thanks!', { show_alert: true });
 
   await db.query(
     `INSERT INTO flagged_explanations (question_id, user_id, reason)
-     VALUES ($1, $2, 'User flagged as incorrect')`,
-    [q.id, user.id]
+     VALUES ($1, $2, $3)`,
+    [q.id, user.id, reasonLabel]
   );
 
-  await db.query(
-    `UPDATE questions SET flag_count = flag_count + 1 WHERE id = $1`,
-    [q.id]
-  );
+  await db.query(`UPDATE questions SET flag_count = flag_count + 1 WHERE id = $1`, [q.id]);
+
+  await ctx.editMessageText('✅ Thanks — flagged for review.').catch(() => {});
+}
+
+export async function handleFlagCancel(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  await ctx.editMessageText('Cancelled.').catch(() => {});
 }

@@ -331,6 +331,25 @@ export function correctAnswer(q: Question, selected: string): string {
 ${md(q.explanation) || '<i>Explanation not yet available.</i>'}`;
 }
 
+export const FLAG_REASONS: Record<string, string> = {
+  wrong_answer: '❌ Wrong answer marked correct',
+  wrong_explanation: '💡 Explanation is wrong/unclear',
+  confusing_question: '❓ Question text is confusing',
+  bad_image: '🖼 Image/diagram missing or wrong',
+  other: '🤷 Other',
+};
+
+export function flagReasonKeyboard() {
+  return {
+    inline_keyboard: [
+      ...Object.entries(FLAG_REASONS).map(([code, label]) => [
+        { text: label, callback_data: `flag:reason:${code}` },
+      ]),
+      [{ text: '« Cancel', callback_data: 'flag:cancel' }],
+    ],
+  };
+}
+
 export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
   if (mode === 'quiz') {
     const rows: any[] = [
