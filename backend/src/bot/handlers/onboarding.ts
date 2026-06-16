@@ -160,6 +160,7 @@ function settingsKeyboard(notificationsEnabled: boolean) {
       [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
       [{ text: '📅 Change Target Year', callback_data: 'settings:year' }],
       [{ text: notifLabel, callback_data: 'settings:notifications' }],
+      [{ text: '📄 Terms & Privacy', url: 'https://exambuddie.app/terms' }],
       [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
       [{ text: '❌ Cancel', callback_data: 'menu:main' }],
     ],
