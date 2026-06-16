@@ -24,9 +24,25 @@ export async function handleStart(ctx: any): Promise<void> {
     return;
   }
 
-  // New user — start onboarding at step 1: year selection
-  await redis.setSession(ctx.from.id, { step: 'year', selectedSubjects: [] });
-  await ctx.reply(fmt.welcome(user.first_name), {
+  // New user — show consent screen before onboarding starts
+  await redis.setSession(ctx.from.id, { step: 'consent', selectedSubjects: [] });
+  await ctx.reply(fmt.consentPrompt(user.first_name), {
+    parse_mode: 'HTML',
+    reply_markup: fmt.consentKeyboard(),
+  });
+}
+
+// Step 0 — Consent agreed → move to year selection
+export async function handleOnboardConsent(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+
+  await redis.updateSession(ctx.from.id, { step: 'year' });
+
+  await ctx.editMessageText('✅ <b>Thanks — you\'re all set.</b> You\'ve agreed to our Terms of Use and Privacy Policy.', {
+    parse_mode: 'HTML',
+  });
+
+  await ctx.reply(fmt.welcome(ctx.from.first_name), {
     parse_mode: 'HTML',
     reply_markup: fmt.onboardYearKeyboard(),
   });

@@ -157,16 +157,26 @@ export const SUBJECT_EMOJI: Record<string, string> = {
   'book-keeping':   '📒',
 };
 
-export function welcome(firstName: string): string {
+export function consentPrompt(firstName: string): string {
   return `🎓 <b>Welcome to ExamBuddie, ${firstName}!</b>
 
 I'm your AI-powered WAEC, JAMB &amp; NECO exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
 
-Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
+Before we start, please review our <a href="https://exambuddie.app/terms">Terms of Use</a> and <a href="https://exambuddie.app/privacy">Privacy Policy</a> — they cover what data we collect (your Telegram ID, exam preferences, quiz history) and how we use it.
 
-📅 <b>Step 1 of 3:</b> Which exam year are you preparing for?
+Tap below to agree and continue.`;
+}
 
-<i>By continuing, you agree to our <a href="https://exambuddie.app/terms">Terms of Use</a> and <a href="https://exambuddie.app/privacy">Privacy Policy</a>.</i>`;
+export function consentKeyboard() {
+  return {
+    inline_keyboard: [[{ text: '✅ I Agree, Continue', callback_data: 'onboard:consent:agree' }]],
+  };
+}
+
+export function welcome(firstName: string): string {
+  return `Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
+
+📅 <b>Step 1 of 3:</b> Which exam year do you want to practice?`;
 }
 
 export function onboardYearKeyboard() {
