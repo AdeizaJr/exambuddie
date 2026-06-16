@@ -79,15 +79,33 @@ export default function PrivacyPage() {
 
           <section>
             <h2>5. Data Retention</h2>
-            <p>
-              We keep your account data for as long as you use ExamBuddie. If you request
-              deletion, we will remove your personal information within 14 days. Quiz history
-              may be retained in anonymised, aggregated form for analytics.
+            <ul>
+              <li>Active accounts: we keep your data for as long as you use ExamBuddie.</li>
+              <li>Inactive accounts: if you don&apos;t use the bot for 24 consecutive months, we delete your personal identifiers (Telegram ID, name, username) automatically.</li>
+              <li>Deletion requests: we remove your personal information within 14 days of your request.</li>
+              <li>Payment records: subscription/payment references are kept for 7 years to meet Nigerian financial record-keeping requirements.</li>
+              <li>Quiz and practice history may be retained in anonymised, aggregated form indefinitely for analytics — this data cannot be linked back to you once anonymised.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>6. Data Breach Response</h2>
+            <p>If we discover a security incident affecting your personal data, we will:</p>
+            <ul>
+              <li>Investigate and contain the incident as soon as it is identified</li>
+              <li>Assess what data and how many users were affected</li>
+              <li>Notify affected users via the bot within 72 hours of confirming a breach, explaining what happened and what we&apos;re doing about it</li>
+              <li>Notify the Nigeria Data Protection Commission (NDPC) where required under the Nigeria Data Protection Act 2023</li>
+              <li>Take corrective action to prevent recurrence (e.g. patching the vulnerability, rotating credentials)</li>
+            </ul>
+            <p className="mt-3">
+              To report a suspected security issue, email{" "}
+              <a href="mailto:support@exambuddie.com" className="text-blue-600 hover:underline">support@exambuddie.com</a>.
             </p>
           </section>
 
           <section>
-            <h2>6. Third-Party Services</h2>
+            <h2>7. Third-Party Services</h2>
             <ul>
               <li><strong>Telegram</strong> — powers the chat interface. Subject to Telegram&apos;s own privacy policy.</li>
               <li><strong>Flutterwave</strong> — processes subscription payments.</li>
@@ -96,7 +114,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2>7. Your Rights</h2>
+            <h2>8. Your Rights</h2>
             <p>You may request to:</p>
             <ul>
               <li>Access the personal data we hold about you</li>
@@ -111,7 +129,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2>8. Children</h2>
+            <h2>9. Children</h2>
             <p>
               ExamBuddie is designed for secondary school and university students. We do not
               knowingly collect data from children under 13. If you believe a child has used
@@ -120,7 +138,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2>9. Changes to This Policy</h2>
+            <h2>10. Changes to This Policy</h2>
             <p>
               We may update this policy from time to time. Material changes will be announced
               via the bot. Continued use of ExamBuddie after changes constitutes acceptance.
