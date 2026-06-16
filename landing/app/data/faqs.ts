@@ -36,7 +36,7 @@ export const faqs = [
     a: "No — you need an internet connection since ExamBuddie runs inside Telegram. However, it works on any network including mobile data.",
   },
   {
-    q: "Can I cancel my Premium subscription?",
-    a: "Premium is a one-time payment per period — monthly or yearly. It does not auto-renew, so there is nothing to cancel.",
+    q: "Can I cancel my Premium plan?",
+    a: "Premium is a one-time payment for a 30-day or 1-year pass — not a subscription. It does not auto-renew, so there is nothing to cancel.",
   },
 ];

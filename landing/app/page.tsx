@@ -206,7 +206,7 @@ function BotMockup() {
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-white">ExamBuddie</p>
-            <p className="text-xs text-blue-300">bot · online</p>
+            <p className="text-xs text-green-400">bot · online</p>
           </div>
         </div>
 
@@ -242,7 +242,7 @@ function BotMockup() {
           <div className="flex justify-end">
             <button
               onClick={() => setCurrent((c) => (c + 1) % mockQuestions.length)}
-              className="rounded-full bg-blue-600 px-3 py-1 text-[10px] font-semibold text-white hover:bg-blue-700 transition-colors"
+              className="rounded-full bg-blue-700 px-3 py-1 text-[10px] font-semibold text-white hover:bg-blue-800 transition-colors"
             >
               Next question →
             </button>
@@ -253,17 +253,17 @@ function BotMockup() {
         <div className="flex items-center justify-between bg-[#0d1117] px-3 pb-3">
           <button
             onClick={() => setCurrent((c) => (c - 1 + mockQuestions.length) % mockQuestions.length)}
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1e3a5f] text-slate-300 transition-colors hover:bg-blue-600 hover:text-white text-xs"
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1e3a5f] text-slate-300 transition-colors hover:bg-slate-700 hover:text-white text-xs"
           >
             ‹
           </button>
           <div className="text-center">
-            <span className="text-[10px] font-semibold text-blue-400">{current + 1} / {mockQuestions.length}</span>
+            <span className="text-[10px] font-semibold text-slate-500">{current + 1} / {mockQuestions.length}</span>
             <p className="text-[9px] text-slate-500 leading-none mt-0.5">swipe to browse</p>
           </div>
           <button
             onClick={() => setCurrent((c) => (c + 1) % mockQuestions.length)}
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1e3a5f] text-slate-300 transition-colors hover:bg-blue-600 hover:text-white text-xs"
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1e3a5f] text-slate-300 transition-colors hover:bg-slate-700 hover:text-white text-xs"
           >
             ›
           </button>
@@ -341,7 +341,7 @@ export default function Home() {
               <rect x="6" y="21" width="18" height="5" rx="1" fill="white"/>
               <path d="M26,22 L26.8,24.5 L29.5,25.2 L26.8,26 L26,28.5 L25.2,26 L22.5,25.2 L25.2,24.5 Z" fill="#FDE68A"/>
             </svg>
-            <span className="text-lg font-bold text-blue-600 sm:text-xl">ExamBuddie</span>
+            <span className="text-lg font-bold text-blue-700 sm:text-xl">ExamBuddie</span>
           </span>
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
             <a href="#features" className="transition-colors hover:text-slate-900">Features</a>
@@ -354,7 +354,7 @@ export default function Home() {
               href={BOT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-blue-600 px-3 py-2 text-xs font-semibold whitespace-nowrap text-white transition-colors hover:bg-blue-700 sm:px-4 sm:text-sm"
+              className="rounded-full bg-blue-700 px-3 py-2 text-xs font-semibold whitespace-nowrap text-white transition-colors hover:bg-blue-800 sm:px-4 sm:text-sm"
             >
               <span className="md:hidden">Open Bot</span>
               <span className="hidden md:inline">Open in Telegram</span>
@@ -402,7 +402,7 @@ export default function Home() {
               <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl">
                 Pass your exam.
                 <br />
-                <span className="text-blue-600">Study on Telegram.</span>
+                <span className="text-blue-700">Study on Telegram.</span>
               </h1>
               <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0">
                 AI-powered exam prep with over 41,000 past WAEC, JAMB and NECO questions. Timed
@@ -414,7 +414,7 @@ export default function Home() {
                   href={BOT_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-blue-600 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700 sm:px-8 sm:py-4 sm:text-lg"
+                  className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg"
                 >
                   Start Practising Free →
                 </a>
@@ -439,7 +439,7 @@ export default function Home() {
       </section>
 
       {/* Stats bar */}
-      <section className="bg-blue-600 py-8 sm:py-10">
+      <section className="bg-blue-700 py-8 sm:py-10">
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-4 text-center text-white sm:gap-8 sm:px-6 md:grid-cols-4">
           {[
             { value: "41,000+", label: "Past Questions", nowrap: false },
@@ -464,7 +464,7 @@ export default function Home() {
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
               Everything you need to prepare
             </h2>
-            <p className="mx-auto max-w-xl text-base text-slate-500 sm:text-lg">
+            <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg">
               Built for Nigerian students. Designed to be fast, focused, and effective.
             </p>
           </div>
@@ -476,7 +476,7 @@ export default function Home() {
               >
                 <div className="mb-3 text-3xl sm:mb-4 sm:text-4xl">{icon}</div>
                 <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg">{title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500 sm:text-base">{description}</p>
+                <p className="text-sm leading-relaxed text-slate-600 sm:text-base">{description}</p>
               </div>
             ))}
           </div>
@@ -490,7 +490,7 @@ export default function Home() {
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
               Why Telegram?
             </h2>
-            <p className="mx-auto max-w-xl text-base text-slate-500 sm:text-lg">
+            <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg">
               No new app. No login. Just open Telegram — which you already have.
             </p>
           </div>
@@ -500,12 +500,12 @@ export default function Home() {
                 key={title}
                 className="flex flex-col items-start gap-3 rounded-2xl border border-slate-200 bg-white p-6"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-2xl">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-2xl">
                   {icon}
                 </span>
                 <div>
                   <h3 className="mb-1 text-sm font-bold text-slate-900 sm:text-base">{title}</h3>
-                  <p className="text-xs leading-relaxed text-slate-500 sm:text-sm">{desc}</p>
+                  <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">{desc}</p>
                 </div>
               </div>
             ))}
@@ -519,7 +519,7 @@ export default function Home() {
           <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
             Up and running in 30 seconds
           </h2>
-          <p className="mb-12 text-base text-slate-500 sm:mb-16 sm:text-lg">
+          <p className="mb-12 text-base text-slate-600 sm:mb-16 sm:text-lg">
             No sign-up forms. No app stores. Just Telegram.
           </p>
           <div className="grid gap-8 sm:grid-cols-3 sm:gap-10">
@@ -541,11 +541,11 @@ export default function Home() {
               },
             ].map(({ step, title, desc }) => (
               <div key={step} className="flex flex-col items-center">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-xl font-extrabold text-white shadow-lg shadow-blue-200 sm:h-14 sm:w-14 sm:text-2xl">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-700 text-xl font-extrabold text-white shadow-lg shadow-blue-200 sm:h-14 sm:w-14 sm:text-2xl">
                   {step}
                 </div>
                 <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg">{title}</h3>
-                <p className="text-sm text-slate-500 sm:text-base">{desc}</p>
+                <p className="text-sm text-slate-600 sm:text-base">{desc}</p>
               </div>
             ))}
           </div>
@@ -553,7 +553,7 @@ export default function Home() {
             href={BOT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-10 inline-block rounded-full bg-blue-600 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700 sm:mt-12 sm:px-8 sm:py-4 sm:text-lg"
+            className="mt-10 inline-block rounded-full bg-blue-700 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:mt-12 sm:px-8 sm:py-4 sm:text-lg"
           >
             Open ExamBuddie →
           </a>
@@ -567,7 +567,7 @@ export default function Home() {
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
               All major subjects covered
             </h2>
-            <p className="text-base text-slate-500 sm:text-lg">
+            <p className="text-base text-slate-600 sm:text-lg">
               WAEC, JAMB and NECO past questions across every core subject.
             </p>
           </div>
@@ -592,7 +592,7 @@ export default function Home() {
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
               Simple pricing
             </h2>
-            <p className="mb-6 text-base text-slate-500 sm:text-lg">
+            <p className="mb-6 text-base text-slate-600 sm:text-lg">
               Start free. Upgrade when you need more.
             </p>
 
@@ -603,7 +603,7 @@ export default function Home() {
                 className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
                   !billingYearly
                     ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    : "text-slate-600 hover:text-slate-700"
                 }`}
               >
                 Monthly
@@ -613,7 +613,7 @@ export default function Home() {
                 className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
                   billingYearly
                     ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    : "text-slate-600 hover:text-slate-700"
                 }`}
               >
                 Yearly
@@ -630,7 +630,7 @@ export default function Home() {
                 key={name}
                 className={`relative flex flex-col rounded-2xl p-6 sm:p-8 ${
                   highlight
-                    ? "bg-blue-600 text-white shadow-2xl ring-2 shadow-blue-200 ring-blue-600"
+                    ? "bg-blue-700 text-white shadow-2xl ring-2 shadow-blue-200 ring-blue-700"
                     : "border border-slate-200 bg-white"
                 }`}
               >
@@ -640,25 +640,25 @@ export default function Home() {
                   </span>
                 )}
                 <div className="mb-5 sm:mb-6">
-                  <div className={`mb-1 text-xs font-semibold tracking-wide uppercase sm:text-sm ${highlight ? "text-blue-200" : "text-blue-600"}`}>
+                  <div className={`mb-1 text-xs font-semibold tracking-wide uppercase sm:text-sm ${highlight ? "text-blue-200" : "text-blue-700"}`}>
                     {name}
                   </div>
                   <div className="mb-2 flex items-end gap-1">
                     <span className={`text-3xl font-extrabold sm:text-4xl ${highlight ? "text-white" : "text-slate-900"}`}>
                       {price}
                     </span>
-                    <span className={`mb-1.5 text-xs sm:text-sm ${highlight ? "text-blue-200" : "text-slate-400"}`}>
+                    <span className={`mb-1.5 text-xs sm:text-sm ${highlight ? "text-blue-200" : "text-slate-500"}`}>
                       /{period}
                     </span>
                   </div>
-                  <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-500"}`}>
+                  <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-600"}`}>
                     {description}
                   </p>
                 </div>
                 <ul className="mb-6 flex-1 space-y-3 sm:mb-8">
                   {planFeatures.map((f) => (
                     <li key={f} className="flex items-start gap-3 text-xs sm:text-sm">
-                      <span className={highlight ? "text-blue-200" : "text-blue-600"}>✓</span>
+                      <span className={highlight ? "text-green-300" : "text-green-600"}>✓</span>
                       <span className={highlight ? "text-blue-50" : "text-slate-600"}>{f}</span>
                     </li>
                   ))}
@@ -669,8 +669,8 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className={`w-full rounded-full py-3 text-center text-sm font-bold transition-colors sm:text-base ${
                     highlight
-                      ? "bg-white text-blue-600 hover:bg-blue-50"
-                      : "bg-blue-600 text-white hover:bg-blue-700"
+                      ? "bg-white text-blue-700 hover:bg-blue-50"
+                      : "bg-blue-700 text-white hover:bg-blue-800"
                   }`}
                 >
                   {cta}
@@ -688,7 +688,7 @@ export default function Home() {
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl">
               Why ExamBuddie beats the alternatives
             </h2>
-            <p className="text-base text-slate-500 sm:text-lg">
+            <p className="text-base text-slate-600 sm:text-lg">
               Compare how students prepare — and why the bot wins.
             </p>
           </div>
@@ -697,9 +697,9 @@ export default function Home() {
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50">
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6">Feature</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-blue-600 sm:px-6">ExamBuddie</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-400 sm:px-6">Textbooks</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-400 sm:px-6">YouTube</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-blue-700 sm:px-6">ExamBuddie</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6">Textbooks</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6">YouTube</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -744,7 +744,7 @@ export default function Home() {
             {faqs.map(({ q, a }) => (
               <div key={q} className="py-5 sm:py-6">
                 <h3 className="mb-2 text-sm font-semibold text-slate-900 sm:text-base">{q}</h3>
-                <p className="text-sm leading-relaxed text-slate-500 sm:text-base">{a}</p>
+                <p className="text-sm leading-relaxed text-slate-600 sm:text-base">{a}</p>
               </div>
             ))}
           </div>
@@ -752,7 +752,7 @@ export default function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section className="bg-blue-600 px-4 py-16 text-center text-white sm:px-6 sm:py-24">
+      <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24">
         <div className="mx-auto max-w-2xl">
           <h2 className="mb-3 text-2xl font-extrabold sm:mb-4 sm:text-3xl md:text-4xl">
             Ready to ace your exam?
@@ -764,7 +764,7 @@ export default function Home() {
             href={BOT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block rounded-full bg-white px-8 py-3.5 text-base font-bold text-blue-600 shadow-xl transition-colors hover:bg-blue-50 sm:px-10 sm:py-4 sm:text-lg"
+            className="inline-block rounded-full bg-white px-8 py-3.5 text-base font-bold text-blue-700 shadow-xl transition-colors hover:bg-blue-50 sm:px-10 sm:py-4 sm:text-lg"
           >
             Start Practising Free →
           </a>
@@ -777,22 +777,22 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-slate-100 px-4 py-8 pb-24 sm:px-6 sm:py-10 md:pb-10">
         <div className="mx-auto max-w-6xl space-y-4">
-          <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-400 sm:gap-4 sm:text-sm md:flex-row md:text-left">
+          <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left">
             <span className="text-sm font-bold text-slate-700 sm:text-base">ExamBuddie</span>
             <span>© {new Date().getFullYear()} ExamBuddie. Built with ❤️ for Nigerian students.</span>
             <a
               href={BOT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-blue-600 hover:underline"
+              className="font-medium text-blue-700 hover:underline"
             >
               Open in Telegram →
             </a>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 md:justify-start">
-            <a href="/privacy" className="hover:text-blue-600 hover:underline">Privacy Policy</a>
-            <a href="/terms" className="hover:text-blue-600 hover:underline">Terms of Use</a>
-            <a href="/refunds" className="hover:text-blue-600 hover:underline">Refund Policy</a>
+            <a href="/privacy" className="hover:text-blue-700 hover:underline">Privacy Policy</a>
+            <a href="/terms" className="hover:text-blue-700 hover:underline">Terms of Use</a>
+            <a href="/refunds" className="hover:text-blue-700 hover:underline">Refund Policy</a>
           </div>
         </div>
       </footer>
@@ -803,7 +803,7 @@ export default function Home() {
           href={BOT_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full rounded-full bg-blue-600 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700"
+          className="block w-full rounded-full bg-blue-700 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800"
         >
           Start Practising Free →
         </a>
