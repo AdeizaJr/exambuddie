@@ -4,6 +4,13 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Refund Policy — ExamBuddie",
   description: "ExamBuddie's subscription refund and cancellation policy.",
+  alternates: { canonical: "/refunds" },
+  openGraph: {
+    title: "Refund Policy — ExamBuddie",
+    description: "ExamBuddie's subscription refund and cancellation policy.",
+    type: "website",
+    url: "https://exambuddie.app/refunds",
+  },
 };
 
 export default function RefundsPage() {
