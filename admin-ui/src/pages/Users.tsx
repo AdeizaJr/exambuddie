@@ -447,7 +447,7 @@ export default function Users() {
       {/* Activity modal */}
       {activityUser && (
         <Modal
-          title={`Activity — ${activityUser.first_name}`}
+          title={`User Activity — ${activityUser.first_name} (${activityUser.telegram_id})`}
           onClose={() => { setActivityUser(null); setActivity(null); }}
         >
           {activityLoading || !activity ? (
