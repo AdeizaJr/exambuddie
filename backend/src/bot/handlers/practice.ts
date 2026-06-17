@@ -388,7 +388,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
     sessionId: session.sessionId || '',
     timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
   });
-  await db.updateStreak(ctx.from.id);
+  const streakResult = await db.updateStreak(ctx.from.id);
 
   // Update daily count and per-subject usage (free users)
   if (user.plan !== 'premium') {
@@ -434,6 +434,11 @@ export async function handleAnswer(ctx: any): Promise<void> {
   if (milestone) {
     await ctx.replyWithDice({ emoji: '🎲' });
     await ctx.reply(milestone);
+  }
+
+  if (streakResult?.isFirstToday) {
+    const weekActivity = await db.getWeeklyActivity(user.id);
+    await ctx.reply(fmt.formatStreakCard(streakResult.streak, weekActivity), { parse_mode: 'HTML' });
   }
 
   // Update session

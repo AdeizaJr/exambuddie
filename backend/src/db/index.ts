@@ -375,23 +375,47 @@ export async function incrementDailyCount(telegramId: number | string): Promise<
   ]);
 }
 
-export async function updateStreak(telegramId: number | string): Promise<number | undefined> {
+export async function updateStreak(telegramId: number | string): Promise<{ streak: number; isFirstToday: boolean } | undefined> {
   const today = new Date().toISOString().split('T')[0];
   const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
   const user = await getUser(telegramId);
   if (!user) return;
-  // pg returns DATE columns as JS Date objects, not strings — normalize before comparing
   const lastActive = user.last_active_date
     ? new Date(user.last_active_date).toISOString().split('T')[0]
     : null;
-  if (lastActive === today) return user.streak; // already counted today
+  if (lastActive === today) return { streak: user.streak, isFirstToday: false };
   const newStreak = lastActive === yesterday ? user.streak + 1 : 1;
   await pool.query(`UPDATE users SET streak = $1, last_active_date = $2 WHERE telegram_id = $3`, [
     newStreak,
     today,
     telegramId,
   ]);
-  return newStreak;
+  return { streak: newStreak, isFirstToday: true };
+}
+
+export async function getWeeklyActivity(userId: number): Promise<boolean[]> {
+  // Returns [Mon, Tue, Wed, Thu, Fri, Sat, Sun] — true if user had any attempt that day
+  const now = new Date();
+  // ISO week starts Monday (getDay: 0=Sun,1=Mon...6=Sat)
+  const dayOfWeek = now.getDay(); // 0=Sun
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + mondayOffset);
+  monday.setHours(0, 0, 0, 0);
+
+  const { rows } = await pool.query(
+    `SELECT DISTINCT DATE(attempted_at) as day FROM attempts
+     WHERE user_id = $1 AND attempted_at >= $2
+     ORDER BY day`,
+    [userId, monday.toISOString()]
+  );
+
+  const activeDays = new Set(rows.map((r: any) => new Date(r.day).toISOString().split('T')[0]));
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return activeDays.has(d.toISOString().split('T')[0]);
+  });
 }
 
 export async function getTotalAttempts(userId: number): Promise<number> {

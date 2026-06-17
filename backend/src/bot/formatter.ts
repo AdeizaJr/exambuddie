@@ -854,3 +854,30 @@ export function yearPickerKeyboard(subject: string) {
   rows.push([{ text: '← Back to Subjects', callback_data: 'practice:pick' }]);
   return { inline_keyboard: rows };
 }
+
+export function formatStreakCard(streak: number, weekActivity: boolean[]): string {
+  const days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+  // Determine today's index in the week (0=Mon ... 6=Sun)
+  const jsDay = new Date().getDay(); // 0=Sun,1=Mon...6=Sat
+  const todayIdx = jsDay === 0 ? 6 : jsDay - 1;
+
+  const icons = weekActivity.map((active, i) => {
+    if (active) return '🟠';
+    if (i < todayIdx) return '❌'; // past day, not practiced
+    return '⬜'; // today (if not yet done) or future
+  });
+
+  const streakLine = streak === 1
+    ? '🔥 <b>1 day streak!</b> You\'re just getting started!'
+    : streak >= 30
+    ? `🔥 <b>${streak} day streak!</b> You're on fire! 🏆`
+    : streak >= 7
+    ? `🔥 <b>${streak} day streak!</b> Keep it going!`
+    : `🔥 <b>${streak} day streak!</b>`;
+
+  return `${streakLine}
+
+<code>${days.join('  ')}
+${icons.join('  ')}</code>`;
+}
