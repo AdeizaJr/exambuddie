@@ -198,7 +198,7 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
 
   const answeredCount = quizState.qIndex;
   const scoreLine = answeredCount > 0
-    ? `\n📊 <b>${quizState.correct}</b> correct so far · <b>${Math.round((quizState.correct / answeredCount) * 100)}%</b> accuracy`
+    ? `\n\n📊 <b>${quizState.correct}</b> correct so far · <b>${Math.round((quizState.correct / answeredCount) * 100)}%</b> accuracy`
     : '';
 
   const baseText = fmt.formatQuestion(q, quizState.qIndex + 1, quizState.total, 'quiz') + fmt.answerOptions(q) + overallTimeLine + scoreLine;
