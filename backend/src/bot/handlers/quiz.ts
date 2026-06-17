@@ -316,7 +316,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
   const totalAttempts = await db.getTotalAttempts(user.id);
   const milestone = fmt.totalMilestone(totalAttempts);
   if (milestone) {
-    await ctx.replyWithDice({ emoji: '🎉' });
+    await ctx.replyWithDice({ emoji: '🎲' });
     await ctx.reply(milestone);
   }
 

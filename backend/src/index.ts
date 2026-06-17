@@ -228,6 +228,12 @@ bot.catch((err: any, ctx: any) => {
   if (msg.includes('request to') && msg.includes('failed, reason:')) return;
   // User blocked the bot or deleted their account — nothing to recover
   if (msg.includes('bot was blocked') || msg.includes('user is deactivated') || msg.includes('chat not found')) return;
+  // Stale message edits — harmless, user deleted or already modified the message
+  if (msg.includes('message to edit not found') || msg.includes('message is not modified')) return;
+  // Invalid emoji in replyWithDice — guard against future invalid calls
+  if (msg.includes('EMOTICON_INVALID')) return;
+  // Message too long — content issue, not a crash worth alarming the user over
+  if (msg.includes('message is too long')) return;
   console.error(
     `[Bot Error] update=${ctx.update.update_id} user=${ctx.from?.id ?? 'unknown'}:`,
     err.stack || msg
