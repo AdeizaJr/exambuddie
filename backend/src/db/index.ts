@@ -1,6 +1,9 @@
 // src/db/index.ts
-import { Pool } from 'pg';
+import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
+
+// Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
+types.setTypeParser(1082, (val: string) => val);
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
