@@ -282,10 +282,10 @@ export default function Home() {
     },
     {
       name: "Premium",
-      price: billingYearly ? "₦7,000" : "₦800",
+      price: billingYearly ? "₦9,000" : "₦1,000",
       period: billingYearly ? "year" : "month",
       description: billingYearly
-        ? "Save ₦2,600 vs monthly — best value."
+        ? "Save ₦3,000 vs monthly — best value."
         : "Everything you need to top the exam.",
       features: [
         "Unlimited questions — no daily caps",
@@ -298,7 +298,7 @@ export default function Home() {
       cta: "Go Premium",
       href: BOT_URL,
       highlight: true,
-      badge: billingYearly ? "Save 27%" : null,
+      badge: billingYearly ? "Save 25%" : null,
     },
   ];
 
@@ -746,7 +746,7 @@ export default function Home() {
               >
                 Yearly
                 <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 dark:bg-green-900 dark:text-green-300">
-                  Save 27%
+                  Save 25%
                 </span>
               </button>
             </div>
@@ -781,7 +781,7 @@ export default function Home() {
                   </div>
                   {highlight && (
                     <p className="mb-2 text-[11px] font-medium text-blue-200">
-                      {billingYearly ? "₦583/month — save ₦2,600 vs monthly" : "That's less than ₦27 a day"}
+                      {billingYearly ? "₦750/month — save ₦3,000 vs monthly" : "That's less than ₦34 a day"}
                     </p>
                   )}
                   <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-600 dark:text-slate-400"}`}>
