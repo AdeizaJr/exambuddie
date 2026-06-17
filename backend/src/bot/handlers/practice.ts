@@ -428,11 +428,11 @@ export async function handleAnswer(ctx: any): Promise<void> {
   }
 
   if (hyped) {
-    if (newConsecutive === 10) await ctx.replyWithDice({ emoji: '🎉' });
+    if (newConsecutive === 10) await ctx.replyWithDice({ emoji: '🎲' });
     await ctx.reply(hyped);
   }
   if (milestone) {
-    await ctx.replyWithDice({ emoji: '🎉' });
+    await ctx.replyWithDice({ emoji: '🎲' });
     await ctx.reply(milestone);
   }
 
