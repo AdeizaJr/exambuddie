@@ -526,7 +526,7 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 • Unlimited questions, every day
 • Quiz mode &amp; Topic drills
 • Progress tracking &amp; weak-topic detection
-• Only ₦800/month or ₦7,000/year
+• Only ₦1,000/month or ₦9,000/year
 
 👇 Tap to upgrade:`;
   }
@@ -546,8 +546,8 @@ Unlock everything you need to ace your exams:
 ✅ Priority support
 
 💰 <b>Pricing:</b>
-• Monthly: ₦800/month
-• Yearly: ₦7,000/year <b>(save ₦2,600)</b>
+• Monthly: ₦1,000/month
+• Yearly: ₦9,000/year <b>(save ₦3,000)</b>
 
 Choose your plan:`;
 }
@@ -555,8 +555,8 @@ Choose your plan:`;
 export function subscribeKeyboard() {
   return {
     inline_keyboard: [
-      [{ text: '📅 Monthly — ₦800', callback_data: 'subscribe:monthly' }],
-      [{ text: '🗓️ Yearly — ₦7,000 (Best Value)', callback_data: 'subscribe:yearly' }],
+      [{ text: '📅 Monthly — ₦1,000', callback_data: 'subscribe:monthly' }],
+      [{ text: '🗓️ Yearly — ₦9,000 (Best Value)', callback_data: 'subscribe:yearly' }],
       [{ text: '❌ Maybe Later', callback_data: 'menu:main' }],
     ],
   };
