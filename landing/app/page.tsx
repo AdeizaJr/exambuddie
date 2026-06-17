@@ -21,42 +21,11 @@ const subjects = [
   { icon: "🏛️", name: "Government" },
 ];
 
-const features = [
-  {
-    icon: "📚",
-    title: "Practice Mode",
-    description:
-      "Go through past questions at your own pace with instant explanations after every answer.",
-  },
-  {
-    icon: "📋",
-    title: "Timed Quiz",
-    description:
-      "Simulate real exam conditions with a countdown timer. 40 questions, exam-style pressure.",
-  },
-  {
-    icon: "🎯",
-    title: "Drill Mode",
-    description:
-      "Zero in on your weakest topics. ExamBuddie identifies the gaps and drills you on them.",
-  },
-  {
-    icon: "📊",
-    title: "Progress Stats",
-    description:
-      "Track accuracy by subject and topic. Know exactly where you stand before exam day.",
-  },
-  {
-    icon: "🏆",
-    title: "Multi-Subject Sessions",
-    description: "Mix subjects in a single practice or quiz session — just like the real exam.",
-  },
-  {
-    icon: "⚡",
-    title: "Works in Telegram",
-    description:
-      "No app download. No account. Open Telegram, start a chat, and you're practising in seconds.",
-  },
+const secondaryFeatures = [
+  { icon: "📊", title: "Progress Stats", desc: "Accuracy by subject and topic" },
+  { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one session" },
+  { icon: "🔥", title: "Study Streaks", desc: "Build a daily practice habit" },
+  { icon: "⚡", title: "Works in Telegram", desc: "No app download — ever" },
 ];
 
 const whyTelegram = [
@@ -486,26 +455,159 @@ export default function Home() {
       {/* Features */}
       <section id="features" className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
-              Everything you need to prepare
+
+          {/* Section header — left aligned, breaks the centered pattern */}
+          <div className="mb-16 sm:mb-20">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">What you get</span>
+            <h2 className="mt-2 max-w-2xl text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl dark:text-white">
+              Built to get you <span className="text-blue-700 dark:text-blue-400">past the exam</span>
             </h2>
-            <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
-              Built for Nigerian students. Designed to be fast, focused, and effective.
-            </p>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
-            {features.map(({ icon, title, description }) => (
-              <div
-                key={title}
-                className="rounded-2xl bg-slate-50 p-6 transition-shadow hover:shadow-md sm:p-8 dark:bg-slate-900 dark:hover:shadow-none"
-              >
-                <div className="mb-3 text-3xl sm:mb-4 sm:text-4xl">{icon}</div>
-                <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg dark:text-white">{title}</h3>
-                <p className="text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-400">{description}</p>
+
+          {/* Hero features — alternating layout */}
+          <div className="space-y-20 sm:space-y-28">
+
+            {/* 1 — Practice Mode: text left, visual right */}
+            <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-20">
+              <div className="flex-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">📚 Practice Mode</span>
+                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                  41,000 past questions.<br />Every answer explained.
+                </h3>
+                <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
+                  Real WAEC, JAMB and NECO questions at your own pace. Instant explanations after every answer — not just which option is correct, but <em>why</em>.
+                </p>
+                <ul className="mt-6 space-y-2.5">
+                  {["Questions from 2010–2025", "Explanations for every option", "No time pressure — learn at your pace"].map(item => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
+                      <span className="text-green-500 font-bold">✓</span> {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))}
+              <div className="w-full flex-shrink-0 lg:w-96">
+                <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl ring-1 ring-slate-800">
+                  <p className="mb-1 text-[10px] font-semibold text-blue-400">📝 Chemistry · WAEC 2023</p>
+                  <p className="mb-4 text-sm font-medium leading-snug text-white">Which gas is produced when dilute HCl reacts with zinc?</p>
+                  <div className="space-y-2">
+                    {[["A. Oxygen", false], ["B. Hydrogen", true], ["C. Chlorine", false], ["D. Carbon dioxide", false]].map(([opt, correct]) => (
+                      <div key={String(opt)} className={`rounded-lg px-3 py-2 text-xs font-medium ${correct ? "bg-green-600 text-white" : "bg-slate-800 text-slate-400"}`}>
+                        {String(opt)} {correct && "✓"}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-3 rounded-xl border border-green-900/40 bg-green-950/50 p-3">
+                    <p className="text-[10px] font-bold text-green-400">💡 Explanation</p>
+                    <p className="mt-1 text-[10px] leading-relaxed text-green-200">Zinc reacts with dilute HCl to produce zinc chloride and hydrogen gas: Zn + 2HCl → ZnCl₂ + H₂↑</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 2 — Timed Quiz: visual left, text right */}
+            <div className="flex flex-col-reverse gap-10 lg:flex-row lg:items-center lg:gap-20">
+              <div className="w-full flex-shrink-0 lg:w-96">
+                <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl ring-1 ring-slate-800">
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-400">Question 23 / 40</span>
+                    <span className="rounded-full bg-red-900/60 px-3 py-1 text-xs font-bold text-red-400">⏱ 28:41 left</span>
+                  </div>
+                  <div className="mb-4 h-1.5 w-full rounded-full bg-slate-800">
+                    <div className="h-1.5 w-[57%] rounded-full bg-blue-600" />
+                  </div>
+                  <p className="mb-3 text-sm font-medium leading-snug text-white">The speed of light in a vacuum is approximately:</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["A. 3×10⁸ m/s", "B. 3×10⁶ m/s", "C. 3×10¹⁰ m/s", "D. 3×10⁴ m/s"].map((opt, i) => (
+                      <div key={opt} className={`rounded-lg px-3 py-2 text-center text-xs font-medium ${i === 0 ? "bg-blue-700 text-white" : "bg-slate-800 text-slate-400"}`}>
+                        {opt}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 flex justify-between text-[10px] text-slate-500">
+                    <span>🎯 18 correct so far</span>
+                    <span>📊 78% accuracy</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">📋 Timed Quiz</span>
+                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                  Exam pressure.<br />Without the exam.
+                </h3>
+                <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
+                  40 questions. 45 minutes. Real exam conditions so the actual paper feels like a repeat. Score breakdown and weak spots the moment you finish.
+                </p>
+                <ul className="mt-6 space-y-2.5">
+                  {["Full 45-minute mock exam", "Score breakdown by topic after", "Compare across attempts"].map(item => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
+                      <span className="text-green-500 font-bold">✓</span> {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  🔒 Premium feature
+                </div>
+              </div>
+            </div>
+
+            {/* 3 — Drill Mode: text left, visual right */}
+            <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-20">
+              <div className="flex-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">🎯 Drill Mode</span>
+                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                  Knows exactly where<br />you're losing marks.
+                </h3>
+                <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
+                  ExamBuddie tracks every topic you attempt. When your accuracy on Organic Chemistry drops, Drill Mode zeroes in and hammers those questions until the gap closes.
+                </p>
+                <ul className="mt-6 space-y-2.5">
+                  {["Auto-detects weak topics from your history", "Focused repetition until accuracy improves", "Per-topic tracking, not just per-subject"].map(item => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
+                      <span className="text-green-500 font-bold">✓</span> {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="w-full flex-shrink-0 lg:w-96">
+                <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl ring-1 ring-slate-800">
+                  <p className="mb-4 text-sm font-bold text-white">📊 Your weak topics</p>
+                  {[
+                    { topic: "Organic Chemistry", pct: 42 },
+                    { topic: "Electromagnetic Waves", pct: 55 },
+                    { topic: "Genetic Inheritance", pct: 61 },
+                  ].map(({ topic, pct }) => (
+                    <div key={topic} className="mb-4">
+                      <div className="mb-1.5 flex justify-between text-xs">
+                        <span className="font-medium text-slate-300">{topic}</span>
+                        <span className={`font-bold ${pct < 50 ? "text-red-400" : pct < 65 ? "text-amber-400" : "text-green-400"}`}>{pct}%</span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-slate-800">
+                        <div className={`h-1.5 rounded-full ${pct < 50 ? "bg-red-500" : pct < 65 ? "bg-amber-500" : "bg-green-500"}`} style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                  <div className="mt-2 rounded-xl bg-blue-700 py-2.5 text-center text-xs font-bold text-white">
+                    🎯 Drill Organic Chemistry now
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Secondary features — compact, lower visual weight */}
+          <div className="mt-20 sm:mt-24">
+            <p className="mb-6 text-xs font-bold uppercase tracking-widest text-slate-400">Also included</p>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+              {secondaryFeatures.map(({ icon, title, desc }) => (
+                <div key={title} className="rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
+                  <div className="mb-2 text-2xl">{icon}</div>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">{title}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
       </section>
 
