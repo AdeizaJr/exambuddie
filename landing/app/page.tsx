@@ -251,16 +251,25 @@ function BotMockup() {
         </div>
 
         {/* Navigation bar */}
-        <div className="flex items-center justify-between bg-[#0d1117] px-3 pb-3">
+        <div className="flex items-center justify-between bg-[#0d1117] px-3 pt-1 pb-2">
           <button
             onClick={() => setCurrent((c) => (c - 1 + mockQuestions.length) % mockQuestions.length)}
             className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1e3a5f] text-slate-300 transition-colors hover:bg-slate-700 hover:text-white text-xs"
           >
             ‹
           </button>
-          <div className="text-center">
-            <span className="text-[10px] font-semibold text-slate-500">{current + 1} / {mockQuestions.length}</span>
-            <p className="text-[9px] text-slate-500 leading-none mt-0.5">swipe to browse</p>
+          {/* Pagination dots */}
+          <div className="flex items-center gap-1">
+            {mockQuestions.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`rounded-full transition-all duration-200 ${
+                  i === current ? "h-1.5 w-3 bg-blue-500" : "h-1.5 w-1.5 bg-slate-600 hover:bg-slate-400"
+                }`}
+                aria-label={`Question ${i + 1}`}
+              />
+            ))}
           </div>
           <button
             onClick={() => setCurrent((c) => (c + 1) % mockQuestions.length)}
@@ -269,6 +278,7 @@ function BotMockup() {
             ›
           </button>
         </div>
+        <p className="bg-[#0d1117] pb-3 text-center text-[9px] text-slate-600">click · swipe · tap arrows</p>
       </div>
 
       {/* Floating badge */}
@@ -282,6 +292,7 @@ function BotMockup() {
 export default function Home() {
   const [billingYearly, setBillingYearly] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const plans = [
     {
@@ -428,7 +439,7 @@ export default function Home() {
                 </a>
               </div>
               <p className="mt-5 text-xs text-slate-400 sm:mt-6 sm:text-sm dark:text-slate-500">
-                Free to start · No download required · Works on any device
+                Free forever · No credit card · No download required
               </p>
             </div>
 
@@ -439,6 +450,19 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Scroll hint */}
+      <div className="flex justify-center bg-gradient-to-b from-white to-transparent -mt-8 pb-4 dark:from-slate-950">
+        <a
+          href="#features"
+          className="flex animate-bounce flex-col items-center gap-1 text-slate-400 hover:text-blue-600 dark:text-slate-500 dark:hover:text-blue-400 transition-colors"
+          aria-label="Scroll to features"
+        >
+          <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </a>
+      </div>
 
       {/* Stats bar */}
       <section className="bg-blue-700 py-8 sm:py-10 dark:bg-blue-900">
@@ -645,7 +669,7 @@ export default function Home() {
                   <div className={`mb-1 text-xs font-semibold tracking-wide uppercase sm:text-sm ${highlight ? "text-blue-200" : "text-blue-700 dark:text-blue-400"}`}>
                     {name}
                   </div>
-                  <div className="mb-2 flex items-end gap-1">
+                  <div className="mb-1 flex items-end gap-1">
                     <span className={`text-3xl font-extrabold sm:text-4xl ${highlight ? "text-white" : "text-slate-900 dark:text-white"}`}>
                       {price}
                     </span>
@@ -653,6 +677,11 @@ export default function Home() {
                       /{period}
                     </span>
                   </div>
+                  {highlight && (
+                    <p className="mb-2 text-[11px] font-medium text-blue-200">
+                      {billingYearly ? "₦583/month — save ₦2,600 vs monthly" : "That's less than ₦27 a day"}
+                    </p>
+                  )}
                   <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-600 dark:text-slate-400"}`}>
                     {description}
                   </p>
@@ -677,6 +706,11 @@ export default function Home() {
                 >
                   {cta}
                 </a>
+                {!highlight && (
+                  <p className="mt-3 text-center text-[11px] text-slate-400 dark:text-slate-500">
+                    Free forever · No credit card needed
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -711,7 +745,7 @@ export default function Home() {
                   ["Progress tracking", true, false, false],
                   ["Timed mock exams", true, false, false],
                   ["Works on any phone", true, false, true],
-                  ["No download required", true, false, true],
+                  ["Works inside Telegram (no new app)", true, false, false],
                   ["AI-powered insights", true, false, false],
                   ["Free to start", true, false, true],
                 ].map(([feature, eb, tb, yt]) => (
@@ -743,10 +777,23 @@ export default function Home() {
             </h2>
           </div>
           <div className="divide-y divide-slate-200 dark:divide-slate-800">
-            {faqs.map(({ q, a }) => (
-              <div key={q} className="py-5 sm:py-6">
-                <h3 className="mb-2 text-sm font-semibold text-slate-900 sm:text-base dark:text-white">{q}</h3>
-                <p className="text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-400">{a}</p>
+            {faqs.map(({ q, a }, i) => (
+              <div key={q}>
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left sm:py-6"
+                >
+                  <h3 className="text-sm font-semibold text-slate-900 sm:text-base dark:text-white">{q}</h3>
+                  <svg
+                    className={`h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`}
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                {openFaq === i && (
+                  <p className="pb-5 text-sm leading-relaxed text-slate-600 sm:pb-6 sm:text-base dark:text-slate-400">{a}</p>
+                )}
               </div>
             ))}
           </div>

@@ -15,17 +15,17 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-white px-4 py-12 sm:px-6">
+    <div className="min-h-screen bg-white px-4 py-12 sm:px-6 dark:bg-slate-950">
       <div className="mx-auto max-w-2xl">
         <div className="mb-8">
-          <Link href="/" className="text-sm font-medium text-blue-600 hover:underline">
+          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-white dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800">
             ← Back to ExamBuddie
           </Link>
         </div>
-        <h1 className="mb-2 text-3xl font-bold text-slate-900">Terms of Use</h1>
-        <p className="mb-10 text-sm text-slate-500">Last updated: June 2026</p>
+        <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white">Terms of Use</h1>
+        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: June 2026</p>
 
-        <div className="space-y-8 text-slate-700 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-slate-900 [&_p]:leading-relaxed [&_ul]:ml-4 [&_ul]:list-disc [&_ul]:space-y-1">
+        <div className="space-y-8 text-slate-700 dark:text-slate-300 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_p]:leading-relaxed [&_ul]:ml-4 [&_ul]:list-disc [&_ul]:space-y-1">
           <section>
             <h2>1. Acceptance of Terms</h2>
             <p>
