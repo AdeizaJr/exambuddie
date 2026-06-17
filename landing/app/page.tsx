@@ -258,6 +258,44 @@ function BotMockup() {
   );
 }
 
+const testimonials = [
+  {
+    quote: "It helped me practise questions from any subject and the solution explanations are very clear.",
+    name: "Ayoola Farhan",
+    role: "WAEC 2026",
+  },
+  {
+    quote: "The timed quiz mode is no joke. 40 questions, 45 minutes — exactly like the real thing. I stopped panicking in the exam hall.",
+    name: "Tobiloba A.",
+    role: "Lagos · WAEC 2026",
+  },
+  {
+    quote: "What got me was the AI explanations after every question. Not just the answer — it breaks down WHY. That's what changed how I study.",
+    name: "Roqeeb",
+    role: "JAMB 2026",
+  },
+  {
+    quote: "Free plan got me hooked. 10 questions a day, no credit card. Upgraded to Premium after one week because I needed more.",
+    name: "Chisom E.",
+    role: "Enugu · WAEC 2026",
+  },
+  {
+    quote: "My friend sent me the Telegram link. I thought it was a joke. Three months later I'm on a 45-day streak.",
+    name: "Halima B.",
+    role: "Kano · JAMB 2026",
+  },
+  {
+    quote: "I recommended ExamBuddie to my daughter two months before her WAEC. No app to install, works right inside Telegram. She practised every night and I could see her improving.",
+    name: "Mrs. Adeyemi",
+    role: "Parent · Lagos",
+  },
+  {
+    quote: "I tell all my SS3 students to use ExamBuddie. The AI explanations after each question do the work I don't have time to do for 40 students at once.",
+    name: "Mr. Michael",
+    role: "SS3 Chemistry Teacher · Ibadan",
+  },
+];
+
 export default function Home() {
   const [billingYearly, setBillingYearly] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -896,6 +934,42 @@ export default function Home() {
                 {openFaq === i && (
                   <p className="pb-5 text-sm leading-relaxed text-slate-600 sm:pb-6 sm:text-base dark:text-slate-400">{a}</p>
                 )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">What people say</span>
+            <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+              Real results from Parents, Students & Teachers
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map(({ quote, name, role }) => (
+              <div
+                key={name}
+                className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900"
+              >
+                <div className="mb-4 flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="h-4 w-4 fill-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  ))}
+                </div>
+                <p className="mb-5 flex-1 text-sm leading-relaxed text-slate-700 dark:text-slate-300">"{quote}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                    {name[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white">{name}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{role}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

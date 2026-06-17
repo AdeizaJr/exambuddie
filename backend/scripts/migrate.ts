@@ -171,6 +171,10 @@ const migrations = [
     explanation ILIKE '%pie chart%' OR
     explanation ILIKE '%bar chart%'`,
 
+  // ── Streak tracking columns (added after initial prod deploy) ───────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS streak INT DEFAULT 0`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_active_date DATE DEFAULT NULL`,
+
   // ── Normalize "From the novel;" questions: trim indentation + collapse blank lines ──
   // Pass 1: strip leading whitespace from each line (e.g. "    This question..." → "This question...")
   // Pass 2: collapse 3+ consecutive newlines to 2
