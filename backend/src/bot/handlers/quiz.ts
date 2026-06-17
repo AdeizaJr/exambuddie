@@ -24,10 +24,11 @@ export async function handleQuiz(ctx: any): Promise<void> {
     return;
   }
 
-  const counts = await db.getSubjectQuestionCounts(user.subjects);
+  const quizSubjects = Object.keys(fmt.SUBJECT_MAP);
+  const counts = await db.getSubjectQuestionCounts(quizSubjects);
   await ctx.reply(
     '📋 <b>Quiz Mode</b>\n\nPick a subject to start your mock exam:',
-    { parse_mode: 'HTML', reply_markup: fmt.quizSubjectKeyboard(user.subjects, counts) }
+    { parse_mode: 'HTML', reply_markup: fmt.quizSubjectKeyboard(quizSubjects, counts) }
   );
 }
 
@@ -199,7 +200,7 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
   const timerLine = (secsLeft: number) =>
     timerSecs > 0 ? `\n\n⏱️ <i>${secsLeft}s remaining</i>` : '';
 
-  const keyboard = fmt.answerKeyboard();
+  const keyboard = fmt.answerKeyboard(!!q.option_e);
   const msgText = baseText + timerLine(timerSecs);
   let sentMsg;
   try {
