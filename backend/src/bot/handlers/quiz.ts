@@ -294,7 +294,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     isCorrect,
     sessionId: quizState.sessionId,
   });
-  await db.updateStreak(ctx.from.id);
+  const streakResult = await db.updateStreak(ctx.from.id);
 
   quizState.answers.push({ qId: q.id, selected, correct: q.correct_option, isCorrect });
   if (isCorrect) quizState.correct++;
@@ -318,6 +318,11 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
   if (milestone) {
     await ctx.replyWithDice({ emoji: '🎲' });
     await ctx.reply(milestone);
+  }
+
+  if (streakResult?.isFirstToday) {
+    const weekActivity = await db.getWeeklyActivity(user.id);
+    await ctx.reply(fmt.formatStreakCard(streakResult.streak, weekActivity), { parse_mode: 'HTML' });
   }
 
   quizState.qIndex++;
