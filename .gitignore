@@ -1,15 +1,28 @@
-# backend
+# ── backend ───────────────────────────────────────────────────────────────────
 backend/.env
+backend/.env.*
 backend/scraper/scraper
 backend/dist/
 backend/node_modules/
 backend/dump.rdb
 
-# admin-ui
+# ── admin-ui ──────────────────────────────────────────────────────────────────
 admin-ui/dist/
 admin-ui/node_modules/
+admin-ui/.env
+admin-ui/.env.*
 
-# miniapp
+# ── miniapp ───────────────────────────────────────────────────────────────────
 miniapp/dist/
 miniapp/node_modules/
-miniapp/.env.local
+miniapp/.env
+miniapp/.env.*
+
+# ── landing ───────────────────────────────────────────────────────────────────
+landing/.env
+landing/.env.*
+
+# ── OS / editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.pem
