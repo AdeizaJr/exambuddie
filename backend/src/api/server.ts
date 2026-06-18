@@ -266,6 +266,9 @@ export default function createServer(bot: any) {
         conditions.push(`(question_text ILIKE $${idx} OR source_id ILIKE $${idx})`);
       }
     }
+    if (req.query.has_diagram !== undefined) {
+      conditions.push(`has_diagram = ${req.query.has_diagram === 'true'}`);
+    }
 
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
@@ -274,7 +277,7 @@ export default function createServer(bot: any) {
 
     const { rows } = await db.query(
       `SELECT id, exam_type, subject, year, question_text, option_a, option_b, option_c, option_d, option_e,
-              correct_option, explanation, explanation_reviewed, flag_count, source_id, created_at
+              correct_option, explanation, explanation_reviewed, flag_count, source_id, has_diagram, created_at
        FROM questions ${where}
        ORDER BY id DESC
        LIMIT $${params.length - 1} OFFSET $${params.length}`,

@@ -97,6 +97,7 @@ export interface QuestionsFilter {
   exam_type?: string;
   year?: number;
   search?: string;
+  has_diagram?: boolean;
 }
 
 export async function getQuestions(
