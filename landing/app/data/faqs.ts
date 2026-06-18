@@ -39,4 +39,12 @@ export const faqs = [
     q: "Can I cancel my Premium plan?",
     a: "Premium is a one-time payment for a 30-day or 1-year pass — not a subscription. It does not auto-renew, so there is nothing to cancel.",
   },
+  {
+    q: "Does ExamBuddie cover the full WAEC/JAMB syllabus?",
+    a: "ExamBuddie is built from over 41,000 real past questions, which covers the vast majority of topics that appear in WAEC, JAMB and NECO exams. Drill Mode automatically targets the specific topics where your accuracy is weakest.",
+  },
+  {
+    q: "Can parents or teachers use ExamBuddie?",
+    a: "Yes. Many parents use ExamBuddie to practise alongside their children, and teachers use it to generate topic-specific question sets for class. The bot works the same way for everyone — just open Telegram and tap Start.",
+  },
 ];
