@@ -1,6 +1,6 @@
-# 🎓 ExamBuddie — AI-Powered Exam Prep for Nigerian Students
+# 🎓 ExamBuddie — WAEC, JAMB & NECO Exam Prep on Telegram
 
-> Practice WAEC, JAMB & NECO past questions with AI-powered explanations and progress tracking — right inside Telegram.
+> Practice 41,000+ real past questions with instant explanations and progress tracking — right inside Telegram.
 
 ---
 

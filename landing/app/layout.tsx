@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://exambuddie.app"),
   title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
   description:
-    "AI-powered exam prep for WAEC, JAMB and NECO — practice past questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
+    "WAEC, JAMB and NECO past question practice on Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
   keywords: [
     "WAEC past questions",
     "JAMB practice questions",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
     description:
-      "AI-powered exam prep for WAEC, JAMB and NECO — practice past questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
+      "Practice 41,000+ past WAEC, JAMB and NECO questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
     type: "website",
     url: "https://exambuddie.app",
     siteName: "ExamBuddie",
@@ -58,7 +58,7 @@ const softwareAppJsonLd = {
   operatingSystem: "Telegram",
   url: "https://exambuddie.app",
   description:
-    "AI-powered exam prep for WAEC, JAMB and NECO — practice past questions directly in Telegram.",
+    "Past question practice for WAEC, JAMB and NECO — timed quizzes, instant explanations, and progress tracking on Telegram.",
   offers: {
     "@type": "Offer",
     price: "0",
@@ -73,7 +73,7 @@ const organizationJsonLd = {
   url: "https://exambuddie.app",
   logo: "https://exambuddie.app/opengraph-image",
   description:
-    "AI-powered WAEC, JAMB and NECO exam preparation platform for Nigerian students, accessible directly inside Telegram.",
+    "Past question practice platform for WAEC, JAMB and NECO exams — timed drills, instant explanations, and streak tracking, accessible directly inside Telegram.",
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
