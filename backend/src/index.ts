@@ -11,6 +11,7 @@ import * as onboarding from './bot/handlers/onboarding';
 import * as practice from './bot/handlers/practice';
 import * as quiz from './bot/handlers/quiz';
 import * as stats from './bot/handlers/stats';
+import * as leaderboard from './bot/handlers/leaderboard';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -37,6 +38,7 @@ bot.command('subscribe', stats.handleSubscribe);
 bot.command('practice', practice.handlePractice);
 bot.command('quiz', quiz.handleQuiz);
 bot.command('drill', (ctx) => practice.handleDrill(ctx));
+bot.command('leaderboard', leaderboard.handleLeaderboard);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -200,9 +202,10 @@ bot.on('text', async (ctx: any) => {
 
   if (!user?.exam_type) return onboarding.handleStart(ctx);
 
-  // Stats and Settings always work, even mid-session
+  // Stats, Settings, and Leaderboard always work, even mid-session
   if (text === '📊 My Stats') return stats.handleStats(ctx);
   if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
+  if (text === '🏆 Leaderboard') return leaderboard.handleLeaderboard(ctx);
 
   const session = await redis.getSession(ctx.from.id);
 
