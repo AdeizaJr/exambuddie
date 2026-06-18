@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { faqs } from "./data/faqs";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -300,6 +300,16 @@ export default function Home() {
   const [billingYearly, setBillingYearly] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const plans = [
     {
@@ -342,6 +352,24 @@ export default function Home() {
 
   return (
     <div className="font-[var(--font-geist)]">
+      {/* Scroll progress bar */}
+      <div
+        className="fixed top-0 left-0 z-[60] h-[3px] bg-blue-600 transition-[width] duration-100 dark:bg-blue-400"
+        style={{ width: `${scrollProgress}%` }}
+      />
+
+      {/* Sticky mobile CTA */}
+      <div className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-slate-200 bg-white/95 backdrop-blur px-4 py-3 dark:border-slate-800 dark:bg-slate-950/95">
+        <a
+          href={BOT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full rounded-full bg-blue-700 py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-blue-200/50 transition-colors hover:bg-blue-800 dark:shadow-none"
+        >
+          Start Practising Free on Telegram →
+        </a>
+      </div>
+
       {/* Nav */}
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
@@ -730,9 +758,14 @@ export default function Home() {
       <section id="subjects" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
-              All major subjects covered
-            </h2>
+            <div className="mb-3 flex items-center justify-center gap-3">
+              <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+                All major subjects covered
+              </h2>
+              <span className="shrink-0 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                {subjects.length} subjects
+              </span>
+            </div>
             <p className="text-base text-slate-600 sm:text-lg dark:text-slate-400">
               WAEC, JAMB and NECO past questions across every core subject.
             </p>
