@@ -29,6 +29,7 @@ export interface Question {
   explanation_reviewed: boolean;
   flag_count: number;
   source_id: string | null;
+  has_diagram: boolean;
   created_at: string;
 }
 

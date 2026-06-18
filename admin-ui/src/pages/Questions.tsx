@@ -66,6 +66,7 @@ export default function Questions() {
   const examType = searchParams.get("exam") ?? "";
   const year = searchParams.get("year") ?? "";
   const search = searchParams.get("q") ?? "";
+  const hasDiagram = searchParams.get("has_diagram") ?? "";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
 
   const [result, setResult] = useState<PaginatedResponse<Question> | null>(null);
@@ -101,6 +102,7 @@ export default function Questions() {
         exam_type: examType || undefined,
         year: year ? parseInt(year) : undefined,
         search: search || undefined,
+        has_diagram: hasDiagram === "true" ? true : hasDiagram === "false" ? false : undefined,
       });
       setResult(data);
       setError(null);
@@ -109,7 +111,7 @@ export default function Questions() {
     } finally {
       setLoading(false);
     }
-  }, [page, subject, examType, year, search]);
+  }, [page, subject, examType, year, search, hasDiagram]);
 
   useEffect(() => {
     load();
@@ -207,6 +209,16 @@ export default function Questions() {
           ))}
         </select>
 
+        <select
+          value={hasDiagram}
+          onChange={(e) => setFilter("has_diagram", e.target.value)}
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+        >
+          <option value="">All Questions</option>
+          <option value="true">Has Diagram</option>
+          <option value="false">No Diagram</option>
+        </select>
+
         <input
           type="text"
           placeholder="Search by ID, source ID, or question text..."
@@ -271,6 +283,11 @@ export default function Questions() {
                     <tr key={q.id} className="transition-colors hover:bg-surface2">
                       <td className="px-4 py-3 font-mono text-xs text-muted">{q.id}</td>
                       <td className="max-w-xs px-4 py-3 text-white">
+                        {q.has_diagram && (
+                          <span className="mr-2 inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium bg-amber-500/15 text-amber-400 border border-amber-500/20">
+                            🖼 diagram
+                          </span>
+                        )}
                         <span title={q.question_text}>
                           {q.question_text.length > 80
                             ? q.question_text.slice(0, 80) + "…"
