@@ -317,6 +317,9 @@ export default function Users() {
                       Streak
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
+                      Phone
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
                       Last Active
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
@@ -364,6 +367,9 @@ export default function Users() {
                         </div>
                       </td>
                       <td className="px-4 py-3 text-muted">{u.streak} 🔥</td>
+                      <td className="px-4 py-3 font-mono text-xs text-muted">
+                        {u.phone_number ?? <span className="text-muted/40">—</span>}
+                      </td>
                       <td className="px-4 py-3 text-xs text-muted">
                         {formatDate(u.last_active_date)}
                       </td>
@@ -454,6 +460,12 @@ export default function Users() {
             <div className="flex items-center justify-center py-12"><Spinner size="lg" /></div>
           ) : (
             <div className="space-y-6">
+              {/* User meta */}
+              <div className="flex flex-wrap gap-4 text-xs text-muted">
+                <span>📱 <span className="text-white">{activityUser.phone_number ?? "Not provided"}</span></span>
+                <span>🔥 <span className="text-white">{activityUser.streak}-day streak</span></span>
+                <span>📅 Joined <span className="text-white">{formatDate(activityUser.joined_at)}</span></span>
+              </div>
               {/* Summary stats */}
               <div className="grid grid-cols-3 gap-3">
                 {[

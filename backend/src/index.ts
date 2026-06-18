@@ -83,6 +83,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'settings:subjects') return onboarding.handleSettingsSubjects(ctx);
   if (data === 'settings:year') return onboarding.handleSettingsYear(ctx);
   if (data.startsWith('settings:year:')) return onboarding.handleSettingsYearPick(ctx);
+  if (data === 'settings:phone') return onboarding.handleSettingsPhone(ctx);
   if (data === 'settings:notifications') return onboarding.handleSettingsNotifications(ctx);
   if (data === 'settings:delete') return onboarding.handleSettingsDelete(ctx);
   if (data === 'settings:delete:confirm') return onboarding.handleSettingsDeleteConfirm(ctx);
@@ -186,6 +187,12 @@ bot.on('callback_query', async (ctx: any) => {
   await ctx.answerCbQuery('Something went wrong. Please try again.', { show_alert: false });
 });
 
+// ── Contact handler (phone number shared during onboarding) ───────────────────
+bot.on('message', async (ctx: any, next: any) => {
+  if (ctx.message?.contact) return onboarding.handleContact(ctx);
+  return next();
+});
+
 // ── Free-text handler — keeps conversation alive ───────────────────────────────
 bot.on('text', async (ctx: any) => {
   const text: string = ctx.message?.text?.trim() || '';
@@ -198,6 +205,11 @@ bot.on('text', async (ctx: any) => {
   if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
 
   const session = await redis.getSession(ctx.from.id);
+
+  // Phone nudge skip
+  if (text === 'Skip for now →' && (await redis.getPhonePending(ctx.from.id))) {
+    return onboarding.handlePhoneSkip(ctx);
+  }
   const activeSession =
     session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill';
 

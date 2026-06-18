@@ -44,10 +44,16 @@ export default function PrivacyPage() {
               <li>Your quiz and practice history — questions answered, scores, time taken</li>
               <li>Your subscription status and payment reference numbers</li>
               <li>Your daily streak and progress statistics</li>
+              <li>
+                Your phone number — <strong>optional</strong>, only if you choose to share it via
+                the bot. We use this to contact you about your subscription, account changes, or
+                important service updates. You can skip this at any time and add or remove it
+                later via Settings.
+              </li>
             </ul>
             <p className="mt-3">
-              We do <strong>not</strong> collect your phone number, email address, or any
-              information beyond what Telegram provides and what you choose while using the bot.
+              We do <strong>not</strong> collect your email address or any information beyond
+              what is listed above.
             </p>
           </section>
 
@@ -61,6 +67,7 @@ export default function PrivacyPage() {
               <li>To detect weak topics and surface targeted drills</li>
               <li>Your progress is stored to track your performance and help you improve over time</li>
               <li>To send scheduled study reminders (if enabled)</li>
+              <li>To contact you about your subscription or account via phone, if you provided your number</li>
             </ul>
             <p className="mt-3">We do not use your data for advertising or sell it to third parties.</p>
           </section>

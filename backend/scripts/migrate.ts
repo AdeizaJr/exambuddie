@@ -175,6 +175,9 @@ const migrations = [
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS streak INT DEFAULT 0`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_active_date DATE DEFAULT NULL`,
 
+  // ── Phone number (collected during onboarding, optional) ─────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS phone_number VARCHAR(20) DEFAULT NULL`,
+
   // ── Normalize "From the novel;" questions: trim indentation + collapse blank lines ──
   // Pass 1: strip leading whitespace from each line (e.g. "    This question..." → "This question...")
   // Pass 2: collapse 3+ consecutive newlines to 2

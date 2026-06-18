@@ -345,7 +345,7 @@ export default function Home() {
       {/* Nav */}
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <span className="flex items-center gap-2">
+          <a href="#" className="flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-8 w-8 shrink-0">
               <defs>
                 <linearGradient id="nav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -361,7 +361,7 @@ export default function Home() {
               <path d="M26,22 L26.8,24.5 L29.5,25.2 L26.8,26 L26,28.5 L25.2,26 L22.5,25.2 L25.2,24.5 Z" fill="#FDE68A"/>
             </svg>
             <span className="text-lg font-bold text-blue-700 sm:text-xl dark:text-blue-400">ExamBuddie</span>
-          </span>
+          </a>
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex dark:text-slate-300">
             <a href="#features" className="transition-colors hover:text-slate-900 dark:hover:text-white">Features</a>
             <a href="#subjects" className="transition-colors hover:text-slate-900 dark:hover:text-white">Subjects</a>
@@ -1003,7 +1003,7 @@ export default function Home() {
       <footer className="border-t border-slate-100 px-4 py-8 pb-24 sm:px-6 sm:py-10 md:pb-10 dark:border-slate-800">
         <div className="mx-auto max-w-6xl space-y-4">
           <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left dark:text-slate-400">
-            <span className="text-sm font-bold text-slate-700 sm:text-base dark:text-slate-200">ExamBuddie</span>
+            <a href="#" className="text-sm font-bold text-slate-700 hover:text-blue-700 sm:text-base dark:text-slate-200 dark:hover:text-blue-400">ExamBuddie</a>
             <span>© {new Date().getFullYear()} ExamBuddie. Built with ❤️ for Nigerian students.</span>
             <a
               href={BOT_URL}
