@@ -14,6 +14,7 @@ export interface User {
   daily_reset_at: string;
   streak: number;
   last_active_date: string | null;
+  phone_number: string | null;
   notifications_enabled: boolean;
   joined_at: string;
   updated_at: string;

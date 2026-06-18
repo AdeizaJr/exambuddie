@@ -370,7 +370,7 @@ export default function createServer(bot: any) {
 
     const { rows } = await db.query(
       `SELECT telegram_id, first_name, username, exam_type, subjects,
-              plan, plan_expires_at, streak, joined_at, daily_count, last_active_date
+              plan, plan_expires_at, streak, joined_at, daily_count, last_active_date, phone_number
        FROM users ${where}
        ORDER BY joined_at DESC
        LIMIT $${params.length - 1} OFFSET $${params.length}`,

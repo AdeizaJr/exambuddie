@@ -94,6 +94,30 @@ export const clearQuizState = async (telegramId: number | string): Promise<void>
   await client.del(`quiz:${telegramId}`);
 };
 
+const PHONE_NUDGE_TTL = 60 * 60 * 24 * 30; // 30 days
+
+export const hasSeenPhoneNudge = async (telegramId: number | string): Promise<boolean> => {
+  const val = await client.get(`phone_nudge:${telegramId}`);
+  return val !== null;
+};
+
+export const markPhoneNudgeSent = async (telegramId: number | string): Promise<void> => {
+  await client.set(`phone_nudge:${telegramId}`, '1', { EX: PHONE_NUDGE_TTL });
+};
+
+// Tracks that the phone keyboard is currently shown (separate from session so it doesn't clash with practice/quiz)
+export const setPhonePending = async (telegramId: number | string): Promise<void> => {
+  await client.set(`phone_pending:${telegramId}`, '1', { EX: 3600 });
+};
+
+export const getPhonePending = async (telegramId: number | string): Promise<boolean> => {
+  return (await client.get(`phone_pending:${telegramId}`)) !== null;
+};
+
+export const clearPhonePending = async (telegramId: number | string): Promise<void> => {
+  await client.del(`phone_pending:${telegramId}`);
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
@@ -101,6 +125,8 @@ export const deleteUserData = async (telegramId: number | string): Promise<void>
       key === `session:${telegramId}` ||
       key === `quiz:${telegramId}` ||
       key === `burst:${telegramId}` ||
+      key === `phone_nudge:${telegramId}` ||
+      key === `phone_pending:${telegramId}` ||
       key.startsWith(`sublimit:${telegramId}:`)
   );
   if (toDelete.length) await client.del(toDelete);

@@ -325,6 +325,26 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     await ctx.reply(fmt.formatStreakCard(streakResult.streak, weekActivity), { parse_mode: 'HTML' });
   }
 
+  // One-time phone nudge for users who haven't shared their number
+  if (!user.phone_number && !(await redis.hasSeenPhoneNudge(ctx.from.id))) {
+    await redis.markPhoneNudgeSent(ctx.from.id);
+    await redis.setPhonePending(ctx.from.id);
+    await ctx.reply(
+      '📱 <b>Quick one!</b> Share your phone number so we can reach you about your subscription.\n\n<i>Optional — tap Skip if you prefer not to.</i>',
+      {
+        parse_mode: 'HTML',
+        reply_markup: {
+          keyboard: [
+            [{ text: '📱 Share Phone Number', request_contact: true }],
+            [{ text: 'Skip for now →' }],
+          ],
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      }
+    );
+  }
+
   quizState.qIndex++;
   await redis.saveQuizState(ctx.from.id, quizState);
 }

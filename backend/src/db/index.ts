@@ -45,7 +45,7 @@ export async function upsertUser(ctx: any): Promise<User> {
 const USER_UPDATABLE_COLUMNS = new Set<string>([
   'username', 'first_name', 'exam_type', 'subjects', 'target_year', 'plan',
   'plan_expires_at', 'daily_count', 'daily_reset_at', 'streak',
-  'last_active_date', 'notifications_enabled',
+  'last_active_date', 'phone_number', 'notifications_enabled',
 ]);
 
 export async function updateUser(

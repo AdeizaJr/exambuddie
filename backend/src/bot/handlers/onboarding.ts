@@ -21,6 +21,26 @@ export async function handleStart(ctx: any): Promise<void> {
       `👋 <b>Welcome back, ${user.first_name}!</b>${body}\n\nReady to practise?`,
       { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() }
     );
+
+    // One-time nudge for existing users without a phone number
+    if (!user.phone_number && !(await redis.hasSeenPhoneNudge(ctx.from.id))) {
+      await redis.markPhoneNudgeSent(ctx.from.id);
+      await redis.setPhonePending(ctx.from.id);
+      await ctx.reply(
+        '📱 <b>Quick one!</b> Share your phone number so we can reach you about your subscription and account.\n\n<i>Optional — tap Skip if you prefer not to.</i>',
+        {
+          parse_mode: 'HTML',
+          reply_markup: {
+            keyboard: [
+              [{ text: '📱 Share Phone Number', request_contact: true }],
+              [{ text: 'Skip for now →' }],
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: true,
+          },
+        }
+      );
+    }
     return;
   }
 
@@ -144,21 +164,57 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
   });
 
   await redis.clearSession(ctx.from.id);
+  await redis.setPhonePending(ctx.from.id);
 
   await ctx.editMessageText(fmt.profileComplete(user), { parse_mode: 'HTML' });
-  await ctx.reply('Use the menu below to get started 👇', {
-    reply_markup: fmt.persistentMenuKeyboard(),
+
+  await ctx.reply(
+    '📱 <b>One last thing!</b>\n\nShare your phone number so we can send you important updates about your subscription and account.\n\n<i>This is optional — tap Skip if you prefer not to.</i>',
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        keyboard: [
+          [{ text: '📱 Share Phone Number', request_contact: true }],
+          [{ text: 'Skip for now →' }],
+        ],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    }
+  );
+}
+
+export async function handleContact(ctx: any): Promise<void> {
+  const phone = ctx.message?.contact?.phone_number;
+  if (!phone) return;
+
+  if (!(await redis.getPhonePending(ctx.from.id))) return;
+
+  await db.updateUser(ctx.from.id, { phone_number: phone });
+  await redis.clearPhonePending(ctx.from.id);
+
+  await ctx.reply('✅ Phone number saved!', {
+    reply_markup: { remove_keyboard: true },
+  });
+}
+
+export async function handlePhoneSkip(ctx: any): Promise<void> {
+  await redis.clearPhonePending(ctx.from.id);
+  await ctx.reply('No problem! You can always add it later in Settings.', {
+    reply_markup: { remove_keyboard: true },
   });
 }
 
 // /settings command
-function settingsKeyboard(notificationsEnabled: boolean) {
+function settingsKeyboard(notificationsEnabled: boolean, hasPhone: boolean) {
   const notifLabel = notificationsEnabled ? '🔔 Bot Messages: ON' : '🔕 Bot Messages: OFF';
+  const phoneLabel = hasPhone ? '📱 Update Phone Number' : '📱 Add Phone Number';
   return {
     inline_keyboard: [
       [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
       [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
       [{ text: '📅 Change Target Year', callback_data: 'settings:year' }],
+      [{ text: phoneLabel, callback_data: 'settings:phone' }],
       [{ text: notifLabel, callback_data: 'settings:notifications' }],
       [{ text: '📄 Terms & Privacy', url: 'https://exambuddie.app/terms' }],
       [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
@@ -176,7 +232,7 @@ export async function handleSettings(ctx: any): Promise<void> {
 
   await ctx.reply(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: settingsKeyboard(user.notifications_enabled),
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number),
   });
 }
 
@@ -211,7 +267,7 @@ export async function handleSettingsNotifications(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   const newVal = !user.notifications_enabled;
   await db.updateUser(ctx.from.id, { notifications_enabled: newVal });
-  await ctx.editMessageReplyMarkup(settingsKeyboard(newVal));
+  await ctx.editMessageReplyMarkup(settingsKeyboard(newVal, !!user.phone_number));
   await ctx.answerCbQuery(
     newVal
       ? "Bot messages enabled ✅"
@@ -268,7 +324,7 @@ export async function handleSettingsYearPick(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: settingsKeyboard(user.notifications_enabled),
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number),
   });
 }
 
@@ -278,7 +334,31 @@ export async function handleSettingsBack(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: settingsKeyboard(user.notifications_enabled),
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number),
+  });
+}
+
+export async function handleSettingsPhone(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
+  await redis.setPhonePending(ctx.from.id);
+
+  const prompt = user.phone_number
+    ? `📱 <b>Update Phone Number</b>\n\nCurrent: <code>${user.phone_number}</code>\n\nTap the button below to share your updated number.`
+    : '📱 <b>Add Phone Number</b>\n\nTap the button below to share your phone number.';
+
+  await ctx.reply(prompt, {
+    parse_mode: 'HTML',
+    reply_markup: {
+      keyboard: [
+        [{ text: '📱 Share Phone Number', request_contact: true }],
+        [{ text: 'Skip for now →' }],
+      ],
+      resize_keyboard: true,
+      one_time_keyboard: true,
+    },
   });
 }
 

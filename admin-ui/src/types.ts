@@ -10,6 +10,7 @@ export interface User {
   joined_at: string;
   daily_count: number;
   last_active_date: string | null;
+  phone_number: string | null;
 }
 
 export interface Question {
