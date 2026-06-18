@@ -8,6 +8,7 @@ import Flags from "./pages/Flags";
 import Subscriptions from "./pages/Subscriptions";
 import AnalyticsPage from "./pages/Analytics";
 import Broadcast from "./pages/Broadcast";
+import LeaderboardPage from "./pages/Leaderboard";
 import { getFlags, loginAdmin } from "./api";
 
 // ── Login page ──────────────────────────────────────────────────────────────
@@ -152,6 +153,7 @@ export default function App() {
         <Route path="/flags" element={<Flags onFlagsResolved={loadFlagCount} />} />
         <Route path="/subscriptions" element={<Subscriptions />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/broadcast" element={<Broadcast />} />
       </Route>
 

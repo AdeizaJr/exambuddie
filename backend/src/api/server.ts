@@ -552,6 +552,20 @@ export default function createServer(bot: any) {
     });
   });
 
+  // ── GET /api/admin/leaderboard ──────────────────────────────────────────────
+  app.get('/api/admin/leaderboard', adminAuth, async (req: Request, res: Response) => {
+    const subject = req.query.subject as string | undefined;
+    const [entries, { rows: countRows }] = await Promise.all([
+      db.getLeaderboard(subject || undefined),
+      db.query(
+        `SELECT COUNT(DISTINCT a.user_id) as active_users
+         FROM attempts a
+         WHERE a.attempted_at >= NOW() - INTERVAL '7 days'`
+      ),
+    ]);
+    res.json({ entries, active_users: parseInt(countRows[0].active_users) });
+  });
+
   // ── POST /api/admin/broadcast ───────────────────────────────────────────────
   app.post('/api/admin/broadcast', adminAuth, async (req: Request, res: Response) => {
     const { message, target } = req.body;

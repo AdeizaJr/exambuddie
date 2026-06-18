@@ -160,6 +160,24 @@ export async function getAnalytics(): Promise<Analytics> {
   return req<Analytics>("GET", "/analytics");
 }
 
+export interface LeaderboardEntry {
+  rank: number;
+  first_name: string;
+  telegram_id: number;
+  correct: number;
+  total: number;
+  accuracy: number;
+}
+
+export async function getLeaderboard(subject?: string): Promise<{ entries: LeaderboardEntry[]; active_users: number }> {
+  return req<{ entries: LeaderboardEntry[]; active_users: number }>(
+    "GET",
+    "/leaderboard",
+    undefined,
+    subject ? { subject } : undefined
+  );
+}
+
 export type BroadcastTarget = "all" | "waec" | "jamb" | "neco" | "premium" | "free";
 
 export async function broadcast(
