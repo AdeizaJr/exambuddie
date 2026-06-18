@@ -1,6 +1,14 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
 
+// Nigeria is UTC+1 (WAT)
+export function timeGreeting(): string {
+  const hour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
+  if (hour >= 5 && hour < 12)  return 'Good morning';
+  if (hour >= 12 && hour < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
 // Convert LaTeX math notation to readable plain text for Telegram.
 function convertLatex(text: string): string {
   return text
@@ -220,7 +228,7 @@ export function askSubjects(examType: string): string {
 export function profileComplete(user: User): string {
   const subjects = user.subjects.map(s => SUBJECT_MAP[s] || s).join(', ');
   const yearLabel = user.target_year ? `<b>${user.target_year}</b>` : '<b>Any Year</b>';
-  return `🎉 <b>You're all set, ${user.first_name}!</b>
+  return `🎉 <b>${timeGreeting()}, ${user.first_name}! You're all set.</b>
 
 📋 <b>Your Profile:</b>
 • 📅 Exam Year: ${yearLabel}

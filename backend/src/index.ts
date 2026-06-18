@@ -229,7 +229,7 @@ bot.on('text', async (ctx: any) => {
   if (text === '📚 Practice') return practice.handlePractice(ctx);
   if (text === '📋 Quiz') return quiz.handleQuiz(ctx);
 
-  await ctx.reply(`What would you like to do, ${user.first_name}?`, {
+  await ctx.reply(`${fmt.timeGreeting()}, ${user.first_name}! What would you like to do?`, {
     parse_mode: 'HTML',
     reply_markup: fmt.persistentMenuKeyboard(),
   });
