@@ -268,7 +268,7 @@ export async function saveQuizSession({
 }): Promise<void> {
   await pool.query(
     `INSERT INTO sessions (id, user_id, mode, subject, total_questions, correct_count, started_at, ended_at, time_limit_secs)
-     VALUES ($1, $2, 'quiz', $3, $4, $5, to_timestamp($6 / 1000.0), to_timestamp($7 / 1000.0), 2700)
+     VALUES ($1, $2, 'quiz', $3, $4, $5, to_timestamp($6 / 1000.0), to_timestamp($7 / 1000.0), 3000)
      ON CONFLICT (id) DO NOTHING`,
     [sessionId, userId, subject, totalQuestions, correctCount, startTime, endTime]
   );
@@ -350,6 +350,78 @@ export async function getSubjectStats(userId: number, examType?: string): Promis
     params
   );
   return rows;
+}
+
+export interface LeaderboardEntry {
+  rank: number;
+  first_name: string;
+  correct: number;
+  total: number;
+  accuracy: number;
+  telegram_id: number;
+}
+
+export async function getLeaderboard(subject?: string): Promise<LeaderboardEntry[]> {
+  const weekStart = `NOW() - INTERVAL '7 days'`;
+  const subjectFilter = subject ? `AND q.subject = $1` : '';
+  const params = subject ? [subject] : [];
+
+  const { rows } = await pool.query(
+    `SELECT
+       u.first_name,
+       u.telegram_id,
+       COUNT(*) AS total,
+       SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) AS correct,
+       ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) AS accuracy
+     FROM attempts a
+     JOIN users u ON a.user_id = u.id
+     JOIN questions q ON a.question_id = q.id
+     WHERE a.attempted_at >= ${weekStart}
+     ${subjectFilter}
+     GROUP BY u.id, u.first_name, u.telegram_id
+     HAVING COUNT(*) >= 5
+     ORDER BY accuracy DESC, total DESC
+     LIMIT 10`,
+    params
+  );
+
+  return rows.map((r, i) => ({
+    rank: i + 1,
+    first_name: r.first_name,
+    telegram_id: parseInt(r.telegram_id),
+    correct: parseInt(r.correct),
+    total: parseInt(r.total),
+    accuracy: parseFloat(r.accuracy),
+  }));
+}
+
+export async function getLeaderboardRank(userId: number, subject?: string): Promise<number | null> {
+  const weekStart = `NOW() - INTERVAL '7 days'`;
+  const subjectFilter = subject ? `AND q.subject = $1` : '';
+  const params: any[] = subject ? [subject] : [];
+
+  const { rows } = await pool.query(
+    `SELECT rank FROM (
+       SELECT
+         u.id,
+         RANK() OVER (ORDER BY
+           ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) DESC,
+           COUNT(*) DESC
+         ) AS rank
+       FROM attempts a
+       JOIN users u ON a.user_id = u.id
+       JOIN questions q ON a.question_id = q.id
+       WHERE a.attempted_at >= ${weekStart}
+       ${subjectFilter}
+       GROUP BY u.id
+       HAVING COUNT(*) >= 5
+     ) ranked
+     JOIN users u ON ranked.id = u.id
+     WHERE u.telegram_id = $${params.length + 1}`,
+    [...params, userId]
+  );
+
+  return rows[0] ? parseInt(rows[0].rank) : null;
 }
 
 export async function checkDailyLimit(

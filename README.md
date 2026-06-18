@@ -52,6 +52,7 @@ npm run dev            # development (long polling)
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Admin dashboard login |
 | `JWT_SECRET` | Admin session signing |
 | `ALLOWED_ORIGINS` | Comma-separated CORS origins (miniapp + admin-ui URLs) |
+| `FREE_DAILY_LIMIT` | Max questions per day for free users (default: 5) |
 
 ---
 
@@ -105,11 +106,12 @@ npm run dev          # runs at localhost:3000
 |---------|-------------|
 | `/start` | Onboarding or main menu |
 | `/practice` | Start a practice session |
-| `/quiz` | 40-question timed mock exam (premium) |
+| `/quiz` | 60-question timed mock exam — 50 min (premium) |
 | `/drill` | Drill your weakest topics |
+| `/leaderboard` | Weekly accuracy leaderboard (top 10) |
 | `/stats` | View accuracy and progress |
 | `/subscribe` | Upgrade to Premium |
-| `/settings` | Change exam type or subjects |
+| `/settings` | Change exam type, subjects, or phone number |
 | `/app` | Open the ExamBuddie Web App |
 | `/stop` | End current session |
 | `/help` | List all commands |
@@ -120,13 +122,14 @@ npm run dev          # runs at localhost:3000
 
 | Feature | Free | Premium |
 |---------|------|---------|
-| Questions per 6 hours | 5 | Unlimited |
+| Questions per day | 5 (configurable) | Unlimited |
 | Practice mode | ✅ | ✅ |
-| Quiz mode (40Q timed) | ❌ | ✅ |
+| Quiz mode (60Q, 50 min) | ❌ | ✅ |
 | Topic drill | ❌ | ✅ |
 | Per-question timer | ❌ | ✅ |
 | Progress tracking | ✅ | ✅ |
 | Weak topic detection | ✅ | ✅ |
+| Weekly leaderboard | ✅ | ✅ |
 | Weekly performance reports | ❌ | ✅ |
 
 ---

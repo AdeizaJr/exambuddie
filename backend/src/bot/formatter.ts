@@ -250,7 +250,8 @@ export function persistentMenuKeyboard() {
   return {
     keyboard: [
       [{ text: '📚 Practice' }, { text: '📋 Quiz' }],
-      [{ text: '📊 My Stats' }, { text: '⚙️ Settings' }],
+      [{ text: '📊 My Stats' }, { text: '🏆 Leaderboard' }],
+      [{ text: '⚙️ Settings' }],
     ],
     resize_keyboard: true,
     persistent: true,
@@ -448,12 +449,12 @@ export function timerPickerKeyboard(mode: 'practice' | 'quiz') {
   return {
     inline_keyboard: [
       [
-        { text: '⏱️ 10 seconds', callback_data: `${mode}:timer:10` },
-        { text: '⏱️ 20 seconds', callback_data: `${mode}:timer:20` },
+        { text: '⏱️ 30 seconds', callback_data: `${mode}:timer:30` },
+        { text: '⏱️ 45 seconds', callback_data: `${mode}:timer:45` },
       ],
       [
-        { text: '⏱️ 30 seconds', callback_data: `${mode}:timer:30` },
-        { text: '▶️ No Timer',   callback_data: `${mode}:timer:0`  },
+        { text: '⏱️ 50 seconds (WAEC pace)', callback_data: `${mode}:timer:50` },
+        { text: '▶️ No Timer',               callback_data: `${mode}:timer:0`  },
       ],
     ],
   };
