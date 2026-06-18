@@ -18,7 +18,7 @@ export async function handleStart(ctx: any): Promise<void> {
     const subLines = [streakLine, statsLine].filter(Boolean).join('\n');
     const body = subLines ? `\n\n${subLines}` : '';
     await ctx.reply(
-      `👋 <b>Welcome back, ${user.first_name}!</b>${body}\n\nReady to practise?`,
+      `👋 <b>${fmt.timeGreeting()}, ${user.first_name}!</b>${body}\n\nReady to practise?`,
       { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() }
     );
 
