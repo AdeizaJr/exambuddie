@@ -453,9 +453,9 @@ export default function Home() {
                 <span className="text-blue-700 dark:text-blue-400">Study on Telegram.</span>
               </h1>
               <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0 dark:text-slate-400">
-                AI-powered exam prep with over 41,000 past WAEC, JAMB and NECO questions. Timed
-                quizzes, instant explanations, and progress tracking — all inside Telegram. No app
-                to download.
+                Practice over 41,000 real past WAEC, JAMB and NECO questions. Timed quizzes,
+                instant explanations, and progress tracking — all inside Telegram. No app to
+                download.
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
                 <a
@@ -919,7 +919,7 @@ export default function Home() {
                   ["Timed mock exams", true, false, false],
                   ["Works on any phone", true, false, true],
                   ["Works inside Telegram (no new app)", true, false, false],
-                  ["AI-powered insights", true, false, false],
+                  ["Weak-topic targeting", true, false, false],
                   ["Free to start", true, false, true],
                 ].map(([feature, eb, tb, yt]) => (
                   <tr key={String(feature)} className="hover:bg-slate-50 dark:hover:bg-slate-900 dark:bg-slate-950">

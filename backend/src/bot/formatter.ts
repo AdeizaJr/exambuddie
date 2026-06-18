@@ -161,7 +161,7 @@ export const SUBJECT_EMOJI: Record<string, string> = {
 export function consentPrompt(firstName: string): string {
   return `🎓 <b>Welcome to ExamBuddie, ${firstName}!</b>
 
-I'm your AI-powered WAEC, JAMB &amp; NECO exam prep assistant. I'll give you past questions, explain every answer, and track your progress.
+I'll give you 41,000+ real WAEC, JAMB &amp; NECO past questions, explain every answer, and track your progress.
 
 Before we start, please review our <a href="https://exambuddie.app/terms">Terms of Use</a> and <a href="https://exambuddie.app/privacy">Privacy Policy</a> — they cover what data we collect (your Telegram ID, exam preferences, quiz history) and how we use it.
 
