@@ -13,6 +13,7 @@ import {
   X,
   Menu,
   Zap,
+  Trophy,
 } from "lucide-react";
 import Modal from "./Modal";
 import { changePassword } from "../api";
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavItem[] = [
   { path: "/flags",         label: "Flags",         icon: <Flag size={16} />            },
   { path: "/subscriptions", label: "Subscriptions", icon: <CreditCard size={16} />      },
   { path: "/analytics",     label: "Analytics",     icon: <BarChart2 size={16} />       },
+  { path: "/leaderboard",   label: "Leaderboard",   icon: <Trophy size={16} />          },
   { path: "/broadcast",     label: "Broadcast",     icon: <Megaphone size={16} />       },
 ];
 
