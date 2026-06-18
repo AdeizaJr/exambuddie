@@ -662,7 +662,7 @@ export default function Home() {
 
           {/* Secondary features — compact, lower visual weight */}
           <div className="mt-20 sm:mt-24">
-            <p className="mb-6 text-xs font-bold uppercase tracking-widest text-slate-400">Also included</p>
+            <p className="mb-8 text-xs font-bold uppercase tracking-widest text-slate-400">Also included</p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
               {secondaryFeatures.map(({ icon, title, desc }) => (
                 <div key={title} className="rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
@@ -677,15 +677,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Telegram? */}
+      {/* Zero friction */}
       <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center sm:mb-16">
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
-              Why Telegram?
+              No setup. No excuses.
             </h2>
             <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
-              No new app. No login. Just open Telegram — which you already have.
+              Your phone is already ready. Open Telegram, tap Start, and your first question is waiting.
             </p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
@@ -787,7 +787,7 @@ export default function Home() {
       {/* Pricing */}
       <section id="pricing" className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-10 text-center sm:mb-12">
+          <div className="mb-10 text-center sm:mb-16">
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Simple pricing
             </h2>
@@ -890,6 +890,10 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
+        <hr className="border-slate-200 dark:border-slate-800" />
+      </div>
+
       {/* Compare */}
       <section className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-4xl">
@@ -976,7 +980,7 @@ export default function Home() {
       {/* Testimonials */}
       <section className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
+          <div className="mb-10 text-center sm:mb-16">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">What people say</span>
             <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
               Real results from Parents, Students & Teachers
