@@ -192,16 +192,25 @@ export async function handleContact(ctx: any): Promise<void> {
 
   await db.updateUser(ctx.from.id, { phone_number: phone });
   await redis.clearPhonePending(ctx.from.id);
+  await redis.markPhoneNudgeSent(ctx.from.id);
 
   await ctx.reply('✅ Phone number saved!', {
     reply_markup: { remove_keyboard: true },
+  });
+  await ctx.reply('Use the menu below to get started 👇', {
+    reply_markup: fmt.persistentMenuKeyboard(),
   });
 }
 
 export async function handlePhoneSkip(ctx: any): Promise<void> {
   await redis.clearPhonePending(ctx.from.id);
+  await redis.markPhoneNudgeSent(ctx.from.id);
+
   await ctx.reply('No problem! You can always add it later in Settings.', {
     reply_markup: { remove_keyboard: true },
+  });
+  await ctx.reply('Use the menu below to get started 👇', {
+    reply_markup: fmt.persistentMenuKeyboard(),
   });
 }
 
