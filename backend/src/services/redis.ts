@@ -94,7 +94,8 @@ export const clearQuizState = async (telegramId: number | string): Promise<void>
   await client.del(`quiz:${telegramId}`);
 };
 
-const PHONE_NUDGE_TTL = 60 * 60 * 24 * 30; // 30 days
+const PHONE_NUDGE_TTL_SKIP  = 60 * 60 * 24 * 7;  // 7 days — re-show after a week if skipped
+const PHONE_NUDGE_TTL_SHOWN = 60 * 60 * 24 * 30; // 30 days — suppress while nudge is pending action
 
 export const hasSeenPhoneNudge = async (telegramId: number | string): Promise<boolean> => {
   const val = await client.get(`phone_nudge:${telegramId}`);
@@ -102,7 +103,11 @@ export const hasSeenPhoneNudge = async (telegramId: number | string): Promise<bo
 };
 
 export const markPhoneNudgeSent = async (telegramId: number | string): Promise<void> => {
-  await client.set(`phone_nudge:${telegramId}`, '1', { EX: PHONE_NUDGE_TTL });
+  await client.set(`phone_nudge:${telegramId}`, '1', { EX: PHONE_NUDGE_TTL_SHOWN });
+};
+
+export const snoozePhoneNudge = async (telegramId: number | string): Promise<void> => {
+  await client.set(`phone_nudge:${telegramId}`, '1', { EX: PHONE_NUDGE_TTL_SKIP });
 };
 
 // Tracks that the phone keyboard is currently shown (separate from session so it doesn't clash with practice/quiz)

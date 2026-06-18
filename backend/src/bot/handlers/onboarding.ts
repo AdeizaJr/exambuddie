@@ -204,7 +204,7 @@ export async function handleContact(ctx: any): Promise<void> {
 
 export async function handlePhoneSkip(ctx: any): Promise<void> {
   await redis.clearPhonePending(ctx.from.id);
-  await redis.markPhoneNudgeSent(ctx.from.id);
+  await redis.snoozePhoneNudge(ctx.from.id); // re-show after 7 days
 
   await ctx.reply('No problem! You can always add it later in Settings.', {
     reply_markup: { remove_keyboard: true },
