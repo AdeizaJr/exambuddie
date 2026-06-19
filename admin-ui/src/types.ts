@@ -84,12 +84,26 @@ export interface SubjectData {
   accuracy: number;
 }
 
+export interface WeakTopicData {
+  subject: string;
+  topic: string;
+  attempts: number;
+  correct: number;
+  accuracy: number;
+}
+
 export interface Analytics {
   daily: DailyData[];
   subjects: SubjectData[];
   contentHealth: {
     missing_explanations: number;
     flagged_questions: number;
+  };
+  weakTopics: WeakTopicData[];
+  engagement: {
+    dau: number;
+    wau: number;
+    mau: number;
   };
 }
 
@@ -115,10 +129,19 @@ export interface UserActivityAttempt {
   exam_type: string;
 }
 
+export interface UserWeakTopic {
+  subject: string;
+  topic: string;
+  attempts: number;
+  correct: number;
+  accuracy: number;
+}
+
 export interface UserActivity {
   summary: UserActivitySummary;
   subjects: UserActivitySubject[];
   recent: UserActivityAttempt[];
+  weakTopics: UserWeakTopic[];
 }
 
 export interface PaginatedResponse<T> {

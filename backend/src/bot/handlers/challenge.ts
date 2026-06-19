@@ -76,11 +76,13 @@ function challengeSubjectKeyboard(subjects: string[]) {
 // ── Creation flow ─────────────────────────────────────────────────────────────
 
 export async function handleChallenge(ctx: any): Promise<void> {
+  const user = await db.getUser(ctx.from.id);
+  const isPremium = user?.plan === 'premium';
   await ctx.reply('🎯 <b>Challenge Mode</b>\n\nCreate a new room or join an existing one:', {
     parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [
-        [{ text: '➕ Create Challenge', callback_data: 'challenge:create' }],
+        [{ text: isPremium ? '➕ Create Challenge' : '💎 Create Challenge (Premium)', callback_data: 'challenge:create' }],
         [{ text: '🔍 Join with Code', callback_data: 'challenge:search' }],
         [{ text: '❌ Cancel', callback_data: 'menu:main' }],
       ],
@@ -92,6 +94,14 @@ export async function handleChallengeCreate(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
+
+  if (user.plan !== 'premium') {
+    await ctx.reply(
+      '💎 <b>Premium Required</b>\n\nCreating a challenge room is a Premium feature.\n\nYou can still <b>join</b> any challenge room shared with you — but to host your own, upgrade to Premium.\n\n👇 Tap /subscribe to unlock.',
+      { parse_mode: 'HTML' }
+    );
+    return;
+  }
 
   await redis.setSession(ctx.from.id, { step: 'challenge_subject', examType: user.exam_type || 'WAEC' });
   await ctx.editMessageText('🎯 <b>Challenge Mode</b>\n\nPick a subject for the challenge:', {

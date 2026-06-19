@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { getAnalytics } from "../api";
-import type { Analytics, DailyData, SubjectData } from "../types";
+import type { Analytics, DailyData, SubjectData, WeakTopicData } from "../types";
 import Spinner from "../components/Spinner";
 
 function accuracyColor(acc: number): string {
@@ -103,6 +103,21 @@ export default function AnalyticsPage() {
         >
           Refresh
         </button>
+      </div>
+
+      {/* Engagement */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: "DAU", value: analytics.engagement?.dau ?? 0, sub: "active today" },
+          { label: "WAU", value: analytics.engagement?.wau ?? 0, sub: "active this week" },
+          { label: "MAU", value: analytics.engagement?.mau ?? 0, sub: "active this month" },
+        ].map(({ label, value, sub }) => (
+          <div key={label} className="rounded-xl border border-border bg-surface p-5">
+            <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted">{label}</p>
+            <p className="font-display text-2xl font-bold text-accent">{Number(value).toLocaleString()}</p>
+            <p className="mt-1 text-xs text-muted">{sub}</p>
+          </div>
+        ))}
       </div>
 
       {/* Content Health */}
@@ -227,6 +242,52 @@ export default function AnalyticsPage() {
           </table>
           {analytics.subjects.length === 0 && (
             <div className="py-10 text-center text-sm text-muted">No attempt data yet</div>
+          )}
+        </div>
+      </div>
+
+      {/* Weakest Topics */}
+      <div className="overflow-hidden rounded-xl border border-border bg-surface">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <div>
+            <h2 className="text-sm font-semibold text-white">Weakest Topics</h2>
+            <p className="mt-0.5 text-xs text-muted">Topics with lowest accuracy (min 10 attempts)</p>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">#</th>
+                <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Topic</th>
+                <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Subject</th>
+                <th className="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted">Attempts</th>
+                <th className="px-5 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted">Accuracy</th>
+                <th className="w-36 px-5 py-3"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {(analytics.weakTopics ?? []).map((t: WeakTopicData, i: number) => {
+                const acc = Number(t.accuracy) || 0;
+                return (
+                  <tr key={`${t.subject}-${t.topic}`} className="transition-colors hover:bg-surface2">
+                    <td className="px-5 py-3 font-mono text-xs text-muted">{i + 1}</td>
+                    <td className="px-5 py-3 text-white">{t.topic}</td>
+                    <td className="px-5 py-3 text-xs capitalize text-muted">{t.subject.replace(/-/g, " ")}</td>
+                    <td className="px-5 py-3 text-right font-mono text-xs text-muted">{Number(t.attempts).toLocaleString()}</td>
+                    <td className={`px-5 py-3 text-right font-mono font-bold ${accuracyColor(acc)}`}>{acc}%</td>
+                    <td className="px-5 py-3">
+                      <div className="h-1.5 w-full rounded-full bg-surface2">
+                        <div className={`h-1.5 rounded-full ${accuracyBg(acc)}`} style={{ width: `${acc}%` }} />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {(analytics.weakTopics ?? []).length === 0 && (
+            <div className="py-10 text-center text-sm text-muted">No topic data yet</div>
           )}
         </div>
       </div>

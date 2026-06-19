@@ -40,7 +40,6 @@ function convertLatex(text: string, block = false): string {
       const n = num.trim(); const d = den.trim();
       const unicode = UNICODE_FRACS[`${n}/${d}`];
       if (unicode) return unicode;
-      if (block) return stackedFrac(n, d);
       return `${fracWrap(n)}/${fracWrap(d)}`;
     })
     // sqrt — single token: √5, multi-term: √(x + 1)
@@ -391,6 +390,10 @@ function formatExplanation(text: string): string {
     .replace(/([\d,.]+)\s+([a-z])(?=\s*=)/g, '$1\n\n$2')
     // new step after a numeric/unit result followed by a capital word starting a new clause
     .replace(/((?:°|%|[\d,.]+))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
+    // ) or ° followed by trig/log function starting a new step
+    .replace(/([)°])\s+(sin|cos|tan|log|ln)\b/g, '$1\n\n$2')
+    // ° followed by a digit starting a new equation (e.g. "sin 30° 1.36 sinr")
+    .replace(/°\s+(\d)/g, '°\n\n$1')
     // common math-step transition words mid-sentence
     .replace(/\s+(Hence|Therefore|Thus|Note:|Substituting|Now,)\s/g, '\n\n$1 ')
     .trim();
