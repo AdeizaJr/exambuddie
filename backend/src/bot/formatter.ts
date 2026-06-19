@@ -33,6 +33,8 @@ function stackedFrac(n: string, d: string): string {
 // block=true → fractions rendered as stacked (for explanations)
 function convertLatex(text: string, block = false): string {
   return text
+    // fractional exponents FIRST — must run before \frac so ^{-\frac{1}{3}} → ^(-1/3)
+    .replace(/\^\{(-?)\\frac\{([^{}]+)\}\{([^{}]+)\}\}/g, (_, sign, n, d) => `^(${sign}${n.trim()}/${d.trim()})`)
     // general fraction with Unicode shorthand for common ones
     .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
       const n = num.trim(); const d = den.trim();
@@ -377,6 +379,16 @@ function formatExplanation(text: string): string {
   return converted
     // sentence breaks: ". Capital"
     .replace(/\.\s+([A-Z])/g, '.\n\n$1')
+    // end of parenthetical reason ) followed by new math step
+    .replace(/\)\s+([∠∴A-Z0-9])/g, ')\n\n$1')
+    // ) followed by lowercase variable + math operator (e.g. ") y + 75°" or ") a° + b°")
+    .replace(/\)\s+([a-z])(?=\s*[+\-=×÷°^])/g, ')\n\n$1')
+    // degree/unit result followed immediately by another angle/equation step
+    .replace(/°\s+(∠|∴)/g, '°\n\n$1')
+    // degree followed by variable starting a new equation (e.g. "= 180° x = ...")
+    .replace(/°\s+([a-z])(?=\s*[+\-=×÷°^])/g, '°\n\n$1')
+    // plain number followed by variable+equals (e.g. "75 y = 105°")
+    .replace(/([\d,.]+)\s+([a-z])(?=\s*=)/g, '$1\n\n$2')
     // new step after a numeric/unit result followed by a capital word starting a new clause
     .replace(/((?:°|%|[\d,.]+))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
     // common math-step transition words mid-sentence

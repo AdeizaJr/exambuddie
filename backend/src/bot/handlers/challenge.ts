@@ -454,15 +454,18 @@ export async function handleChallengeReady(ctx: any): Promise<void> {
 
 export async function handleChallengeStartNow(ctx: any): Promise<void> {
   const code = ctx.callbackQuery.data.split(':')[2];
-  await ctx.answerCbQuery();
 
   const room = await db.getRoom(code);
-  if (!room || room.status !== 'waiting') return;
+  if (!room || room.status !== 'waiting') {
+    await ctx.answerCbQuery('Room already started or ended.', { show_alert: true });
+    return;
+  }
   if (ctx.from.id !== room.creator_telegram_id) {
     await ctx.answerCbQuery('Only the creator can start early.', { show_alert: true });
     return;
   }
 
+  await ctx.answerCbQuery('⚡ Starting now!');
   const participants = await db.getRoomParticipants(room.id);
   await startChallenge(ctx.telegram, room, participants);
 }
@@ -505,7 +508,7 @@ export async function handleChallengeLeave(ctx: any): Promise<void> {
       await ctx.telegram
         .sendMessage(
           p.telegram_id,
-          `👤 <b>${ctx.from.first_name}</b> left the room. (${remaining.length}/5)`,
+          `👤 <b>${ctx.from.first_name}</b> left the room. (${remaining.filter(p => p.ready).length}/${room.max_players} ready)`,
           { parse_mode: 'HTML' }
         )
         .catch(() => {});
