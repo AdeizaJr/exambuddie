@@ -119,6 +119,23 @@ export async function deleteQuestion(id: number): Promise<{ ok: boolean; deleted
   return req<{ ok: boolean; deleted: number }>("DELETE", `/questions/${id}`);
 }
 
+export async function uploadQuestionImage(id: number, file: File): Promise<Question> {
+  const token = localStorage.getItem("admin_token") || "";
+  const form = new FormData();
+  form.append("image", file);
+  const res = await fetch(`${BASE}/questions/${id}/image`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function deleteQuestionImage(id: number): Promise<{ ok: boolean }> {
+  return req<{ ok: boolean }>("DELETE", `/questions/${id}/image`);
+}
+
 export interface UsersFilter {
   page?: number;
   limit?: number;

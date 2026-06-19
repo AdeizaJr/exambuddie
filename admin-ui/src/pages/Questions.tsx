@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getQuestions, updateQuestion, deleteQuestion } from "../api";
+import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage } from "../api";
 import type { Question, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
@@ -77,6 +77,8 @@ export default function Questions() {
   const [saving, setSaving] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Question | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
 
   // Update a single filter key; resets page to 1 unless changing the page itself
   function setFilter(key: string, value: string, keepPage = false) {
@@ -119,6 +121,7 @@ export default function Questions() {
 
   function openEdit(q: Question) {
     setEditTarget(q);
+    setImageFile(null);
     setEditState({
       question_text: q.question_text,
       option_a: q.option_a,
@@ -129,6 +132,34 @@ export default function Questions() {
       correct_option: q.correct_option,
       explanation: q.explanation || "",
     });
+  }
+
+  async function handleImageUpload() {
+    if (!editTarget || !imageFile) return;
+    setImageUploading(true);
+    try {
+      const updated = await uploadQuestionImage(editTarget.id, imageFile);
+      setEditTarget(updated);
+      setImageFile(null);
+      setResult((prev) =>
+        prev ? { ...prev, data: prev.data.map((q) => (q.id === updated.id ? updated : q)) } : prev
+      );
+    } catch (e: any) {
+      alert("Upload failed: " + e.message);
+    } finally {
+      setImageUploading(false);
+    }
+  }
+
+  async function handleImageDelete() {
+    if (!editTarget) return;
+    if (!confirm("Remove this diagram image?")) return;
+    await deleteQuestionImage(editTarget.id);
+    const updated = { ...editTarget, image_url: undefined };
+    setEditTarget(updated as Question);
+    setResult((prev) =>
+      prev ? { ...prev, data: prev.data.map((q) => (q.id === updated.id ? (updated as Question) : q)) } : prev
+    );
   }
 
   async function handleSave() {
@@ -452,6 +483,45 @@ export default function Questions() {
                 className="w-full resize-y rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
                 placeholder="Add an explanation for this question..."
               />
+            </div>
+
+            {/* Diagram Image */}
+            <div>
+              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
+                Diagram Image
+              </label>
+              {editTarget?.image_url && (
+                <div className="mb-2 flex items-center gap-3">
+                  <img
+                    src={editTarget.image_url}
+                    alt="diagram"
+                    className="h-32 rounded border border-border object-contain bg-white"
+                  />
+                  <button
+                    onClick={handleImageDelete}
+                    className="text-xs text-red-400 hover:text-red-300 underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+                  className="text-sm text-muted file:mr-2 file:rounded file:border-0 file:bg-surface2 file:px-3 file:py-1 file:text-xs file:text-white"
+                />
+                {imageFile && (
+                  <button
+                    onClick={handleImageUpload}
+                    disabled={imageUploading}
+                    className="flex items-center gap-1 rounded-lg bg-accent px-3 py-1.5 text-xs text-white disabled:opacity-50"
+                  >
+                    {imageUploading ? "Uploading…" : "Upload"}
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="flex justify-end gap-3 pt-2">
