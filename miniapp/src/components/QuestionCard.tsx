@@ -2,24 +2,43 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import type { Question } from '../types';
 
+function tryKatex(expr: string, display: boolean): string {
+  try {
+    return katex.renderToString(expr.trim(), { displayMode: display, throwOnError: false, strict: false });
+  } catch {
+    return expr;
+  }
+}
+
+// Regex that matches bare LaTeX math sequences (no delimiters)
+const BARE_LATEX = /(?:\\(?:frac|sqrt|sum|prod|int|partial|lim|infty|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|lambda|mu|nu|xi|pi|rho|sigma|tau|phi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|times|div|pm|geq|leq|neq|approx|equiv|cdot|angle|parallel|perp|rightarrow|leftarrow|sin|cos|tan|log|ln|vec|hat|overline)(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?)+(?:\s*[+\-=\/()\[\]a-zA-Z0-9.,]*(?:\\[a-zA-Z]+(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?|(?:\^|_)(?:\{[^{}]+\}|[a-zA-Z0-9]))*)*/g;
+
 function renderMath(text: string): string {
+  // Escape HTML
   let result = text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  result = result.replace(/\\\[([\s\S]*?)\\\]/g, (_, expr) => {
-    try {
-      return katex.renderToString(expr.trim(), { displayMode: true, throwOnError: false });
-    } catch { return expr; }
-  });
+  // Display mode: $$...$$ and \[...\]
+  result = result
+    .replace(/\$\$([\s\S]+?)\$\$/g, (_, e) => tryKatex(e, true))
+    .replace(/\\\[([\s\S]+?)\\\]/g, (_, e) => tryKatex(e, true));
 
-  result = result.replace(/\\\(([\s\S]*?)\\\)/g, (_, expr) => {
-    try {
-      return katex.renderToString(expr.trim(), { displayMode: false, throwOnError: false });
-    } catch { return expr; }
-  });
+  // Inline mode: $...$ and \(...\)
+  result = result
+    .replace(/\$([^\$\n]+?)\$/g, (_, e) => tryKatex(e, false))
+    .replace(/\\\(([\s\S]+?)\\\)/g, (_, e) => tryKatex(e, false));
 
+  // Bare LaTeX commands (e.g. \frac{1}{2} without delimiters)
+  result = result.replace(BARE_LATEX, (match) => tryKatex(match, false));
+
+  // Superscripts/subscripts outside KaTeX context
+  result = result
+    .replace(/\^\{([^}]+)\}/g, (_, e) => tryKatex(`^{${e}}`, false))
+    .replace(/_\{([^}]+)\}/g, (_, e) => tryKatex(`_{${e}}`, false));
+
+  // *text* → underline
   result = result.replace(/\*([^*\n]+)\*/g, '<u>$1</u>');
   return result;
 }
