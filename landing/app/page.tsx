@@ -577,11 +577,11 @@ export default function Home() {
               <div className="w-full flex-shrink-0 lg:w-96">
                 <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl ring-1 ring-slate-800">
                   <div className="mb-3 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-400">Question 23 / 40</span>
-                    <span className="rounded-full bg-red-900/60 px-3 py-1 text-xs font-bold text-red-400">⏱ 28:41 left</span>
+                    <span className="text-xs font-semibold text-slate-400">Question 35 / 60</span>
+                    <span className="rounded-full bg-red-900/60 px-3 py-1 text-xs font-bold text-red-400">⏱ 31:14 left</span>
                   </div>
                   <div className="mb-4 h-1.5 w-full rounded-full bg-slate-800">
-                    <div className="h-1.5 w-[57%] rounded-full bg-blue-600" />
+                    <div className="h-1.5 w-[58%] rounded-full bg-blue-600" />
                   </div>
                   <p className="mb-3 text-sm font-medium leading-snug text-white">The speed of light in a vacuum is approximately:</p>
                   <div className="grid grid-cols-2 gap-2">
@@ -603,10 +603,10 @@ export default function Home() {
                   Exam pressure.<br />Without the exam.
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
-                  40 questions. 45 minutes. Real exam conditions so the actual paper feels like a repeat. Score breakdown and weak spots the moment you finish.
+                  60 questions. 50 minutes. Real exam conditions so the actual paper feels like a repeat. Score breakdown and weak spots the moment you finish.
                 </p>
                 <ul className="mt-6 space-y-2.5">
-                  {["Full 45-minute mock exam", "Score breakdown by topic after", "Compare across attempts"].map(item => (
+                  {["Full 50-minute mock exam", "Score breakdown by topic after", "Compare across attempts"].map(item => (
                     <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
                       <span className="text-green-500 font-bold">✓</span> {item}
                     </li>
@@ -635,6 +635,9 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
+                <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  🔒 Premium feature
+                </div>
               </div>
               <div className="w-full flex-shrink-0 lg:w-96">
                 <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl ring-1 ring-slate-800">
@@ -660,7 +663,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
 
             {/* 4 — Challenge Mode: visual left, text right */}
             <div className="flex flex-col-reverse gap-10 lg:flex-row lg:items-center lg:gap-20">
@@ -714,6 +716,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
 
           {/* Secondary features — compact, lower visual weight */}
           <div className="mt-20 sm:mt-24">
