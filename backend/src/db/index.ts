@@ -29,15 +29,23 @@ export async function getUser(telegramId: number | string): Promise<User | null>
   return rows[0] || null;
 }
 
+function generateReferralCode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
 export async function upsertUser(ctx: any): Promise<User> {
   const { id, username, first_name } = ctx.from;
+  const code = generateReferralCode();
   const { rows } = await pool.query<User>(
-    `INSERT INTO users (telegram_id, username, first_name)
-     VALUES ($1, $2, $3)
+    `INSERT INTO users (telegram_id, username, first_name, referral_code)
+     VALUES ($1, $2, $3, $4)
      ON CONFLICT (telegram_id) DO UPDATE
        SET username = $2, first_name = $3, updated_at = NOW()
      RETURNING *`,
-    [id, username || null, first_name || 'Student']
+    [id, username || null, first_name || 'Student', code]
   );
   return rows[0];
 }
@@ -795,4 +803,79 @@ export async function getExpiredLobbyRooms(): Promise<PracticeRoom[]> {
      AND created_at + INTERVAL '60 seconds' < NOW()`
   );
   return rows;
+}
+
+// ── Referral system ───────────────────────────────────────────────────────────
+
+export async function getUserByReferralCode(code: string): Promise<User | null> {
+  const { rows } = await pool.query<User>(
+    'SELECT * FROM users WHERE referral_code = $1',
+    [code.toUpperCase()]
+  );
+  return rows[0] || null;
+}
+
+export async function setReferredBy(userId: number, referrerId: number): Promise<void> {
+  await pool.query(
+    'UPDATE users SET referred_by = $2 WHERE id = $1 AND referred_by IS NULL',
+    [userId, referrerId]
+  );
+}
+
+export async function getConfirmedReferralCount(referrerId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) as c FROM users u
+     WHERE u.referred_by = $1
+       AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)`,
+    [referrerId]
+  );
+  return parseInt(rows[0].c);
+}
+
+export async function checkAndGrantReferralReward(
+  newUserId: number
+): Promise<{ granted: boolean; referrer: User | null }> {
+  // Only fires on first-ever attempt
+  const { rows: cntRows } = await pool.query(
+    'SELECT COUNT(*) as c FROM attempts WHERE user_id = $1',
+    [newUserId]
+  );
+  if (parseInt(cntRows[0].c) !== 1) return { granted: false, referrer: null };
+
+  const { rows: newUserRows } = await pool.query(
+    'SELECT referred_by FROM users WHERE id = $1',
+    [newUserId]
+  );
+  const referrerId = newUserRows[0]?.referred_by;
+  if (!referrerId) return { granted: false, referrer: null };
+
+  const confirmed = await getConfirmedReferralCount(referrerId);
+  if (confirmed < 2) return { granted: false, referrer: null };
+
+  const { rows: referrerRows } = await pool.query<User>(
+    'SELECT * FROM users WHERE id = $1',
+    [referrerId]
+  );
+  const referrer = referrerRows[0];
+  if (!referrer || referrer.referral_reward_granted) return { granted: false, referrer: null };
+
+  // Extend or start a 3-day Premium window
+  await pool.query(
+    `UPDATE users SET
+       plan = 'premium',
+       plan_expires_at = CASE
+         WHEN plan_expires_at IS NOT NULL AND plan_expires_at > NOW()
+           THEN plan_expires_at + INTERVAL '3 days'
+         ELSE NOW() + INTERVAL '3 days'
+       END,
+       referral_reward_granted = TRUE
+     WHERE id = $1`,
+    [referrerId]
+  );
+
+  const { rows: updatedRows } = await pool.query<User>(
+    'SELECT * FROM users WHERE id = $1',
+    [referrerId]
+  );
+  return { granted: true, referrer: updatedRows[0] };
 }
