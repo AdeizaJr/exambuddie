@@ -21,8 +21,9 @@ function convertLatex(text: string): string {
     // sqrt
     .replace(/\\sqrt\{([^}]+)\}/g, '√($1)')
     .replace(/\\sqrt\b/g, '√')
-    // degree: ^{\circ} or \circ or \degree
+    // degree: ^{\circ} or \circ or \degree or 60o pattern
     .replace(/\^\{\\circ\}/g, '°').replace(/\\circ/g, '°').replace(/\\degree/g, '°')
+    .replace(/([0-9]+)o\b/g, '$1°')
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
     .replace(/\^(\w)/g, (_, e) => toSup(e))
