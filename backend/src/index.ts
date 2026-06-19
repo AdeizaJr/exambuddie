@@ -212,6 +212,35 @@ bot.on('callback_query', async (ctx: any) => {
     return;
   }
 
+  // Session resume
+  if (data === 'session:resume') {
+    await ctx.answerCbQuery();
+    const session = await redis.getSession(ctx.from.id);
+    const q = session?.currentQuestion;
+    if (!q) {
+      await ctx.reply('No active session found. Tap /start to begin again.');
+      return;
+    }
+    const qNum = session.qNum || 1;
+    const total = session.total || '?';
+    const mode = session.mode || 'practice';
+    const imageUrl = q.image_url?.startsWith('/')
+      ? `${process.env.APP_URL || ''}${q.image_url}`
+      : q.image_url;
+    const text = fmt.formatQuestion(q, qNum, total, mode) + fmt.answerOptions(q);
+    const keyboard = fmt.answerKeyboard(!!q.option_e);
+    try {
+      if (imageUrl) {
+        await ctx.replyWithPhoto(imageUrl, { caption: text, parse_mode: 'HTML', reply_markup: keyboard });
+      } else {
+        await ctx.reply(text, { parse_mode: 'HTML', reply_markup: keyboard });
+      }
+    } catch {
+      await ctx.reply(text, { parse_mode: 'HTML', reply_markup: keyboard });
+    }
+    return;
+  }
+
   // Fallback
   await ctx.answerCbQuery('Something went wrong. Please try again.', { show_alert: false });
 });
@@ -267,7 +296,7 @@ bot.on('text', async (ctx: any) => {
 });
 
 // ── Error handler ──────────────────────────────────────────────────────────────
-bot.catch((err: any, ctx: any) => {
+bot.catch(async (err: any, ctx: any) => {
   const msg: string = err.message || '';
   // Stale callback queries and transient network blips are not actionable
   if (msg.includes('query is too old') || msg.includes('query ID is invalid')) return;
@@ -284,7 +313,39 @@ bot.catch((err: any, ctx: any) => {
     `[Bot Error] update=${ctx.update.update_id} user=${ctx.from?.id ?? 'unknown'}:`,
     err.stack || msg
   );
-  ctx.reply('⚠️ Oops! We hit a snag. Tap /start to get back on track.').catch(() => {});
+
+  try {
+    const session = ctx.from?.id ? await redis.getSession(ctx.from.id) : null;
+    const mode = session?.mode;
+    const hasQuestion = !!session?.currentQuestion;
+
+    if (mode === 'challenge') {
+      await ctx.reply(
+        '⚠️ <b>We hit a snag!</b>\n\nYour challenge session had an error. Use the room code to rejoin, or tap below to go home.',
+        {
+          parse_mode: 'HTML',
+          reply_markup: { inline_keyboard: [[{ text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
+        }
+      );
+    } else if ((mode === 'practice' || mode === 'quiz' || mode === 'drill') && hasQuestion) {
+      await ctx.reply(
+        '⚠️ <b>We hit a snag!</b>\n\nYour session is still active. Tap below to resume where you left off.',
+        {
+          parse_mode: 'HTML',
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '▶️ Resume Session', callback_data: 'session:resume' }],
+              [{ text: '⏹ End Session', callback_data: 'practice:stop' }],
+            ],
+          },
+        }
+      );
+    } else {
+      await ctx.reply('⚠️ Oops! We hit a snag. Tap /start to get back on track.');
+    }
+  } catch {
+    ctx.reply('⚠️ Oops! We hit a snag. Tap /start to get back on track.').catch(() => {});
+  }
 });
 
 // ── Launch ─────────────────────────────────────────────────────────────────────

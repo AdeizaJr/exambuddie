@@ -503,7 +503,7 @@ export default function createServer(bot: any) {
   app.get('/api/admin/users/:telegramId/activity', adminAuth, async (req: Request, res: Response) => {
     const tid = parseInt(req.params.telegramId as string, 10);
 
-    const [summaryRes, subjectsRes, recentRes] = await Promise.all([
+    const [summaryRes, subjectsRes, recentRes, weakTopicsRes] = await Promise.all([
       db.query(`
         SELECT
           COUNT(*) as total_attempts,
@@ -537,12 +537,30 @@ export default function createServer(bot: any) {
         ORDER BY a.attempted_at DESC
         LIMIT 50
       `, [tid]),
+      db.query(`
+        SELECT
+          q.subject,
+          q.topic,
+          COUNT(*) as attempts,
+          SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) as correct,
+          ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+        FROM attempts a
+        JOIN users u ON a.user_id = u.id
+        JOIN questions q ON a.question_id = q.id
+        WHERE u.telegram_id = $1
+          AND q.topic IS NOT NULL AND q.topic != ''
+        GROUP BY q.subject, q.topic
+        HAVING COUNT(*) >= 3
+        ORDER BY accuracy ASC
+        LIMIT 15
+      `, [tid]),
     ]);
 
     res.json({
       summary: summaryRes.rows[0] ?? { total_attempts: 0, correct: 0, accuracy: 0 },
       subjects: subjectsRes.rows,
       recent: recentRes.rows,
+      weakTopics: weakTopicsRes.rows,
     });
   });
 
@@ -562,7 +580,7 @@ export default function createServer(bot: any) {
 
   // ── GET /api/admin/analytics ────────────────────────────────────────────────
   app.get('/api/admin/analytics', adminAuth, async (req: Request, res: Response) => {
-    const [dailyResult, subjectsResult, missingExpResult, flaggedResult] = await Promise.all([
+    const [dailyResult, subjectsResult, missingExpResult, flaggedResult, weakTopicsResult, dauResult] = await Promise.all([
       db.query(`
         SELECT
           DATE(attempted_at) as date,
@@ -588,6 +606,28 @@ export default function createServer(bot: any) {
         `SELECT COUNT(*) as count FROM questions WHERE explanation IS NULL OR explanation = ''`
       ),
       db.query(`SELECT COUNT(*) as count FROM questions WHERE flag_count > 0`),
+      db.query(`
+        SELECT
+          q.subject,
+          q.topic,
+          COUNT(a.id) as attempts,
+          SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) as correct,
+          ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(a.id), 0), 1) as accuracy
+        FROM attempts a
+        JOIN questions q ON a.question_id = q.id
+        WHERE q.topic IS NOT NULL AND q.topic != ''
+        GROUP BY q.subject, q.topic
+        HAVING COUNT(a.id) >= 10
+        ORDER BY accuracy ASC
+        LIMIT 20
+      `),
+      db.query(`
+        SELECT
+          COUNT(DISTINCT CASE WHEN attempted_at >= NOW() - INTERVAL '1 day' THEN user_id END) as dau,
+          COUNT(DISTINCT CASE WHEN attempted_at >= NOW() - INTERVAL '7 days' THEN user_id END) as wau,
+          COUNT(DISTINCT CASE WHEN attempted_at >= NOW() - INTERVAL '30 days' THEN user_id END) as mau
+        FROM attempts
+      `),
     ]);
 
     res.json({
@@ -597,6 +637,8 @@ export default function createServer(bot: any) {
         missing_explanations: parseInt(missingExpResult.rows[0].count),
         flagged_questions: parseInt(flaggedResult.rows[0].count),
       },
+      weakTopics: weakTopicsResult.rows,
+      engagement: dauResult.rows[0],
     });
   });
 

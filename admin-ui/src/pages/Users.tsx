@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getUsers, updateUserPlan, deleteUsers, getUserActivity } from "../api";
-import type { User, UserActivity, PaginatedResponse } from "../types";
+import type { User, UserActivity, UserWeakTopic, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
 import Badge from "../components/Badge";
 import Modal from "../components/Modal";
@@ -501,6 +501,37 @@ export default function Users() {
                             <td className="px-3 py-2 text-right text-muted">{Number(s.attempts).toLocaleString()}</td>
                             <td className="px-3 py-2 text-right text-muted">{Number(s.correct).toLocaleString()}</td>
                             <td className="px-3 py-2 text-right font-medium text-white">{s.accuracy}%</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Weak topics */}
+              {activity.weakTopics?.length > 0 && (
+                <div>
+                  <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Weak Topics</h3>
+                  <div className="overflow-hidden rounded-lg border border-border">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="border-b border-border bg-surface2">
+                          <th className="px-3 py-2 text-left font-medium text-muted">Topic</th>
+                          <th className="px-3 py-2 text-left font-medium text-muted">Subject</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Attempts</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Accuracy</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {activity.weakTopics.map((t: UserWeakTopic) => (
+                          <tr key={`${t.subject}-${t.topic}`} className="hover:bg-surface2">
+                            <td className="px-3 py-2 text-white">{t.topic}</td>
+                            <td className="px-3 py-2 capitalize text-muted">{t.subject.replace(/-/g, " ")}</td>
+                            <td className="px-3 py-2 text-right text-muted">{Number(t.attempts).toLocaleString()}</td>
+                            <td className={`px-3 py-2 text-right font-bold ${Number(t.accuracy) < 40 ? "text-red-400" : Number(t.accuracy) < 60 ? "text-amber-400" : "text-white"}`}>
+                              {t.accuracy}%
+                            </td>
                           </tr>
                         ))}
                       </tbody>
