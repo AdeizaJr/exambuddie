@@ -39,10 +39,19 @@ function formatLobby(room: db.PracticeRoom, participants: db.RoomParticipant[], 
   );
 }
 
+function whatsappUrl(code: string) {
+  const text = `Join my ExamBuddie Challenge! Room code: *${code}*\n${inviteLink(code)}`;
+  return `https://wa.me/?text=${encodeURIComponent(text)}`;
+}
+
 function lobbyKeyboard(code: string, isReady: boolean, isCreator: boolean) {
   const rows: { text: string; callback_data?: string; url?: string }[][] = [];
   rows.push([{ text: isReady ? '✅ Ready!' : '✅ Mark Ready', callback_data: `challenge:ready:${code}` }]);
-  rows.push([{ text: '📤 Share Invite', url: shareUrl(code) }]);
+  rows.push([
+    { text: '📤 Telegram', url: shareUrl(code) },
+    { text: '💬 WhatsApp', url: whatsappUrl(code) },
+  ]);
+  rows.push([{ text: '📋 Copy Link', callback_data: `challenge:copylink:${code}` }]);
   if (isCreator) {
     rows.push([{ text: '⚡ Start Now', callback_data: `challenge:start_now:${code}` }]);
   }
@@ -364,11 +373,7 @@ export function scheduleAutoStart(telegram: any, room: db.PracticeRoom): void {
 // ── Join via deep link ────────────────────────────────────────────────────────
 
 export async function handleChallengeJoin(ctx: any, code: string): Promise<void> {
-  const user = await db.getUser(ctx.from.id);
-  if (!user?.exam_type) {
-    await ctx.reply('Please set up your profile first using /start.');
-    return;
-  }
+  const firstName = ctx.from.first_name || ctx.from.username || 'Player';
 
   const room = await db.getRoom(code);
   if (!room) { await ctx.reply('❌ Room not found. Check the code and try again.'); return; }
@@ -378,7 +383,7 @@ export async function handleChallengeJoin(ctx: any, code: string): Promise<void>
   const participants = await db.getRoomParticipants(room.id);
   const alreadyIn = participants.some(p => p.telegram_id === ctx.from.id);
 
-  await db.joinRoom(room.id, ctx.from.id, user.first_name);
+  await db.joinRoom(room.id, ctx.from.id, firstName);
   await redis.clearSession(ctx.from.id);
   await redis.setSession(ctx.from.id, { step: 'challenge_lobby', roomCode: code });
 
@@ -390,7 +395,7 @@ export async function handleChallengeJoin(ctx: any, code: string): Promise<void>
         await ctx.telegram
           .sendMessage(
             p.telegram_id,
-            `👤 <b>${user.first_name}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
+            `👤 <b>${firstName}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
             { parse_mode: 'HTML' }
           )
           .catch(() => {});
@@ -463,6 +468,15 @@ export async function handleChallengeStartNow(ctx: any): Promise<void> {
 }
 
 // ── Lobby: Leave ─────────────────────────────────────────────────────────────
+
+export async function handleChallengeCopyLink(ctx: any): Promise<void> {
+  const code = ctx.callbackQuery.data.split(':')[2];
+  await ctx.answerCbQuery('Link copied below 👇');
+  await ctx.reply(
+    `🔗 <b>Challenge Invite Link</b>\n\nRoom code: <code>${code}</code>\n\n<code>${inviteLink(code)}</code>\n\n<i>Tap the link above to copy, then share anywhere.</i>`,
+    { parse_mode: 'HTML' }
+  );
+}
 
 export async function handleChallengeLeave(ctx: any): Promise<void> {
   const code = ctx.callbackQuery.data.split(':')[2];
