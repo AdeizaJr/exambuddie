@@ -25,6 +25,7 @@ const secondaryFeatures = [
   { icon: "📊", title: "Progress Stats", desc: "Accuracy by subject and topic" },
   { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one session" },
   { icon: "🔥", title: "Study Streaks", desc: "Build a daily practice habit" },
+  { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
   { icon: "⚡", title: "Works in Telegram", desc: "No app download — ever" },
 ];
 
@@ -339,6 +340,7 @@ export default function Home() {
         "Unlimited questions — no daily caps",
         "Multi-subject quiz & practice",
         "Full drill mode on weak topics",
+        "Challenge Mode — create rooms & compete",
         "Detailed progress analytics",
         "Weekly performance reports",
         "Priority support",
@@ -660,6 +662,59 @@ export default function Home() {
             </div>
           </div>
 
+            {/* 4 — Challenge Mode: visual left, text right */}
+            <div className="flex flex-col-reverse gap-10 lg:flex-row lg:items-center lg:gap-20">
+              <div className="w-full flex-shrink-0 lg:w-96">
+                <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl ring-1 ring-slate-800">
+                  <p className="mb-3 text-xs font-semibold text-blue-400">🎯 Challenge Room · 6 players</p>
+                  <div className="mb-4 space-y-2">
+                    {[
+                      { name: "Tobiloba", ready: true, score: 7 },
+                      { name: "Halima", ready: true, score: 6 },
+                      { name: "Chisom", ready: true, score: 5 },
+                      { name: "You", ready: true, score: 8 },
+                    ].map(({ name, ready, score }) => (
+                      <div key={name} className="flex items-center justify-between rounded-lg bg-slate-800 px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`h-2 w-2 rounded-full ${ready ? "bg-green-400" : "bg-slate-600"}`} />
+                          <span className={`text-xs font-medium ${name === "You" ? "text-blue-300" : "text-slate-300"}`}>{name}</span>
+                        </div>
+                        <span className="text-xs font-bold text-white">{score}/10 ✓</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="rounded-xl bg-blue-700 py-2 text-center text-xs font-bold text-white">
+                    🏆 You're in the lead!
+                  </div>
+                  <p className="mt-3 text-center text-[10px] text-slate-500">Shared via WhatsApp · Room code: AB7X2K</p>
+                </div>
+              </div>
+              <div className="flex-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">🎯 Challenge Mode</span>
+                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                  Study alone no more.<br />Challenge your friends.
+                </h3>
+                <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
+                  Create a challenge room, share the link on WhatsApp, and race your classmates through the same questions. The challenge auto-starts when everyone's ready.
+                </p>
+                <ul className="mt-6 space-y-2.5">
+                  {[
+                    "Share invite link via WhatsApp or Telegram",
+                    "Auto-starts when all players mark ready",
+                    "Real-time leaderboard at the end",
+                    "Anyone can join — free users included",
+                  ].map(item => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
+                      <span className="text-green-500 font-bold">✓</span> {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  🔒 Create rooms with Premium · Join free
+                </div>
+              </div>
+            </div>
+
           {/* Secondary features — compact, lower visual weight */}
           <div className="mt-20 sm:mt-24">
             <p className="mb-8 text-xs font-bold uppercase tracking-widest text-slate-400">Also included</p>
@@ -921,6 +976,7 @@ export default function Home() {
                   ["Instant answer explanations", true, false, false],
                   ["Progress tracking", true, false, false],
                   ["Timed mock exams", true, false, false],
+                  ["Challenge Mode (multiplayer)", true, false, false],
                   ["Works on any phone", true, false, true],
                   ["Works inside Telegram (no new app)", true, false, false],
                   ["Weak-topic targeting", true, false, false],
