@@ -376,26 +376,40 @@ export function answerOptions(q: Question): string {
 function formatExplanation(text: string): string {
   const converted = convertLatex(text, true);
   return converted
+    // curly braces used as algebraic grouping → regular parens
+    .replace(/\{/g, '(').replace(/\}/g, ')')
     // sentence breaks: ". Capital"
     .replace(/\.\s+([A-Z])/g, '.\n\n$1')
+    // sentence breaks after ". lowercase transition word"
+    .replace(/\.\s+(divide|multiply|substitut|simplif|cross|rearrang|expand|collect|factor|compar|from\s+the|since|recall|this\s+give|let\s+)/gi, '.\n\n$1')
+    // colon used as step separator: "= expr : x = value" → "\n∴ x = value"
+    .replace(/\s*:\s*([a-zA-Z])\s*=/g, '\n∴ $1 =')
+    // arrow results on their own line: "... → expression"
+    .replace(/\s+→\s+/g, '\n→ ')
+    // "= 0" then the next equation step begins (chain of steps ending in = 0)
+    .replace(/=\s*0\s+(?=[a-zA-Zα-ωΑ-Ω(])/g, '= 0\n\n')
+    // factorization step chain: ") = NUMBER (" → break between steps
+    .replace(/\)\s*=\s*(\d+)\s*\(/g, ')\n= $1 (')
+    // "comparing/from the/since" following a math result mid-sentence
+    .replace(/\s+([Cc]omparing|[Ff]rom the table|[Ff]rom the diagram|[Ff]rom the graph)\b/g, '\n\n$1')
     // end of parenthetical reason ) followed by new math step
     .replace(/\)\s+([∠∴A-Z0-9])/g, ')\n\n$1')
-    // ) followed by lowercase variable + math operator (e.g. ") y + 75°" or ") a° + b°")
+    // ) followed by lowercase variable + math operator
     .replace(/\)\s+([a-z])(?=\s*[+\-=×÷°^])/g, ')\n\n$1')
     // degree/unit result followed immediately by another angle/equation step
     .replace(/°\s+(∠|∴)/g, '°\n\n$1')
-    // degree followed by variable starting a new equation (e.g. "= 180° x = ...")
+    // degree followed by variable starting a new equation
     .replace(/°\s+([a-z])(?=\s*[+\-=×÷°^])/g, '°\n\n$1')
     // plain number followed by variable+equals (e.g. "75 y = 105°")
     .replace(/([\d,.]+)\s+([a-z])(?=\s*=)/g, '$1\n\n$2')
-    // new step after a numeric/unit result followed by a capital word starting a new clause
+    // numeric/unit result followed by a capital word starting a new clause
     .replace(/((?:°|%|[\d,.]+))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
     // ) or ° followed by trig/log function starting a new step
     .replace(/([)°])\s+(sin|cos|tan|log|ln)\b/g, '$1\n\n$2')
-    // ° followed by a digit starting a new equation (e.g. "sin 30° 1.36 sinr")
+    // ° followed by a digit starting a new equation
     .replace(/°\s+(\d)/g, '°\n\n$1')
-    // common math-step transition words mid-sentence
-    .replace(/\s+(Hence|Therefore|Thus|Note:|Substituting|Now,)\s/g, '\n\n$1 ')
+    // common math-step transition words
+    .replace(/\s+(Hence|Therefore|Thus|Note:|Substituting|Now,|Solving|Dividing|Multiplying|Expanding|Factoring|Rearranging)\s/g, '\n\n$1 ')
     .trim();
 }
 
