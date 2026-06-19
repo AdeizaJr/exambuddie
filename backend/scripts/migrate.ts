@@ -191,6 +191,24 @@ const migrations = [
    )
    WHERE question_text LIKE 'From the novel;%'`,
 
+  // ── Flag chart/graph questions missed by initial has_diagram pass ────────────
+  `UPDATE questions SET has_diagram = TRUE WHERE has_diagram = FALSE AND (
+    question_text ILIKE '%bar chart%' OR
+    question_text ILIKE '%pie chart%' OR
+    question_text ILIKE '%histogram%' OR
+    question_text ILIKE '%the graph%' OR
+    question_text ILIKE '%from the graph%' OR
+    question_text ILIKE '%graph shows%' OR
+    question_text ILIKE '%graph above%' OR
+    question_text ILIKE '%graph below%' OR
+    question_text ILIKE '%the bar chart%' OR
+    question_text ILIKE '%the pie chart%' OR
+    question_text ILIKE '%frequency polygon%' OR
+    question_text ILIKE '%ogive%' OR
+    question_text ILIKE '%cumulative frequency%curve%' OR
+    question_text ILIKE '%the histogram%'
+  )`,
+
   // ── Referral system ──────────────────────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code VARCHAR(12) UNIQUE`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by INT REFERENCES users(id)`,
