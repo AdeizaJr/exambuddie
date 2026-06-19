@@ -110,6 +110,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('challenge:count:')) return challenge.handleChallengeCount(ctx);
   if (data.startsWith('challenge:timer:')) return challenge.handleChallengeTimer(ctx);
   if (data.startsWith('challenge:expected:')) return challenge.handleChallengeExpected(ctx);
+  if (data.startsWith('challenge:copylink:')) return challenge.handleChallengeCopyLink(ctx);
   if (data.startsWith('challenge:start_now:')) return challenge.handleChallengeStartNow(ctx);
   if (data.startsWith('challenge:ready:')) return challenge.handleChallengeReady(ctx);
   if (data.startsWith('challenge:leave:')) return challenge.handleChallengeLeave(ctx);
