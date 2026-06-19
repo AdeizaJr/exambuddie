@@ -21,9 +21,10 @@ function convertLatex(text: string): string {
     // sqrt — supports nested braces e.g. \sqrt{x^{2}}
     .replace(/\\sqrt\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '√($1)')
     .replace(/\\sqrt\b/g, '√')
-    // degree: ^{\circ} or \circ or \degree or 60o pattern
+    // degree: ^{\circ} or \circ or \degree or 60o or (90)o pattern
     .replace(/\^\{\\circ\}/g, '°').replace(/\\circ/g, '°').replace(/\\degree/g, '°')
     .replace(/([0-9]+)o\b/g, '$1°')
+    .replace(/\)o(?=\s|=|,|\.|$)/g, ')°')
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
     .replace(/\^(\w)/g, (_, e) => toSup(e))
@@ -344,6 +345,18 @@ export function answerOptions(q: Question): string {
   return text;
 }
 
+function formatExplanation(text: string): string {
+  const converted = md(text);
+  return converted
+    // sentence breaks: ". Capital"
+    .replace(/\.\s+([A-Z])/g, '.\n\n$1')
+    // new step after a numeric/unit result followed by a capital word starting a new clause
+    .replace(/((?:°|%|[\d,.]+))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
+    // common math-step transition words mid-sentence
+    .replace(/\s+(Hence|Therefore|Thus|Note:|Substituting|Now,)\s/g, '\n\n$1 ')
+    .trim();
+}
+
 export function correctAnswer(q: Question, selected: string): string {
   const wasCorrect = selected === q.correct_option;
   const emoji = wasCorrect ? '✅' : '❌';
@@ -360,7 +373,7 @@ export function correctAnswer(q: Question, selected: string): string {
 ✔️ <b>${q.correct_option}.</b> ${md(optionText[q.correct_option])}
 
 💡 <b>Explanation:</b>
-${md(q.explanation) || '<i>Explanation not yet available.</i>'}`;
+${q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>'}`;
 }
 
 export const FLAG_REASONS: Record<string, string> = {
