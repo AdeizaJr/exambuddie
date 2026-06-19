@@ -322,6 +322,53 @@ export function persistentMenuKeyboard() {
   };
 }
 
+// Detect scraped two-column tables (header\nvals...\n\nheader\nvals...)
+// and rebuild them as aligned monospace tables wrapped in <code>.
+function tryFormatColumnTable(rawText: string): string | null {
+  const lines = rawText.split('\n').map(l => l.trim());
+  const isNum = (s: string) => /^-?[\d.]+$/.test(s);
+  const isBlank = (s: string) => s === '';
+  const isShortLabel = (s: string) => s.length > 0 && !isNum(s) && s.split(' ').length <= 4;
+
+  let i = 0;
+  while (i < lines.length && isBlank(lines[i])) i++;
+  if (i >= lines.length || !isShortLabel(lines[i])) return null;
+  const h1 = lines[i++];
+
+  const col1: string[] = [];
+  while (i < lines.length && (isNum(lines[i]) || isBlank(lines[i]))) {
+    if (isNum(lines[i])) col1.push(lines[i]);
+    i++;
+  }
+  if (col1.length < 2) return null;
+
+  while (i < lines.length && isBlank(lines[i])) i++;
+  if (i >= lines.length || !isShortLabel(lines[i])) return null;
+  const h2 = lines[i++];
+
+  const col2: string[] = [];
+  while (i < lines.length && (isNum(lines[i]) || isBlank(lines[i]))) {
+    if (isNum(lines[i])) col2.push(lines[i]);
+    i++;
+  }
+  if (col2.length !== col1.length) return null;
+
+  const w1 = Math.max(h1.length, ...col1.map(v => v.length));
+  const w2 = Math.max(h2.length, ...col2.map(v => v.length));
+  const sep = '  │  ';
+  const tableLines = [
+    h1.padEnd(w1) + sep + h2,
+    '─'.repeat(w1) + '──┼──' + '─'.repeat(w2),
+    ...col1.map((v, idx) => v.padEnd(w1) + sep + col2[idx]),
+  ];
+  const tableHtml = tableLines.join('\n')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  while (i < lines.length && isBlank(lines[i])) i++;
+  const rest = lines.slice(i).join('\n').trim();
+  return `<code>${tableHtml}</code>${rest ? '\n\n' + md(rest) : ''}`;
+}
+
 export function formatQuestion(q: Question, number: number, total: number | string, mode?: string): string {
   const modeTag = mode === 'quiz'
     ? `📋 <b>Question ${number}/${total}</b>`
@@ -349,7 +396,7 @@ export function formatQuestion(q: Question, number: number, total: number | stri
   return `${modeTag}
 <i>${q.exam_type} ${q.subject.charAt(0).toUpperCase() + q.subject.slice(1)} ${q.year}</i>
 
-${md(questionText)}`;
+${tryFormatColumnTable(questionText) ?? md(questionText)}`;
 }
 
 export function answerKeyboard(hasOptionE = false) {
