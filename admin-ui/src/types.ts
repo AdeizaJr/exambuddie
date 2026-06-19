@@ -30,6 +30,7 @@ export interface Question {
   flag_count: number;
   source_id: string | null;
   has_diagram: boolean;
+  image_url?: string;
   created_at: string;
 }
 

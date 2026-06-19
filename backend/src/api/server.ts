@@ -1,10 +1,29 @@
 // src/api/server.ts
 import path from 'path';
+import fs from 'fs';
 import express, { Request, Response, NextFunction } from 'express';
+import multer from 'multer';
 import * as payments from '../services/payments';
 import * as db from '../db';
 import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
+
+const diagramsDir = path.join(__dirname, '../../public/diagrams');
+if (!fs.existsSync(diagramsDir)) fs.mkdirSync(diagramsDir, { recursive: true });
+
+const diagramUpload = multer({
+  storage: multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, diagramsDir),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
+      cb(null, `q${req.params.id}${ext}`);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    cb(null, /image\/(jpeg|png|gif|webp)/.test(file.mimetype));
+  },
+});
 
 export default function createServer(bot: any) {
   const app = express();
@@ -350,6 +369,32 @@ export default function createServer(bot: any) {
     ]);
     if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
     res.json({ ok: true, deleted: rows[0].id });
+  });
+
+  // ── POST /api/admin/questions/:id/image ────────────────────────────────────
+  app.post('/api/admin/questions/:id/image', adminAuth, diagramUpload.single('image'), async (req: Request, res: Response) => {
+    if (!req.file) return res.status(400).json({ error: 'No image file provided' });
+    const ext = path.extname(req.file.originalname).toLowerCase() || '.jpg';
+    const imageUrl = `/images/diagrams/q${req.params.id}${ext}`;
+    const { rows } = await db.query(
+      `UPDATE questions SET image_url = $1, has_diagram = true WHERE id = $2 RETURNING *`,
+      [imageUrl, req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
+    res.json(rows[0]);
+  });
+
+  // ── DELETE /api/admin/questions/:id/image ──────────────────────────────────
+  app.delete('/api/admin/questions/:id/image', adminAuth, async (req: Request, res: Response) => {
+    const { rows } = await db.query(`SELECT image_url FROM questions WHERE id = $1`, [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
+    const existing = rows[0].image_url as string | null;
+    if (existing) {
+      const filePath = path.join(__dirname, '../../public', existing.replace('/images/', ''));
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    }
+    await db.query(`UPDATE questions SET image_url = NULL WHERE id = $1`, [req.params.id]);
+    res.json({ ok: true });
   });
 
   // ── GET /api/admin/users ────────────────────────────────────────────────────
