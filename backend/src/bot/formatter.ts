@@ -421,6 +421,8 @@ export function answerOptions(q: Question): string {
 }
 
 function formatExplanation(text: string): string {
+  // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain
+  if (/<(?:b|i|code)>/.test(text)) return text;
   const converted = convertLatex(text, true);
   return converted
     // curly braces used as algebraic grouping → regular parens

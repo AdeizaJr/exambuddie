@@ -247,6 +247,29 @@ const migrations = [
     joined_at TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE(room_id, telegram_id)
   )`,
+
+  // ── Improved step-by-step explanation: WAEC Math 2016 median age (id 116125) ──
+  `UPDATE questions SET explanation = $expl$Let's find the median age.
+
+<b>Step 1: Total frequency</b>
+10 + 24 + 8 + 5 + 3 = 50
+
+<b>Step 2: Median position</b>
+N = 50 (even), so the median is the average of the 25th and 26th values.
+N/2 = 50/2 = 25
+
+<b>Step 3: Cumulative frequencies</b>
+<code>Age  Freq  Cumulative
+ 13    10        10
+ 14    24        34
+ 15     8        42
+ 16     5        47
+ 17     3        50</code>
+
+The 25th and 26th values both fall within the group for age 14 (cumulative frequency = 34, since 10 &lt; 25 ≤ 34).
+
+∴ Median age = 14 years.$expl$
+WHERE id = 116125`,
 ];
 
 async function migrate(): Promise<void> {
