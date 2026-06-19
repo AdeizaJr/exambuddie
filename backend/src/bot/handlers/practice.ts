@@ -38,10 +38,13 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
   const keyboard = fmt.answerKeyboard(hasOptionE);
 
   const msgText = baseText + (timerSecs > 0 ? timerLine(timerSecs) : '');
+  const imageUrl = question.image_url?.startsWith('/')
+    ? `${process.env.APP_URL || ''}${question.image_url}`
+    : question.image_url;
   let sentMsg;
   try {
-    sentMsg = question.image_url
-      ? await ctx.replyWithPhoto(question.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
+    sentMsg = imageUrl
+      ? await ctx.replyWithPhoto(imageUrl, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
       : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
   } catch (err) {
     // Dead image link or blocked user — fall back to text so the question still gets sent
@@ -58,7 +61,7 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
     timerService.startDisplayTimer(
       telegramId,
       timerSecs,
-      { telegram: ctx.telegram, chatId: ctx.chat.id, messageId: sentMsg.message_id, imageUrl: question.image_url, baseText, timerLine, keyboard },
+      { telegram: ctx.telegram, chatId: ctx.chat.id, messageId: sentMsg.message_id, imageUrl, baseText, timerLine, keyboard },
       async () => {
         const sess = await redis.getSession(telegramId);
         if (!sess?.questionDeadline || sess.questionDeadline !== deadline) return;

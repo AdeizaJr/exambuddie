@@ -31,6 +31,9 @@ export default function createServer(bot: any) {
   // Mini App API routes
   app.use('/api/miniapp', miniappRouter);
 
+  // Serve question diagrams
+  app.use('/images', express.static(path.join(__dirname, '../../public')));
+
   // Serve miniapp static files (built to backend/dist/miniapp/)
   const miniappDir = path.join(__dirname, '../../miniapp');
   app.use('/app', express.static(miniappDir));

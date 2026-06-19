@@ -207,10 +207,13 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
 
   const keyboard = fmt.answerKeyboard(!!q.option_e);
   const msgText = baseText + timerLine(timerSecs);
+  const imageUrl = q.image_url?.startsWith('/')
+    ? `${process.env.APP_URL || ''}${q.image_url}`
+    : q.image_url;
   let sentMsg;
   try {
-    sentMsg = q.image_url
-      ? await ctx.replyWithPhoto(q.image_url, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
+    sentMsg = imageUrl
+      ? await ctx.replyWithPhoto(imageUrl, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard })
       : await ctx.reply(msgText, { parse_mode: 'HTML', reply_markup: keyboard });
   } catch (err) {
     // Dead image link or blocked user — fall back to text so the question still gets sent
@@ -228,7 +231,7 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
     timerService.startDisplayTimer(
       telegramId,
       timerSecs,
-      { telegram: ctx.telegram, chatId: ctx.chat.id, messageId: sentMsg.message_id, imageUrl: q.image_url, baseText, timerLine, keyboard },
+      { telegram: ctx.telegram, chatId: ctx.chat.id, messageId: sentMsg.message_id, imageUrl, baseText, timerLine, keyboard },
       async () => {
         const state = await redis.getQuizState(telegramId);
         if (!state || state.questionDeadline !== deadline) return;
