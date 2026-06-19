@@ -287,8 +287,8 @@ export function persistentMenuKeyboard() {
   return {
     keyboard: [
       [{ text: '📚 Practice' }, { text: '📋 Quiz' }],
-      [{ text: '📊 My Stats' }, { text: '🏆 Leaderboard' }],
-      [{ text: '⚙️ Settings' }],
+      [{ text: '🎯 Challenge' }, { text: '🏆 Leaderboard' }],
+      [{ text: '📊 My Stats' }, { text: '⚙️ Settings' }],
     ],
     resize_keyboard: true,
     persistent: true,
