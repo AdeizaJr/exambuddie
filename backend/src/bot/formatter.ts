@@ -12,64 +12,92 @@ export function timeGreeting(): string {
 // Convert LaTeX math notation to readable plain text for Telegram.
 function convertLatex(text: string): string {
   return text
-    // fractions: \frac{a}{b} → a/b
+    // simple Unicode fractions before general \frac
+    .replace(/\\frac\{1\}\{2\}/g, '½').replace(/\\frac\{1\}\{4\}/g, '¼')
+    .replace(/\\frac\{3\}\{4\}/g, '¾').replace(/\\frac\{1\}\{3\}/g, '⅓')
+    .replace(/\\frac\{2\}\{3\}/g, '⅔')
+    // general fraction
     .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1/$2)')
-    // sqrt: \sqrt{x} → √x
+    // sqrt
     .replace(/\\sqrt\{([^}]+)\}/g, '√($1)')
     .replace(/\\sqrt\b/g, '√')
-    // superscripts: ^{n} or ^n → unicode superscript where possible
+    // degree: ^{\circ} or \circ or \degree
+    .replace(/\^\{\\circ\}/g, '°').replace(/\\circ/g, '°').replace(/\\degree/g, '°')
+    // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
     .replace(/\^(\w)/g, (_, e) => toSup(e))
-    // subscripts: _{n} → unicode subscript where possible
+    // subscripts
     .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
     .replace(/_(\w)/g, (_, e) => toSub(e))
-    // common symbols
-    .replace(/\\times/g, '×')
-    .replace(/\\div/g, '÷')
-    .replace(/\\pm/g, '±')
-    .replace(/\\geq/g, '≥')
-    .replace(/\\leq/g, '≤')
-    .replace(/\\neq/g, '≠')
-    .replace(/\\approx/g, '≈')
+    // operators
+    .replace(/\\times/g, '×').replace(/\\div/g, '÷')
+    .replace(/\\pm/g, '±').replace(/\\mp/g, '∓')
+    .replace(/\\geq/g, '≥').replace(/\\leq/g, '≤')
+    .replace(/\\neq/g, '≠').replace(/\\approx/g, '≈')
+    .replace(/\\equiv/g, '≡').replace(/\\propto/g, '∝')
     .replace(/\\infty/g, '∞')
-    .replace(/\\pi/g, 'π')
-    .replace(/\\theta/g, 'θ')
-    .replace(/\\alpha/g, 'α')
-    .replace(/\\beta/g, 'β')
-    .replace(/\\gamma/g, 'γ')
-    .replace(/\\delta/g, 'δ')
-    .replace(/\\sigma/g, 'σ')
-    .replace(/\\mu/g, 'μ')
-    .replace(/\\lambda/g, 'λ')
-    .replace(/\\cdot/g, '·')
-    .replace(/\\log/g, 'log')
-    .replace(/\\ln/g, 'ln')
-    .replace(/\\sin/g, 'sin')
-    .replace(/\\cos/g, 'cos')
-    .replace(/\\tan/g, 'tan')
-    // arrays/tables: strip LaTeX table markup, keep values
+    .replace(/\\therefore/g, '∴').replace(/\\because/g, '∵')
+    .replace(/\\cdot/g, '·').replace(/\\ldots/g, '…').replace(/\\dots/g, '…')
+    // arrows
+    .replace(/\\Rightarrow/g, '⇒').replace(/\\Leftarrow/g, '⇐')
+    .replace(/\\rightarrow/g, '→').replace(/\\leftarrow/g, '←')
+    .replace(/\\leftrightarrow/g, '↔').replace(/\\to/g, '→')
+    // geometry
+    .replace(/\\angle/g, '∠').replace(/\\parallel/g, '∥').replace(/\\perp/g, '⊥')
+    .replace(/\\triangle/g, '△').replace(/\\sim/g, '∼').replace(/\\cong/g, '≅')
+    // calculus / advanced
+    .replace(/\\sum/g, 'Σ').replace(/\\prod/g, 'Π')
+    .replace(/\\int/g, '∫').replace(/\\partial/g, '∂').replace(/\\nabla/g, '∇')
+    // sets
+    .replace(/\\in\b/g, '∈').replace(/\\notin/g, '∉')
+    .replace(/\\subset/g, '⊂').replace(/\\supset/g, '⊃')
+    .replace(/\\cup/g, '∪').replace(/\\cap/g, '∩').replace(/\\emptyset/g, '∅')
+    // Greek lowercase
+    .replace(/\\alpha/g, 'α').replace(/\\beta/g, 'β').replace(/\\gamma/g, 'γ')
+    .replace(/\\delta/g, 'δ').replace(/\\epsilon/g, 'ε').replace(/\\varepsilon/g, 'ε')
+    .replace(/\\zeta/g, 'ζ').replace(/\\eta/g, 'η').replace(/\\theta/g, 'θ')
+    .replace(/\\iota/g, 'ι').replace(/\\kappa/g, 'κ').replace(/\\lambda/g, 'λ')
+    .replace(/\\mu/g, 'μ').replace(/\\nu/g, 'ν').replace(/\\xi/g, 'ξ')
+    .replace(/\\pi/g, 'π').replace(/\\rho/g, 'ρ').replace(/\\sigma/g, 'σ')
+    .replace(/\\tau/g, 'τ').replace(/\\upsilon/g, 'υ')
+    .replace(/\\varphi/g, 'φ').replace(/\\phi/g, 'φ')
+    .replace(/\\chi/g, 'χ').replace(/\\psi/g, 'ψ').replace(/\\omega/g, 'ω')
+    // Greek uppercase
+    .replace(/\\Gamma/g, 'Γ').replace(/\\Delta/g, 'Δ').replace(/\\Theta/g, 'Θ')
+    .replace(/\\Lambda/g, 'Λ').replace(/\\Xi/g, 'Ξ').replace(/\\Pi/g, 'Π')
+    .replace(/\\Sigma/g, 'Σ').replace(/\\Phi/g, 'Φ').replace(/\\Psi/g, 'Ψ')
+    .replace(/\\Omega/g, 'Ω')
+    // trig / log
+    .replace(/\\arcsin/g, 'arcsin').replace(/\\arccos/g, 'arccos').replace(/\\arctan/g, 'arctan')
+    .replace(/\\cot/g, 'cot').replace(/\\sec/g, 'sec').replace(/\\csc/g, 'csc')
+    .replace(/\\log/g, 'log').replace(/\\ln/g, 'ln').replace(/\\lim/g, 'lim')
+    .replace(/\\sin/g, 'sin').replace(/\\cos/g, 'cos').replace(/\\tan/g, 'tan')
+    // arrays/tables
     .replace(/\\begin\{array\}[\s\S]*?\\end\{array\}/g, (m) =>
       m.replace(/\\begin\{array\}\{[^}]*\}|\\end\{array\}|\\hline|\\multicolumn\{[^}]+\}\{[^}]+\}/g, '')
        .replace(/&/g, ' | ')
        .replace(/\\\\/g, '\n')
     )
-    // strip remaining LaTeX delimiters \( \) \[ \]
-    .replace(/\\\(|\\\)/g, '')
-    .replace(/\\\[|\\\]/g, '')
-    // strip remaining backslash commands
+    // strip remaining LaTeX delimiters
+    .replace(/\$\$/g, '').replace(/\$/g, '')
+    .replace(/\\\(|\\\)/g, '').replace(/\\\[|\\\]/g, '')
+    // strip remaining backslash commands (unwrap content from braces)
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')
     .replace(/\\[a-zA-Z]+/g, '')
-    // clean up extra spaces
     .replace(/ {2,}/g, ' ')
     .trim();
 }
 
 const SUP_MAP: Record<string, string> = {
   '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
-  '+':'⁺','-':'⁻','n':'ⁿ','x':'ˣ',
+  '+':'⁺','-':'⁻','=':'⁼','(':'⁽',')':'⁾',
+  'a':'ᵃ','b':'ᵇ','c':'ᶜ','d':'ᵈ','e':'ᵉ','f':'ᶠ','g':'ᵍ','h':'ʰ','i':'ⁱ','j':'ʲ',
+  'k':'ᵏ','l':'ˡ','m':'ᵐ','n':'ⁿ','o':'ᵒ','p':'ᵖ','r':'ʳ','s':'ˢ','t':'ᵗ','u':'ᵘ',
+  'v':'ᵛ','w':'ʷ','x':'ˣ','y':'ʸ','z':'ᶻ',
 };
 const SUB_MAP: Record<string, string> = {
   '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉',
+  'a':'ₐ','e':'ₑ','i':'ᵢ','o':'ₒ','u':'ᵤ','n':'ₙ','x':'ₓ',
 };
 function toSup(s: string): string {
   const mapped = [...s].map(c => SUP_MAP[c] || c).join('');
