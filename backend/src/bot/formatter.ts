@@ -9,6 +9,7 @@ export function timeGreeting(): string {
   return 'Good evening';
 }
 
+
 const UNICODE_FRACS: Record<string, string> = {
   '1/2': '½',
   '1/3': '⅓', '2/3': '⅔',
@@ -17,6 +18,15 @@ const UNICODE_FRACS: Record<string, string> = {
   '1/6': '⅙', '5/6': '⅚',
   '1/8': '⅛', '3/8': '⅜', '5/8': '⅝', '7/8': '⅞',
 };
+
+const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+const SUB = '₀₁₂₃₄₅₆₇₈₉';
+
+// For single-digit fractions not in UNICODE_FRACS (e.g. 3/2, 4/3), build ³⁄₂ style
+function toFracGlyph(n: string, d: string): string | null {
+  if (!/^\d$/.test(n) || !/^\d$/.test(d)) return null;
+  return `${SUP[parseInt(n)]}⁄${SUB[parseInt(d)]}`;
+}
 
 // Wrap in parens only if the string is multi-token (has space, binary +, or mid-string -)
 function fracWrap(s: string): string {
@@ -38,7 +48,7 @@ function convertLatex(text: string, block = false): string {
     // general fraction with Unicode shorthand for common ones
     .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
       const n = num.trim(); const d = den.trim();
-      const unicode = UNICODE_FRACS[`${n}/${d}`];
+      const unicode = UNICODE_FRACS[`${n}/${d}`] ?? toFracGlyph(n, d);
       if (unicode) return unicode;
       return `${fracWrap(n)}/${fracWrap(d)}`;
     })
@@ -443,8 +453,8 @@ function formatExplanation(text: string): string {
     .replace(/=\s*0\s+(?=[a-zA-Zα-ωΑ-Ω(])/g, '= 0\n\n')
     // factorization step chain: ") = NUMBER (" → break between steps
     .replace(/\)\s*=\s*(\d+)\s*\(/g, ')\n= $1 (')
-    // equation chain: ") = (" including superscript exponents between ) and = (e.g. ")² = (")
-    .replace(/\)([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ]?)\s*=\s*\(/g, ')$1\n= (')
+    // equation chain: ") = (" including ASCII/superscript exponents e.g. ")2 = (" or ")² = ("
+    .replace(/\)([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ0-9]?)\s*=\s*\(/g, ')$1\n= (')
     // arithmetic chain at end of line: "= EXPR = SINGLE_NUMBER"
     .replace(/= ([^=\n]+) = (\d+)\s*$/gm, '= $1\n= $2')
     // substitution step: ") -4 =" or ") 3 =" — numeric value starting new equation after closing paren
