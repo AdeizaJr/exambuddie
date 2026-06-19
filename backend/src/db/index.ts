@@ -604,3 +604,182 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   await pool.query('DELETE FROM subscriptions WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 }
+
+// ── Challenge rooms ───────────────────────────────────────────────────────────
+
+export interface PracticeRoom {
+  id: number;
+  code: string;
+  creator_telegram_id: number;
+  subject: string;
+  exam_type: string;
+  year: number | null;
+  question_ids: number[];
+  num_questions: number;
+  time_limit_secs: number;
+  status: 'waiting' | 'active' | 'ended';
+  max_players: number;
+  created_at: string;
+  started_at: string | null;
+  ended_at: string | null;
+}
+
+export interface RoomParticipant {
+  id: number;
+  room_id: number;
+  telegram_id: number;
+  first_name: string;
+  current_q_idx: number;
+  correct: number;
+  total_answered: number;
+  ready: boolean;
+  finished: boolean;
+  finished_at: string | null;
+  joined_at: string;
+}
+
+function generateRoomCode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+export async function getQuestionById(id: number): Promise<Question | null> {
+  const { rows } = await pool.query<Question>('SELECT * FROM questions WHERE id = $1', [id]);
+  return rows[0] || null;
+}
+
+export async function createRoom(data: {
+  creatorTelegramId: number;
+  subject: string;
+  examType: string;
+  year: number | null;
+  numQuestions: number;
+  timeLimitSecs: number;
+  expectedPlayers?: number;
+}): Promise<PracticeRoom> {
+  const yearClause = data.year ? `AND year = ${data.year}` : '';
+  const qRes = await pool.query(
+    `SELECT id FROM questions
+     WHERE subject = $1 AND exam_type = $2
+     AND (has_diagram = FALSE OR image_url IS NOT NULL)
+     ${yearClause}
+     ORDER BY RANDOM() LIMIT $3`,
+    [data.subject, data.examType, data.numQuestions]
+  );
+  const questionIds = qRes.rows.map((r: any) => r.id);
+  if (questionIds.length < data.numQuestions) {
+    throw new Error(`Only ${questionIds.length} questions available`);
+  }
+
+  let code = '';
+  for (let i = 0; i < 10; i++) {
+    const candidate = generateRoomCode();
+    const { rows } = await pool.query('SELECT id FROM practice_rooms WHERE code = $1', [candidate]);
+    if (rows.length === 0) { code = candidate; break; }
+  }
+  if (!code) throw new Error('Could not generate unique room code');
+
+  const { rows } = await pool.query(
+    `INSERT INTO practice_rooms (code, creator_telegram_id, subject, exam_type, year, question_ids, num_questions, time_limit_secs, max_players)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+    [code, data.creatorTelegramId, data.subject, data.examType, data.year, questionIds, data.numQuestions, data.timeLimitSecs, data.expectedPlayers ?? 2]
+  );
+  return rows[0];
+}
+
+export async function getRoom(code: string): Promise<PracticeRoom | null> {
+  const { rows } = await pool.query('SELECT * FROM practice_rooms WHERE code = $1', [code]);
+  return rows[0] || null;
+}
+
+export async function getRoomById(id: number): Promise<PracticeRoom | null> {
+  const { rows } = await pool.query('SELECT * FROM practice_rooms WHERE id = $1', [id]);
+  return rows[0] || null;
+}
+
+export async function getRoomParticipants(roomId: number): Promise<RoomParticipant[]> {
+  const { rows } = await pool.query(
+    'SELECT * FROM room_participants WHERE room_id = $1 ORDER BY joined_at',
+    [roomId]
+  );
+  return rows;
+}
+
+export async function joinRoom(roomId: number, telegramId: number, firstName: string): Promise<RoomParticipant> {
+  const { rows } = await pool.query(
+    `INSERT INTO room_participants (room_id, telegram_id, first_name)
+     VALUES ($1, $2, $3)
+     ON CONFLICT (room_id, telegram_id) DO UPDATE SET first_name = EXCLUDED.first_name
+     RETURNING *`,
+    [roomId, telegramId, firstName]
+  );
+  return rows[0];
+}
+
+export async function setParticipantReady(roomId: number, telegramId: number): Promise<void> {
+  await pool.query(
+    'UPDATE room_participants SET ready = true WHERE room_id = $1 AND telegram_id = $2',
+    [roomId, telegramId]
+  );
+}
+
+export async function startRoom(roomId: number): Promise<void> {
+  await pool.query(
+    `UPDATE practice_rooms SET status = 'active', started_at = NOW() WHERE id = $1`,
+    [roomId]
+  );
+}
+
+export async function recordChallengeAnswer(
+  roomId: number, telegramId: number, isCorrect: boolean
+): Promise<RoomParticipant> {
+  const { rows } = await pool.query(
+    `UPDATE room_participants
+     SET current_q_idx = current_q_idx + 1,
+         total_answered = total_answered + 1,
+         correct = correct + $3
+     WHERE room_id = $1 AND telegram_id = $2 RETURNING *`,
+    [roomId, telegramId, isCorrect ? 1 : 0]
+  );
+  return rows[0];
+}
+
+export async function finishParticipant(roomId: number, telegramId: number): Promise<void> {
+  await pool.query(
+    `UPDATE room_participants SET finished = true, finished_at = NOW()
+     WHERE room_id = $1 AND telegram_id = $2`,
+    [roomId, telegramId]
+  );
+}
+
+export async function endRoom(roomId: number): Promise<void> {
+  await pool.query(
+    `UPDATE practice_rooms SET status = 'ended', ended_at = NOW() WHERE id = $1`,
+    [roomId]
+  );
+  await pool.query(
+    `UPDATE room_participants SET finished = true, finished_at = NOW()
+     WHERE room_id = $1 AND finished = false`,
+    [roomId]
+  );
+}
+
+export async function getExpiredActiveRooms(): Promise<PracticeRoom[]> {
+  const { rows } = await pool.query(
+    `SELECT * FROM practice_rooms
+     WHERE status = 'active'
+     AND started_at + (time_limit_secs || ' seconds')::INTERVAL < NOW()`
+  );
+  return rows;
+}
+
+export async function getExpiredLobbyRooms(): Promise<PracticeRoom[]> {
+  const { rows } = await pool.query(
+    `SELECT * FROM practice_rooms
+     WHERE status = 'waiting'
+     AND created_at + INTERVAL '60 seconds' < NOW()`
+  );
+  return rows;
+}

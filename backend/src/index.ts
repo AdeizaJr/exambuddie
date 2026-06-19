@@ -12,6 +12,7 @@ import * as practice from './bot/handlers/practice';
 import * as quiz from './bot/handlers/quiz';
 import * as stats from './bot/handlers/stats';
 import * as leaderboard from './bot/handlers/leaderboard';
+import * as challenge from './bot/handlers/challenge';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -30,7 +31,14 @@ bot.use(async (ctx, next) => {
 });
 
 // ── Commands ───────────────────────────────────────────────────────────────────
-bot.start(onboarding.handleStart);
+bot.start(async (ctx: any) => {
+  const payload = ctx.startPayload as string | undefined;
+  if (payload?.startsWith('room_')) {
+    const code = payload.slice(5);
+    return challenge.handleChallengeJoin(ctx, code);
+  }
+  return onboarding.handleStart(ctx);
+});
 bot.command('help', (ctx) => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));
 bot.command('settings', onboarding.handleSettings);
 bot.command('stats', stats.handleStats);
@@ -39,6 +47,7 @@ bot.command('practice', practice.handlePractice);
 bot.command('quiz', quiz.handleQuiz);
 bot.command('drill', (ctx) => practice.handleDrill(ctx));
 bot.command('leaderboard', leaderboard.handleLeaderboard);
+bot.command('challenge', challenge.handleChallenge);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -91,6 +100,22 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'settings:delete:confirm') return onboarding.handleSettingsDeleteConfirm(ctx);
   if (data === 'settings:back') return onboarding.handleSettingsBack(ctx);
 
+  // Challenge
+  if (data === 'challenge:pick') return challenge.handleChallenge(ctx);
+  if (data === 'challenge:create') return challenge.handleChallengeCreate(ctx);
+  if (data === 'challenge:search') return challenge.handleChallengeSearch(ctx);
+  if (data.startsWith('challenge:subject:')) return challenge.handleChallengeSubject(ctx);
+  if (data.startsWith('challenge:examtype:')) return challenge.handleChallengeExamType(ctx);
+  if (data.startsWith('challenge:year:')) return challenge.handleChallengeYear(ctx);
+  if (data.startsWith('challenge:count:')) return challenge.handleChallengeCount(ctx);
+  if (data.startsWith('challenge:timer:')) return challenge.handleChallengeTimer(ctx);
+  if (data.startsWith('challenge:expected:')) return challenge.handleChallengeExpected(ctx);
+  if (data.startsWith('challenge:start_now:')) return challenge.handleChallengeStartNow(ctx);
+  if (data.startsWith('challenge:ready:')) return challenge.handleChallengeReady(ctx);
+  if (data.startsWith('challenge:leave:')) return challenge.handleChallengeLeave(ctx);
+  if (data === 'challenge:next') return challenge.handleChallengeNext(ctx);
+  if (data === 'challenge:finish') return challenge.handleChallengeFinish(ctx);
+
   // Practice
   if (data === 'practice:pick') return practice.handlePractice(ctx);
   if (data.startsWith('practice:multisubject:toggle:'))
@@ -118,9 +143,10 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'practice:add_subject') return onboarding.handleSettingsSubjects(ctx);
   if (data === 'practice:change_exam') return onboarding.handleSettingsExam(ctx);
 
-  // Answer (shared by practice + quiz)
+  // Answer (shared by practice + quiz + challenge)
   if (data.startsWith('answer:')) {
     const session = await redis.getSession(ctx.from.id);
+    if (session?.mode === 'challenge') return challenge.handleChallengeAnswer(ctx);
     if (session?.mode === 'quiz') return quiz.handleQuizAnswer(ctx);
     return practice.handleAnswer(ctx);
   }
@@ -206,8 +232,12 @@ bot.on('text', async (ctx: any) => {
   if (text === '📊 My Stats') return stats.handleStats(ctx);
   if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
   if (text === '🏆 Leaderboard') return leaderboard.handleLeaderboard(ctx);
+  if (text === '🎯 Challenge') return challenge.handleChallenge(ctx);
 
   const session = await redis.getSession(ctx.from.id);
+
+  // Challenge room code input
+  if (session?.step === 'challenge_enter_code') return challenge.handleChallengeCodeInput(ctx);
 
   // Phone nudge skip
   if (text === 'Skip for now →' && (await redis.getPhonePending(ctx.from.id))) {

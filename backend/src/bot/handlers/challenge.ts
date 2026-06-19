@@ -1,0 +1,685 @@
+// src/bot/handlers/challenge.ts
+import * as db from '../../db';
+import * as redis from '../../services/redis';
+import * as fmt from '../formatter';
+
+const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
+const LOBBY_SECS = 60;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function inviteLink(code: string) {
+  return `https://t.me/${BOT_USERNAME}?start=room_${code}`;
+}
+
+function shareUrl(code: string) {
+  const link = inviteLink(code);
+  return `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(`Join my ExamBuddie challenge! Room code: ${code}`)}`;
+}
+
+function formatLobby(room: db.PracticeRoom, participants: db.RoomParticipant[], secsLeft: number): string {
+  const sub = fmt.SUBJECT_MAP[room.subject] || room.subject;
+  const yr = room.year ? `${room.year}` : 'Any Year';
+  const mins = Math.floor(room.time_limit_secs / 60);
+  const readyCount = participants.filter(p => p.ready).length;
+  const playerList = participants
+    .map(p => `${p.ready ? '✅' : '⏳'} ${p.first_name}${p.telegram_id === room.creator_telegram_id ? ' 👑' : ''}`)
+    .join('\n');
+  const countdownStr = secsLeft > 0
+    ? `⏳ <b>${secsLeft}s</b> lobby countdown — auto-starts when all ${room.max_players} players are ready`
+    : `🚀 Starting now…`;
+
+  return (
+    `🎯 <b>Challenge Room</b> <code>${room.code}</code>\n\n` +
+    `📚 ${sub} · ${yr} · ${room.exam_type}\n` +
+    `❓ ${room.num_questions} questions · ⏱ ${mins} min\n\n` +
+    `<b>Players (${readyCount}/${room.max_players} ready):</b>\n${playerList}\n\n` +
+    `🔗 Invite link:\n<code>${inviteLink(room.code)}</code>\n\n` +
+    `${countdownStr}`
+  );
+}
+
+function lobbyKeyboard(code: string, isReady: boolean, isCreator: boolean) {
+  const rows: { text: string; callback_data?: string; url?: string }[][] = [];
+  rows.push([{ text: isReady ? '✅ Ready!' : '✅ Mark Ready', callback_data: `challenge:ready:${code}` }]);
+  rows.push([{ text: '📤 Share Invite', url: shareUrl(code) }]);
+  if (isCreator) {
+    rows.push([{ text: '⚡ Start Now', callback_data: `challenge:start_now:${code}` }]);
+  }
+  rows.push([{ text: '❌ Leave Room', callback_data: `challenge:leave:${code}` }]);
+  return { inline_keyboard: rows };
+}
+
+function challengeSubjectKeyboard(subjects: string[]) {
+  const rows: { text: string; callback_data: string }[][] = [];
+  for (let i = 0; i < subjects.length; i += 2) {
+    rows.push(
+      subjects.slice(i, i + 2).map(s => ({
+        text: fmt.SUBJECT_MAP[s] || s,
+        callback_data: `challenge:subject:${s}`,
+      }))
+    );
+  }
+  rows.push([{ text: '❌ Cancel', callback_data: 'menu:main' }]);
+  return { inline_keyboard: rows };
+}
+
+// ── Creation flow ─────────────────────────────────────────────────────────────
+
+export async function handleChallenge(ctx: any): Promise<void> {
+  await ctx.reply('🎯 <b>Challenge Mode</b>\n\nCreate a new room or join an existing one:', {
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: '➕ Create Challenge', callback_data: 'challenge:create' }],
+        [{ text: '🔍 Join with Code', callback_data: 'challenge:search' }],
+        [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+      ],
+    },
+  });
+}
+
+export async function handleChallengeCreate(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  await redis.setSession(ctx.from.id, { step: 'challenge_subject', examType: user.exam_type || 'WAEC' });
+  await ctx.editMessageText('🎯 <b>Challenge Mode</b>\n\nPick a subject for the challenge:', {
+    parse_mode: 'HTML',
+    reply_markup: challengeSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP)),
+  });
+}
+
+export async function handleChallengeSearch(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  await redis.setSession(ctx.from.id, { step: 'challenge_enter_code' });
+  await ctx.reply('🔍 <b>Join a Challenge</b>\n\nType the 6-character room code shared with you:', {
+    parse_mode: 'HTML',
+    reply_markup: { force_reply: true, selective: true },
+  });
+}
+
+// Called from free-text handler when step === 'challenge_enter_code'
+export async function handleChallengeCodeInput(ctx: any): Promise<void> {
+  const code = ctx.message?.text?.trim().toUpperCase();
+  if (!code || code.length !== 6) {
+    await ctx.reply('❌ Invalid code. Room codes are 6 characters. Try again or tap /start to go back.');
+    return;
+  }
+
+  const room = await db.getRoom(code);
+  if (!room) { await ctx.reply('❌ Room not found. Check the code and try again.'); return; }
+  if (room.status === 'ended') { await ctx.reply('❌ This challenge has already ended.'); return; }
+  if (room.status === 'active') { await ctx.reply('❌ This challenge has already started.'); return; }
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user?.exam_type) { await ctx.reply('Please set up your profile first using /start.'); return; }
+
+  const participants = await db.getRoomParticipants(room.id);
+  const alreadyIn = participants.some(p => p.telegram_id === ctx.from.id);
+
+  await db.joinRoom(room.id, ctx.from.id, user.first_name);
+  await redis.clearSession(ctx.from.id);
+  await redis.setSession(ctx.from.id, { step: 'challenge_lobby', roomCode: code });
+
+  const updated = await db.getRoomParticipants(room.id);
+
+  if (!alreadyIn) {
+    for (const p of updated) {
+      if (p.telegram_id !== ctx.from.id) {
+        await ctx.telegram
+          .sendMessage(
+            p.telegram_id,
+            `👤 <b>${user.first_name}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
+            { parse_mode: 'HTML' }
+          )
+          .catch(() => {});
+      }
+    }
+  }
+
+  const lobbyExpiresAt = new Date(room.created_at).getTime() + LOBBY_SECS * 1000;
+  const secsLeft = Math.max(0, Math.floor((lobbyExpiresAt - Date.now()) / 1000));
+
+  await ctx.reply(formatLobby(room, updated, secsLeft), {
+    parse_mode: 'HTML',
+    reply_markup: lobbyKeyboard(code, false, false),
+    disable_web_page_preview: true,
+  });
+}
+
+export async function handleChallengeSubject(ctx: any): Promise<void> {
+  const subject = ctx.callbackQuery.data.split(':')[2];
+  await ctx.answerCbQuery();
+
+  await redis.updateSession(ctx.from.id, { step: 'challenge_examtype', subject });
+  const sub = fmt.SUBJECT_MAP[subject] || subject;
+
+  await ctx.editMessageText(
+    `🎯 <b>Challenge Mode</b>\n\nSubject: <b>${sub}</b>\n\nPick exam type:`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: 'WAEC', callback_data: 'challenge:examtype:WAEC' },
+            { text: 'JAMB', callback_data: 'challenge:examtype:JAMB' },
+            { text: 'NECO', callback_data: 'challenge:examtype:NECO' },
+          ],
+          [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleChallengeExamType(ctx: any): Promise<void> {
+  const examType = ctx.callbackQuery.data.split(':')[2];
+  await ctx.answerCbQuery();
+
+  await redis.updateSession(ctx.from.id, { step: 'challenge_year', examType });
+  const session = await redis.getSession(ctx.from.id);
+  const sub = fmt.SUBJECT_MAP[session.subject] || session.subject;
+
+  const years: number[] = [];
+  const now = new Date().getFullYear();
+  for (let y = now - 1; y >= 2005; y--) years.push(y);
+
+  const rows: { text: string; callback_data: string }[][] = [];
+  for (let i = 0; i < Math.min(years.length, 18); i += 3) {
+    rows.push(years.slice(i, i + 3).map(y => ({ text: `${y}`, callback_data: `challenge:year:${y}` })));
+  }
+  rows.push([{ text: '🔀 Any Year', callback_data: 'challenge:year:any' }]);
+  rows.push([{ text: '❌ Cancel', callback_data: 'menu:main' }]);
+
+  await ctx.editMessageText(
+    `🎯 <b>Challenge Mode</b>\n\nSubject: <b>${sub}</b> · Exam: <b>${examType}</b>\n\nPick a year:`,
+    { parse_mode: 'HTML', reply_markup: { inline_keyboard: rows } }
+  );
+}
+
+export async function handleChallengeYear(ctx: any): Promise<void> {
+  const raw = ctx.callbackQuery.data.split(':')[2];
+  const year = raw === 'any' ? null : parseInt(raw, 10);
+  await ctx.answerCbQuery();
+
+  await redis.updateSession(ctx.from.id, { step: 'challenge_count', year });
+  const session = await redis.getSession(ctx.from.id);
+  const sub = fmt.SUBJECT_MAP[session.subject] || session.subject;
+  const yr = year ? `${year}` : 'Any Year';
+
+  await ctx.editMessageText(
+    `🎯 <b>Challenge Mode</b>\n\nSubject: <b>${sub}</b> · Exam: <b>${session.examType}</b> · Year: <b>${yr}</b>\n\nHow many questions?`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: '10', callback_data: 'challenge:count:10' },
+            { text: '20', callback_data: 'challenge:count:20' },
+            { text: '30', callback_data: 'challenge:count:30' },
+          ],
+          [
+            { text: '40', callback_data: 'challenge:count:40' },
+            { text: '50', callback_data: 'challenge:count:50' },
+            { text: '60', callback_data: 'challenge:count:60' },
+          ],
+          [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleChallengeCount(ctx: any): Promise<void> {
+  const count = parseInt(ctx.callbackQuery.data.split(':')[2], 10);
+  await ctx.answerCbQuery();
+
+  await redis.updateSession(ctx.from.id, { step: 'challenge_timer', numQuestions: count });
+  const session = await redis.getSession(ctx.from.id);
+  const sub = fmt.SUBJECT_MAP[session.subject] || session.subject;
+  const yr = session.year ? `${session.year}` : 'Any Year';
+
+  await ctx.editMessageText(
+    `🎯 <b>Challenge Mode</b>\n\nSubject: <b>${sub}</b> · Exam: <b>${session.examType}</b> · Year: <b>${yr}</b> · Questions: <b>${count}</b>\n\nSet overall time limit:`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: '10 min', callback_data: 'challenge:timer:600' },
+            { text: '15 min', callback_data: 'challenge:timer:900' },
+            { text: '20 min', callback_data: 'challenge:timer:1200' },
+          ],
+          [
+            { text: '30 min', callback_data: 'challenge:timer:1800' },
+            { text: '45 min', callback_data: 'challenge:timer:2700' },
+            { text: '60 min', callback_data: 'challenge:timer:3600' },
+          ],
+          [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleChallengeTimer(ctx: any): Promise<void> {
+  const timeSecs = parseInt(ctx.callbackQuery.data.split(':')[2], 10);
+  await ctx.answerCbQuery();
+
+  await redis.updateSession(ctx.from.id, { step: 'challenge_expected', timeLimitSecs: timeSecs });
+  const session = await redis.getSession(ctx.from.id);
+  const sub = fmt.SUBJECT_MAP[session.subject] || session.subject;
+  const yr = session.year ? `${session.year}` : 'Any Year';
+  const mins = Math.floor(timeSecs / 60);
+
+  await ctx.editMessageText(
+    `🎯 <b>Challenge Mode</b>\n\nSubject: <b>${sub}</b> · Exam: <b>${session.examType}</b> · Year: <b>${yr}</b> · Questions: <b>${session.numQuestions}</b> · Time: <b>${mins} min</b>\n\nHow many players are you expecting?\n\n<i>Challenge auto-starts when all expected players tap Ready, or after 60s lobby countdown.</i>`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: '2', callback_data: 'challenge:expected:2' },
+            { text: '3', callback_data: 'challenge:expected:3' },
+            { text: '4', callback_data: 'challenge:expected:4' },
+            { text: '5', callback_data: 'challenge:expected:5' },
+          ],
+          [
+            { text: '6', callback_data: 'challenge:expected:6' },
+            { text: '7', callback_data: 'challenge:expected:7' },
+            { text: '8', callback_data: 'challenge:expected:8' },
+            { text: '10', callback_data: 'challenge:expected:10' },
+          ],
+          [
+            { text: '15', callback_data: 'challenge:expected:15' },
+            { text: '20', callback_data: 'challenge:expected:20' },
+            { text: '30', callback_data: 'challenge:expected:30' },
+            { text: '50', callback_data: 'challenge:expected:50' },
+          ],
+          [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleChallengeExpected(ctx: any): Promise<void> {
+  const expected = parseInt(ctx.callbackQuery.data.split(':')[2], 10);
+  await ctx.answerCbQuery();
+
+  const session = await redis.getSession(ctx.from.id);
+  const user = await db.getUser(ctx.from.id);
+  if (!user || !session) return;
+
+  let room: db.PracticeRoom;
+  try {
+    room = await db.createRoom({
+      creatorTelegramId: ctx.from.id,
+      subject: session.subject,
+      examType: session.examType || user.exam_type || 'WAEC',
+      year: session.year || null,
+      numQuestions: session.numQuestions,
+      timeLimitSecs: session.timeLimitSecs,
+      expectedPlayers: expected,
+    });
+  } catch (e: any) {
+    await ctx.editMessageText(`❌ ${e.message}. Try fewer questions or a different year.`);
+    return;
+  }
+
+  // Auto-join and auto-ready the creator
+  await db.joinRoom(room.id, ctx.from.id, user.first_name);
+  await db.setParticipantReady(room.id, ctx.from.id);
+  await redis.clearSession(ctx.from.id);
+  await redis.setSession(ctx.from.id, { step: 'challenge_lobby', roomCode: room.code });
+
+  const participants = await db.getRoomParticipants(room.id);
+  await ctx.editMessageText(formatLobby(room, participants, LOBBY_SECS), {
+    parse_mode: 'HTML',
+    reply_markup: lobbyKeyboard(room.code, true, true),
+    disable_web_page_preview: true,
+  });
+
+  scheduleAutoStart(ctx.telegram, room);
+}
+
+// ── Auto-start timer ──────────────────────────────────────────────────────────
+
+export function scheduleAutoStart(telegram: any, room: db.PracticeRoom): void {
+  setTimeout(async () => {
+    try {
+      const fresh = await db.getRoomById(room.id);
+      if (!fresh || fresh.status !== 'waiting') return; // already started or ended
+      const participants = await db.getRoomParticipants(fresh.id);
+      if (participants.length === 0) { await db.endRoom(fresh.id); return; }
+      await startChallenge(telegram, fresh, participants);
+    } catch (e) {
+      console.error('[challenge] auto-start error:', e);
+    }
+  }, LOBBY_SECS * 1000);
+}
+
+// ── Join via deep link ────────────────────────────────────────────────────────
+
+export async function handleChallengeJoin(ctx: any, code: string): Promise<void> {
+  const user = await db.getUser(ctx.from.id);
+  if (!user?.exam_type) {
+    await ctx.reply('Please set up your profile first using /start.');
+    return;
+  }
+
+  const room = await db.getRoom(code);
+  if (!room) { await ctx.reply('❌ Room not found. Check the code and try again.'); return; }
+  if (room.status === 'ended') { await ctx.reply('❌ This challenge has already ended.'); return; }
+  if (room.status === 'active') { await ctx.reply('❌ This challenge has already started.'); return; }
+
+  const participants = await db.getRoomParticipants(room.id);
+  const alreadyIn = participants.some(p => p.telegram_id === ctx.from.id);
+
+  await db.joinRoom(room.id, ctx.from.id, user.first_name);
+  await redis.clearSession(ctx.from.id);
+  await redis.setSession(ctx.from.id, { step: 'challenge_lobby', roomCode: code });
+
+  const updated = await db.getRoomParticipants(room.id);
+
+  if (!alreadyIn) {
+    for (const p of updated) {
+      if (p.telegram_id !== ctx.from.id) {
+        await ctx.telegram
+          .sendMessage(
+            p.telegram_id,
+            `👤 <b>${user.first_name}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
+            { parse_mode: 'HTML' }
+          )
+          .catch(() => {});
+      }
+    }
+  }
+
+  const lobbyExpiresAt = new Date(room.created_at).getTime() + LOBBY_SECS * 1000;
+  const secsLeft = Math.max(0, Math.floor((lobbyExpiresAt - Date.now()) / 1000));
+
+  await ctx.reply(formatLobby(room, updated, secsLeft), {
+    parse_mode: 'HTML',
+    reply_markup: lobbyKeyboard(code, false, false),
+    disable_web_page_preview: true,
+  });
+}
+
+// ── Lobby: Ready ──────────────────────────────────────────────────────────────
+
+export async function handleChallengeReady(ctx: any): Promise<void> {
+  const code = ctx.callbackQuery.data.split(':')[2];
+  await ctx.answerCbQuery('✅ You\'re ready!');
+
+  const room = await db.getRoom(code);
+  if (!room || room.status !== 'waiting') return;
+
+  await db.setParticipantReady(room.id, ctx.from.id);
+  const participants = await db.getRoomParticipants(room.id);
+
+  const lobbyExpiresAt = new Date(room.created_at).getTime() + LOBBY_SECS * 1000;
+  const secsLeft = Math.max(0, Math.floor((lobbyExpiresAt - Date.now()) / 1000));
+  const isCreator = ctx.from.id === room.creator_telegram_id;
+
+  await ctx.editMessageText(formatLobby(room, participants, secsLeft), {
+    parse_mode: 'HTML',
+    reply_markup: lobbyKeyboard(code, true, isCreator),
+    disable_web_page_preview: true,
+  });
+
+  for (const p of participants) {
+    if (p.telegram_id !== ctx.from.id) {
+      await ctx.telegram
+        .sendMessage(p.telegram_id, `✅ <b>${ctx.from.first_name}</b> is ready!`, { parse_mode: 'HTML' })
+        .catch(() => {});
+    }
+  }
+
+  // Auto-start if all expected players are ready
+  const readyCount = participants.filter(p => p.ready).length;
+  if (readyCount >= room.max_players) {
+    await startChallenge(ctx.telegram, room, participants);
+  }
+}
+
+// ── Lobby: Start Now (creator) ────────────────────────────────────────────────
+
+export async function handleChallengeStartNow(ctx: any): Promise<void> {
+  const code = ctx.callbackQuery.data.split(':')[2];
+  await ctx.answerCbQuery();
+
+  const room = await db.getRoom(code);
+  if (!room || room.status !== 'waiting') return;
+  if (ctx.from.id !== room.creator_telegram_id) {
+    await ctx.answerCbQuery('Only the creator can start early.', { show_alert: true });
+    return;
+  }
+
+  const participants = await db.getRoomParticipants(room.id);
+  await startChallenge(ctx.telegram, room, participants);
+}
+
+// ── Lobby: Leave ─────────────────────────────────────────────────────────────
+
+export async function handleChallengeLeave(ctx: any): Promise<void> {
+  const code = ctx.callbackQuery.data.split(':')[2];
+  await ctx.answerCbQuery();
+
+  const room = await db.getRoom(code);
+  if (!room) return;
+
+  await db.query('DELETE FROM room_participants WHERE room_id = $1 AND telegram_id = $2', [room.id, ctx.from.id]);
+  await redis.clearSession(ctx.from.id);
+  await ctx.editMessageText('👋 You left the room.');
+  await ctx.reply('Use the menu below to get started 👇', { reply_markup: fmt.persistentMenuKeyboard() });
+
+  if (ctx.from.id === room.creator_telegram_id) {
+    await db.endRoom(room.id);
+    const remaining = await db.getRoomParticipants(room.id);
+    for (const p of remaining) {
+      await ctx.telegram.sendMessage(p.telegram_id, '❌ The room creator left. Challenge cancelled.').catch(() => {});
+      await ctx.telegram.sendMessage(p.telegram_id, 'Use the menu below to continue 👇', {
+        reply_markup: fmt.persistentMenuKeyboard(),
+      }).catch(() => {});
+    }
+  } else {
+    const remaining = await db.getRoomParticipants(room.id);
+    for (const p of remaining) {
+      await ctx.telegram
+        .sendMessage(
+          p.telegram_id,
+          `👤 <b>${ctx.from.first_name}</b> left the room. (${remaining.length}/5)`,
+          { parse_mode: 'HTML' }
+        )
+        .catch(() => {});
+    }
+  }
+}
+
+// ── Start challenge ───────────────────────────────────────────────────────────
+
+async function startChallenge(telegram: any, room: db.PracticeRoom, participants: db.RoomParticipant[]): Promise<void> {
+  await db.startRoom(room.id);
+  const endTime = Date.now() + room.time_limit_secs * 1000;
+  const mins = Math.floor(room.time_limit_secs / 60);
+
+  for (const p of participants) {
+    await redis.setSession(p.telegram_id, {
+      mode: 'challenge',
+      roomCode: room.code,
+      roomId: room.id,
+      questionIds: room.question_ids,
+      currentQIdx: 0,
+      endTime,
+    });
+
+    await telegram
+      .sendMessage(
+        p.telegram_id,
+        `🚀 <b>Challenge starting!</b>\n\n${room.num_questions} questions · ⏱ ${mins} min countdown\n\nGood luck! 🍀`,
+        { parse_mode: 'HTML' }
+      )
+      .catch(() => {});
+
+    await sendChallengeQuestion(telegram, p.telegram_id, room, 0, endTime);
+  }
+}
+
+async function sendChallengeQuestion(
+  telegram: any,
+  telegramId: number,
+  room: db.PracticeRoom,
+  qIdx: number,
+  endTime: number
+): Promise<void> {
+  const question = await db.getQuestionById(room.question_ids[qIdx]);
+  if (!question) return;
+
+  const timeLeftSecs = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+  const timeStr = `⏱ ${Math.floor(timeLeftSecs / 60)}:${String(timeLeftSecs % 60).padStart(2, '0')} left`;
+  const msgText =
+    fmt.formatQuestion(question, qIdx + 1, room.num_questions, 'challenge') +
+    fmt.answerOptions(question) +
+    `\n\n${timeStr}`;
+  const keyboard = fmt.answerKeyboard(!!question.option_e);
+
+  const imageUrl = question.image_url?.startsWith('/')
+    ? `${process.env.APP_URL || ''}${question.image_url}`
+    : question.image_url;
+
+  try {
+    if (imageUrl) {
+      await telegram.sendPhoto(telegramId, imageUrl, { caption: msgText, parse_mode: 'HTML', reply_markup: keyboard });
+    } else {
+      await telegram.sendMessage(telegramId, msgText, { parse_mode: 'HTML', reply_markup: keyboard });
+    }
+  } catch {
+    await telegram.sendMessage(telegramId, msgText, { parse_mode: 'HTML', reply_markup: keyboard }).catch(() => {});
+  }
+}
+
+// ── Answer ────────────────────────────────────────────────────────────────────
+
+export async function handleChallengeAnswer(ctx: any): Promise<void> {
+  const selected = ctx.callbackQuery.data.split(':')[1];
+  const session = await redis.getSession(ctx.from.id);
+  if (!session || session.mode !== 'challenge') return;
+
+  await ctx.answerCbQuery();
+
+  if (Date.now() > session.endTime) {
+    await finishParticipant(ctx, session);
+    return;
+  }
+
+  const room = await db.getRoomById(session.roomId);
+  if (!room || room.status === 'ended') { await redis.clearSession(ctx.from.id); return; }
+
+  const question = await db.getQuestionById(session.questionIds[session.currentQIdx]);
+  if (!question) return;
+
+  const isCorrect = selected === question.correct_option;
+  await db.recordChallengeAnswer(room.id, ctx.from.id, isCorrect);
+
+  const nextIdx = session.currentQIdx + 1;
+  const isLast = nextIdx >= room.num_questions;
+  await redis.updateSession(ctx.from.id, { currentQIdx: nextIdx });
+
+  const afterKb = isLast
+    ? { inline_keyboard: [[{ text: '🏁 Finish', callback_data: 'challenge:finish' }]] }
+    : { inline_keyboard: [[{ text: '➡️ Next Question', callback_data: 'challenge:next' }]] };
+
+  await ctx.reply(fmt.correctAnswer(question, selected), { parse_mode: 'HTML', reply_markup: afterKb });
+}
+
+export async function handleChallengeNext(ctx: any): Promise<void> {
+  const session = await redis.getSession(ctx.from.id);
+  if (!session || session.mode !== 'challenge') return;
+  await ctx.answerCbQuery();
+
+  if (Date.now() > session.endTime) {
+    await finishParticipant(ctx, session);
+    return;
+  }
+
+  const room = await db.getRoomById(session.roomId);
+  if (!room || room.status === 'ended') { await redis.clearSession(ctx.from.id); return; }
+
+  await sendChallengeQuestion(ctx.telegram, ctx.from.id, room, session.currentQIdx, session.endTime);
+}
+
+export async function handleChallengeFinish(ctx: any): Promise<void> {
+  const session = await redis.getSession(ctx.from.id);
+  if (!session || session.mode !== 'challenge') return;
+  await ctx.answerCbQuery();
+  await finishParticipant(ctx, session);
+}
+
+async function finishParticipant(ctx: any, session: any): Promise<void> {
+  await db.finishParticipant(session.roomId, ctx.from.id);
+  await redis.clearSession(ctx.from.id);
+
+  const participants = await db.getRoomParticipants(session.roomId);
+  const allDone = participants.every(p => p.finished);
+
+  if (allDone) {
+    const room = await db.getRoomById(session.roomId);
+    if (room && room.status !== 'ended') {
+      await db.endRoom(session.roomId);
+      await broadcastResults(ctx.telegram, room, participants);
+    }
+  } else {
+    await ctx.reply('✅ <b>You\'re done!</b> Waiting for other players to finish…', { parse_mode: 'HTML' });
+    for (const p of participants) {
+      if (!p.finished && p.telegram_id !== ctx.from.id) {
+        await ctx.telegram
+          .sendMessage(p.telegram_id, `🏃 <b>${ctx.from.first_name}</b> has finished! Keep going! 💪`, { parse_mode: 'HTML' })
+          .catch(() => {});
+      }
+    }
+  }
+}
+
+// ── Results ───────────────────────────────────────────────────────────────────
+
+export async function broadcastResults(telegram: any, room: db.PracticeRoom, participants: db.RoomParticipant[]): Promise<void> {
+  const sorted = [...participants].sort((a, b) => {
+    if (b.correct !== a.correct) return b.correct - a.correct;
+    if (a.finished_at && b.finished_at) {
+      return new Date(a.finished_at).getTime() - new Date(b.finished_at).getTime();
+    }
+    return 0;
+  });
+
+  const medals = ['🥇', '🥈', '🥉'];
+  const sub = fmt.SUBJECT_MAP[room.subject] || room.subject;
+
+  let msg = `🏆 <b>Challenge Results</b>\n`;
+  msg += `📚 ${sub} · ${room.year || 'Any Year'} · ${room.num_questions}Q\n\n`;
+  sorted.forEach((p, i) => {
+    const acc = Math.round((p.correct / room.num_questions) * 100);
+    msg += `${medals[i] || `${i + 1}.`} <b>${p.first_name}</b> — ${p.correct}/${room.num_questions} (${acc}%)\n`;
+  });
+
+  for (const p of participants) {
+    await telegram.sendMessage(p.telegram_id, msg, { parse_mode: 'HTML' }).catch(() => {});
+    await telegram.sendMessage(p.telegram_id, 'Use the menu below to continue 👇', {
+      reply_markup: fmt.persistentMenuKeyboard(),
+    }).catch(() => {});
+  }
+}
+
+// ── Cron helpers ──────────────────────────────────────────────────────────────
+
+export async function startChallengeCron(telegram: any, room: db.PracticeRoom, participants: db.RoomParticipant[]): Promise<void> {
+  await startChallenge(telegram, room, participants);
+}
+
+export async function endExpiredRoom(telegram: any, room: db.PracticeRoom): Promise<void> {
+  await db.endRoom(room.id);
+  const participants = await db.getRoomParticipants(room.id);
+  await broadcastResults(telegram, room, participants);
+}

@@ -3,8 +3,30 @@ import cron from 'node-cron';
 import * as db from '../db';
 import * as payments from './payments';
 import { SUBJECT_MAP, SUBJECT_EMOJI } from '../bot/formatter';
+import { endExpiredRoom } from '../bot/handlers/challenge';
 
 export default function startCrons(bot: any): void {
+  // ── Every 15s — manage challenge rooms ────────────────────────────────────
+  setInterval(async () => {
+    try {
+      // Start waiting rooms whose 60s lobby timer has expired
+      const expiredLobbies = await db.getExpiredLobbyRooms();
+      for (const room of expiredLobbies) {
+        const participants = await db.getRoomParticipants(room.id);
+        if (participants.length === 0) { await db.endRoom(room.id); continue; }
+        const { startChallengeCron } = await import('../bot/handlers/challenge');
+        await startChallengeCron(bot.telegram, room, participants);
+      }
+      // End active rooms whose overall time has expired
+      const expired = await db.getExpiredActiveRooms();
+      for (const room of expired) {
+        await endExpiredRoom(bot.telegram, room);
+      }
+    } catch (e) {
+      console.error('[CRON] challenge room error:', e);
+    }
+  }, 15_000);
+
   // ── Every midnight WAT (UTC+1) — reset daily counts ─────────────────────
   cron.schedule(
     '0 23 * * *',

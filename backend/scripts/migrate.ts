@@ -189,7 +189,39 @@ const migrations = [
        E'\\n{3,}', E'\\n\\n', 'g'
      )
    )
-   WHERE question_text LIKE 'From the novel;%'`
+   WHERE question_text LIKE 'From the novel;%'`,
+
+  // ── Challenge rooms ───────────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS practice_rooms (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(8) UNIQUE NOT NULL,
+    creator_telegram_id BIGINT NOT NULL,
+    subject TEXT NOT NULL,
+    exam_type TEXT NOT NULL,
+    year INT,
+    question_ids INT[] NOT NULL DEFAULT '{}',
+    num_questions INT NOT NULL DEFAULT 10,
+    time_limit_secs INT NOT NULL DEFAULT 600,
+    status TEXT NOT NULL DEFAULT 'waiting',
+    max_players INT NOT NULL DEFAULT 5,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    started_at TIMESTAMPTZ,
+    ended_at TIMESTAMPTZ
+  )`,
+  `CREATE TABLE IF NOT EXISTS room_participants (
+    id SERIAL PRIMARY KEY,
+    room_id INT REFERENCES practice_rooms(id) ON DELETE CASCADE,
+    telegram_id BIGINT NOT NULL,
+    first_name TEXT NOT NULL,
+    current_q_idx INT NOT NULL DEFAULT 0,
+    correct INT NOT NULL DEFAULT 0,
+    total_answered INT NOT NULL DEFAULT 0,
+    ready BOOLEAN NOT NULL DEFAULT FALSE,
+    finished BOOLEAN NOT NULL DEFAULT FALSE,
+    finished_at TIMESTAMPTZ,
+    joined_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(room_id, telegram_id)
+  )`,
 ];
 
 async function migrate(): Promise<void> {
