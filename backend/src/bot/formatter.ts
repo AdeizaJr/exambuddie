@@ -425,6 +425,10 @@ function formatExplanation(text: string): string {
   if (/<(?:b|i|code)>/.test(text)) return text;
   const converted = convertLatex(text, true);
   return converted
+    // inverse trig: cos-1 / sin-1 / tan-1 → cos⁻¹ / sin⁻¹ / tan⁻¹
+    .replace(/\b(sin|cos|tan)-1\b/g, '$1⁻¹')
+    // packed equations: "0.5 0.8660" → "0.5\n0.8660" (two decimals with no operator)
+    .replace(/(\d\.\d+) (\d)/g, '$1\n$2')
     // curly braces used as algebraic grouping → regular parens
     .replace(/\{/g, '(').replace(/\}/g, ')')
     // sentence breaks: ". Capital"

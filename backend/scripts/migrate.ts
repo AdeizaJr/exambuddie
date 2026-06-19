@@ -248,6 +248,18 @@ const migrations = [
     UNIQUE(room_id, telegram_id)
   )`,
 
+  // ── Fix packed trig explanation: WAEC Math 2016 cosine question (id 116126) ──
+  `UPDATE questions SET explanation = $expl$sin 60° = x + 0.5 (given)
+0.8660 = x + 0.5
+0.8660 - 0.5 = x
+x = 0.3660
+
+cosθ = x (given)
+cosθ = 0.3660
+
+Hence, θ = cos-1(0.3660) = 68.53° = 69° (nearest degree)$expl$
+WHERE id = 116126`,
+
   // ── Improved step-by-step explanation: WAEC Math 2016 median age (id 116125) ──
   `UPDATE questions SET explanation = $expl$Let's find the median age.
 
