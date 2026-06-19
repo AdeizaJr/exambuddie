@@ -108,6 +108,7 @@ npm run dev          # runs at localhost:3000
 | `/practice` | Start a practice session |
 | `/quiz` | 60-question timed mock exam — 50 min (premium) |
 | `/drill` | Drill your weakest topics |
+| `/challenge` | Create or join a multiplayer challenge room (create = premium) |
 | `/leaderboard` | Weekly accuracy leaderboard (top 10) |
 | `/stats` | View accuracy and progress |
 | `/subscribe` | Upgrade to Premium |
@@ -131,6 +132,8 @@ npm run dev          # runs at localhost:3000
 | Weak topic detection | ✅ | ✅ |
 | Weekly leaderboard | ✅ | ✅ |
 | Weekly performance reports | ❌ | ✅ |
+| Challenge Mode — join a room | ✅ | ✅ |
+| Challenge Mode — create a room | ❌ | ✅ |
 
 ---
 

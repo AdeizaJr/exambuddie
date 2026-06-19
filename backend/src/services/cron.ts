@@ -34,11 +34,13 @@ export default function startCrons(bot: any): void {
       // WAT midnight = 23:00 UTC
       console.log('[CRON] Resetting daily question counts and broken streaks...');
       await db.query(`UPDATE users SET daily_count = 0, daily_reset_at = CURRENT_DATE`);
-      // Reset streak for users who missed yesterday — last_active_date is stored in UTC
+      // Reset streak for users who missed yesterday (WAT).
+      // At 23:00 UTC = 00:00 WAT: "yesterday WAT" = CURRENT_DATE (UTC).
+      // last_active_date is now stored as WAT date strings.
       const { rowCount } = await db.query(`
         UPDATE users SET streak = 0
         WHERE streak > 0
-          AND (last_active_date IS NULL OR last_active_date < CURRENT_DATE - INTERVAL '1 day')
+          AND (last_active_date IS NULL OR last_active_date < CURRENT_DATE)
       `);
       console.log(`[CRON] Broke streaks for ${rowCount} inactive users`);
     },
