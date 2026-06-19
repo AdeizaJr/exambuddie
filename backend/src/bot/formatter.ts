@@ -390,6 +390,10 @@ function formatExplanation(text: string): string {
     .replace(/=\s*0\s+(?=[a-zA-Zα-ωΑ-Ω(])/g, '= 0\n\n')
     // factorization step chain: ") = NUMBER (" → break between steps
     .replace(/\)\s*=\s*(\d+)\s*\(/g, ')\n= $1 (')
+    // substitution step: ") -4 =" or ") 3 =" — numeric value starting new equation after closing paren
+    .replace(/\)\s+(-?\.?\d+(?:\.\d+)?)\s*=/g, ')\n\n$1 =')
+    // cross-multiplying/cross multiply on its own line with result below
+    .replace(/\s+(cross[\s-]multipl\w*)/gi, '\n\n$1\n')
     // "comparing/from the/since" following a math result mid-sentence
     .replace(/\s+([Cc]omparing|[Ff]rom the table|[Ff]rom the diagram|[Ff]rom the graph)\b/g, '\n\n$1')
     // end of parenthetical reason ) followed by new math step
