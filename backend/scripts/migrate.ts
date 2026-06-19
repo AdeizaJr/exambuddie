@@ -191,6 +191,13 @@ const migrations = [
    )
    WHERE question_text LIKE 'From the novel;%'`,
 
+  // ── Referral system ──────────────────────────────────────────────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code VARCHAR(12) UNIQUE`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by INT REFERENCES users(id)`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_reward_granted BOOLEAN DEFAULT FALSE`,
+  `CREATE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code)`,
+  `CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by)`,
+
   // ── Challenge rooms ───────────────────────────────────────────────────────────
   `CREATE TABLE IF NOT EXISTS practice_rooms (
     id SERIAL PRIMARY KEY,

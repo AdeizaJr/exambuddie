@@ -13,6 +13,7 @@ import * as quiz from './bot/handlers/quiz';
 import * as stats from './bot/handlers/stats';
 import * as leaderboard from './bot/handlers/leaderboard';
 import * as challenge from './bot/handlers/challenge';
+import * as invite from './bot/handlers/invite';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -37,6 +38,15 @@ bot.start(async (ctx: any) => {
     const code = payload.slice(5);
     return challenge.handleChallengeJoin(ctx, code);
   }
+  if (payload?.startsWith('ref_')) {
+    const refCode = payload.slice(4);
+    const referrer = await db.getUserByReferralCode(refCode);
+    const newUser = await db.upsertUser(ctx);
+    if (referrer && referrer.id !== newUser.id) {
+      await db.setReferredBy(newUser.id, referrer.id);
+    }
+    return onboarding.handleStart(ctx);
+  }
   return onboarding.handleStart(ctx);
 });
 bot.command('help', (ctx) => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));
@@ -48,6 +58,7 @@ bot.command('quiz', quiz.handleQuiz);
 bot.command('drill', (ctx) => practice.handleDrill(ctx));
 bot.command('leaderboard', leaderboard.handleLeaderboard);
 bot.command('challenge', challenge.handleChallenge);
+bot.command('invite', invite.handleInvite);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {

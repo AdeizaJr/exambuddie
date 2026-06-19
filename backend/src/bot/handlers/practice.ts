@@ -393,6 +393,17 @@ export async function handleAnswer(ctx: any): Promise<void> {
   });
   const streakResult = await db.updateStreak(ctx.from.id);
 
+  // Referral reward: fires silently on first-ever attempt
+  db.checkAndGrantReferralReward(user.id).then(({ granted, referrer }) => {
+    if (granted && referrer) {
+      ctx.telegram.sendMessage(
+        referrer.telegram_id,
+        `🎁 <b>Referral Reward Unlocked!</b>\n\nTwo of your invited friends just started practising on ExamBuddie. You've earned <b>3 days Premium free</b>! 🎉\n\nKeep sharing — /invite`,
+        { parse_mode: 'HTML' }
+      ).catch(() => {});
+    }
+  }).catch(() => {});
+
   // Update daily count and per-subject usage (free users)
   if (user.plan !== 'premium') {
     await db.incrementDailyCount(ctx.from.id);

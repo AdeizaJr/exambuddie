@@ -16,6 +16,9 @@ export interface User {
   last_active_date: string | null;
   phone_number: string | null;
   notifications_enabled: boolean;
+  referral_code: string | null;
+  referred_by: number | null;
+  referral_reward_granted: boolean;
   joined_at: string;
   updated_at: string;
 }
