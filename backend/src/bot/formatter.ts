@@ -951,9 +951,9 @@ export function yearPickerKeyboard(subject: string) {
 export function formatStreakCard(streak: number, weekActivity: boolean[]): string {
   const days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
-  // Determine today's index in the week (0=Mon ... 6=Sun)
-  const jsDay = new Date().getDay(); // 0=Sun,1=Mon...6=Sat
-  const todayIdx = jsDay === 0 ? 6 : jsDay - 1;
+  // Determine today's index in the week (0=Mon ... 6=Sun) using WAT (UTC+1)
+  const watDay = new Date(Date.now() + 60 * 60 * 1000).getUTCDay(); // 0=Sun
+  const todayIdx = watDay === 0 ? 6 : watDay - 1;
 
   const icons = weekActivity.map((active, i) => {
     if (active) return '🟠';

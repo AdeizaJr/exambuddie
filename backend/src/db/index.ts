@@ -450,13 +450,21 @@ export async function incrementDailyCount(telegramId: number | string): Promise<
   ]);
 }
 
+// WAT = UTC+1. All date logic uses WAT so Nigerian users practicing near midnight
+// don't get credited to the wrong day.
+function watDateString(offsetDays = 0): string {
+  return new Date(Date.now() + 60 * 60 * 1000 + offsetDays * 86400000)
+    .toISOString()
+    .split('T')[0];
+}
+
 export async function updateStreak(telegramId: number | string): Promise<{ streak: number; isFirstToday: boolean } | undefined> {
-  const today = new Date().toISOString().split('T')[0];
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  const today = watDateString();
+  const yesterday = watDateString(-1);
   const user = await getUser(telegramId);
   if (!user) return;
   const lastActive = user.last_active_date
-    ? new Date(user.last_active_date).toISOString().split('T')[0]
+    ? new Date(new Date(user.last_active_date).getTime() + 60 * 60 * 1000).toISOString().split('T')[0]
     : null;
   if (lastActive === today) return { streak: user.streak, isFirstToday: false };
   const newStreak = lastActive === yesterday ? user.streak + 1 : 1;
@@ -469,26 +477,31 @@ export async function updateStreak(telegramId: number | string): Promise<{ strea
 }
 
 export async function getWeeklyActivity(userId: number): Promise<boolean[]> {
-  // Returns [Mon, Tue, Wed, Thu, Fri, Sat, Sun] — true if user had any attempt that day
-  const now = new Date();
-  // ISO week starts Monday (getDay: 0=Sun,1=Mon...6=Sat)
-  const dayOfWeek = now.getDay(); // 0=Sun
+  // Returns [Mon, Tue, Wed, Thu, Fri, Sat, Sun] using WAT (UTC+1) dates
+  const nowWAT = new Date(Date.now() + 60 * 60 * 1000);
+  const dayOfWeek = nowWAT.getUTCDay(); // 0=Sun
   const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-  const monday = new Date(now);
-  monday.setDate(now.getDate() + mondayOffset);
-  monday.setHours(0, 0, 0, 0);
+  const mondayWAT = new Date(nowWAT);
+  mondayWAT.setUTCDate(nowWAT.getUTCDate() + mondayOffset);
+  mondayWAT.setUTCHours(0, 0, 0, 0);
+  // convert back to UTC for the DB query: WAT midnight = UTC 23:00 previous day
+  const mondayUTC = new Date(mondayWAT.getTime() - 60 * 60 * 1000);
 
   const { rows } = await pool.query(
-    `SELECT DISTINCT DATE(attempted_at) as day FROM attempts
+    `SELECT DISTINCT DATE(attempted_at AT TIME ZONE 'Africa/Lagos') as day FROM attempts
      WHERE user_id = $1 AND attempted_at >= $2
      ORDER BY day`,
-    [userId, monday.toISOString()]
+    [userId, mondayUTC.toISOString()]
   );
 
-  const activeDays = new Set(rows.map((r: any) => new Date(r.day).toISOString().split('T')[0]));
+  const activeDays = new Set(rows.map((r: any) => {
+    const d = new Date(r.day);
+    return new Date(d.getTime() + 60 * 60 * 1000).toISOString().split('T')[0];
+  }));
+
   return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
+    const d = new Date(mondayWAT);
+    d.setUTCDate(mondayWAT.getUTCDate() + i);
     return activeDays.has(d.toISOString().split('T')[0]);
   });
 }
