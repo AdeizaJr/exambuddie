@@ -9,17 +9,42 @@ export function timeGreeting(): string {
   return 'Good evening';
 }
 
+const UNICODE_FRACS: Record<string, string> = {
+  '1/2': '½',
+  '1/3': '⅓', '2/3': '⅔',
+  '1/4': '¼', '3/4': '¾',
+  '1/5': '⅕', '2/5': '⅖', '3/5': '⅗', '4/5': '⅘',
+  '1/6': '⅙', '5/6': '⅚',
+  '1/8': '⅛', '3/8': '⅜', '5/8': '⅝', '7/8': '⅞',
+};
+
+// Wrap in parens only if the string is multi-token (has space, binary +, or mid-string -)
+function fracWrap(s: string): string {
+  const needsParens = /\s/.test(s) || /[+]/.test(s) || /(?<!^)-/.test(s);
+  return needsParens ? `(${s})` : s;
+}
+
+function stackedFrac(n: string, d: string): string {
+  const barLen = Math.max(n.length, d.length) + 2;
+  return `${n}\n${'─'.repeat(barLen)}\n${d}`;
+}
+
 // Convert LaTeX math notation to readable plain text for Telegram.
-function convertLatex(text: string): string {
+// block=true → fractions rendered as stacked (for explanations)
+function convertLatex(text: string, block = false): string {
   return text
-    // simple Unicode fractions before general \frac
-    .replace(/\\frac\{1\}\{2\}/g, '½').replace(/\\frac\{1\}\{4\}/g, '¼')
-    .replace(/\\frac\{3\}\{4\}/g, '¾').replace(/\\frac\{1\}\{3\}/g, '⅓')
-    .replace(/\\frac\{2\}\{3\}/g, '⅔')
-    // general fraction — supports one level of nested braces e.g. \frac{3^{n-1}}{81^n}
-    .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '($1)/($2)')
-    // sqrt — supports nested braces e.g. \sqrt{x^{2}}
-    .replace(/\\sqrt\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '√($1)')
+    // general fraction with Unicode shorthand for common ones
+    .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
+      const n = num.trim(); const d = den.trim();
+      const unicode = UNICODE_FRACS[`${n}/${d}`];
+      if (unicode) return unicode;
+      if (block) return stackedFrac(n, d);
+      return `${fracWrap(n)}/${fracWrap(d)}`;
+    })
+    // sqrt — single token: √5, multi-term: √(x + 1)
+    .replace(/\\sqrt\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, inner) =>
+      /^[0-9a-zA-Z]+$/.test(inner.trim()) ? `√${inner.trim()}` : `√(${inner.trim()})`
+    )
     .replace(/\\sqrt\b/g, '√')
     // degree: ^{\circ} or \circ or \degree or 60o or (90)o pattern
     .replace(/\^\{\\circ\}/g, '°').replace(/\\circ/g, '°').replace(/\\degree/g, '°')
@@ -301,6 +326,8 @@ export function formatQuestion(q: Question, number: number, total: number | stri
     ? `📋 <b>Question ${number}/${total}</b>`
     : mode === 'drill'
     ? `🎯 <b>Topic Drill: ${q.topic || 'Mixed'}</b>`
+    : mode === 'challenge'
+    ? `🎯 <b>Question ${number}/${total}</b>`
     : `📚 <b>Practice Mode</b>`;
 
   let questionText = q.question_text || '';
@@ -346,7 +373,7 @@ export function answerOptions(q: Question): string {
 }
 
 function formatExplanation(text: string): string {
-  const converted = md(text);
+  const converted = convertLatex(text, true);
   return converted
     // sentence breaks: ". Capital"
     .replace(/\.\s+([A-Z])/g, '.\n\n$1')
