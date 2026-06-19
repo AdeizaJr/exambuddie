@@ -248,6 +248,35 @@ const migrations = [
     UNIQUE(room_id, telegram_id)
   )`,
 
+  // ── Fix log explanation: WAEC Math 2013 log question (id 115983) ──
+  `UPDATE questions SET explanation = $expl$<b>Step 1: Simplify 3³⁄₈</b>
+3³⁄₈ = 27/8 (mixed number to improper fraction)
+
+<b>Step 2: Divide both sides by 2</b>
+2 logₓ(27/8) = 6
+logₓ(27/8) = 3
+
+<b>Step 3: Convert to exponential form</b>
+x³ = 27/8
+
+<b>Step 4: Solve for x</b>
+x = ∛(27/8) = ∛27 / ∛8 = 3/2
+
+∴ x = ³⁄₂$expl$
+WHERE id = 115983`,
+
+  // ── Fix packed trig explanation: WAEC Math 2016 cosine question (id 116126) ──
+  `UPDATE questions SET explanation = $expl$sin 60° = x + 0.5 (given)
+0.8660 = x + 0.5
+0.8660 - 0.5 = x
+x = 0.3660
+
+cosθ = x (given)
+cosθ = 0.3660
+
+Hence, θ = cos-1(0.3660) = 68.53° = 69° (nearest degree)$expl$
+WHERE id = 116126`,
+
   // ── Improved step-by-step explanation: WAEC Math 2016 median age (id 116125) ──
   `UPDATE questions SET explanation = $expl$Let's find the median age.
 
