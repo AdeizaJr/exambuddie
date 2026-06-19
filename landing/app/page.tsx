@@ -26,6 +26,7 @@ const secondaryFeatures = [
   { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one session" },
   { icon: "🔥", title: "Study Streaks", desc: "Build a daily practice habit" },
   { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
+  { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free" },
   { icon: "⚡", title: "Works in Telegram", desc: "No app download — ever" },
 ];
 
@@ -343,6 +344,7 @@ export default function Home() {
         "Challenge Mode — create rooms & compete",
         "Detailed progress analytics",
         "Weekly performance reports",
+        "Referral rewards (/invite)",
         "Priority support",
       ],
       cta: "Go Premium",
@@ -980,6 +982,7 @@ export default function Home() {
                   ["Progress tracking", true, false, false],
                   ["Timed mock exams", true, false, false],
                   ["Challenge Mode (multiplayer)", true, false, false],
+                  ["Referral rewards (invite friends, earn Premium)", true, false, false],
                   ["Works on any phone", true, false, true],
                   ["Works inside Telegram (no new app)", true, false, false],
                   ["Weak-topic targeting", true, false, false],

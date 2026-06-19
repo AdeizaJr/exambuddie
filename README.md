@@ -109,6 +109,7 @@ npm run dev          # runs at localhost:3000
 | `/quiz` | 60-question timed mock exam — 50 min (premium) |
 | `/drill` | Drill your weakest topics |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
+| `/invite` | Get your referral link — invite 2 friends, earn 3 days Premium free |
 | `/leaderboard` | Weekly accuracy leaderboard (top 10) |
 | `/stats` | View accuracy and progress |
 | `/subscribe` | Upgrade to Premium |
@@ -134,6 +135,7 @@ npm run dev          # runs at localhost:3000
 | Weekly performance reports | ❌ | ✅ |
 | Challenge Mode — join a room | ✅ | ✅ |
 | Challenge Mode — create a room | ❌ | ✅ |
+| Referral rewards (/invite) | ✅ | ✅ |
 
 ---
 
