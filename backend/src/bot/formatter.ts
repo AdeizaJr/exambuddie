@@ -437,6 +437,10 @@ function formatExplanation(text: string): string {
     .replace(/=\s*0\s+(?=[a-zA-Zα-ωΑ-Ω(])/g, '= 0\n\n')
     // factorization step chain: ") = NUMBER (" → break between steps
     .replace(/\)\s*=\s*(\d+)\s*\(/g, ')\n= $1 (')
+    // equation chain: ") = (" including superscript exponents between ) and = (e.g. ")² = (")
+    .replace(/\)([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ]?)\s*=\s*\(/g, ')$1\n= (')
+    // arithmetic chain at end of line: "= EXPR = SINGLE_NUMBER"
+    .replace(/= ([^=\n]+) = (\d+)\s*$/gm, '= $1\n= $2')
     // substitution step: ") -4 =" or ") 3 =" — numeric value starting new equation after closing paren
     .replace(/\)\s+(-?\.?\d+(?:\.\d+)?)\s*=/g, ')\n\n$1 =')
     // cross-multiplying/cross multiply on its own line with result below
@@ -459,8 +463,8 @@ function formatExplanation(text: string): string {
     .replace(/([)°])\s+(sin|cos|tan|log|ln)\b/g, '$1\n\n$2')
     // ° followed by a digit starting a new equation
     .replace(/°\s+(\d)/g, '°\n\n$1')
-    // common math-step transition words
-    .replace(/\s+(Hence|Therefore|Thus|Note:|Substituting|Now,|Solving|Dividing|Multiplying|Expanding|Factoring|Rearranging)\s/g, '\n\n$1 ')
+    // common math-step transition words (case-insensitive, optional trailing comma)
+    .replace(/\s+(hence|therefore|thus|note:|substituting|now|solving|dividing|multiplying|expanding|factoring|rearranging),?\s/gi, '\n\n$1 ')
     .trim();
 }
 
