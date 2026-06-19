@@ -17,7 +17,7 @@ function convertLatex(text: string): string {
     .replace(/\\frac\{3\}\{4\}/g, '¾').replace(/\\frac\{1\}\{3\}/g, '⅓')
     .replace(/\\frac\{2\}\{3\}/g, '⅔')
     // general fraction — supports one level of nested braces e.g. \frac{3^{n-1}}{81^n}
-    .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '($1/$2)')
+    .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '($1)/($2)')
     // sqrt — supports nested braces e.g. \sqrt{x^{2}}
     .replace(/\\sqrt\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '√($1)')
     .replace(/\\sqrt\b/g, '√')
