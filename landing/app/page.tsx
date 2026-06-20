@@ -316,8 +316,8 @@ export default function Home() {
   const plans = [
     {
       name: "Free",
-      price: "₦0",
-      period: "forever",
+      price: "Free",
+      period: "",
       description: "Start practising today at no cost.",
       features: [
         "5 questions per subject every 6 hours",
@@ -331,11 +331,26 @@ export default function Home() {
       badge: null,
     },
     {
+      name: "Term",
+      price: "₦3,500",
+      period: "3 months",
+      description: "Exam-season bundle. Save ₦1,000 vs monthly.",
+      features: [
+        "Everything in Premium",
+        "Perfect for WAEC / JAMB prep window",
+        "Save ₦1,000 vs 3× monthly",
+      ],
+      cta: "Get Term Plan",
+      href: BOT_URL,
+      highlight: false,
+      badge: "Save ₦1,000",
+    },
+    {
       name: "Premium",
-      price: billingYearly ? "₦9,000" : "₦1,000",
+      price: billingYearly ? "₦12,000" : "₦1,500",
       period: billingYearly ? "year" : "month",
       description: billingYearly
-        ? "Save ₦3,000 vs monthly — best value."
+        ? "Save ₦6,000 vs monthly — best value."
         : "Everything you need to top the exam.",
       features: [
         "Unlimited questions — no daily caps",
@@ -350,7 +365,7 @@ export default function Home() {
       cta: "Go Premium",
       href: BOT_URL,
       highlight: true,
-      badge: billingYearly ? "Save 25%" : null,
+      badge: billingYearly ? "Save 33%" : null,
     },
   ];
 
@@ -846,7 +861,7 @@ export default function Home() {
 
       {/* Pricing */}
       <section id="pricing" className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-5xl">
           <div className="mb-10 text-center sm:mb-16">
             <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Simple pricing
@@ -877,13 +892,13 @@ export default function Home() {
               >
                 Yearly
                 <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 dark:bg-green-900 dark:text-green-300">
-                  Save 25%
+                  Save 33%
                 </span>
               </button>
             </div>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 sm:gap-8">
+          <div className="grid gap-6 sm:grid-cols-3 sm:gap-6">
             {plans.map(({ name, price, period, description, features: planFeatures, cta, href, highlight, badge }) => (
               <div
                 key={name}
@@ -906,13 +921,15 @@ export default function Home() {
                     <span className={`text-3xl font-extrabold sm:text-4xl ${highlight ? "text-white" : "text-slate-900 dark:text-white"}`}>
                       {price}
                     </span>
-                    <span className={`mb-1.5 text-xs sm:text-sm ${highlight ? "text-blue-200" : "text-slate-500 dark:text-slate-400"}`}>
-                      /{period}
-                    </span>
+                    {period && (
+                      <span className={`mb-1.5 text-xs sm:text-sm ${highlight ? "text-blue-200" : "text-slate-500 dark:text-slate-400"}`}>
+                        /{period}
+                      </span>
+                    )}
                   </div>
                   {highlight && (
                     <p className="mb-2 text-[11px] font-medium text-blue-200">
-                      {billingYearly ? "₦750/month — save ₦3,000 vs monthly" : "That's less than ₦34 a day"}
+                      {billingYearly ? "₦1,000/month — save ₦6,000 vs monthly" : "That's less than ₦50 a day"}
                     </p>
                   )}
                   <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-600 dark:text-slate-400"}`}>
@@ -939,11 +956,6 @@ export default function Home() {
                 >
                   {cta}
                 </a>
-                {!highlight && (
-                  <p className="mt-3 text-center text-[11px] text-slate-400 dark:text-slate-500">
-                    Free forever · No credit card needed
-                  </p>
-                )}
               </div>
             ))}
           </div>

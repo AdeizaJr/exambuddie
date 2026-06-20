@@ -19,13 +19,18 @@ export interface PlanDetails {
 
 export const PLANS: Record<string, PlanDetails> = {
   monthly: {
-    amount: parseInt(process.env.MONTHLY_PRICE_NGN || '1000', 10),
-    label: '₦1,000/month',
-    duration: 30, // days
+    amount: parseInt(process.env.MONTHLY_PRICE_NGN || '1500', 10),
+    label: '₦1,500/month',
+    duration: 30,
+  },
+  term: {
+    amount: parseInt(process.env.TERM_PRICE_NGN || '3500', 10),
+    label: '₦3,500 / 3 months (save ₦1,000)',
+    duration: 90,
   },
   yearly: {
-    amount: parseInt(process.env.YEARLY_PRICE_NGN || '9000', 10),
-    label: '₦9,000/year (save ₦3,000)',
+    amount: parseInt(process.env.YEARLY_PRICE_NGN || '12000', 10),
+    label: '₦12,000/year (save ₦6,000)',
     duration: 365,
   },
 };
