@@ -319,6 +319,12 @@ WHERE id = 116125`,
        END LOOP;
      END LOOP;
    END $$`,
+
+  // ── Fix scraping artifact: "A - E[Capital]" missing period+space ──────────
+  // e.g. "options lettered A - EAction" → "options lettered A - E. Action"
+  `UPDATE questions
+   SET question_text = REGEXP_REPLACE(question_text, 'A - E([A-Z])', E'A - E. \\1', 'g')
+   WHERE question_text ~ 'A - E[A-Z]'`,
 ];
 
 async function migrate(): Promise<void> {
