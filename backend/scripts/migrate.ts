@@ -320,6 +320,11 @@ WHERE id = 116125`,
      END LOOP;
    END $$`,
 
+  // ── Strip "From the novel;" prefix from question_text ───────────────────────
+  `UPDATE questions
+   SET question_text = TRIM(REGEXP_REPLACE(question_text, E'^From the novel;\\s*', '', 'i'))
+   WHERE question_text ~* '^From the novel;'`,
+
   // ── Fix scraping artifact: "A - E[Capital]" missing period+space ──────────
   // e.g. "options lettered A - EAction" → "options lettered A - E. Action"
   `UPDATE questions
