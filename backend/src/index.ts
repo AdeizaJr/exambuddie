@@ -313,8 +313,15 @@ bot.on('text', async (ctx: any) => {
 
   if (activeSession && (text === '📚 Practice' || text === '📋 Quiz')) {
     await ctx.reply(
-      `You have an active ${session.mode} session running.\n\nTap <b>⏹ Stop</b> to end it first, or use /stop.`,
-      { parse_mode: 'HTML' }
+      `You have an active ${session.mode} session running.\n\nEnd it first to start a new one.`,
+      {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '⏹ Stop Session', callback_data: 'practice:stop' }],
+          ],
+        },
+      }
     );
     return;
   }
