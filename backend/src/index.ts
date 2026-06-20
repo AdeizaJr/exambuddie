@@ -48,6 +48,10 @@ bot.start(async (ctx: any) => {
     }
     return onboarding.handleStart(ctx);
   }
+  if (payload?.startsWith('subscribe_')) {
+    const plan = payload.slice('subscribe_'.length); // 'monthly' | 'term' | 'yearly'
+    return stats.handleSubscribeDeepLink(ctx, plan);
+  }
   return onboarding.handleStart(ctx);
 });
 bot.command('help', (ctx) => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));

@@ -38,6 +38,30 @@ export async function handleStatsFilter(ctx: any): Promise<void> {
   await ctx.reply(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats), { parse_mode: 'HTML' });
 }
 
+// Called from bot.start() when user arrives via landing page deep link
+export async function handleSubscribeDeepLink(ctx: any, plan: string): Promise<void> {
+  const user = await db.upsertUser(ctx);
+  if (user.plan === 'premium' && user.plan_expires_at && new Date(user.plan_expires_at) > new Date()) {
+    await ctx.reply('✅ You already have an active Premium plan! Use /stats to track your progress.', { parse_mode: 'HTML' });
+    return;
+  }
+  if (!payments.PLANS[plan]) {
+    await handleSubscribe(ctx);
+    return;
+  }
+  try {
+    const { link, txRef } = await payments.createPaymentLink(user, plan);
+    const planInfo = payments.PLANS[plan];
+    await ctx.reply(
+      fmt.paymentLinkMessage(link, planInfo.label, txRef),
+      { parse_mode: 'HTML', disable_web_page_preview: false }
+    );
+  } catch (err: any) {
+    console.error('Payment link error:', err.message);
+    await ctx.reply('Sorry, we could not generate a payment link right now. Please try again in a moment.');
+  }
+}
+
 export async function handleSubscribe(ctx: any): Promise<void> {
   await ctx.reply(fmt.upgradeMessage(), {
     parse_mode: 'HTML',
