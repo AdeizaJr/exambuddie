@@ -33,9 +33,10 @@ exambuddie/
 cd backend
 npm install
 cp .env.example .env   # fill in your values
-npm run migrate        # create DB tables
-npm run seed           # load subjects + sample questions
-npm run dev            # development (long polling)
+npm run migrate              # create DB tables
+npm run seed                 # load subjects + sample questions
+npm run format-explanations  # pre-render LaTeX explanations to Unicode (run once after seeding)
+npm run dev                  # development (long polling)
 ```
 
 ### Key environment variables
@@ -43,16 +44,21 @@ npm run dev            # development (long polling)
 | Variable | Description |
 |----------|-------------|
 | `TELEGRAM_BOT_TOKEN` | From BotFather |
+| `BOT_USERNAME` | Your bot's Telegram username e.g. `ExamBuddieBot` |
 | `DATABASE_URL` | PostgreSQL connection string |
 | `REDIS_URL` | Redis connection string |
 | `APP_URL` | Public URL of your backend (enables webhook mode) |
-| `ANTHROPIC_API_KEY` | For AI explanation generation |
+| `ANTHROPIC_API_KEY` | For AI explanation generation scripts |
 | `FLUTTERWAVE_SECRET_KEY` | Payment processing |
 | `FLUTTERWAVE_WEBHOOK_HASH` | Webhook verification |
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Admin dashboard login |
 | `JWT_SECRET` | Admin session signing |
 | `ALLOWED_ORIGINS` | Comma-separated CORS origins (miniapp + admin-ui URLs) |
 | `FREE_DAILY_LIMIT` | Max questions per day for free users (default: 5) |
+| `SUPPORT_CHAT_ID` | Telegram chat/group ID to receive bug reports (optional) |
+| `ZOHO_SMTP_USER` | Zoho Mail address e.g. `support@exambuddie.app` |
+| `ZOHO_SMTP_PASS` | Zoho app-specific password |
+| `ZOHO_SMTP_TO` | Inbox that receives support emails (defaults to `ZOHO_SMTP_USER`) |
 
 ---
 
@@ -109,11 +115,12 @@ npm run dev          # runs at localhost:3000
 | `/quiz` | 60-question timed mock exam — 50 min (premium) |
 | `/drill` | Drill your weakest topics |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
-| `/invite` | Get your referral link — invite 2 friends, earn 3 days Premium free |
+| `/invite` | Get your referral link — share on Telegram or WhatsApp, invite 2 friends → 3 days Premium free |
 | `/leaderboard` | Weekly accuracy leaderboard (top 10) |
 | `/stats` | View accuracy and progress |
 | `/subscribe` | Upgrade to Premium |
 | `/settings` | Change exam type, subjects, or phone number |
+| `/support` | Report a bug, request your data, or delete your account |
 | `/app` | Open the ExamBuddie Web App |
 | `/stop` | End current session |
 | `/help` | List all commands |
@@ -149,7 +156,7 @@ npm run dev          # runs at localhost:3000
 6. Set `APP_URL` to your Railway public URL
 7. Set Flutterwave webhook to: `https://your-app.railway.app/webhooks/flutterwave`
 
-Landing page deploys separately (Vercel recommended).
+Landing page deploys separately on Railway (same process — connect repo, set build/start commands).
 
 ---
 

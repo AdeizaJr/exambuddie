@@ -69,7 +69,7 @@ export default function RefundsPage() {
           <section>
             <h2>How to Request a Refund</h2>
             <p>Send an email to{" "}
-              <a href="mailto:support@exambuddie.com" className="text-blue-600 hover:underline">support@exambuddie.com</a>{" "}
+              <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>{" "}
               with:
             </p>
             <ul>

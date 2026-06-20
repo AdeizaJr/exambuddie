@@ -14,6 +14,7 @@ import * as stats from './bot/handlers/stats';
 import * as leaderboard from './bot/handlers/leaderboard';
 import * as challenge from './bot/handlers/challenge';
 import * as invite from './bot/handlers/invite';
+import * as support from './bot/handlers/support';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -59,6 +60,7 @@ bot.command('drill', (ctx) => practice.handleDrill(ctx));
 bot.command('leaderboard', leaderboard.handleLeaderboard);
 bot.command('challenge', challenge.handleChallenge);
 bot.command('invite', invite.handleInvite);
+bot.command('support', support.handleSupport);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -194,6 +196,20 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'menu:subscribe') return stats.handleSubscribe(ctx);
   if (data.startsWith('subscribe:')) return stats.handleSubscribePlan(ctx);
 
+  // Invite
+  if (data.startsWith('invite:copy:')) {
+    const link = data.slice('invite:copy:'.length);
+    await ctx.answerCbQuery(link, { show_alert: true });
+    return;
+  }
+
+  // Support
+  if (data === 'support:menu') return support.handleSupport(ctx);
+  if (data === 'support:bug') return support.handleSupportBug(ctx);
+  if (data === 'support:data') return support.handleSupportData(ctx);
+  if (data === 'support:delete') return onboarding.handleSettingsDelete(ctx);
+  if (data === 'support:other') return support.handleSupportOther(ctx);
+
   // Flag
   if (data === 'flag:question') return stats.handleFlagQuestion(ctx);
   if (data === 'flag:underline') return stats.handleFlagUnderline(ctx);
@@ -279,6 +295,10 @@ bot.on('text', async (ctx: any) => {
 
   // Challenge room code input
   if (session?.step === 'challenge_enter_code') return challenge.handleChallengeCodeInput(ctx);
+
+  // Support bug report awaiting user text
+  const supportStep = await redis.getSupportStep(ctx.from.id);
+  if (supportStep === 'bug') return support.handleBugReport(ctx, bot);
 
   // Phone nudge skip
   if (text === 'Skip for now →' && (await redis.getPhonePending(ctx.from.id))) {

@@ -123,6 +123,16 @@ export const clearPhonePending = async (telegramId: number | string): Promise<vo
   await client.del(`phone_pending:${telegramId}`);
 };
 
+export const setSupportStep = async (telegramId: number | string, step: string): Promise<void> => {
+  await client.set(`support_step:${telegramId}`, step, { EX: 1800 });
+};
+export const getSupportStep = async (telegramId: number | string): Promise<string | null> => {
+  return client.get(`support_step:${telegramId}`);
+};
+export const clearSupportStep = async (telegramId: number | string): Promise<void> => {
+  await client.del(`support_step:${telegramId}`);
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
@@ -132,6 +142,7 @@ export const deleteUserData = async (telegramId: number | string): Promise<void>
       key === `burst:${telegramId}` ||
       key === `phone_nudge:${telegramId}` ||
       key === `phone_pending:${telegramId}` ||
+      key === `support_step:${telegramId}` ||
       key.startsWith(`sublimit:${telegramId}:`)
   );
   if (toDelete.length) await client.del(toDelete);

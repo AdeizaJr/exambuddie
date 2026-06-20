@@ -800,6 +800,7 @@ export function helpMessage(): string {
 
 <b>⏹ Other</b>
 /stop — End your current session
+/support — Report a bug, delete your account, or request your data
 /help — Show this message
 
 <b>During a session:</b>
@@ -807,7 +808,7 @@ export function helpMessage(): string {
 • Tap <b>➡️ Next</b> after seeing the explanation
 • Tap <b>🚩 Flag</b> if an explanation looks wrong
 
-Questions or issues? DM @ExamBuddiSupport`;
+Need help? Use /support`;
 }
 
 export function examTypeKeyboard() {
