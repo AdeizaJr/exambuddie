@@ -267,7 +267,7 @@ const testimonials = [
     role: "WAEC 2026",
   },
   {
-    quote: "The timed quiz mode is no joke. 40 questions, 45 minutes — exactly like the real thing. I stopped panicking in the exam hall.",
+    quote: "The timed quiz mode is no joke. 50 questions, 60 minutes — exactly like the real thing. I stopped panicking in the exam hall.",
     name: "Tobiloba A.",
     role: "Lagos · WAEC 2026",
   },
@@ -579,8 +579,8 @@ export default function Home() {
               <div className="w-full flex-shrink-0 lg:w-96">
                 <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl ring-1 ring-slate-800">
                   <div className="mb-3 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-400">Question 35 / 60</span>
-                    <span className="rounded-full bg-red-900/60 px-3 py-1 text-xs font-bold text-red-400">⏱ 31:14 left</span>
+                    <span className="text-xs font-semibold text-slate-400">Question 35 / 50</span>
+                    <span className="rounded-full bg-red-900/60 px-3 py-1 text-xs font-bold text-red-400">⏱ 41:14 left</span>
                   </div>
                   <div className="mb-4 h-1.5 w-full rounded-full bg-slate-800">
                     <div className="h-1.5 w-[58%] rounded-full bg-blue-600" />
@@ -605,10 +605,10 @@ export default function Home() {
                   Exam pressure.<br />Without the exam.
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
-                  60 questions. 50 minutes. Real exam conditions so the actual paper feels like a repeat. Score breakdown and weak spots the moment you finish.
+                  50 questions. 60 minutes. Real exam conditions so the actual paper feels like a repeat. Score breakdown and weak spots the moment you finish.
                 </p>
                 <ul className="mt-6 space-y-2.5">
-                  {["Full 50-minute mock exam", "Score breakdown by topic after", "Compare across attempts"].map(item => (
+                  {["Full 60-minute mock exam", "Score breakdown by topic after", "Compare across attempts"].map(item => (
                     <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
                       <span className="text-green-500 font-bold">✓</span> {item}
                     </li>

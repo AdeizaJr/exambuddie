@@ -6,8 +6,8 @@ import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
 import { User, QuizState } from '../../types';
 
-const QUIZ_QUESTIONS = 60;
-const QUIZ_TIME_SECS = 50 * 60; // 50 minutes
+const QUIZ_QUESTIONS = 50;
+const QUIZ_TIME_SECS = 60 * 60; // 60 minutes
 
 export async function handleQuiz(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
@@ -18,7 +18,7 @@ export async function handleQuiz(ctx: any): Promise<void> {
 
   if (user.plan !== 'premium') {
     await ctx.reply(
-      `📋 <b>Quiz Mode — Premium Feature</b>\n\nQuiz mode gives you a real exam experience:\n• 60 questions back-to-back\n• 50-minute countdown timer\n• Full score breakdown at the end\n\nUpgrade to Premium to unlock this!`,
+      `📋 <b>Quiz Mode — Premium Feature</b>\n\nQuiz mode gives you a real exam experience:\n• 50 questions back-to-back\n• 60-minute countdown timer\n• Full score breakdown at the end\n\nUpgrade to Premium to unlock this!`,
       { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() }
     );
     return;
@@ -134,7 +134,7 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   await redis.setSession(ctx.from.id, { mode: 'quiz', subject, sessionId, questionTimerSecs: timerSecs });
 
   const timerNote = timerSecs > 0 ? ` with <b>${timerSecs}s per question</b>` : '';
-  const timeMsg = `⏱️ You have <b>50 minutes</b> to complete ${questions.length} questions${timerNote}.\nGood luck! 🍀`;
+  const timeMsg = `⏱️ You have <b>60 minutes</b> to complete ${questions.length} questions${timerNote}.\nGood luck! 🍀`;
   await ctx.reply(
     `📋 <b>Quiz Mode Started</b>\n${fmt.SUBJECT_MAP[subject] || subject}\n\n${timeMsg}\n\nTap /stop or use ⏹ End Quiz at any time to stop early.`,
     { parse_mode: 'HTML' }
