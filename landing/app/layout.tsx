@@ -77,7 +77,7 @@ const organizationJsonLd = {
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
-    email: "support@exambuddie.com",
+    email: "support@exambuddie.app",
   },
   areaServed: "NG",
   knowsLanguage: "en-NG",

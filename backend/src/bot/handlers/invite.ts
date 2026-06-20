@@ -31,7 +31,11 @@ export async function handleInvite(ctx: any): Promise<void> {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: [
-          [{ text: '📤 Share on Telegram', url: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Practice WAEC, JAMB & NECO questions on ExamBuddie! 🎓')}` }],
+          [
+            { text: '📤 Telegram', url: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Practice WAEC, JAMB & NECO questions on ExamBuddie! 🎓')}` },
+            { text: '💚 WhatsApp', url: `https://wa.me/?text=${encodeURIComponent(`Practice WAEC, JAMB & NECO questions on ExamBuddie! 🎓\n${link}`)}` },
+          ],
+          [{ text: '📋 Copy Link', callback_data: `invite:copy:${link}` }],
         ],
       },
     }

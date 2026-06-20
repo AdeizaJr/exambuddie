@@ -299,6 +299,26 @@ The 25th and 26th values both fall within the group for age 14 (cumulative frequ
 
 ∴ Median age = 14 years.$expl$
 WHERE id = 116125`,
+
+  // ── Backfill referral codes for users who existed before the column was added ──
+  `DO $$
+   DECLARE r RECORD; chars TEXT := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; code TEXT;
+   BEGIN
+     FOR r IN SELECT id FROM users WHERE referral_code IS NULL LOOP
+       LOOP
+         code := '';
+         FOR i IN 1..8 LOOP
+           code := code || substr(chars, floor(random() * length(chars) + 1)::int, 1);
+         END LOOP;
+         BEGIN
+           UPDATE users SET referral_code = code WHERE id = r.id;
+           EXIT;
+         EXCEPTION WHEN unique_violation THEN
+           -- collision: retry with a new code
+         END;
+       END LOOP;
+     END LOOP;
+   END $$`,
 ];
 
 async function migrate(): Promise<void> {

@@ -31,7 +31,7 @@ export default function PrivacyPage() {
             <p>
               ExamBuddie is a Telegram-based exam preparation service for Nigerian students
               preparing for WAEC, JAMB, and NECO. We are operated by ExamBuddie (Nigeria).
-              Questions or concerns: <a href="mailto:support@exambuddie.com" className="text-blue-600 hover:underline">support@exambuddie.com</a>.
+              Questions or concerns: <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>.
             </p>
           </section>
 
@@ -70,6 +70,14 @@ export default function PrivacyPage() {
               <li>To contact you about your subscription or account via phone, if you provided your number</li>
             </ul>
             <p className="mt-3">We do not use your data for advertising or sell it to third parties.</p>
+            <p className="mt-3">
+              <strong>Legal basis (Nigeria Data Protection Act 2023):</strong> We process your
+              data on the basis of <em>contractual necessity</em> — to deliver the exam prep
+              service you signed up for. Where we send optional reminders or use your phone
+              number to contact you, we rely on your <em>consent</em>, which you can withdraw
+              at any time via Settings. Aggregate analytics are processed under <em>legitimate
+              interest</em> to improve the service.
+            </p>
           </section>
 
           <section>
@@ -107,7 +115,7 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-3">
               To report a suspected security issue, email{" "}
-              <a href="mailto:support@exambuddie.com" className="text-blue-600 hover:underline">support@exambuddie.com</a>.
+              <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>.
             </p>
           </section>
 
@@ -122,26 +130,42 @@ export default function PrivacyPage() {
 
           <section>
             <h2>8. Your Rights</h2>
-            <p>You may request to:</p>
+            <p>Under the Nigeria Data Protection Act 2023, you have the right to:</p>
             <ul>
-              <li>Access the personal data we hold about you</li>
-              <li>Correct inaccurate data</li>
-              <li>Delete your account and data</li>
+              <li><strong>Access</strong> — request a copy of the personal data we hold about you</li>
+              <li><strong>Correction</strong> — ask us to fix inaccurate or incomplete data</li>
+              <li><strong>Deletion</strong> — request erasure of your account and personal data</li>
+              <li><strong>Portability</strong> — receive your data in a structured, machine-readable format</li>
+              <li><strong>Object</strong> — object to processing based on legitimate interest</li>
+              <li><strong>Withdraw consent</strong> — turn off notifications or remove your phone number at any time via Settings in the bot, without affecting your ability to use the service</li>
             </ul>
             <p className="mt-3">
-              To exercise any of these rights, message us at{" "}
-              <a href="mailto:support@exambuddie.com" className="text-blue-600 hover:underline">support@exambuddie.com</a>{" "}
-              or contact us directly via the bot.
+              To exercise any of these rights, email us at{" "}
+              <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>{" "}
+              or use the <strong>/support</strong> command in the ExamBuddie Telegram bot and select <em>Data Request</em>. We will respond within 30 days.
+            </p>
+            <p className="mt-3">
+              If you are unhappy with how we handle your data, you have the right to lodge a
+              complaint with the{" "}
+              <a href="https://ndpc.gov.ng" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                Nigeria Data Protection Commission (NDPC)
+              </a>.
             </p>
           </section>
 
           <section>
-            <h2>9. Children</h2>
+            <h2>9. Children and Young Users</h2>
             <p>
-              ExamBuddie is designed for secondary school and university students. We do not
-              knowingly collect data from children under 13. If you believe a child has used
-              the service, contact us for prompt removal.
+              ExamBuddie is designed for secondary school and university students. Our users
+              commonly include students aged 15–17 preparing for WAEC and JAMB. We recognise
+              that many users are under 18 and apply heightened care to their data as required
+              by the Nigeria Data Protection Act 2023:
             </p>
+            <ul>
+              <li>We collect only the minimum data needed to deliver the service</li>
+              <li>We do not share personal data of under-18 users with any third party for commercial purposes</li>
+              <li>Parental or guardian consent is required for users under 13. If you believe a child under 13 has used the service without parental consent, contact us and we will delete the account promptly</li>
+            </ul>
           </section>
 
           <section>

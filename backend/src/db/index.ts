@@ -43,7 +43,8 @@ export async function upsertUser(ctx: any): Promise<User> {
     `INSERT INTO users (telegram_id, username, first_name, referral_code)
      VALUES ($1, $2, $3, $4)
      ON CONFLICT (telegram_id) DO UPDATE
-       SET username = $2, first_name = $3, updated_at = NOW()
+       SET username = $2, first_name = $3, updated_at = NOW(),
+           referral_code = COALESCE(users.referral_code, EXCLUDED.referral_code)
      RETURNING *`,
     [id, username || null, first_name || 'Student', code]
   );
