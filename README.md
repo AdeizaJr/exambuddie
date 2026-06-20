@@ -59,6 +59,9 @@ npm run dev                  # development (long polling)
 | `ZOHO_SMTP_USER` | Zoho Mail address e.g. `support@exambuddie.app` |
 | `ZOHO_SMTP_PASS` | Zoho app-specific password |
 | `ZOHO_SMTP_TO` | Inbox that receives support emails (defaults to `ZOHO_SMTP_USER`) |
+| `MONTHLY_PRICE_NGN` | Monthly plan price in kobo (default: `1500`) |
+| `TERM_PRICE_NGN` | 3-month plan price in kobo (default: `3500`) |
+| `YEARLY_PRICE_NGN` | Yearly plan price in kobo (default: `12000`) |
 
 ---
 
@@ -133,7 +136,7 @@ npm run dev          # runs at localhost:3000
 |---------|------|---------|
 | Questions per day | 5 (configurable) | Unlimited |
 | Practice mode | ✅ | ✅ |
-| Quiz mode (60Q, 50 min) | ❌ | ✅ |
+| Quiz mode (50Q, 60 min) | ❌ | ✅ |
 | Topic drill | ❌ | ✅ |
 | Per-question timer | ❌ | ✅ |
 | Progress tracking | ✅ | ✅ |
@@ -143,6 +146,8 @@ npm run dev          # runs at localhost:3000
 | Challenge Mode — join a room | ✅ | ✅ |
 | Challenge Mode — create a room | ❌ | ✅ |
 | Referral rewards (/invite) | ✅ | ✅ |
+
+**Pricing:** ₦1,500/month · ₦3,500/term (3 months) · ₦12,000/year
 
 ---
 

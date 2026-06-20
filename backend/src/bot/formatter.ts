@@ -704,7 +704,7 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 • Unlimited questions, every day
 • Quiz mode &amp; Topic drills
 • Progress tracking &amp; weak-topic detection
-• Only ₦1,000/month or ₦9,000/year
+• From ₦1,500/month · ₦3,500 for 3 months · ₦12,000/year
 
 👇 Tap to upgrade:`;
   }
@@ -717,15 +717,16 @@ export function upgradeMessage(): string {
 Unlock everything you need to ace your exams:
 
 ✅ Unlimited questions (no daily cap)
-✅ Timed quiz mode (40 questions, 45 mins)
+✅ Timed quiz mode (50 questions, 60 mins)
 ✅ Topic drill (target weak areas)
 ✅ Progress tracking &amp; stats
 ✅ Weak topic detection
 ✅ Priority support
 
 💰 <b>Pricing:</b>
-• Monthly: ₦1,000/month
-• Yearly: ₦9,000/year <b>(save ₦3,000)</b>
+• Monthly: ₦1,500/month
+• Term (3 months): ₦3,500 <b>(save ₦1,000)</b>
+• Yearly: ₦12,000 <b>(save ₦6,000)</b>
 
 Choose your plan:`;
 }
@@ -733,8 +734,9 @@ Choose your plan:`;
 export function subscribeKeyboard() {
   return {
     inline_keyboard: [
-      [{ text: '📅 Monthly — ₦1,000', callback_data: 'subscribe:monthly' }],
-      [{ text: '🗓️ Yearly — ₦9,000 (Best Value)', callback_data: 'subscribe:yearly' }],
+      [{ text: '📅 Monthly — ₦1,500', callback_data: 'subscribe:monthly' }],
+      [{ text: '📆 Term (3 months) — ₦3,500', callback_data: 'subscribe:term' }],
+      [{ text: '🗓️ Yearly — ₦12,000 (Best Value)', callback_data: 'subscribe:yearly' }],
       [{ text: '❌ Maybe Later', callback_data: 'menu:main' }],
     ],
   };
