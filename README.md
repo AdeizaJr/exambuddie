@@ -112,7 +112,7 @@ npm run dev          # runs at localhost:3000
 |---------|-------------|
 | `/start` | Onboarding or main menu |
 | `/practice` | Start a practice session |
-| `/quiz` | 60-question timed mock exam — 50 min (premium) |
+| `/quiz` | 50-question timed mock exam — 60 min (premium) |
 | `/drill` | Drill your weakest topics |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
 | `/invite` | Get your referral link — share on Telegram or WhatsApp, invite 2 friends → 3 days Premium free |
