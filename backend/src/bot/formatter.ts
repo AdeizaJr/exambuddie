@@ -155,7 +155,9 @@ function md(text: string | null | undefined): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>')
-    .replace(/\*([^*\n]+)\*/g, '<u>$1</u>');
+    .replace(/\*([^*\n]+)\*/g, '<u>$1</u>')
+    // Wrap IP addresses in <code> so Telegram doesn't auto-link them
+    .replace(/\b(\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?)\b/g, '<code>$1</code>');
 }
 
 export const SUBJECT_MAP: Record<string, string> = {
