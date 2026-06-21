@@ -336,7 +336,7 @@ export async function getWeakTopics(
      JOIN questions q ON a.question_id = q.id
      WHERE a.user_id = $1 AND q.subject = $2 AND q.topic IS NOT NULL
      ${filtered ? 'AND q.exam_type = $3' : ''}
-     GROUP BY q.topic HAVING COUNT(*) >= 3
+     GROUP BY q.topic HAVING COUNT(*) >= 2
      ORDER BY accuracy ASC LIMIT 3`,
     params
   );
@@ -551,10 +551,13 @@ export interface WeeklyReport {
   lastWeek: { attempts: number; accuracy: number };
   subjectBreakdown: { subject: string; attempts: number; accuracy: number }[];
   weakTopics: { subject: string; topic: string; accuracy: number; attempts: number }[];
+  bestSubject: { subject: string; accuracy: number } | null;
+  coverageStats: { subject: string; seen: number; total: number }[];
+  percentileRank: number | null;
 }
 
 export async function getWeeklyReport(userId: number): Promise<WeeklyReport> {
-  const [thisWeekRes, lastWeekRes, subjectRes, weakRes] = await Promise.all([
+  const [thisWeekRes, lastWeekRes, subjectRes, weakRes, coverageRes, percentileRes] = await Promise.all([
     pool.query(
       `SELECT COUNT(*) as attempts,
               ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
@@ -587,11 +590,54 @@ export async function getWeeklyReport(userId: number): Promise<WeeklyReport> {
        JOIN questions q ON a.question_id = q.id
        WHERE a.user_id = $1 AND a.attempted_at > NOW() - INTERVAL '7 days'
          AND q.topic IS NOT NULL
-       GROUP BY q.subject, q.topic HAVING COUNT(*) >= 3
+       GROUP BY q.subject, q.topic HAVING COUNT(*) >= 2
        ORDER BY accuracy ASC LIMIT 5`,
       [userId]
     ),
+    pool.query(
+      `SELECT q.subject,
+              COUNT(DISTINCT a.question_id) as seen,
+              totals.total
+       FROM attempts a
+       JOIN questions q ON a.question_id = q.id
+       JOIN (
+         SELECT subject, COUNT(*) as total
+         FROM questions WHERE has_diagram = FALSE OR image_url IS NOT NULL
+         GROUP BY subject
+       ) totals ON q.subject = totals.subject
+       WHERE a.user_id = $1
+       GROUP BY q.subject, totals.total`,
+      [userId]
+    ),
+    pool.query(
+      `SELECT ROUND(
+         100.0 * COUNT(CASE WHEN all_accs.acc < user_acc.user_accuracy THEN 1 END)
+         / NULLIF(COUNT(*), 0)
+       ) as percentile
+       FROM (
+         SELECT user_id,
+                ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as acc
+         FROM attempts
+         WHERE attempted_at > NOW() - INTERVAL '7 days'
+         GROUP BY user_id HAVING COUNT(*) >= 5
+       ) all_accs
+       CROSS JOIN (
+         SELECT ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as user_accuracy
+         FROM attempts WHERE user_id = $1 AND attempted_at > NOW() - INTERVAL '7 days'
+       ) user_acc`,
+      [userId]
+    ),
   ]);
+
+  const subjectBreakdown = subjectRes.rows.map((r: any) => ({
+    subject: r.subject,
+    attempts: parseInt(r.attempts),
+    accuracy: parseFloat(r.accuracy),
+  }));
+
+  const bestSubject = subjectBreakdown.length > 0
+    ? [...subjectBreakdown].sort((a, b) => b.accuracy - a.accuracy)[0]
+    : null;
 
   return {
     thisWeek: {
@@ -602,18 +648,53 @@ export async function getWeeklyReport(userId: number): Promise<WeeklyReport> {
       attempts: parseInt(lastWeekRes.rows[0]?.attempts || '0'),
       accuracy: parseFloat(lastWeekRes.rows[0]?.accuracy || '0'),
     },
-    subjectBreakdown: subjectRes.rows.map((r: any) => ({
-      subject: r.subject,
-      attempts: parseInt(r.attempts),
-      accuracy: parseFloat(r.accuracy),
-    })),
+    subjectBreakdown,
     weakTopics: weakRes.rows.map((r: any) => ({
       subject: r.subject,
       topic: r.topic,
       attempts: parseInt(r.attempts),
       accuracy: parseFloat(r.accuracy),
     })),
+    bestSubject: bestSubject ? { subject: bestSubject.subject, accuracy: bestSubject.accuracy } : null,
+    coverageStats: coverageRes.rows.map((r: any) => ({
+      subject: r.subject,
+      seen: parseInt(r.seen),
+      total: parseInt(r.total),
+    })),
+    percentileRank: percentileRes.rows[0]?.percentile != null
+      ? parseInt(percentileRes.rows[0].percentile)
+      : null,
   };
+}
+
+export async function getWeakTopicsAllSubjects(
+  userId: number,
+  subjects: string[]
+): Promise<{ subject: string; topic: string; attempts: number; accuracy: number }[]> {
+  if (!subjects.length) return [];
+  const { rows } = await pool.query(
+    `SELECT q.subject, q.topic,
+            COUNT(*) as attempts,
+            ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+     FROM attempts a
+     JOIN questions q ON a.question_id = q.id
+     WHERE a.user_id = $1 AND q.subject = ANY($2) AND q.topic IS NOT NULL
+       AND a.attempted_at > NOW() - INTERVAL '7 days'
+     GROUP BY q.subject, q.topic HAVING COUNT(*) >= 2
+     ORDER BY accuracy ASC LIMIT 3`,
+    [userId, subjects]
+  );
+  return rows.map((r: any) => ({
+    subject: r.subject,
+    topic: r.topic,
+    attempts: parseInt(r.attempts),
+    accuracy: parseFloat(r.accuracy),
+  }));
+}
+
+export async function markWeeklyReportSent(userIds: number[]): Promise<void> {
+  if (!userIds.length) return;
+  await pool.query(`UPDATE users SET last_report_sent_at = NOW() WHERE id = ANY($1)`, [userIds]);
 }
 
 export async function deleteUser(telegramId: number | string): Promise<void> {

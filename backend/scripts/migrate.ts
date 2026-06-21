@@ -330,6 +330,9 @@ WHERE id = 116125`,
   `UPDATE questions
    SET question_text = REGEXP_REPLACE(question_text, 'A - E([A-Z])', E'A - E. \\1', 'g')
    WHERE question_text ~ 'A - E[A-Z]'`,
+
+  // ── Weekly report send tracking ───────────────────────────────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_report_sent_at TIMESTAMP`,
 ];
 
 async function migrate(): Promise<void> {

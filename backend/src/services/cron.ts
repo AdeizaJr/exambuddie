@@ -88,98 +88,232 @@ export default function startCrons(bot: any): void {
     }
   });
 
-  // ── Sunday 10am WAT — weekly summary messages ─────────────────────────────
-  cron.schedule('0 9 * * 0', async () => {
-    console.log('[CRON] Sending weekly summaries...');
-
+  // ── Sunday 8am UTC (9am WAT) — morning wave ──────────────────────────────
+  cron.schedule('0 8 * * 0', async () => {
+    console.log('[CRON] Weekly summaries — morning wave...');
     const { rows: users } = await db.query(
-      `SELECT DISTINCT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan
+      `SELECT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan, u.last_active_date
+       FROM users u
+       WHERE u.notifications_enabled = TRUE
+         AND (u.last_report_sent_at IS NULL OR u.last_report_sent_at < NOW() - INTERVAL '6 days')
+         AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id AND a.attempted_at > NOW() - INTERVAL '7 days')
+         AND COALESCE(
+           (SELECT EXTRACT(HOUR FROM (ph.attempted_at AT TIME ZONE 'Africa/Lagos'))::INT
+            FROM attempts ph WHERE ph.user_id = u.id AND ph.attempted_at > NOW() - INTERVAL '30 days'
+            GROUP BY EXTRACT(HOUR FROM (ph.attempted_at AT TIME ZONE 'Africa/Lagos'))::INT
+            ORDER BY COUNT(*) DESC LIMIT 1),
+           9
+         ) BETWEEN 6 AND 14`
+    );
+    await sendWeeklySummaries(users, bot, 'morning');
+  });
+
+  // ── Sunday 4pm UTC (5pm WAT) — evening wave (also catches any morning failures) ──
+  cron.schedule('0 16 * * 0', async () => {
+    console.log('[CRON] Weekly summaries — evening wave...');
+    const { rows: users } = await db.query(
+      `SELECT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan, u.last_active_date
+       FROM users u
+       WHERE u.notifications_enabled = TRUE
+         AND (u.last_report_sent_at IS NULL OR u.last_report_sent_at < NOW() - INTERVAL '6 days')
+         AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id AND a.attempted_at > NOW() - INTERVAL '7 days')`
+    );
+    await sendWeeklySummaries(users, bot, 'evening');
+  });
+
+  // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────
+  cron.schedule('0 17 * * 5', async () => {
+    console.log('[CRON] Friday nudge...');
+    const { rows: users } = await db.query(
+      `SELECT u.id, u.telegram_id, u.first_name, u.streak,
+              COUNT(a.id) as week_attempts,
+              ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(a.id), 0), 1) as week_accuracy
        FROM users u
        JOIN attempts a ON a.user_id = u.id
-       WHERE a.attempted_at > NOW() - INTERVAL '7 days'`
+       WHERE a.attempted_at > NOW() - INTERVAL '7 days'
+         AND u.notifications_enabled = TRUE
+       GROUP BY u.id`
     );
 
     let sent = 0;
-    for (const user of users) {
-      try {
-        let msg: string;
+    const BATCH_SIZE = 20;
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      const batch = users.slice(i, i + BATCH_SIZE);
+      await Promise.allSettled(batch.map(async (user) => {
+        try {
+          const attempts = parseInt(user.week_attempts || '0');
+          const accuracy = parseFloat(user.week_accuracy || '0');
+          const streakLine = (user.streak || 0) > 0
+            ? `🔥 Keep your ${user.streak}-day streak alive`
+            : '🔥 Start a new streak';
+          const msg = `📚 <b>Weekend's here, ${user.first_name}!</b>
 
-        if (user.plan === 'premium') {
-          const report = await db.getWeeklyReport(user.id);
-          const { thisWeek, lastWeek, subjectBreakdown, weakTopics } = report;
+You've done <b>${attempts} questions</b> this week at <b>${accuracy}%</b> accuracy — the exam doesn't take weekends off 😤
 
-          const delta = lastWeek.attempts > 0
-            ? thisWeek.accuracy - lastWeek.accuracy
-            : null;
-          const deltaStr = delta !== null
-            ? (delta >= 0 ? ` ↑ +${delta.toFixed(1)}%` : ` ↓ ${delta.toFixed(1)}%`)
-            : '';
-
-          const subjectLines = subjectBreakdown.map((s) => {
-            const name = SUBJECT_MAP[s.subject] || s.subject;
-            const emoji = SUBJECT_EMOJI[s.subject] || '📖';
-            const warn = s.accuracy < 50 ? ' ⚠️' : '';
-            return `  ${emoji} ${name}: ${s.accuracy}% (${s.attempts} questions)${warn}`;
-          }).join('\n');
-
-          const weakLines = weakTopics.map((t) => {
-            const subjectName = SUBJECT_MAP[t.subject] || t.subject;
-            return `  • ${t.topic} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${t.topic}`;
-          }).join('\n');
-
-          msg = `💎 <b>Your Weekly Report, ${user.first_name}!</b>
-
-📅 <b>This Week's Performance:</b>
-📝 Questions answered: ${thisWeek.attempts}
-🎯 Accuracy: ${thisWeek.accuracy}%${deltaStr}
-🔥 Streak: ${user.streak || 0} days${subjectBreakdown.length > 0 ? `
-
-📚 <b>Subject Breakdown:</b>
-${subjectLines}` : ''}${weakTopics.length > 0 ? `
-
-⚠️ <b>Focus Areas (drill these to improve fast):</b>
-${weakLines}` : '\n\n✅ No weak topics detected this week — great work!'}
-
-Keep pushing — consistency is what wins exams. 💪
-Ready? /practice`;
-        } else {
-          const subject = user.subjects?.[0];
-          const weakTopics = subject ? await db.getWeakTopics(user.id, subject) : [];
-
-          const { rows } = await db.query(
-            `SELECT ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) as acc
-             FROM attempts WHERE user_id = $1 AND attempted_at > NOW() - INTERVAL '7 days'`,
-            [user.id]
-          );
-          const weeklyAccuracy = rows[0]?.acc || 0;
-
-          const weakSection = weakTopics.length > 0
-            ? `\n⚠️ <b>Weak Topics to Focus On:</b>\n${weakTopics.map((t) => `  • ${t.topic}: ${t.accuracy}% accuracy`).join('\n')}`
-            : '';
-
-          msg = `📊 <b>Your Week in Review, ${user.first_name}!</b>
-
-This week:
-🎯 Accuracy: ${weeklyAccuracy}%
-🔥 Current Streak: ${user.streak || 0} days
-${weakSection}
-
-Keep up the momentum — exams reward consistency! 💪
-
-💎 <i>Upgrade to Premium for full subject breakdowns, week-over-week tracking, and personalised drill suggestions.</i> /subscribe
-
-Ready to practise? /practice`;
-        }
-
-        await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
-        sent++;
-      } catch {
-        /* user blocked or unavailable */
-      }
+${streakLine} → /practice`;
+          await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
+          sent++;
+        } catch { /* blocked or unavailable */ }
+      }));
+      if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
-
-    console.log(`[CRON] Weekly summaries sent to ${sent} users`);
+    console.log(`[CRON] Friday nudge sent to ${sent}/${users.length} users`);
   });
 
   console.log('⏰ Cron jobs started');
+}
+
+function watToday(): string {
+  return new Date(Date.now() + 3600000).toISOString().split('T')[0];
+}
+
+function buildWeeklyPremiumMsg(user: any, report: db.WeeklyReport): string {
+  const { thisWeek, lastWeek, subjectBreakdown, weakTopics, bestSubject, coverageStats, percentileRank } = report;
+
+  const delta = lastWeek.attempts > 0 ? thisWeek.accuracy - lastWeek.accuracy : null;
+  const deltaStr = delta !== null
+    ? (delta >= 0 ? ` ↑ +${delta.toFixed(1)}%` : ` ↓ ${delta.toFixed(1)}%`)
+    : '';
+
+  const streakAtRisk = (user.streak || 0) > 0 && user.last_active_date !== watToday();
+
+  if (thisWeek.attempts < 5) {
+    const streakWarn = streakAtRisk
+      ? `\n\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
+    return `💎 <b>Slow week, ${user.first_name}</b>
+
+Only ${thisWeek.attempts} questions this week. Even 10 more today makes a real difference.
+🎯 Accuracy: ${thisWeek.accuracy}%${deltaStr}
+🔥 Streak: ${user.streak || 0} days${streakWarn}
+
+Back on track? /practice`;
+  }
+
+  const subjectLines = subjectBreakdown.map((s) => {
+    const name = SUBJECT_MAP[s.subject] || s.subject;
+    const emoji = SUBJECT_EMOJI[s.subject] || '📖';
+    const warn = s.accuracy < 50 ? ' ⚠️' : '';
+    return `  ${emoji} ${name}: ${s.accuracy}% (${s.attempts} questions)${warn}`;
+  }).join('\n');
+
+  const weakLines = weakTopics.map((t) => {
+    const subjectName = SUBJECT_MAP[t.subject] || t.subject;
+    return `  • ${t.topic} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${t.topic}`;
+  }).join('\n');
+
+  const bestLine = bestSubject
+    ? `\n🌟 Best subject: ${SUBJECT_MAP[bestSubject.subject] || bestSubject.subject} at ${bestSubject.accuracy}%`
+    : '';
+
+  const percentileLine = percentileRank !== null
+    ? `\n🏅 You're in the top ${100 - percentileRank}% of students this week`
+    : '';
+
+  const coverageLines = coverageStats
+    .filter(c => subjectBreakdown.some(s => s.subject === c.subject))
+    .slice(0, 2)
+    .map(c => {
+      const pct = Math.round((c.seen / c.total) * 100);
+      const name = SUBJECT_MAP[c.subject] || c.subject;
+      return `  📊 ${name}: ${pct}% of question bank explored (${c.seen}/${c.total})`;
+    }).join('\n');
+
+  const streakWarn = streakAtRisk
+    ? `\n\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
+
+  return `💎 <b>Your Weekly Report, ${user.first_name}!</b>
+
+📅 <b>This Week:</b>
+📝 Questions answered: ${thisWeek.attempts}
+🎯 Accuracy: ${thisWeek.accuracy}%${deltaStr}
+🔥 Streak: ${user.streak || 0} days${bestLine}${percentileLine}${subjectBreakdown.length > 0 ? `
+
+📚 <b>Subject Breakdown:</b>
+${subjectLines}` : ''}${coverageLines ? `
+
+📈 <b>Progress:</b>
+${coverageLines}` : ''}${weakTopics.length > 0 ? `
+
+⚠️ <b>Focus Areas:</b>
+${weakLines}` : '\n\n✅ No weak topics this week — great work!'}${streakWarn}
+
+Consistency wins exams. 💪 /practice`;
+}
+
+async function buildFreeMsg(user: any): Promise<string> {
+  const subjects: string[] = user.subjects || [];
+  const streakAtRisk = (user.streak || 0) > 0 && user.last_active_date !== watToday();
+
+  const [accRes, weakTopics] = await Promise.all([
+    db.query(
+      `SELECT COUNT(*) as attempts,
+              ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as acc
+       FROM attempts WHERE user_id = $1 AND attempted_at > NOW() - INTERVAL '7 days'`,
+      [user.id]
+    ),
+    db.getWeakTopicsAllSubjects(user.id, subjects),
+  ]);
+
+  const weeklyAttempts = parseInt(accRes.rows[0]?.attempts || '0');
+  const weeklyAccuracy = parseFloat(accRes.rows[0]?.acc || '0');
+
+  const streakWarn = streakAtRisk
+    ? `\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
+
+  const weakSection = weakTopics.length > 0
+    ? `\n\n⚠️ <b>Weak Topics:</b>\n${weakTopics.map(t => `  • ${t.topic}: ${t.accuracy}% accuracy`).join('\n')}`
+    : '';
+
+  const blurredBreakdown = subjects.length > 0
+    ? `\n\n💎 <b>Subject Breakdown</b> <i>(Premium)</i>\n${subjects.slice(0, 3).map(s => {
+        const name = SUBJECT_MAP[s] || s;
+        const emoji = SUBJECT_EMOJI[s] || '📖';
+        return `  ${emoji} ${name}: ████████`;
+      }).join('\n')}\n<i>Unlock your full breakdown + drill suggestions:</i> /subscribe`
+    : `\n\n💎 <i>Upgrade to Premium for subject breakdowns, week-over-week tracking, and drill suggestions.</i> /subscribe`;
+
+  if (weeklyAttempts < 5) {
+    return `📊 <b>Slow week, ${user.first_name}</b>
+
+Only ${weeklyAttempts} questions this week — that's okay, let's pick it up.
+🔥 Streak: ${user.streak || 0} days${streakWarn}
+
+Even 10 questions today puts you back on track → /practice${blurredBreakdown}`;
+  }
+
+  return `📊 <b>Your Week in Review, ${user.first_name}!</b>
+
+🎯 Accuracy: ${weeklyAccuracy}%
+📝 Questions: ${weeklyAttempts}
+🔥 Streak: ${user.streak || 0} days${streakWarn}${weakSection}${blurredBreakdown}
+
+Ready? /practice`;
+}
+
+async function sendWeeklySummaries(users: any[], bot: any, waveName: string): Promise<void> {
+  const BATCH_SIZE = 20;
+  let sent = 0;
+  const sentIds: number[] = [];
+
+  for (let i = 0; i < users.length; i += BATCH_SIZE) {
+    const batch = users.slice(i, i + BATCH_SIZE);
+    await Promise.allSettled(batch.map(async (user) => {
+      try {
+        let msg: string;
+        if (user.plan === 'premium') {
+          const report = await db.getWeeklyReport(user.id);
+          msg = buildWeeklyPremiumMsg(user, report);
+        } else {
+          msg = await buildFreeMsg(user);
+        }
+        await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
+        sentIds.push(user.id);
+        sent++;
+      } catch { /* blocked or unavailable */ }
+    }));
+    if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
+  }
+
+  await db.markWeeklyReportSent(sentIds);
+  console.log(`[CRON] Weekly summaries (${waveName}): sent ${sent}/${users.length}`);
 }
