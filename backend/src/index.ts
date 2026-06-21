@@ -65,6 +65,7 @@ bot.command('leaderboard', leaderboard.handleLeaderboard);
 bot.command('challenge', challenge.handleChallenge);
 bot.command('invite', invite.handleInvite);
 bot.command('support', support.handleSupport);
+bot.command('progress', stats.handleProgress);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -117,6 +118,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'settings:delete:confirm') return onboarding.handleSettingsDeleteConfirm(ctx);
   if (data === 'settings:back') return onboarding.handleSettingsBack(ctx);
   if (data === 'settings:weekly_report') return stats.handleWeeklyReport(ctx);
+  if (data === 'settings:freeze_streak') return onboarding.handleStreakFreeze(ctx);
 
   // Challenge
   if (data === 'challenge:pick') return challenge.handleChallenge(ctx);
@@ -195,6 +197,7 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Stats
   if (data === 'stats:show') return stats.handleStats(ctx);
+  if (data === 'stats:progress') return stats.handleProgress(ctx);
   if (data.startsWith('stats:filter:')) return stats.handleStatsFilter(ctx);
 
   // Subscribe
@@ -202,6 +205,8 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('subscribe:')) return stats.handleSubscribePlan(ctx);
 
   // Invite
+  if (data === 'invite:link') return invite.handleInvite(ctx);
+  if (data === 'invite:leaderboard') return invite.handleReferralLeaderboard(ctx);
   if (data.startsWith('invite:copy:')) {
     const link = data.slice('invite:copy:'.length);
     await ctx.answerCbQuery(link, { show_alert: true });

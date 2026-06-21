@@ -355,6 +355,12 @@ WHERE id = 116125`,
   `CREATE UNIQUE INDEX IF NOT EXISTS did_you_know_external_id_key ON did_you_know(external_id)`,
   `CREATE INDEX IF NOT EXISTS idx_dyk_subject_code ON did_you_know(subject_code)`,
   `CREATE INDEX IF NOT EXISTS idx_dyk_last_used ON did_you_know(last_used_at NULLS FIRST, sent_count ASC)`,
+
+  // ── Streak freeze (premium: once/week) ────────────────────────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS streak_freeze_used_at DATE DEFAULT NULL`,
+
+  // ── Trial period flag (14-day free Premium on first onboarding) ──────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_used BOOLEAN DEFAULT FALSE`,
 ];
 
 async function migrate(): Promise<void> {

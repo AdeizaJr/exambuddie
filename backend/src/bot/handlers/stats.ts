@@ -219,6 +219,26 @@ export async function handleFlagCancel(ctx: any): Promise<void> {
   await ctx.editMessageText('Cancelled.').catch(() => {});
 }
 
+export async function handleProgress(ctx: any): Promise<void> {
+  if (ctx.callbackQuery) await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Please use /start first.'); return; }
+
+  const progress = await db.getProgressStats(user.id);
+  await ctx.reply(
+    fmt.progressMessage(user, progress.totalAttempts, progress.accuracy, progress.subjectCoverage),
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '📊 Full Stats', callback_data: 'stats:show' }],
+          [{ text: '📚 Practice', callback_data: 'practice:pick' }],
+        ],
+      },
+    }
+  );
+}
+
 export async function handleWeeklyReport(ctx: any): Promise<void> {
   if (ctx.callbackQuery) await ctx.answerCbQuery();
 
@@ -278,7 +298,8 @@ export async function handleWeeklyReport(ctx: any): Promise<void> {
       return `  📊 ${name}: ${pct}% of question bank explored (${c.seen}/${c.total})`;
     }).join('\n');
 
-  const msg = `💎 <b>Your Weekly Report</b>
+  const countdown = fmt.examCountdown(user.exam_type || null, user.target_year || null);
+  const msg = `💎 <b>Your Weekly Report</b>${countdown ? `\n${countdown}` : ''}
 
 📅 <b>This Week:</b>
 📝 Questions answered: ${thisWeek.attempts}

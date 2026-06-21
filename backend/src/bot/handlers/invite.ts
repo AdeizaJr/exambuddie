@@ -3,6 +3,7 @@ import * as db from '../../db';
 const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
 
 export async function handleInvite(ctx: any): Promise<void> {
+  if (ctx.callbackQuery) await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please tap /start first.'); return; }
 
@@ -36,8 +37,39 @@ export async function handleInvite(ctx: any): Promise<void> {
             { text: '💚 WhatsApp', url: `https://wa.me/?text=${encodeURIComponent(`Practice WAEC, JAMB & NECO questions on ExamBuddie! 🎓\n${link}`)}` },
           ],
           [{ text: '📋 Copy Link', callback_data: `invite:copy:${link}` }],
+          [{ text: '🏆 Referral Leaderboard', callback_data: 'invite:leaderboard' }],
         ],
       },
     }
   );
+}
+
+export async function handleReferralLeaderboard(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const topReferrers = await db.getTopReferrers(10);
+
+  if (topReferrers.length === 0) {
+    await ctx.reply(
+      '🏆 <b>Referral Leaderboard</b>\n\nNo confirmed referrals yet — be the first!',
+      {
+        parse_mode: 'HTML',
+        reply_markup: { inline_keyboard: [[{ text: '🔗 My Invite Link', callback_data: 'invite:link' }]] },
+      }
+    );
+    return;
+  }
+
+  const medals = ['🥇', '🥈', '🥉'];
+  let text = '🏆 <b>Top Referrers</b>\n\n';
+  for (let i = 0; i < topReferrers.length; i++) {
+    const r = topReferrers[i];
+    const medal = medals[i] || `${i + 1}.`;
+    text += `${medal} ${r.first_name} — ${r.referrals} friend${r.referrals !== 1 ? 's' : ''}\n`;
+  }
+  text += '\n<i>Invite 2 active friends → earn 3 days Premium free! /invite</i>';
+
+  await ctx.reply(text, {
+    parse_mode: 'HTML',
+    reply_markup: { inline_keyboard: [[{ text: '🔗 My Invite Link', callback_data: 'invite:link' }]] },
+  });
 }

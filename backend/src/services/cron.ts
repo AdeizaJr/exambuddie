@@ -2,7 +2,7 @@
 import cron from 'node-cron';
 import * as db from '../db';
 import * as payments from './payments';
-import { SUBJECT_MAP, SUBJECT_EMOJI } from '../bot/formatter';
+import { SUBJECT_MAP, SUBJECT_EMOJI, examCountdown } from '../bot/formatter';
 import { endExpiredRoom } from '../bot/handlers/challenge';
 
 export default function startCrons(bot: any): void {
@@ -41,6 +41,10 @@ export default function startCrons(bot: any): void {
         UPDATE users SET streak = 0
         WHERE streak > 0
           AND (last_active_date IS NULL OR last_active_date < CURRENT_DATE)
+          AND NOT (
+            plan = 'premium'
+            AND streak_freeze_used_at = CURRENT_DATE
+          )
       `);
       console.log(`[CRON] Broke streaks for ${rowCount} inactive users`);
     },
@@ -173,6 +177,40 @@ export default function startCrons(bot: any): void {
     console.log(`[CRON] Did You Know sent to ${sent}/${users.length} users`);
   });
 
+  // ── Daily 2pm UTC (3pm WAT) — 3-day inactivity nudge ────────────────────
+  cron.schedule('0 14 * * *', async () => {
+    const watNow = new Date(Date.now() + 60 * 60 * 1000);
+    const threeDaysAgoWAT = new Date(watNow.getTime() - 3 * 86400000).toISOString().split('T')[0];
+
+    const { rows: users } = await db.query(
+      `SELECT telegram_id, first_name, streak
+       FROM users
+       WHERE notifications_enabled = TRUE
+         AND last_active_date = $1`,
+      [threeDaysAgoWAT]
+    );
+
+    let sent = 0;
+    const BATCH_SIZE = 20;
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      const batch = users.slice(i, i + BATCH_SIZE);
+      await Promise.allSettled(batch.map(async (user) => {
+        try {
+          const streakWarn = (user.streak || 0) > 0
+            ? `\n\n⚠️ Your <b>${user.streak}-day streak</b> is at risk!` : '';
+          await bot.telegram.sendMessage(
+            user.telegram_id,
+            `👋 <b>Miss us, ${user.first_name}?</b>\n\nYou haven't practised in 3 days. Even 5 questions today keeps you on track for your exam.${streakWarn}\n\n📚 /practice`,
+            { parse_mode: 'HTML' }
+          );
+          sent++;
+        } catch { /* blocked */ }
+      }));
+      if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
+    }
+    console.log(`[CRON] 3-day inactivity nudge sent to ${sent}/${users.length} users`);
+  });
+
   // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────
   cron.schedule('0 17 * * 5', async () => {
     console.log('[CRON] Friday nudge...');
@@ -273,7 +311,8 @@ Back on track? /practice`;
   const streakWarn = streakAtRisk
     ? `\n\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
 
-  return `💎 <b>Your Weekly Report, ${user.first_name}!</b>
+  const countdown = examCountdown(user.exam_type || null, user.target_year || null);
+  return `💎 <b>Your Weekly Report, ${user.first_name}!</b>${countdown ? `\n${countdown}` : ''}
 
 📅 <b>This Week:</b>
 📝 Questions answered: ${thisWeek.attempts}

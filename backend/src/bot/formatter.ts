@@ -680,11 +680,12 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
     }
   }
 
+  const countdown = examCountdown(user.exam_type || null, user.target_year || null);
   return `📈 <b>Your ${examLabel} Stats</b>
 
 👤 ${user.first_name}
 📋 Exam: ${user.exam_type || 'Not set'}
-🗓️ Joined: ${new Date(user.joined_at).toLocaleDateString('en-NG')}
+🗓️ Joined: ${new Date(user.joined_at).toLocaleDateString('en-NG')}${countdown ? `\n${countdown}` : ''}
 
 📊 <b>${examLabel} Performance:</b>
 • Total Attempts: ${stats.total_attempts || 0}
@@ -1036,6 +1037,64 @@ export function yearPickerKeyboard(subject: string) {
   }
   rows.push([{ text: '← Back to Subjects', callback_data: 'practice:pick' }]);
   return { inline_keyboard: rows };
+}
+
+export function examCountdown(examType: string | null, targetYear: number | null): string | null {
+  if (!targetYear) return null;
+  const now = new Date();
+  if (targetYear < now.getFullYear()) return null;
+  let month: number, day: number;
+  if (examType === 'JAMB') { month = 3; day = 15; }
+  else if (examType === 'NECO') { month = 7; day = 1; }
+  else { month = 5; day = 15; } // WAEC default
+  const examDate = new Date(targetYear, month - 1, day);
+  const daysLeft = Math.ceil((examDate.getTime() - now.getTime()) / 86400000);
+  if (daysLeft <= 0) return null;
+  if (daysLeft === 1) return '⏰ 1 day until your exam!';
+  if (daysLeft < 7) return `⏰ ${daysLeft} days until your exam!`;
+  if (daysLeft < 30) return `📅 ${Math.floor(daysLeft / 7)} week${Math.floor(daysLeft / 7) > 1 ? 's' : ''} until your exam`;
+  return `📅 ~${Math.floor(daysLeft / 30)} month${Math.floor(daysLeft / 30) > 1 ? 's' : ''} until your exam`;
+}
+
+export function progressMessage(
+  user: User,
+  totalAttempts: number,
+  accuracy: number,
+  subjectCoverage: { subject: string; seen: number; total: number }[]
+): string {
+  const plan = user.plan === 'premium'
+    ? `💎 Premium${user.plan_expires_at ? ` (until ${new Date(user.plan_expires_at).toLocaleDateString('en-NG')})` : ''}`
+    : '🆓 Free';
+  const countdown = examCountdown(user.exam_type || null, user.target_year || null);
+  const coverageLines = subjectCoverage
+    .filter(c => user.subjects?.includes(c.subject))
+    .map(c => {
+      const pct = Math.round((c.seen / c.total) * 100);
+      const emoji = SUBJECT_EMOJI[c.subject] || '📖';
+      return `  ${emoji} ${SUBJECT_MAP[c.subject] || c.subject}: ${pct}% (${c.seen}/${c.total})`;
+    }).join('\n');
+
+  return `⚡ <b>Your Progress</b>
+
+🔥 Streak: ${user.streak || 0} days
+📝 Questions: ${totalAttempts.toLocaleString()} answered
+🎯 Accuracy: ${accuracy}%${countdown ? `\n${countdown}` : ''}${coverageLines ? `\n\n📈 <b>Coverage:</b>\n${coverageLines}` : ''}
+
+💳 Plan: ${plan}`;
+}
+
+export function onboardingGuide(): string {
+  return `🎓 <b>Here's what you can do:</b>
+
+📚 /practice — Answer past questions one at a time
+📋 /quiz — 40-question timed mock exam
+🎯 /drill — Focus on a weak topic
+📊 /stats — See your accuracy &amp; streaks
+🏆 /leaderboard — Weekly ranking
+🔗 /invite — Earn Premium by referring friends
+⚙️ /settings — Update your profile
+
+💡 <i>Practise daily to build your streak!</i>`;
 }
 
 export function formatStreakCard(streak: number, weekActivity: boolean[]): string {

@@ -168,6 +168,15 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
 
   await ctx.editMessageText(fmt.profileComplete(user), { parse_mode: 'HTML' });
 
+  // Grant 14-day Premium trial to new users completing onboarding for the first time
+  if (session.step === 'subjects' && !user.trial_used && user.plan === 'free') {
+    await db.grantTrial(ctx.from.id);
+    await ctx.reply(
+      `🎁 <b>Welcome Gift!</b>\n\nWe're giving you <b>14 days of Premium free</b> to get started!\n\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nEnjoy — and subscribe when it expires to keep going! /subscribe`,
+      { parse_mode: 'HTML' }
+    );
+  }
+
   await ctx.reply(
     '📱 <b>One last thing!</b>\n\nShare your phone number so we can send you important updates about your subscription and account.\n\n<i>This is optional — tap Skip if you prefer not to.</i>',
     {
@@ -200,6 +209,7 @@ export async function handleContact(ctx: any): Promise<void> {
   await ctx.reply('Use the menu below to get started 👇', {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
+  await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
 }
 
 export async function handlePhoneSkip(ctx: any): Promise<void> {
@@ -212,6 +222,7 @@ export async function handlePhoneSkip(ctx: any): Promise<void> {
   await ctx.reply('Use the menu below to get started 👇', {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
+  await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
 }
 
 // /settings command
@@ -220,7 +231,10 @@ function settingsKeyboard(notificationsEnabled: boolean, hasPhone: boolean, isPr
   const phoneLabel = hasPhone ? '📱 Update Phone Number' : '📱 Add Phone Number';
   return {
     inline_keyboard: [
-      ...(isPremium ? [[{ text: '📊 Weekly Report', callback_data: 'settings:weekly_report' }]] : []),
+      ...(isPremium ? [
+        [{ text: '📊 Weekly Report', callback_data: 'settings:weekly_report' }],
+        [{ text: '🛡️ Freeze Streak', callback_data: 'settings:freeze_streak' }],
+      ] : []),
       [{ text: '📋 Change Exam Type', callback_data: 'settings:exam' }],
       [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
       [{ text: '📅 Change Target Year', callback_data: 'settings:year' }],
@@ -345,6 +359,36 @@ export async function handleSettingsBack(ctx: any): Promise<void> {
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
     reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, user.plan === 'premium'),
+  });
+}
+
+export async function handleStreakFreeze(ctx: any): Promise<void> {
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.answerCbQuery(); return; }
+
+  if (user.plan !== 'premium') {
+    await ctx.answerCbQuery('Streak freeze is a Premium feature!', { show_alert: true });
+    return;
+  }
+  if ((user.streak || 0) === 0) {
+    await ctx.answerCbQuery('No active streak to protect! Start practising first.', { show_alert: true });
+    return;
+  }
+  // Once per 7 days
+  const sevenDaysAgo = new Date(Date.now() - 6 * 86400000).toISOString().split('T')[0];
+  if (user.streak_freeze_used_at && user.streak_freeze_used_at >= sevenDaysAgo) {
+    await ctx.answerCbQuery('You can only freeze your streak once per week!', { show_alert: true });
+    return;
+  }
+  const today = new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0]; // WAT today
+  await db.updateUser(ctx.from.id, { streak_freeze_used_at: today as any });
+  await ctx.answerCbQuery(
+    `🛡️ Streak frozen! Your ${user.streak}-day streak is protected for today.`,
+    { show_alert: true }
+  );
+  await ctx.editMessageText('⚙️ <b>Settings</b>\n\nWhat would you like to change?', {
+    parse_mode: 'HTML',
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, true),
   });
 }
 
