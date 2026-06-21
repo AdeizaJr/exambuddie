@@ -22,11 +22,13 @@ const subjects = [
 ];
 
 const secondaryFeatures = [
-  { icon: "📊", title: "Progress Stats", desc: "Accuracy by subject and topic" },
+  { icon: "📊", title: "Progress Stats", desc: "Accuracy by subject and topic — instant snapshot with /progress" },
   { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one session" },
-  { icon: "🔥", title: "Study Streaks", desc: "Build a daily practice habit" },
+  { icon: "🔥", title: "Study Streaks", desc: "Build a daily habit — freeze your streak once a week (Premium)" },
+  { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you get them right (Premium)" },
+  { icon: "📅", title: "Exam Countdown", desc: "Days left until your WAEC, JAMB or NECO — shown in /stats" },
   { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
-  { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free" },
+  { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
   { icon: "⚡", title: "Works in Telegram", desc: "No app download — ever" },
 ];
 
@@ -318,12 +320,13 @@ export default function Home() {
       name: "Free",
       price: "Free",
       period: "",
-      description: "Start practising today at no cost.",
+      description: "Start practising today — 14 days Premium free, no card needed.",
       features: [
+        "14-day Premium trial on signup",
         "5 questions per subject every 6 hours",
         "All WAEC, JAMB & NECO subjects",
         "Instant answer explanations",
-        "Basic stats tracking",
+        "Progress tracking & exam countdown",
       ],
       cta: "Start Free",
       href: BOT_URL,
@@ -356,8 +359,10 @@ export default function Home() {
         "Unlimited questions — no daily caps",
         "Multi-subject quiz & practice",
         "Full drill mode on weak topics",
+        "Spaced repetition — wrong answers come back",
+        "Streak freeze — protect your streak once/week",
         "Challenge Mode — create rooms & compete",
-        "Detailed progress analytics",
+        "Detailed progress analytics & exam countdown",
         "Weekly performance reports",
         "Referral rewards (/invite)",
         "Priority support",
@@ -991,13 +996,16 @@ export default function Home() {
                 {[
                   ["Past questions (WAEC, JAMB, NECO)", true, true, false],
                   ["Instant answer explanations", true, false, false],
-                  ["Progress tracking", true, false, false],
+                  ["Progress tracking + exam countdown", true, false, false],
                   ["Timed mock exams", true, false, false],
+                  ["Spaced repetition (wrong answers resurface)", true, false, false],
+                  ["Streak freeze (protect your streak)", true, false, false],
                   ["Challenge Mode (multiplayer)", true, false, false],
                   ["Referral rewards (invite friends, earn Premium)", true, false, false],
                   ["Works on any phone", true, false, true],
                   ["Works inside Telegram (no new app)", true, false, false],
                   ["Weak-topic targeting", true, false, false],
+                  ["14-day free trial on signup", true, false, false],
                   ["Free to start", true, false, true],
                 ].map(([feature, eb, tb, yt]) => (
                   <tr key={String(feature)} className="hover:bg-slate-50 dark:hover:bg-slate-900 dark:bg-slate-950">
