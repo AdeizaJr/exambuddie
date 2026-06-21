@@ -120,7 +120,8 @@ npm run dev          # runs at localhost:3000
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
 | `/invite` | Get your referral link — share on Telegram or WhatsApp, invite 2 friends → 3 days Premium free |
 | `/leaderboard` | Weekly accuracy leaderboard (top 10) |
-| `/stats` | View accuracy and progress |
+| `/stats` | View accuracy and progress — includes exam countdown |
+| `/progress` | Quick snapshot: streak, accuracy, subject coverage |
 | `/subscribe` | Upgrade to Premium |
 | `/settings` | Change exam type, subjects, or phone number |
 | `/support` | Report a bug, request your data, or delete your account |
@@ -134,18 +135,25 @@ npm run dev          # runs at localhost:3000
 
 | Feature | Free | Premium |
 |---------|------|---------|
+| 14-day Premium trial on first signup | ✅ | — |
 | Questions per day | 5 (configurable) | Unlimited |
 | Practice mode | ✅ | ✅ |
+| Year picker in practice | ✅ | ✅ |
 | Quiz mode (50Q, 60 min) | ❌ | ✅ |
 | Topic drill | ❌ | ✅ |
 | Per-question timer | ❌ | ✅ |
-| Progress tracking | ✅ | ✅ |
+| Spaced repetition (wrong questions resurface) | ❌ | ✅ |
+| Streak freeze (once/week) | ❌ | ✅ |
+| Progress tracking (/progress) | ✅ | ✅ |
+| Exam countdown in /stats | ✅ | ✅ |
 | Weak topic detection | ✅ | ✅ |
 | Weekly leaderboard | ✅ | ✅ |
 | Weekly performance reports | ❌ | ✅ |
+| Milestone celebrations | ✅ | ✅ |
 | Challenge Mode — join a room | ✅ | ✅ |
 | Challenge Mode — create a room | ❌ | ✅ |
-| Referral rewards (/invite) | ✅ | ✅ |
+| Referral rewards (/invite) — invite 2 friends → 3 days free | ✅ | ✅ |
+| Referral leaderboard | ✅ | ✅ |
 
 **Pricing:** ₦1,500/month · ₦3,500/term (3 months) · ₦12,000/year
 
