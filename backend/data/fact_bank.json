@@ -1287,6 +1287,246 @@
       "fact": "A standard football match consists of two 45-minute halves, plus any added stoppage time for delays during play.",
       "difficulty": "easy",
       "source": "general knowledge"
+    },
+    {
+      "id": "sci_075",
+      "subject": "Physics",
+      "topic": "Simple Machines",
+      "fact": "A lever multiplies force by using a pivot point called a fulcrum, allowing a small effort to move a much heavier load.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_076",
+      "subject": "Physics",
+      "topic": "Density",
+      "fact": "Ice floats on water because it is less dense than liquid water, even though both are made of the same molecule.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_077",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "Materials like copper and silver are excellent conductors of electricity because their atoms allow electrons to move freely.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_078",
+      "subject": "Physics",
+      "topic": "Sound",
+      "fact": "Pitch is determined by frequency; higher frequency sound waves produce higher-pitched sounds.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_079",
+      "subject": "Chemistry",
+      "topic": "States of Matter",
+      "fact": "Sublimation is the process where a solid changes directly into a gas without passing through the liquid state, as dry ice does.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_080",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "Indicators like litmus paper change colour depending on whether a substance is acidic or basic, making them useful for quick pH testing.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_081",
+      "subject": "Chemistry",
+      "topic": "Reactions",
+      "fact": "A catalyst speeds up a chemical reaction without being consumed or permanently changed by the reaction itself.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_082",
+      "subject": "Biology",
+      "topic": "Photosynthesis",
+      "fact": "Photosynthesis converts carbon dioxide and water into glucose and oxygen, using light energy captured by chlorophyll in plant cells.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_083",
+      "subject": "Biology",
+      "topic": "Excretion",
+      "fact": "The kidneys filter waste products out of the blood and produce urine, helping maintain the body's internal balance of water and salts.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_084",
+      "subject": "Biology",
+      "topic": "Ecosystems",
+      "fact": "Decomposers like fungi and bacteria break down dead organisms, recycling nutrients back into the soil for other living things to use.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_085",
+      "subject": "Earth Science",
+      "topic": "Weather",
+      "fact": "Clouds form when water vapour in the air cools and condenses around tiny particles of dust or salt.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_086",
+      "subject": "Astronomy",
+      "topic": "Eclipses",
+      "fact": "A solar eclipse happens when the Moon passes directly between the Sun and Earth, temporarily blocking sunlight from reaching part of the planet.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_087",
+      "subject": "Mathematics",
+      "topic": "Fractions",
+      "fact": "A fraction represents a part of a whole, with the top number, the numerator, showing the part, and the bottom number, the denominator, showing the whole.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_088",
+      "subject": "Mathematics",
+      "topic": "Probability",
+      "fact": "Flipping a fair coin always has a 50% chance of landing heads, regardless of how many times it landed heads or tails before.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_016",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "Nigeria's three largest ethnic groups, the Hausa, Yoruba, and Igbo, each had distinct pre-colonial political systems before British rule.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_017",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The Code of Hammurabi, created in ancient Babylon, is one of the earliest known written sets of laws in human history.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_014",
+      "subject": "Geography",
+      "topic": "Vegetation",
+      "fact": "Nigeria's vegetation changes from mangrove swamps in the south to savanna grassland in the north, reflecting differences in rainfall.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_015",
+      "subject": "Geography",
+      "topic": "Map Skills",
+      "fact": "A map's scale shows the ratio between a distance on the map and the actual distance on the ground.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_011",
+      "subject": "English Language",
+      "topic": "Comprehension",
+      "fact": "Context clues are hints within a sentence or paragraph that help a reader figure out the meaning of an unfamiliar word.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_012",
+      "subject": "English Language",
+      "topic": "Writing",
+      "fact": "A topic sentence usually appears at the start of a paragraph and states the paragraph's main idea before supporting details follow.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_005",
+      "subject": "Civic Education",
+      "topic": "Duties",
+      "fact": "Civic duties often include obeying laws, paying taxes, and voting, which keep a society functioning fairly for everyone.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_005",
+      "subject": "Economics",
+      "topic": "Production",
+      "fact": "The factors of production are typically grouped into four categories: land, labour, capital, and entrepreneurship.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_009",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "A protagonist is the main character a story centres around, while an antagonist is the character or force that opposes them.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_007",
+      "subject": "Government",
+      "topic": "Political Parties",
+      "fact": "A political party is a group of people who share similar views on governance and work together to win elections and influence policy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_008",
+      "subject": "Agricultural Science",
+      "topic": "Farm Tools",
+      "fact": "Mechanized farming, using tractors and machinery, can dramatically increase the amount of land a single farmer can cultivate.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_007",
+      "subject": "Computer Science",
+      "topic": "Storage",
+      "fact": "A gigabyte is roughly equal to one billion bytes, often used to measure the storage capacity of phones and computers.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_007",
+      "subject": "Health Education",
+      "topic": "Disease",
+      "fact": "Malaria is spread by the bite of infected Anopheles mosquitoes, not by direct contact between people.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_004",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "Diversification means spreading money across different investments, which can reduce the risk of losing everything if one investment performs poorly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_004",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Tempo describes how fast or slow a piece of music is played, usually measured in beats per minute.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_003",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In basketball, a standard game is divided into four quarters, with teams switching ends of the court at halftime.",
+      "difficulty": "easy",
+      "source": "general knowledge"
     }
   ]
 }
