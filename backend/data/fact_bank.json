@@ -1,0 +1,1292 @@
+{
+  "facts": [
+    {
+      "id": "sci_001",
+      "subject": "Physics",
+      "topic": "Space",
+      "fact": "A day on Venus is longer than its year. Venus takes about 243 Earth days to rotate once, but only about 225 Earth days to orbit the Sun.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_002",
+      "subject": "Physics",
+      "topic": "Space",
+      "fact": "Light from the Sun takes about 8 minutes to reach Earth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_003",
+      "subject": "Physics",
+      "topic": "Sound",
+      "fact": "There is no sound in space. Sound needs a medium, like air, to travel through, and space is a near-vacuum.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_004",
+      "subject": "Physics",
+      "topic": "Light",
+      "fact": "The human body constantly emits infrared light, meaning people glow faintly, just not in a range our eyes can detect.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_005",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "A bolt of lightning is roughly five times hotter than the surface of the Sun.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_006",
+      "subject": "Chemistry",
+      "topic": "States of Matter",
+      "fact": "Water expands when it freezes, instead of contracting like most substances. This is why ice floats.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_007",
+      "subject": "Chemistry",
+      "topic": "Carbon",
+      "fact": "Diamond and graphite, the material in pencil lead, are made of the exact same element, carbon, just arranged differently.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_008",
+      "subject": "Chemistry",
+      "topic": "Elements",
+      "fact": "Helium is the only element that was discovered in space before it was found on Earth.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_009",
+      "subject": "Chemistry",
+      "topic": "Compounds",
+      "fact": "Table salt is made of two elements, sodium and chlorine, that are both dangerous on their own.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_010",
+      "subject": "Chemistry",
+      "topic": "Metals",
+      "fact": "Gold is so unreactive that it doesn't tarnish or rust, which is part of why it has been valuable for thousands of years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_011",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The stomach lining replaces itself every few days because stomach acid is strong enough to dissolve it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_012",
+      "subject": "Biology",
+      "topic": "Genetics",
+      "fact": "Humans share about 60% of their DNA with bananas.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_013",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The human brain uses about 20% of the body's total energy, despite being only about 2% of body weight.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_014",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "Bones are about five times stronger than steel of the same weight.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_015",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The human heart beats around 100,000 times a day without any conscious effort.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_016",
+      "subject": "Earth Science",
+      "topic": "Geology",
+      "fact": "Mount Everest grows about 4mm taller every year due to tectonic plate movement.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_017",
+      "subject": "Earth Science",
+      "topic": "Climate History",
+      "fact": "The Sahara Desert was a lush, green landscape with lakes and rivers around 10,000 years ago.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_018",
+      "subject": "Earth Science",
+      "topic": "Atmosphere",
+      "fact": "There is enough water in Earth's atmosphere at any moment to cover the planet in about 1 inch of rain if it all fell at once.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_019",
+      "subject": "Earth Science",
+      "topic": "Weather",
+      "fact": "Lightning strikes the Earth about 100 times every second.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_020",
+      "subject": "Earth Science",
+      "topic": "Soil Science",
+      "fact": "A single teaspoon of soil can contain billions of microorganisms.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_021",
+      "subject": "Mathematics",
+      "topic": "Number Systems",
+      "fact": "Zero was not always considered a number. Many ancient civilizations had no symbol or concept for it.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_022",
+      "subject": "Biology",
+      "topic": "Animal Behaviour",
+      "fact": "Honeybees build their hives using hexagons because that shape uses the least wax while storing the most honey, an efficient geometric solution.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_023",
+      "subject": "Physics",
+      "topic": "Forces",
+      "fact": "A feather and a hammer dropped together in a vacuum, with no air resistance, hit the ground at exactly the same time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_024",
+      "subject": "Physics",
+      "topic": "Materials",
+      "fact": "Glass is not a true crystalline solid; it is an amorphous solid, meaning its atoms are arranged more like a liquid that has been frozen in place.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_025",
+      "subject": "Physics",
+      "topic": "Sound",
+      "fact": "Sound travels about four times faster through water than it does through air.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_026",
+      "subject": "Physics",
+      "topic": "Magnetism",
+      "fact": "Earth's magnetic poles have flipped many times over its history, with north and south swapping places.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_027",
+      "subject": "Chemistry",
+      "topic": "Gases",
+      "fact": "Nitrogen makes up about 78% of the air we breathe, far more than oxygen, which is only about 21%.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_028",
+      "subject": "Chemistry",
+      "topic": "Reactions",
+      "fact": "Rust forms when iron reacts with oxygen and water, a chemical process called oxidation.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_029",
+      "subject": "Chemistry",
+      "topic": "Elements",
+      "fact": "Mercury is the only metal that is liquid at room temperature.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_030",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "Pure water has a neutral pH of 7, exactly in the middle of the acid-base scale, which runs from 0 to 14.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_031",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Only two elements on the periodic table are liquid at room temperature: mercury and bromine.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_032",
+      "subject": "Biology",
+      "topic": "Cells",
+      "fact": "An adult human body is made up of an estimated 37 trillion cells.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_033",
+      "subject": "Biology",
+      "topic": "Plants",
+      "fact": "Plants release oxygen as a byproduct of photosynthesis, which is why forests are often called the lungs of the planet.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_034",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The human body contains enough iron to make a small nail, though it is spread across the blood and tissues rather than concentrated in one place.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_035",
+      "subject": "Biology",
+      "topic": "Genetics",
+      "fact": "Identical twins do not have completely identical fingerprints, even though they share the same DNA.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_036",
+      "subject": "Biology",
+      "topic": "Animal Biology",
+      "fact": "An octopus has three hearts and blue blood, due to the copper-based protein it uses to carry oxygen.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_037",
+      "subject": "Biology",
+      "topic": "Microbiology",
+      "fact": "Bacteria outnumber human cells in the human body, with trillions of microbes living mostly in the gut.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_038",
+      "subject": "Earth Science",
+      "topic": "Oceans",
+      "fact": "More than 80% of the ocean has never been explored or mapped in detail.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_039",
+      "subject": "Earth Science",
+      "topic": "Volcanoes",
+      "fact": "There are more active volcanoes underwater than there are on land.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_040",
+      "subject": "Earth Science",
+      "topic": "Atmosphere",
+      "fact": "Earth's atmosphere has no clear edge; it gradually thins out into space over hundreds of kilometres.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_041",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Jupiter is so massive that it could fit all the other planets in the solar system inside it combined.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_042",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "Most of the stars visible in the night sky are actually much brighter than the Sun, but they appear dimmer because they are far away.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_043",
+      "subject": "Astronomy",
+      "topic": "Moon",
+      "fact": "The Moon is slowly drifting away from Earth at a rate of about 3.8 centimetres per year.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_044",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "A circle has infinite lines of symmetry, more than any other basic shape.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_045",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "Prime numbers become rarer as numbers get larger, but mathematicians have proven there are infinitely many of them.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_001",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The Great Pyramid of Giza was the tallest man-made structure in the world for over 3,800 years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_002",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "Ancient Egyptians used a 365-day calendar thousands of years before the modern calendar was developed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_003",
+      "subject": "History",
+      "topic": "World Wars",
+      "fact": "World War One ended in 1918, but the official peace treaty, the Treaty of Versailles, was not signed until 1919.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_004",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "The ancient Mali Empire, under Mansa Musa, was once considered one of the wealthiest civilizations in recorded history.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_005",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "The Benin Bronzes, created by skilled artisans in the Kingdom of Benin, are some of the most celebrated metal artworks in African history.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_006",
+      "subject": "History",
+      "topic": "Exploration",
+      "fact": "It took explorers over 400 years after Columbus's voyages to fully map the coastlines of the Americas.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_007",
+      "subject": "History",
+      "topic": "Inventions",
+      "fact": "The printing press, invented in the 1400s, made books dramatically cheaper and helped literacy spread across Europe.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_008",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The Great Wall of China was not built all at once; it was constructed and extended by multiple dynasties over more than 2,000 years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_001",
+      "subject": "Geography",
+      "topic": "Rivers",
+      "fact": "The Nile is often cited as the longest river in the world, stretching over 6,600 kilometres through northeastern Africa.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_002",
+      "subject": "Geography",
+      "topic": "Mountains",
+      "fact": "Mount Everest is the highest mountain above sea level, but Mauna Kea in Hawaii is taller when measured from base to peak.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_003",
+      "subject": "Geography",
+      "topic": "Countries",
+      "fact": "Russia spans 11 time zones, more than any other country in the world.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_004",
+      "subject": "Geography",
+      "topic": "Africa",
+      "fact": "Africa is the only continent that lies across all four hemispheres: north, south, east, and west.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_005",
+      "subject": "Geography",
+      "topic": "Deserts",
+      "fact": "Antarctica is technically the largest desert in the world, since deserts are defined by low precipitation, not heat.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_006",
+      "subject": "Geography",
+      "topic": "Population",
+      "fact": "Lagos is one of the fastest-growing cities in the world, with its population having grown dramatically over the past few decades.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_007",
+      "subject": "Geography",
+      "topic": "Oceans",
+      "fact": "The Pacific Ocean is so large it covers more area than all of Earth's continents combined.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_008",
+      "subject": "Geography",
+      "topic": "Climate",
+      "fact": "The equator passes through 13 countries, including several in Africa such as Kenya, Uganda, and the Democratic Republic of the Congo.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_001",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "The word \"set\" has more distinct meanings in the dictionary than almost any other word in the English language.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_002",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "English borrows words from over 350 other languages, which is part of why its spelling rules have so many exceptions.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_003",
+      "subject": "English Language",
+      "topic": "Literature",
+      "fact": "William Shakespeare is credited with inventing or popularizing over 1,700 words still used in English today.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_004",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "\"I am\" is the shortest complete sentence in the English language, since it has both a subject and a verb.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_005",
+      "subject": "English Language",
+      "topic": "Spelling",
+      "fact": "The longest word in widely used English dictionaries without repeating any letter is \"uncopyrightable,\" at 15 letters.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_006",
+      "subject": "English Language",
+      "topic": "Punctuation",
+      "fact": "The question mark and exclamation mark did not exist in early written English; punctuation systems developed gradually over centuries.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_001",
+      "subject": "Civic Education",
+      "topic": "Government",
+      "fact": "A democracy is a system of government where citizens choose their leaders through voting, rather than power being inherited or seized.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_002",
+      "subject": "Civic Education",
+      "topic": "Rights",
+      "fact": "The Universal Declaration of Human Rights, adopted in 1948, was one of the first global agreements outlining basic rights for all people.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_001",
+      "subject": "Economics",
+      "topic": "Trade",
+      "fact": "Barter, trading goods directly without money, was the main system of exchange before currency was widely adopted.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_002",
+      "subject": "Economics",
+      "topic": "Money",
+      "fact": "The first known paper money was used in China over a thousand years ago, long before it appeared in Europe.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_001",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "A haiku is a traditional Japanese poetic form made up of just three lines and 17 syllables in total.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_002",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Chinua Achebe's novel Things Fall Apart, published in 1958, has been translated into more than 50 languages.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_003",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "Ancient Greek plays were performed in massive outdoor theatres that could hold tens of thousands of spectators at once.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_004",
+      "subject": "Literature",
+      "topic": "Literary Devices",
+      "fact": "A palindrome is a word or phrase that reads the same forwards and backwards, like \"level\" or \"madam.\"",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_005",
+      "subject": "Literature",
+      "topic": "Novels",
+      "fact": "The novel Don Quixote, published in the early 1600s, is often considered one of the first modern novels ever written.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_006",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Wole Soyinka became the first African writer to win the Nobel Prize in Literature, in 1986.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_001",
+      "subject": "Government",
+      "topic": "Systems of Government",
+      "fact": "A federal system of government divides power between a central government and smaller regional or state governments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_002",
+      "subject": "Government",
+      "topic": "Separation of Powers",
+      "fact": "Most modern governments divide power into three branches: executive, legislative, and judicial, to prevent any single branch from having too much control.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_003",
+      "subject": "Government",
+      "topic": "Elections",
+      "fact": "Universal suffrage, the right of all adult citizens to vote regardless of gender or property ownership, only became common worldwide in the 20th century.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_004",
+      "subject": "Government",
+      "topic": "Constitutions",
+      "fact": "A constitution is a country's foundational legal document, outlining how its government is structured and what powers it holds.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_001",
+      "subject": "Agricultural Science",
+      "topic": "Soil",
+      "fact": "Topsoil, the most fertile layer of soil, can take hundreds of years to form naturally but can be eroded away in just a few seasons of poor farming practice.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_002",
+      "subject": "Agricultural Science",
+      "topic": "Crops",
+      "fact": "Crop rotation, growing different crops in the same field across seasons, helps maintain soil fertility and reduce pest buildup.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_003",
+      "subject": "Agricultural Science",
+      "topic": "Livestock",
+      "fact": "A cow has four stomach compartments, which allow it to digest tough plant material like grass that humans cannot break down.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_004",
+      "subject": "Agricultural Science",
+      "topic": "Plant Science",
+      "fact": "Nitrogen-fixing plants like beans and groundnuts can pull nitrogen from the air and add it back into the soil, naturally improving fertility.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_005",
+      "subject": "Agricultural Science",
+      "topic": "Farming Practices",
+      "fact": "Irrigation systems have been used by farmers for thousands of years, with some of the earliest known systems dating back to ancient Mesopotamia.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_046",
+      "subject": "Physics",
+      "topic": "Light",
+      "fact": "A rainbow forms when light is refracted, reflected, and dispersed inside water droplets, splitting white light into its different colours.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_047",
+      "subject": "Physics",
+      "topic": "Motion",
+      "fact": "An object in motion stays in motion unless acted on by an external force, a principle known as Newton's First Law, or the law of inertia.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_048",
+      "subject": "Physics",
+      "topic": "Energy",
+      "fact": "Energy cannot be created or destroyed, only changed from one form to another, a principle known as the law of conservation of energy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_049",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "A circuit must form a complete loop for electric current to flow; breaking the loop anywhere stops the current entirely.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_050",
+      "subject": "Chemistry",
+      "topic": "Atoms",
+      "fact": "An atom is mostly empty space; if the nucleus were the size of a marble, the electrons would orbit roughly a kilometre away.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_051",
+      "subject": "Chemistry",
+      "topic": "Mixtures",
+      "fact": "A solution is a type of mixture where one substance dissolves completely into another, like sugar dissolving in water.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_052",
+      "subject": "Chemistry",
+      "topic": "Energy Changes",
+      "fact": "Exothermic reactions release heat into their surroundings, while endothermic reactions absorb heat from their surroundings.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_053",
+      "subject": "Biology",
+      "topic": "Respiration",
+      "fact": "Humans breathe out roughly the same volume of air they breathe in, but with less oxygen and more carbon dioxide.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_054",
+      "subject": "Biology",
+      "topic": "Ecosystems",
+      "fact": "A food chain shows energy moving from one organism to another, starting with producers like plants and moving through different levels of consumers.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_055",
+      "subject": "Biology",
+      "topic": "Reproduction",
+      "fact": "Some plants can reproduce both sexually, through seeds, and asexually, through runners or cuttings.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_056",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The human skeleton is constantly remodelling itself, with old bone tissue being broken down and replaced with new tissue over time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_057",
+      "subject": "Earth Science",
+      "topic": "Rock Cycle",
+      "fact": "Rocks are classified into three main types: igneous, sedimentary, and metamorphic, based on how they form.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_058",
+      "subject": "Earth Science",
+      "topic": "Water Cycle",
+      "fact": "The water cycle has no real starting point; water continuously moves between the ocean, atmosphere, and land through evaporation, condensation, and precipitation.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_059",
+      "subject": "Astronomy",
+      "topic": "Solar System",
+      "fact": "It takes Earth about 365.25 days to orbit the Sun, which is why an extra day is added every four years in a leap year.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_060",
+      "subject": "Mathematics",
+      "topic": "Algebra",
+      "fact": "The term \"algebra\" comes from the Arabic word al-jabr, meaning \"reunion of broken parts,\" from a 9th-century mathematics text.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_009",
+      "subject": "History",
+      "topic": "Colonial Era",
+      "fact": "The Berlin Conference of 1884 to 1885 saw European powers divide up African territory without consulting any African leaders.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_010",
+      "subject": "History",
+      "topic": "Independence Movements",
+      "fact": "Ghana became the first sub-Saharan African country to gain independence from colonial rule, in 1957.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_011",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "Nigeria gained independence from British colonial rule on October 1, 1960.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_012",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The Roman Empire at its peak controlled territory across three continents: Europe, Africa, and Asia.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_009",
+      "subject": "Geography",
+      "topic": "Natural Resources",
+      "fact": "Nigeria is one of the largest producers of crude oil in Africa, with reserves concentrated mainly in the Niger Delta region.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_010",
+      "subject": "Geography",
+      "topic": "Map Reading",
+      "fact": "Contour lines on a map connect points of equal elevation, and lines drawn close together indicate steep terrain.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_011",
+      "subject": "Geography",
+      "topic": "Weather and Climate",
+      "fact": "Weather describes short-term atmospheric conditions, while climate describes long-term average weather patterns over years or decades.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_007",
+      "subject": "English Language",
+      "topic": "Parts of Speech",
+      "fact": "English has eight traditional parts of speech: nouns, pronouns, verbs, adjectives, adverbs, prepositions, conjunctions, and interjections.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_008",
+      "subject": "English Language",
+      "topic": "Comprehension",
+      "fact": "Skimming and scanning are two different reading strategies; skimming gets a general overview, while scanning searches for specific information.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_003",
+      "subject": "Civic Education",
+      "topic": "Citizenship",
+      "fact": "Citizenship can usually be acquired in three ways: by birth, by descent from a parent, or by naturalization after meeting legal requirements.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_003",
+      "subject": "Economics",
+      "topic": "Scarcity",
+      "fact": "Scarcity, the basic economic problem, exists because human wants are unlimited but resources to satisfy them are limited.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_007",
+      "subject": "Literature",
+      "topic": "Literary Devices",
+      "fact": "A metaphor directly states that one thing is another, while a simile compares two things using \"like\" or \"as.\"",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_005",
+      "subject": "Government",
+      "topic": "International Relations",
+      "fact": "The United Nations was founded in 1945 after the Second World War, aiming to prevent future global conflicts through diplomacy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_006",
+      "subject": "Agricultural Science",
+      "topic": "Pest Control",
+      "fact": "Integrated pest management combines biological, chemical, and physical methods to control pests while minimizing environmental harm.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_001",
+      "subject": "Computer Science",
+      "topic": "Basics",
+      "fact": "All data in a computer, including text, images, and sound, is ultimately stored and processed as combinations of just two digits: 0 and 1.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_002",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "The first computer virus to spread over a network, called the Morris Worm, was created in 1988 and accidentally caused major disruption.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_003",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "A byte is made up of 8 bits, and a single bit can only hold a value of 0 or 1.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_004",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "The first computer programmer is widely considered to be Ada Lovelace, who wrote algorithms for a mechanical computer in the 1840s.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_001",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A balanced diet should include carbohydrates, proteins, fats, vitamins, minerals, and water, since each plays a different role in the body.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_002",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Vaccines work by training the immune system to recognize and fight specific diseases before a person is ever exposed to the real infection.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_003",
+      "subject": "Health Education",
+      "topic": "Hygiene",
+      "fact": "Washing hands properly with soap for at least 20 seconds removes far more germs than rinsing with water alone.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_004",
+      "subject": "Health Education",
+      "topic": "First Aid",
+      "fact": "The recovery position is used to keep an unconscious but breathing person safe by preventing them from choking on fluids.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_061",
+      "subject": "Physics",
+      "topic": "Heat",
+      "fact": "Metals feel colder than wood at the same temperature because metal conducts heat away from your skin much faster.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_062",
+      "subject": "Physics",
+      "topic": "Waves",
+      "fact": "Radio waves, light, and X-rays are all part of the same electromagnetic spectrum, differing only in wavelength and energy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_063",
+      "subject": "Physics",
+      "topic": "Optics",
+      "fact": "A concave lens spreads light rays apart, while a convex lens brings them together to a focal point.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_064",
+      "subject": "Physics",
+      "topic": "Pressure",
+      "fact": "Atmospheric pressure decreases with altitude, which is part of why it is harder to breathe at the top of tall mountains.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_065",
+      "subject": "Chemistry",
+      "topic": "Bonding",
+      "fact": "Ionic bonds form when electrons are transferred between atoms, while covalent bonds form when electrons are shared.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_066",
+      "subject": "Chemistry",
+      "topic": "Separation Techniques",
+      "fact": "Distillation separates liquids with different boiling points by heating a mixture and collecting the vapour as it cools back into liquid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_067",
+      "subject": "Chemistry",
+      "topic": "Metals",
+      "fact": "Aluminium is the most abundant metal in the Earth's crust, even though it was only isolated by scientists in the 1800s.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_068",
+      "subject": "Biology",
+      "topic": "Classification",
+      "fact": "Living things are organized into a hierarchy of groups, from kingdom down to species, based on shared characteristics.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_069",
+      "subject": "Biology",
+      "topic": "Nervous System",
+      "fact": "Nerve impulses can travel through the human body at speeds of over 100 metres per second.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_070",
+      "subject": "Biology",
+      "topic": "Digestion",
+      "fact": "Digestion begins in the mouth, where the enzyme amylase in saliva starts breaking down starches before food even reaches the stomach.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_071",
+      "subject": "Earth Science",
+      "topic": "Plate Tectonics",
+      "fact": "Earth's continents were once joined together in a single landmass called Pangaea, before slowly drifting apart over millions of years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_072",
+      "subject": "Astronomy",
+      "topic": "Galaxies",
+      "fact": "The Milky Way galaxy contains an estimated 100 to 400 billion stars, and our Sun is just one of them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_073",
+      "subject": "Mathematics",
+      "topic": "Statistics",
+      "fact": "The mean, median, and mode are three different ways of describing the \"average\" or central value in a set of data.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_074",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The angles in any triangle always add up to exactly 180 degrees, regardless of the triangle's shape or size.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_013",
+      "subject": "History",
+      "topic": "Trade Routes",
+      "fact": "The Trans-Saharan trade routes connected West Africa to North Africa and the Mediterranean for centuries, exchanging gold, salt, and other goods.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_014",
+      "subject": "History",
+      "topic": "Slavery and Abolition",
+      "fact": "Britain formally abolished the slave trade in 1807, though slavery itself continued in some British territories for decades afterward.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_015",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "Ancient Mesopotamia, located between the Tigris and Euphrates rivers, is often called the cradle of civilization.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_012",
+      "subject": "Geography",
+      "topic": "Landforms",
+      "fact": "A plateau is a flat, elevated area of land, distinguishing it from a plain, which is flat but at a lower elevation.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_013",
+      "subject": "Geography",
+      "topic": "Population",
+      "fact": "Urbanization describes the movement of people from rural areas into cities, a trend that has accelerated rapidly across Africa in recent decades.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_009",
+      "subject": "English Language",
+      "topic": "Figures of Speech",
+      "fact": "Personification gives human qualities to non-human things, like saying \"the wind whispered through the trees.\"",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_010",
+      "subject": "English Language",
+      "topic": "Tenses",
+      "fact": "English has 12 main verb tenses, formed by combining past, present, and future with simple, continuous, perfect, and perfect continuous aspects.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_004",
+      "subject": "Civic Education",
+      "topic": "Rule of Law",
+      "fact": "The rule of law means that everyone, including leaders, is subject to and accountable under the law, not above it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_004",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "When demand for a product rises while supply stays the same, prices typically increase, according to basic economic theory.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_008",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "A sonnet is a 14-line poem, often written in iambic pentameter, with a structured rhyme scheme.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_006",
+      "subject": "Government",
+      "topic": "Local Government",
+      "fact": "Local governments typically handle community-level matters like waste collection, local roads, and primary education, while national governments handle broader policy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_007",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "Poultry farming is one of the fastest ways to produce animal protein, since chickens grow to market size much faster than cattle or goats.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_005",
+      "subject": "Computer Science",
+      "topic": "Networks",
+      "fact": "A URL, or web address, is essentially a human-readable way of pointing to a numerical IP address that identifies a specific server.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_006",
+      "subject": "Computer Science",
+      "topic": "Software",
+      "fact": "Open-source software allows anyone to view, modify, and distribute its source code, unlike proprietary software which keeps its code private.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_005",
+      "subject": "Health Education",
+      "topic": "Mental Health",
+      "fact": "Regular physical exercise has been shown to reduce symptoms of stress and anxiety, partly by triggering the release of mood-boosting chemicals in the brain.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_006",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "Vitamin C deficiency causes a disease called scurvy, which was historically common among sailors on long voyages without fresh fruit.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_001",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Compound interest means earning interest not just on the money you saved, but also on the interest that money has already earned.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_002",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "A budget tracks income against expenses, helping identify whether someone is spending more than they earn.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_003",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "A credit score is a number that represents how reliably a person has repaid borrowed money in the past, which lenders use to assess risk.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_001",
+      "subject": "Creative Arts",
+      "topic": "Visual Art",
+      "fact": "Primary colours, red, blue, and yellow, cannot be created by mixing other colours, but can be combined to create every other colour.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_002",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "A musical octave contains 12 distinct notes, including both the natural notes and the sharps or flats between them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_003",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "Adire is a traditional Yoruba textile art form from Nigeria, made using resist-dyeing techniques to create intricate patterns on cloth.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_001",
+      "subject": "Physical Education",
+      "topic": "Fitness",
+      "fact": "Aerobic exercise strengthens the heart and lungs over time, while anaerobic exercise like sprinting builds short-burst muscle power.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_002",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "A standard football match consists of two 45-minute halves, plus any added stoppage time for delays during play.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    }
+  ]
+}
