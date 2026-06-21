@@ -334,6 +334,27 @@ WHERE id = 116125`,
   // ── Weekly report send tracking ───────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_report_sent_at TIMESTAMP`,
 
+  // ── Did You Know fact bank ────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS did_you_know (
+    id SERIAL PRIMARY KEY,
+    external_id VARCHAR(20) UNIQUE NOT NULL,
+    subject VARCHAR(50) NOT NULL,
+    subject_code VARCHAR(30) NOT NULL DEFAULT '',
+    topic VARCHAR(100),
+    fact_text TEXT NOT NULL,
+    difficulty VARCHAR(10),
+    sent_count INT DEFAULT 0,
+    last_used_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
+  )`,
+  `ALTER TABLE did_you_know ADD COLUMN IF NOT EXISTS subject_code VARCHAR(30) NOT NULL DEFAULT ''`,
+  `ALTER TABLE did_you_know ADD COLUMN IF NOT EXISTS external_id VARCHAR(20)`,
+  `ALTER TABLE did_you_know ADD COLUMN IF NOT EXISTS difficulty VARCHAR(10)`,
+  `ALTER TABLE did_you_know DROP COLUMN IF EXISTS wikipedia_title`,
+  `DELETE FROM did_you_know WHERE external_id IS NULL`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS did_you_know_external_id_key ON did_you_know(external_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_dyk_subject_code ON did_you_know(subject_code)`,
+  `CREATE INDEX IF NOT EXISTS idx_dyk_last_used ON did_you_know(last_used_at NULLS FIRST, sent_count ASC)`,
 ];
 
 async function migrate(): Promise<void> {

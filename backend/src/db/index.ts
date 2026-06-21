@@ -961,3 +961,55 @@ export async function checkAndGrantReferralReward(
   );
   return { granted: true, referrer: updatedRows[0] };
 }
+
+// ── Did You Know ──────────────────────────────────────────────────────────────
+
+export interface DidYouKnowFact {
+  id: number;
+  external_id: string;
+  subject: string;
+  subject_code: string;
+  topic: string | null;
+  fact_text: string;
+  difficulty: string | null;
+}
+
+export async function getDailyFactsForSubjects(
+  subjectCodes: string[]
+): Promise<Record<string, DidYouKnowFact>> {
+  if (!subjectCodes.length) return {};
+
+  // For each subject_code, pick the least-recently-used fact
+  const { rows } = await pool.query(
+    `SELECT DISTINCT ON (subject_code)
+       id, external_id, subject, subject_code, topic, fact_text, difficulty
+     FROM did_you_know
+     WHERE subject_code = ANY($1)
+     ORDER BY subject_code, last_used_at NULLS FIRST, sent_count ASC, RANDOM()`,
+    [subjectCodes]
+  );
+
+  const map: Record<string, DidYouKnowFact> = {};
+  for (const row of rows) map[row.subject_code] = row;
+  return map;
+}
+
+export async function getRandomFact(): Promise<DidYouKnowFact | null> {
+  const { rows } = await pool.query(
+    `SELECT id, external_id, subject, subject_code, topic, fact_text, difficulty
+     FROM did_you_know
+     ORDER BY last_used_at NULLS FIRST, sent_count ASC, RANDOM()
+     LIMIT 1`
+  );
+  return rows[0] || null;
+}
+
+export async function markFactsSent(factIds: number[]): Promise<void> {
+  if (!factIds.length) return;
+  await pool.query(
+    `UPDATE did_you_know
+     SET sent_count = sent_count + 1, last_used_at = NOW()
+     WHERE id = ANY($1)`,
+    [factIds]
+  );
+}
