@@ -54,7 +54,7 @@ async function main() {
   const fileArg = args.find((_, i) => args[i - 1] === '--file');
   const filePath = fileArg
     ? path.resolve(fileArg)
-    : path.resolve('/home/adeizajr/Downloads/exambuddie_fact_bank (2).json');
+    : path.resolve(__dirname, '../data/fact_bank.json');
 
   if (!fs.existsSync(filePath)) {
     console.error(`File not found: ${filePath}`);
