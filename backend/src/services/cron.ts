@@ -121,6 +121,58 @@ export default function startCrons(bot: any): void {
     await sendWeeklySummaries(users, bot, 'evening');
   });
 
+  // ── Daily 7am UTC (8am WAT) — Did You Know ───────────────────────────────
+  cron.schedule('0 7 * * *', async () => {
+    console.log('[CRON] Sending Did You Know facts...');
+
+    const { rows: users } = await db.query(
+      `SELECT u.id, u.telegram_id, u.first_name, u.subjects
+       FROM users u
+       WHERE u.notifications_enabled = TRUE
+         AND u.subjects IS NOT NULL AND array_length(u.subjects, 1) > 0
+         AND EXISTS (
+           SELECT 1 FROM attempts a WHERE a.user_id = u.id AND a.attempted_at > NOW() - INTERVAL '30 days'
+         )`
+    );
+
+    if (!users.length) return;
+
+    // Pre-select one fact per subject_code for today (least-recently-used)
+    const allSubjectCodes = [...new Set(users.flatMap((u: any) => u.subjects as string[]))];
+    const factMap = await db.getDailyFactsForSubjects(allSubjectCodes);
+    const fallbackFact = await db.getRandomFact();
+
+    const dayIndex = Math.floor(Date.now() / 86400000);
+    const BATCH_SIZE = 20;
+    let sent = 0;
+    const usedFactIds = new Set<number>();
+
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      const batch = users.slice(i, i + BATCH_SIZE);
+      await Promise.allSettled(batch.map(async (user: any) => {
+        try {
+          const subjects: string[] = user.subjects || [];
+          // Rotate which subject the user sees today
+          const todaySubject = subjects[dayIndex % subjects.length];
+          const fact = factMap[todaySubject] || fallbackFact;
+          if (!fact) return;
+
+          const subjectLabel = fact.subject;
+          const topicLabel = fact.topic ? ` · ${fact.topic}` : '';
+
+          const msg = `💡 <b>Did You Know?</b>\n\n${fact.fact_text}\n\n<i>📚 ${subjectLabel}${topicLabel}</i>`;
+          await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
+          usedFactIds.add(fact.id);
+          sent++;
+        } catch { /* blocked or unavailable */ }
+      }));
+      if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
+    }
+
+    await db.markFactsSent([...usedFactIds]);
+    console.log(`[CRON] Did You Know sent to ${sent}/${users.length} users`);
+  });
+
   // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────
   cron.schedule('0 17 * * 5', async () => {
     console.log('[CRON] Friday nudge...');
