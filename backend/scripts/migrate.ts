@@ -333,6 +333,7 @@ WHERE id = 116125`,
 
   // ── Weekly report send tracking ───────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_report_sent_at TIMESTAMP`,
+
 ];
 
 async function migrate(): Promise<void> {
