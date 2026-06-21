@@ -8,7 +8,7 @@
     "build": "tsc",
     "build:miniapp": "cd ../miniapp && npm run build && rm -rf ../backend/dist/miniapp && cp -r dist ../backend/dist/miniapp",
     "build:all": "npm run build:miniapp && npm run build",
-    "prestart": "ts-node scripts/migrate.ts",
+    "prestart": "ts-node scripts/migrate.ts && ts-node scripts/importDidYouKnow.ts",
     "start": "NODE_OPTIONS='--dns-result-order=ipv4first' node dist/src/index.js",
     "dev": "NODE_OPTIONS='--dns-result-order=ipv4first' nodemon --exec ts-node src/index.ts",
     "seed": "ts-node scripts/seed.ts",
