@@ -55,6 +55,7 @@ const USER_UPDATABLE_COLUMNS = new Set<string>([
   'username', 'first_name', 'exam_type', 'subjects', 'target_year', 'plan',
   'plan_expires_at', 'daily_count', 'daily_reset_at', 'streak',
   'last_active_date', 'phone_number', 'notifications_enabled',
+  'streak_freeze_used_at', 'trial_used',
 ]);
 
 export async function updateUser(
@@ -73,6 +74,17 @@ export async function updateUser(
     [telegramId, ...values]
   );
   return rows[0];
+}
+
+export async function grantTrial(telegramId: number | string): Promise<void> {
+  await pool.query(
+    `UPDATE users SET
+       plan = 'premium',
+       plan_expires_at = NOW() + INTERVAL '14 days',
+       trial_used = TRUE
+     WHERE telegram_id = $1 AND trial_used = FALSE`,
+    [telegramId]
+  );
 }
 
 function isAllExams(examType: string): boolean {
@@ -106,13 +118,61 @@ export async function getTopicsForSubject(examType: string, subject: string): Pr
   return rows.map((r: any) => r.topic as string);
 }
 
+async function getSpacedQuestion(
+  examType: string,
+  subject: string,
+  excludeIds: number[],
+  year: number | null | undefined,
+  topic: string | null | undefined,
+  userId: number
+): Promise<Question | null> {
+  const all = isAllExams(examType);
+  const params: any[] = [];
+  if (!all) params.push(examType);
+  params.push(subject);
+  params.push(userId);
+  const subjectIdx = all ? 1 : 2;
+  const userIdx = all ? 2 : 3;
+  const examFilter = all ? '' : 'AND q.exam_type = $1';
+
+  let yearFilter = '';
+  if (year) { yearFilter = `AND q.year = $${params.length + 1}`; params.push(year); }
+  let topicFilter = '';
+  if (topic) { topicFilter = `AND q.topic ILIKE $${params.length + 1}`; params.push(`%${topic}%`); }
+  const excStart = params.length + 1;
+  const excFilter = excludeIds.length > 0
+    ? `AND q.id NOT IN (${excludeIds.map((_, i) => `$${excStart + i}`).join(',')})`
+    : '';
+  params.push(...excludeIds);
+
+  const { rows } = await pool.query<Question>(
+    `SELECT DISTINCT ON (q.id) q.* FROM questions q
+     JOIN attempts a ON a.question_id = q.id
+     WHERE q.subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excFilter}
+       AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
+       AND a.user_id = $${userIdx}
+       AND a.is_correct = FALSE
+       AND a.attempted_at > NOW() - INTERVAL '30 days'
+     ORDER BY q.id, RANDOM() LIMIT 1`,
+    params
+  );
+  return rows[0] || null;
+}
+
 export async function getRandomQuestion(
   examType: string,
   subject: string,
   excludeIds: number[] = [],
   year?: number | null,
-  topic?: string | null
+  topic?: string | null,
+  userId?: number
 ): Promise<Question | null> {
+  // 40% chance: serve a previously wrong question (spaced repetition)
+  if (userId && Math.random() < 0.4) {
+    const wrong = await getSpacedQuestion(examType, subject, excludeIds, year, topic, userId);
+    if (wrong) return wrong;
+  }
+
   const all = isAllExams(examType);
   const params: any[] = all ? [subject] : [examType, subject];
   const subjectIdx = all ? 1 : 2;
@@ -1012,4 +1072,59 @@ export async function markFactsSent(factIds: number[]): Promise<void> {
      WHERE id = ANY($1)`,
     [factIds]
   );
+}
+
+// ── Referral leaderboard ──────────────────────────────────────────────────────
+
+export async function getTopReferrers(limit = 10): Promise<{ first_name: string; referrals: number }[]> {
+  const { rows } = await pool.query(
+    `SELECT u.first_name, COUNT(r.id) as referrals
+     FROM users u
+     JOIN users r ON r.referred_by = u.id
+     WHERE EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = r.id)
+     GROUP BY u.id, u.first_name
+     ORDER BY referrals DESC
+     LIMIT $1`,
+    [limit]
+  );
+  return rows.map((r: any) => ({ first_name: r.first_name, referrals: parseInt(r.referrals) }));
+}
+
+// ── Progress stats for /progress command ─────────────────────────────────────
+
+export async function getProgressStats(userId: number): Promise<{
+  totalAttempts: number;
+  accuracy: number;
+  subjectCoverage: { subject: string; seen: number; total: number }[];
+}> {
+  const [attRes, covRes] = await Promise.all([
+    pool.query(
+      `SELECT COUNT(*) as total,
+              ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) as accuracy
+       FROM attempts WHERE user_id = $1`,
+      [userId]
+    ),
+    pool.query(
+      `SELECT q.subject, COUNT(DISTINCT a.question_id) as seen, totals.total
+       FROM attempts a
+       JOIN questions q ON a.question_id = q.id
+       JOIN (
+         SELECT subject, COUNT(*) as total FROM questions
+         WHERE has_diagram = FALSE OR image_url IS NOT NULL
+         GROUP BY subject
+       ) totals ON q.subject = totals.subject
+       WHERE a.user_id = $1
+       GROUP BY q.subject, totals.total`,
+      [userId]
+    ),
+  ]);
+  return {
+    totalAttempts: parseInt(attRes.rows[0]?.total || '0'),
+    accuracy: parseFloat(attRes.rows[0]?.accuracy || '0'),
+    subjectCoverage: covRes.rows.map((r: any) => ({
+      subject: r.subject,
+      seen: parseInt(r.seen),
+      total: parseInt(r.total),
+    })),
+  };
 }

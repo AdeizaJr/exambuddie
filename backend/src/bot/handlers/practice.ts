@@ -160,16 +160,18 @@ export async function handleMultiSubjectStart(ctx: any): Promise<void> {
   );
 }
 
-// Subject tapped from the subject picker
+// Subject tapped from the subject picker — show year picker for all users
 export async function handleSubjectPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const subject = ctx.callbackQuery.data.split(':')[2];
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
-  // Premium: year=undefined triggers the year picker step inside startPractice
-  // Free: use saved target_year directly (no extra steps)
-  const year = user.plan === 'premium' ? undefined : (user.target_year ?? null);
-  await startPractice(ctx, user, subject, year);
+  await redis.updateSession(ctx.from.id, { pendingSubject: subject });
+  const subjectName = fmt.SUBJECT_MAP[subject] || subject;
+  await ctx.reply(
+    `📅 <b>${subjectName}</b>\n\nWhich year would you like to practise?`,
+    { parse_mode: 'HTML', reply_markup: fmt.yearPickerKeyboard(subject) }
+  );
 }
 
 // Explicit year picker — only reached from "Change Year" on the session summary
@@ -217,7 +219,7 @@ pendingTimerSecs: questionTimerSecs ?? 0,
   // For non-premium, year may be undefined here — fall back to their saved target_year
   const effectiveYear = year !== undefined ? year : (user.target_year ?? null);
   const effectiveTopic = topic === '__all__' ? null : topic;
-  const q = await db.getRandomQuestion(examType, subject, [], effectiveYear, effectiveTopic);
+  const q = await db.getRandomQuestion(examType, subject, [], effectiveYear, effectiveTopic, user.id);
   if (!q) {
     const availability = await db.getSubjectAvailability(subject);
     const subjectName = fmt.SUBJECT_MAP[subject] || subject;
@@ -519,7 +521,7 @@ export async function handleNext(ctx: any): Promise<void> {
         const usage = await redis.getSubjectUsage(ctx.from.id, subj);
         if (usage.count >= fmt.SUBJECT_Q_LIMIT) continue;
       }
-      q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic);
+      q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic, user.id);
       if (q) { pickedSubject = subj; break; }
     }
     if (!q) {
@@ -528,7 +530,7 @@ export async function handleNext(ctx: any): Promise<void> {
     }
   } else {
     if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
-    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic);
+    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic, user.id);
   }
 
   if (!q) {

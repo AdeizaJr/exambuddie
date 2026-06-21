@@ -19,6 +19,8 @@ export interface User {
   referral_code: string | null;
   referred_by: number | null;
   referral_reward_granted: boolean;
+  streak_freeze_used_at?: string | null;
+  trial_used?: boolean;
   joined_at: string;
   updated_at: string;
 }

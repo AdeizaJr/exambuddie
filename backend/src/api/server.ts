@@ -218,6 +218,19 @@ export default function createServer(bot: any) {
     res.json(rows[0]);
   });
 
+  // ── GET /api/admin/flags/top-questions ────────────────────────────────────
+  app.get('/api/admin/flags/top-questions', adminAuth, async (req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT id, exam_type, subject, year, question_text, flag_count,
+             (SELECT COUNT(*) FROM flagged_explanations f WHERE f.question_id = questions.id AND f.resolved = false) as open_flags
+      FROM questions
+      WHERE flag_count > 0
+      ORDER BY flag_count DESC
+      LIMIT 20
+    `);
+    res.json(rows);
+  });
+
   // ── GET /api/admin/flags ────────────────────────────────────────────────────
   app.get('/api/admin/flags', adminAuth, async (req: Request, res: Response) => {
     const { rows } = await db.query(`
