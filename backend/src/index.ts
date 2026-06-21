@@ -116,6 +116,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'settings:delete') return onboarding.handleSettingsDelete(ctx);
   if (data === 'settings:delete:confirm') return onboarding.handleSettingsDeleteConfirm(ctx);
   if (data === 'settings:back') return onboarding.handleSettingsBack(ctx);
+  if (data === 'settings:weekly_report') return stats.handleWeeklyReport(ctx);
 
   // Challenge
   if (data === 'challenge:pick') return challenge.handleChallenge(ctx);

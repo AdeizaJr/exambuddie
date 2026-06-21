@@ -1,7 +1,7 @@
 // src/bot/handlers/stats.ts
 import * as db from '../../db';
 import * as fmt from '../formatter';
-import { SUBJECT_MAP } from '../formatter';
+import { SUBJECT_MAP, SUBJECT_EMOJI } from '../formatter';
 import * as payments from '../../services/payments';
 import * as redis from '../../services/redis';
 
@@ -217,4 +217,85 @@ export async function handleFlagReason(ctx: any, reasonCode: string): Promise<vo
 export async function handleFlagCancel(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   await ctx.editMessageText('Cancelled.').catch(() => {});
+}
+
+export async function handleWeeklyReport(ctx: any): Promise<void> {
+  if (ctx.callbackQuery) await ctx.answerCbQuery();
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Please use /start first.'); return; }
+
+  if (user.plan !== 'premium') {
+    await ctx.reply(
+      '💎 Weekly reports are a Premium feature.\n\nUpgrade to see your full breakdown, week-over-week accuracy, weak topics, and peer ranking.',
+      {
+        parse_mode: 'HTML',
+        reply_markup: { inline_keyboard: [[{ text: '💎 Upgrade to Premium', callback_data: 'menu:subscribe' }]] },
+      }
+    );
+    return;
+  }
+
+  const report = await db.getWeeklyReport(user.id);
+  const { thisWeek, lastWeek, subjectBreakdown, weakTopics, bestSubject, coverageStats, percentileRank } = report;
+
+  if (thisWeek.attempts === 0) {
+    await ctx.reply("📊 No questions answered this week yet.\n\nStart practising to see your report! /practice");
+    return;
+  }
+
+  const delta = lastWeek.attempts > 0 ? thisWeek.accuracy - lastWeek.accuracy : null;
+  const deltaStr = delta !== null
+    ? (delta >= 0 ? ` ↑ +${delta.toFixed(1)}%` : ` ↓ ${delta.toFixed(1)}%`)
+    : '';
+
+  const subjectLines = subjectBreakdown.map((s) => {
+    const name = SUBJECT_MAP[s.subject] || s.subject;
+    const emoji = SUBJECT_EMOJI[s.subject] || '📖';
+    const warn = s.accuracy < 50 ? ' ⚠️' : '';
+    return `  ${emoji} ${name}: ${s.accuracy}% (${s.attempts} questions)${warn}`;
+  }).join('\n');
+
+  const weakLines = weakTopics.map((t) => {
+    const subjectName = SUBJECT_MAP[t.subject] || t.subject;
+    return `  • ${t.topic} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${t.topic}`;
+  }).join('\n');
+
+  const bestLine = bestSubject
+    ? `\n🌟 Best subject: ${SUBJECT_MAP[bestSubject.subject] || bestSubject.subject} at ${bestSubject.accuracy}%`
+    : '';
+
+  const percentileLine = percentileRank !== null
+    ? `\n🏅 You're in the top ${100 - percentileRank}% of students this week`
+    : '';
+
+  const coverageLines = coverageStats
+    .filter(c => subjectBreakdown.some(s => s.subject === c.subject))
+    .slice(0, 2)
+    .map(c => {
+      const pct = Math.round((c.seen / c.total) * 100);
+      const name = SUBJECT_MAP[c.subject] || c.subject;
+      return `  📊 ${name}: ${pct}% of question bank explored (${c.seen}/${c.total})`;
+    }).join('\n');
+
+  const msg = `💎 <b>Your Weekly Report</b>
+
+📅 <b>This Week:</b>
+📝 Questions answered: ${thisWeek.attempts}
+🎯 Accuracy: ${thisWeek.accuracy}%${deltaStr}
+🔥 Streak: ${user.streak || 0} days${bestLine}${percentileLine}${subjectBreakdown.length > 0 ? `
+
+📚 <b>Subject Breakdown:</b>
+${subjectLines}` : ''}${coverageLines ? `
+
+📈 <b>Progress:</b>
+${coverageLines}` : ''}${weakTopics.length > 0 ? `
+
+⚠️ <b>Focus Areas:</b>
+${weakLines}` : '\n\n✅ No weak topics this week — great work!'}`;
+
+  await ctx.reply(msg, {
+    parse_mode: 'HTML',
+    reply_markup: { inline_keyboard: [[{ text: '← Back to Settings', callback_data: 'settings:back' }]] },
+  });
 }
