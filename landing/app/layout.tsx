@@ -59,6 +59,8 @@ const softwareAppJsonLd = {
   url: "https://exambuddie.app",
   description:
     "Past question practice for WAEC, JAMB and NECO — timed quizzes, instant explanations, and progress tracking on Telegram.",
+  datePublished: "2024-01-01",
+  dateModified: "2026-06-01",
   offers: {
     "@type": "Offer",
     price: "0",
@@ -74,6 +76,7 @@ const organizationJsonLd = {
   logo: "https://exambuddie.app/opengraph-image",
   description:
     "Past question practice platform for WAEC, JAMB and NECO exams — timed drills, instant explanations, and streak tracking, accessible directly inside Telegram.",
+  foundingDate: "2024",
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
