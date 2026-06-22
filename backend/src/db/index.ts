@@ -60,7 +60,7 @@ const USER_UPDATABLE_COLUMNS = new Set<string>([
   'username', 'first_name', 'exam_type', 'subjects', 'target_year', 'plan',
   'plan_expires_at', 'daily_count', 'daily_reset_at', 'streak',
   'last_active_date', 'phone_number', 'notifications_enabled',
-  'streak_freeze_used_at', 'trial_used', 'daily_reminder_hour',
+  'streak_freeze_used_at', 'trial_used', 'daily_reminder_hour', 'source',
 ]);
 
 export async function updateUser(

@@ -218,6 +218,15 @@ export default function createServer(bot: any) {
     res.json(rows[0]);
   });
 
+  // ── GET /api/admin/acquisition ───────────────────────────────────────────
+  app.get('/api/admin/acquisition', adminAuth, async (req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT COALESCE(source, 'organic') as source, COUNT(*) as users
+      FROM users GROUP BY source ORDER BY users DESC
+    `);
+    res.json(rows);
+  });
+
   // ── GET /api/admin/flags/top-questions ────────────────────────────────────
   app.get('/api/admin/flags/top-questions', adminAuth, async (req: Request, res: Response) => {
     const { rows } = await db.query(`

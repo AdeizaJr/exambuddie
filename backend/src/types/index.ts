@@ -22,6 +22,7 @@ export interface User {
   streak_freeze_used_at?: string | null;
   trial_used?: boolean;
   daily_reminder_hour?: number | null;
+  source?: string | null;
   joined_at: string;
   updated_at: string;
 }

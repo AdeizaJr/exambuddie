@@ -52,6 +52,11 @@ bot.start(async (ctx: any) => {
     const plan = payload.slice('subscribe_'.length); // 'monthly' | 'term' | 'yearly'
     return stats.handleSubscribeDeepLink(ctx, plan);
   }
+  if (payload === 'from_landing') {
+    const user = await db.upsertUser(ctx);
+    if (!user.source) await db.updateUser(ctx.from.id, { source: 'landing' } as any);
+    return onboarding.handleStart(ctx);
+  }
   return onboarding.handleStart(ctx);
 });
 bot.command('help', (ctx) => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));
