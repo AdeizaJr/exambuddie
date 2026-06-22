@@ -4,7 +4,7 @@ Marketing site for [ExamBuddie](https://exambuddie.app). Built with Next.js 15 (
 
 ## Pages
 
-| Route | Description |
+| Route | Descriptions |
 |-------|-------------|
 | `/` | Homepage — hero, features, pricing, FAQ |
 | `/privacy` | Privacy Policy (NDPA 2023 compliant) |
