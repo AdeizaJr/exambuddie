@@ -42,6 +42,7 @@ export default function Users() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const search = searchParams.get("q") ?? "";
+  const planFilter = (searchParams.get("plan") ?? "all") as "all" | "premium" | "free" | "trial";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
 
   const [result, setResult] = useState<PaginatedResponse<User> | null>(null);
@@ -87,7 +88,7 @@ export default function Users() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getUsers({ page, limit: 50, search: search || undefined });
+      const data = await getUsers({ page, limit: 50, search: search || undefined, plan: planFilter === 'all' ? undefined : planFilter });
       setResult(data);
       setError(null);
       setSelected(new Set());
@@ -97,7 +98,7 @@ export default function Users() {
     } finally {
       setLoading(false);
     }
-  }, [page, search]);
+  }, [page, search, planFilter]);
 
   useEffect(() => {
     load();
@@ -212,6 +213,23 @@ export default function Users() {
       <div>
         <h1 className="font-display text-xl font-bold text-white">Users</h1>
         <p className="mt-0.5 text-sm text-muted">Manage user accounts and plans</p>
+      </div>
+
+      {/* Plan filter tabs */}
+      <div className="flex gap-1 rounded-lg border border-border bg-surface p-1 w-fit">
+        {(["all", "premium", "free", "trial"] as const).map((p) => (
+          <button
+            key={p}
+            onClick={() => setFilter("plan", p === "all" ? "" : p)}
+            className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
+              planFilter === p
+                ? "bg-accent text-white"
+                : "text-muted hover:text-white"
+            }`}
+          >
+            {p === "all" ? "All Users" : p === "trial" ? "Trial" : p === "premium" ? "Premium" : "Free"}
+          </button>
+        ))}
       </div>
 
       <div className="flex flex-wrap gap-3">

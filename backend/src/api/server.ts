@@ -436,6 +436,10 @@ export default function createServer(bot: any) {
       );
     }
 
+    if (req.query.plan === 'premium') conditions.push(`plan = 'premium'`);
+    if (req.query.plan === 'free') conditions.push(`plan = 'free'`);
+    if (req.query.plan === 'trial') conditions.push(`(plan = 'premium' AND trial_used = TRUE AND plan_expires_at > NOW())`);
+
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
     params.push(limit);
