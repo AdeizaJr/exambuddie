@@ -8,8 +8,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 export const metadata: Metadata = {
   metadataBase: new URL("https://exambuddie.app"),
   title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
-  // Add your Google Search Console verification code here when ready:
-  verification: { google: "googleb86b6e207e3f7ae9.html" },
+  verification: { google: "googleb86b6e207e3f7ae9" },
   description:
     "WAEC, JAMB and NECO past question practice on Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
   keywords: [
