@@ -10,7 +10,7 @@ export function Nav() {
   return (
     <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <a href="#" className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-8 w-8 shrink-0">
             <defs>
               <linearGradient id="nav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -28,10 +28,10 @@ export function Nav() {
           <span className="text-lg font-bold text-blue-700 sm:text-xl dark:text-blue-400">ExamBuddie</span>
         </a>
         <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex dark:text-slate-300">
-          <a href="#features" className="transition-colors hover:text-slate-900 dark:hover:text-white">Features</a>
-          <a href="#subjects" className="transition-colors hover:text-slate-900 dark:hover:text-white">Subjects</a>
-          <a href="#pricing" className="transition-colors hover:text-slate-900 dark:hover:text-white">Pricing</a>
-          <a href="#faq" className="transition-colors hover:text-slate-900 dark:hover:text-white">FAQ</a>
+          <a href="/#features" className="transition-colors hover:text-slate-900 dark:hover:text-white">Features</a>
+          <a href="/#subjects" className="transition-colors hover:text-slate-900 dark:hover:text-white">Subjects</a>
+          <a href="/#pricing" className="transition-colors hover:text-slate-900 dark:hover:text-white">Pricing</a>
+          <a href="/#faq" className="transition-colors hover:text-slate-900 dark:hover:text-white">FAQ</a>
           <a href="/blog" className="transition-colors hover:text-slate-900 dark:hover:text-white">Blog</a>
         </div>
         <div className="flex items-center gap-2">
@@ -65,10 +65,10 @@ export function Nav() {
       {menuOpen && (
         <div className="border-t border-slate-100 bg-white px-4 py-4 md:hidden dark:border-slate-800 dark:bg-slate-950">
           <div className="flex flex-col gap-4 text-sm font-medium text-slate-600 dark:text-slate-300">
-            <a href="#features" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Features</a>
-            <a href="#subjects" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Subjects</a>
-            <a href="#pricing" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Pricing</a>
-            <a href="#faq" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">FAQ</a>
+            <a href="/#features" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Features</a>
+            <a href="/#subjects" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Subjects</a>
+            <a href="/#pricing" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Pricing</a>
+            <a href="/#faq" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">FAQ</a>
             <a href="/blog" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Blog</a>
           </div>
         </div>
