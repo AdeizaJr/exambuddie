@@ -312,7 +312,7 @@ export function mainMenuKeyboard(plan?: string) {
     inline_keyboard: [
       [
         { text: '📚 Practice',   callback_data: 'practice:pick' },
-        { text: '📋 Quiz Mode',  callback_data: 'quiz:pick' },
+        { text: '📋 CBT Mode',   callback_data: 'quiz:pick' },
       ],
       [
         { text: '📊 My Stats',   callback_data: 'stats:show' },
@@ -325,7 +325,7 @@ export function mainMenuKeyboard(plan?: string) {
 export function persistentMenuKeyboard() {
   return {
     keyboard: [
-      [{ text: '📚 Practice' }, { text: '📋 Quiz' }],
+      [{ text: '📚 Practice' }, { text: '📋 CBT' }],
       [{ text: '🎯 Challenge' }, { text: '🏆 Leaderboard' }],
       [{ text: '📊 My Stats' }, { text: '⚙️ Settings' }],
     ],
@@ -531,7 +531,7 @@ export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
         { text: '➡️  Next Question', callback_data: 'quiz:next' },
         { text: '🚩 Flag', callback_data: 'flag:question' },
       ],
-      [{ text: '⏹ End Quiz', callback_data: 'quiz:stop' }],
+      [{ text: '⏹ End CBT', callback_data: 'quiz:stop' }],
     ];
     if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
     return { inline_keyboard: rows };
@@ -648,7 +648,7 @@ export function statsFilterKeyboard() {
         { text: 'JAMB', callback_data: 'stats:filter:JAMB' },
       ],
       [{ text: 'All Exams', callback_data: 'stats:filter:all' }],
-      [{ text: '📜 Quiz History', callback_data: 'quiz:history' }],
+      [{ text: '📜 CBT History', callback_data: 'quiz:history' }],
     ],
   };
 }
@@ -661,6 +661,11 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
   const weakSection = weakTopics && weakTopics.length > 0
     ? '\n⚠️ <b>Weak Topics (focus here!):</b>\n' +
       weakTopics.map(t => `  • ${t.topic}: ${t.accuracy}% accuracy (${t.attempts} attempts)`).join('\n')
+    : '';
+
+  const worstTopic = weakTopics && weakTopics.length > 0 ? weakTopics[0] : null;
+  const drillTip = worstTopic
+    ? `\n\n💡 <b>Score Tip:</b> Drilling <i>${worstTopic.topic}</i> (${worstTopic.accuracy}%) could meaningfully boost your score. Use /drill to target it now.`
     : '';
 
   const examLabel = examType && examType !== 'all' ? examType : 'Overall';
@@ -694,7 +699,7 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 • 🔥 Streak: ${user.streak || 0} days
 
 💳 <b>Plan:</b> ${plan}
-${subjectSection}${weakSection}`;
+${subjectSection}${weakSection}${drillTip}`;
 }
 
 export function freeLimitMessage(remaining: number, limit: number): string | null {
@@ -720,7 +725,7 @@ export function upgradeMessage(): string {
 Unlock everything you need to ace your exams:
 
 ✅ Unlimited questions (no daily cap)
-✅ Timed quiz mode (50 questions, 60 mins)
+✅ CBT mode — timed mock exam (50 questions, 60 mins)
 ✅ Topic drill (target weak areas)
 ✅ Progress tracking &amp; stats
 ✅ Weak topic detection
@@ -790,8 +795,8 @@ export function helpMessage(): string {
 /practice — Answer questions one at a time, pick subject and year
 <i>Best for daily revision and building topic confidence</i>
 
-<b>📋 Quiz Mode</b>
-/quiz — 40-question timed mock exam, scored at the end
+<b>📋 CBT Mode</b>
+/quiz — 50-question timed CBT exam (60 mins), scored at the end
 <i>Best for simulating real exam conditions</i>
 
 <b>🎯 Drill Mode</b>
@@ -1081,6 +1086,28 @@ export function progressMessage(
 🎯 Accuracy: ${accuracy}%${countdown ? `\n${countdown}` : ''}${coverageLines ? `\n\n📈 <b>Coverage:</b>\n${coverageLines}` : ''}
 
 💳 Plan: ${plan}`;
+}
+
+export function shareableProgressCard(
+  user: User,
+  totalAttempts: number,
+  accuracy: number,
+  botUsername: string
+): string {
+  const best = user.subjects && user.subjects.length > 0 ? user.subjects[0] : null;
+  const bestLine = best ? `\n📚 Studying: ${SUBJECT_MAP[best] || best}` : '';
+  const examLine = user.exam_type && user.target_year ? `\n🎯 Goal: ${user.exam_type} ${user.target_year}` : '';
+  const link = user.referral_code
+    ? `https://t.me/${botUsername}?start=ref_${user.referral_code}`
+    : `https://t.me/${botUsername}`;
+  return `📊 My ExamBuddie Stats
+━━━━━━━━━━━━━━━━
+🔥 Streak: ${user.streak || 0} days
+✅ ${totalAttempts.toLocaleString()} questions answered
+🎯 Accuracy: ${accuracy}%${bestLine}${examLine}
+
+Studying smarter for WAEC/JAMB/NECO 📖
+Join me → ${link}`;
 }
 
 export function onboardingGuide(): string {

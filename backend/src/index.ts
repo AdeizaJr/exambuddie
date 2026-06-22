@@ -119,6 +119,8 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'settings:back') return onboarding.handleSettingsBack(ctx);
   if (data === 'settings:weekly_report') return stats.handleWeeklyReport(ctx);
   if (data === 'settings:freeze_streak') return onboarding.handleStreakFreeze(ctx);
+  if (data === 'settings:reminder') return onboarding.handleSettingsReminder(ctx);
+  if (data.startsWith('settings:reminder:')) return onboarding.handleReminderSet(ctx);
 
   // Challenge
   if (data === 'challenge:pick') return challenge.handleChallenge(ctx);
@@ -198,6 +200,7 @@ bot.on('callback_query', async (ctx: any) => {
   // Stats
   if (data === 'stats:show') return stats.handleStats(ctx);
   if (data === 'stats:progress') return stats.handleProgress(ctx);
+  if (data === 'stats:share') return stats.handleShareProgress(ctx);
   if (data.startsWith('stats:filter:')) return stats.handleStatsFilter(ctx);
 
   // Subscribe
@@ -317,7 +320,7 @@ bot.on('text', async (ctx: any) => {
   const activeSession =
     session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill';
 
-  if (activeSession && (text === '📚 Practice' || text === '📋 Quiz')) {
+  if (activeSession && (text === '📚 Practice' || text === '📋 CBT')) {
     await ctx.reply(
       `You have an active ${session.mode} session running.\n\nEnd it first to start a new one.`,
       {
@@ -335,7 +338,7 @@ bot.on('text', async (ctx: any) => {
   if (activeSession) return; // mid-session free text — ignore
 
   if (text === '📚 Practice') return practice.handlePractice(ctx);
-  if (text === '📋 Quiz') return quiz.handleQuiz(ctx);
+  if (text === '📋 CBT') return quiz.handleQuiz(ctx);
 
   await ctx.reply(`${fmt.timeGreeting()}, ${user.first_name}! What would you like to do?`, {
     parse_mode: 'HTML',

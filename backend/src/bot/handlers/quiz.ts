@@ -18,7 +18,7 @@ export async function handleQuiz(ctx: any): Promise<void> {
 
   if (user.plan !== 'premium') {
     await ctx.reply(
-      `📋 <b>Quiz Mode — Premium Feature</b>\n\nQuiz mode gives you a real exam experience:\n• 50 questions back-to-back\n• 60-minute countdown timer\n• Full score breakdown at the end\n\nUpgrade to Premium to unlock this!`,
+      `📋 <b>CBT Mode — Premium Feature</b>\n\nCBT mode gives you a real exam experience:\n• 50 questions back-to-back\n• 60-minute countdown timer\n• Full score breakdown at the end\n\nUpgrade to Premium to unlock this!`,
       { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() }
     );
     return;
@@ -27,7 +27,7 @@ export async function handleQuiz(ctx: any): Promise<void> {
   const quizSubjects = Object.keys(fmt.SUBJECT_MAP);
   const counts = await db.getSubjectQuestionCounts(quizSubjects);
   await ctx.reply(
-    '📋 <b>Quiz Mode</b>\n\nPick a subject to start your mock exam:',
+    '📋 <b>CBT Mode</b>\n\nPick a subject to start your mock exam:',
     { parse_mode: 'HTML', reply_markup: fmt.quizSubjectKeyboard(quizSubjects, counts) }
   );
 }
@@ -136,7 +136,7 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   const timerNote = timerSecs > 0 ? ` with <b>${timerSecs}s per question</b>` : '';
   const timeMsg = `⏱️ You have <b>60 minutes</b> to complete ${questions.length} questions${timerNote}.\nGood luck! 🍀`;
   await ctx.reply(
-    `📋 <b>Quiz Mode Started</b>\n${fmt.SUBJECT_MAP[subject] || subject}\n\n${timeMsg}\n\nTap /stop or use ⏹ End Quiz at any time to stop early.`,
+    `📋 <b>CBT Mode Started</b>\n${fmt.SUBJECT_MAP[subject] || subject}\n\n${timeMsg}\n\nTap /stop or use ⏹ End CBT at any time to stop early.`,
     { parse_mode: 'HTML' }
   );
 
