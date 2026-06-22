@@ -140,6 +140,7 @@ export interface UsersFilter {
   page?: number;
   limit?: number;
   search?: string;
+  plan?: 'all' | 'premium' | 'free' | 'trial';
 }
 
 export async function getUsers(filter: UsersFilter = {}): Promise<PaginatedResponse<User>> {
