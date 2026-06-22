@@ -5,6 +5,7 @@ import { faqs } from "./data/faqs";
 import { ThemeToggle } from "./theme-toggle";
 
 const BOT_URL = "https://t.me/ExamBuddieBot";
+const BOT_URL_LANDING = "https://t.me/ExamBuddieBot?start=from_landing";
 
 const subjects = [
   { icon: "📐", name: "Mathematics" },
@@ -385,7 +386,7 @@ export default function Home() {
       {/* Sticky mobile CTA */}
       <div className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-slate-200 bg-white/95 backdrop-blur px-4 py-3 dark:border-slate-800 dark:bg-slate-950/95">
         <a
-          href={BOT_URL}
+          href={BOT_URL_LANDING}
           target="_blank"
           rel="noopener noreferrer"
           className="block w-full rounded-full bg-blue-700 py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-blue-200/50 transition-colors hover:bg-blue-800 dark:shadow-none"
@@ -483,13 +484,14 @@ export default function Home() {
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
                 <a
-                  href={BOT_URL}
+                  href={BOT_URL_LANDING}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
                   Start Free — 14 Days Premium →
                 </a>
+
                 <a
                   href="#features"
                   className="rounded-full border border-slate-200 px-6 py-3.5 text-base font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:px-8 sm:py-4 sm:text-lg dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
@@ -855,7 +857,7 @@ export default function Home() {
             ))}
           </div>
           <a
-            href={BOT_URL}
+            href={BOT_URL_LANDING}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-10 inline-block rounded-full bg-blue-700 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:mt-12 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
@@ -1136,7 +1138,7 @@ export default function Home() {
             Start free today — 14 days Premium included, no card needed.
           </p>
           <a
-            href={BOT_URL}
+            href={BOT_URL_LANDING}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block rounded-full bg-white px-8 py-3.5 text-base font-bold text-blue-700 shadow-xl transition-colors hover:bg-blue-50 sm:px-10 sm:py-4 sm:text-lg"
@@ -1175,7 +1177,7 @@ export default function Home() {
       {/* Sticky mobile CTA */}
       <div className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur md:hidden dark:border-slate-800 dark:bg-slate-950/95">
         <a
-          href={BOT_URL}
+          href={BOT_URL_LANDING}
           target="_blank"
           rel="noopener noreferrer"
           className="block w-full rounded-full bg-blue-700 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800"

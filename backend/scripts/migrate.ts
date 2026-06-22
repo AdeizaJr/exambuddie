@@ -364,6 +364,9 @@ WHERE id = 116125`,
 
   // ── Daily reminder opt-in (WAT hour 0–23, NULL = off) ─────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_reminder_hour INTEGER DEFAULT NULL`,
+
+  // ── Acquisition source tracking ───────────────────────────────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS source VARCHAR(50) DEFAULT NULL`,
 ];
 
 async function migrate(): Promise<void> {
