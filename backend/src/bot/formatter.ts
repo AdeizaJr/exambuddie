@@ -1088,23 +1088,34 @@ export function progressMessage(
 💳 Plan: ${plan}`;
 }
 
+function streakBadge(streak: number): string {
+  if (streak >= 90) return '🏆 LEGEND';
+  if (streak >= 60) return '🥇 EXAM READY';
+  if (streak >= 30) return '🥈 MONTHLY GRINDER';
+  if (streak >= 7)  return '🥉 WEEK WARRIOR';
+  return '📖 IN TRAINING';
+}
+
 export function shareableProgressCard(
   user: User,
   totalAttempts: number,
   accuracy: number,
   botUsername: string
 ): string {
+  const streak = user.streak || 0;
+  const badge = streakBadge(streak);
   const best = user.subjects && user.subjects.length > 0 ? user.subjects[0] : null;
-  const bestLine = best ? `\n📚 Studying: ${SUBJECT_MAP[best] || best}` : '';
-  const examLine = user.exam_type && user.target_year ? `\n🎯 Goal: ${user.exam_type} ${user.target_year}` : '';
+  const bestLine = best ? `\n📚 ${SUBJECT_MAP[best] || best}` : '';
+  const examLine = user.exam_type && user.target_year ? `\n🎯 ${user.exam_type} ${user.target_year}` : '';
   const link = user.referral_code
     ? `https://t.me/${botUsername}?start=ref_${user.referral_code}`
     : `https://t.me/${botUsername}`;
-  return `📊 My ExamBuddie Stats
+  return `${badge}
 ━━━━━━━━━━━━━━━━
-🔥 Streak: ${user.streak || 0} days
+${user.first_name} · ExamBuddie
+🔥 ${streak}-day streak
 ✅ ${totalAttempts.toLocaleString()} questions answered
-🎯 Accuracy: ${accuracy}%${bestLine}${examLine}
+🎯 ${accuracy}% accuracy${bestLine}${examLine}
 
 Studying smarter for WAEC/JAMB/NECO 📖
 Join me → ${link}`;
