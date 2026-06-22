@@ -115,15 +115,15 @@ npm run dev          # runs at localhost:3000
 |---------|-------------|
 | `/start` | Onboarding or main menu |
 | `/practice` | Start a practice session |
-| `/quiz` | 50-question timed mock exam — 60 min (premium) |
+| `/quiz` | 50-question timed CBT exam — 60 min (premium) |
 | `/drill` | Drill your weakest topics |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
-| `/invite` | Get your referral link — share on Telegram or WhatsApp, invite 2 friends → 3 days Premium free |
+| `/invite` | Get your referral link — invite 2 friends → 3 days Premium free + referral leaderboard |
 | `/leaderboard` | Weekly accuracy leaderboard (top 10) |
-| `/stats` | View accuracy and progress — includes exam countdown |
-| `/progress` | Quick snapshot: streak, accuracy, subject coverage |
+| `/stats` | View accuracy, progress, exam countdown, and actionable score tip |
+| `/progress` | Quick snapshot: streak, accuracy, subject coverage + shareable progress card |
 | `/subscribe` | Upgrade to Premium |
-| `/settings` | Change exam type, subjects, or phone number |
+| `/settings` | Change exam type, subjects, phone number, or daily reminder time |
 | `/support` | Report a bug, request your data, or delete your account |
 | `/app` | Open the ExamBuddie Web App |
 | `/stop` | End current session |
@@ -139,13 +139,15 @@ npm run dev          # runs at localhost:3000
 | Questions per day | 5 (configurable) | Unlimited |
 | Practice mode | ✅ | ✅ |
 | Year picker in practice | ✅ | ✅ |
-| Quiz mode (50Q, 60 min) | ❌ | ✅ |
+| CBT mode (50Q, 60 min) | ❌ | ✅ |
 | Topic drill | ❌ | ✅ |
 | Per-question timer | ❌ | ✅ |
 | Spaced repetition (wrong questions resurface) | ❌ | ✅ |
 | Streak freeze (once/week) | ❌ | ✅ |
-| Progress tracking (/progress) | ✅ | ✅ |
+| Daily reminder opt-in (custom WAT hour) | ✅ | ✅ |
+| Progress tracking (/progress + shareable badge card) | ✅ | ✅ |
 | Exam countdown in /stats | ✅ | ✅ |
+| Score tip in /stats (drill weakest topic) | ✅ | ✅ |
 | Weak topic detection | ✅ | ✅ |
 | Weekly leaderboard | ✅ | ✅ |
 | Weekly performance reports | ❌ | ✅ |
@@ -154,8 +156,23 @@ npm run dev          # runs at localhost:3000
 | Challenge Mode — create a room | ❌ | ✅ |
 | Referral rewards (/invite) — invite 2 friends → 3 days free | ✅ | ✅ |
 | Referral leaderboard | ✅ | ✅ |
+| "Beat your inviter" onboarding hook | ✅ | ✅ |
 
 **Pricing:** ₦1,500/month · ₦3,500/term (3 months) · ₦12,000/year
+
+---
+
+## Admin API Endpoints
+
+All endpoints require HTTP Basic Auth (`ADMIN_USERNAME` / `ADMIN_PASSWORD`).
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/admin/stats` | Total users, premium count, attempts today, revenue |
+| `GET /api/admin/acquisition` | Signup breakdown by source (landing, organic, referral) |
+| `GET /api/admin/flags/top-questions` | Most-flagged questions (top 20) |
+| `GET /api/admin/flags` | All open flagged explanations |
+| `POST /api/admin/flags/:id/resolve` | Mark a flag as resolved |
 
 ---
 
