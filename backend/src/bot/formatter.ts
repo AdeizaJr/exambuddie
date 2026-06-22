@@ -434,7 +434,10 @@ export function answerOptions(q: Question): string {
 
 function formatExplanation(text: string): string {
   // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain
-  if (/<(?:b|i|code)>/.test(text)) return text;
+  // Still sanitize any bare < that are not valid Telegram tags
+  if (/<(?:b|i|code)>/.test(text)) {
+    return text.replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
+  }
   const converted = convertLatex(text, true);
   return converted
     // inverse trig: cos-1 / sin-1 / tan-1 → cos⁻¹ / sin⁻¹ / tan⁻¹
@@ -483,6 +486,8 @@ function formatExplanation(text: string): string {
     .replace(/°\s+(\d)/g, '°\n\n$1')
     // common math-step transition words (case-insensitive, optional trailing comma)
     .replace(/\s+(hence|therefore|thus|note:|substituting|now|solving|dividing|multiplying|expanding|factoring|rearranging),?\s/gi, '\n\n$1 ')
+    // Escape bare < that are not valid Telegram HTML tags (e.g. angle notation <POQ, <ABC)
+    .replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;')
     .trim();
 }
 
