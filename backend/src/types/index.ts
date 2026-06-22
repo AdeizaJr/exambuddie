@@ -21,6 +21,7 @@ export interface User {
   referral_reward_granted: boolean;
   streak_freeze_used_at?: string | null;
   trial_used?: boolean;
+  daily_reminder_hour?: number | null;
   joined_at: string;
   updated_at: string;
 }

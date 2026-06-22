@@ -5,6 +5,8 @@ import { SUBJECT_MAP, SUBJECT_EMOJI } from '../formatter';
 import * as payments from '../../services/payments';
 import * as redis from '../../services/redis';
 
+const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
+
 export async function handleStats(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
@@ -231,11 +233,24 @@ export async function handleProgress(ctx: any): Promise<void> {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: [
+          [{ text: '📤 Share Progress', callback_data: 'stats:share' }],
           [{ text: '📊 Full Stats', callback_data: 'stats:show' }],
           [{ text: '📚 Practice', callback_data: 'practice:pick' }],
         ],
       },
     }
+  );
+}
+
+export async function handleShareProgress(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Please use /start first.'); return; }
+  const progress = await db.getProgressStats(user.id);
+  const card = fmt.shareableProgressCard(user, progress.totalAttempts, progress.accuracy, BOT_USERNAME);
+  await ctx.reply(
+    `${card}\n\n<i>Copy the text above and share it on WhatsApp or anywhere you like!</i>`,
+    { parse_mode: 'HTML' }
   );
 }
 

@@ -361,6 +361,9 @@ WHERE id = 116125`,
 
   // ── Trial period flag (14-day free Premium on first onboarding) ──────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_used BOOLEAN DEFAULT FALSE`,
+
+  // ── Daily reminder opt-in (WAT hour 0–23, NULL = off) ─────────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_reminder_hour INTEGER DEFAULT NULL`,
 ];
 
 async function migrate(): Promise<void> {

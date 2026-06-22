@@ -211,6 +211,39 @@ export default function startCrons(bot: any): void {
     console.log(`[CRON] 3-day inactivity nudge sent to ${sent}/${users.length} users`);
   });
 
+  // ── Hourly — daily reminder opt-in ───────────────────────────────────────
+  cron.schedule('0 * * * *', async () => {
+    const watHour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
+    const watToday = new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0];
+
+    const { rows: users } = await db.query(
+      `SELECT telegram_id, first_name
+       FROM users
+       WHERE notifications_enabled = TRUE
+         AND daily_reminder_hour = $1
+         AND (last_active_date IS NULL OR last_active_date < $2)`,
+      [watHour, watToday]
+    );
+
+    let sent = 0;
+    const BATCH_SIZE = 20;
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      const batch = users.slice(i, i + BATCH_SIZE);
+      await Promise.allSettled(batch.map(async (user) => {
+        try {
+          await bot.telegram.sendMessage(
+            user.telegram_id,
+            `⏰ <b>Time to practise, ${user.first_name}!</b>\n\nYour daily reminder is here. Even 5 questions keeps the momentum going.\n\n📚 /practice`,
+            { parse_mode: 'HTML' }
+          );
+          sent++;
+        } catch { /* blocked */ }
+      }));
+      if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
+    }
+    if (users.length > 0) console.log(`[CRON] Daily reminder sent to ${sent}/${users.length} users at WAT ${watHour}:00`);
+  });
+
   // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────
   cron.schedule('0 17 * * 5', async () => {
     console.log('[CRON] Friday nudge...');

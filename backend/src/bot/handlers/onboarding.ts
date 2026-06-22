@@ -226,9 +226,10 @@ export async function handlePhoneSkip(ctx: any): Promise<void> {
 }
 
 // /settings command
-function settingsKeyboard(notificationsEnabled: boolean, hasPhone: boolean, isPremium: boolean) {
+function settingsKeyboard(notificationsEnabled: boolean, hasPhone: boolean, isPremium: boolean, reminderHour?: number | null) {
   const notifLabel = notificationsEnabled ? '🔔 Bot Messages: ON' : '🔕 Bot Messages: OFF';
   const phoneLabel = hasPhone ? '📱 Update Phone Number' : '📱 Add Phone Number';
+  const reminderLabel = reminderHour != null ? `⏰ Daily Reminder: ${String(reminderHour).padStart(2, '0')}:00 WAT` : '⏰ Set Daily Reminder';
   return {
     inline_keyboard: [
       ...(isPremium ? [
@@ -239,6 +240,7 @@ function settingsKeyboard(notificationsEnabled: boolean, hasPhone: boolean, isPr
       [{ text: '📚 Change Subjects', callback_data: 'settings:subjects' }],
       [{ text: '📅 Change Target Year', callback_data: 'settings:year' }],
       [{ text: phoneLabel, callback_data: 'settings:phone' }],
+      [{ text: reminderLabel, callback_data: 'settings:reminder' }],
       [{ text: notifLabel, callback_data: 'settings:notifications' }],
       [{ text: '📄 Terms & Privacy', url: 'https://exambuddie.app/terms' }],
       [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
@@ -256,7 +258,7 @@ export async function handleSettings(ctx: any): Promise<void> {
 
   await ctx.reply(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, user.plan === 'premium'),
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, user.plan === 'premium', user.daily_reminder_hour),
   });
 }
 
@@ -291,7 +293,7 @@ export async function handleSettingsNotifications(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   const newVal = !user.notifications_enabled;
   await db.updateUser(ctx.from.id, { notifications_enabled: newVal });
-  await ctx.editMessageReplyMarkup(settingsKeyboard(newVal, !!user.phone_number, user.plan === 'premium'));
+  await ctx.editMessageReplyMarkup(settingsKeyboard(newVal, !!user.phone_number, user.plan === 'premium', user.daily_reminder_hour));
   await ctx.answerCbQuery(
     newVal
       ? "Bot messages enabled ✅"
@@ -348,7 +350,7 @@ export async function handleSettingsYearPick(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, user.plan === 'premium'),
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, user.plan === 'premium', user.daily_reminder_hour),
   });
 }
 
@@ -358,7 +360,7 @@ export async function handleSettingsBack(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await ctx.editMessageText(`⚙️ <b>Settings</b>\n\nWhat would you like to change?`, {
     parse_mode: 'HTML',
-    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, user.plan === 'premium'),
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, user.plan === 'premium', user.daily_reminder_hour),
   });
 }
 
@@ -388,7 +390,7 @@ export async function handleStreakFreeze(ctx: any): Promise<void> {
   );
   await ctx.editMessageText('⚙️ <b>Settings</b>\n\nWhat would you like to change?', {
     parse_mode: 'HTML',
-    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, true),
+    reply_markup: settingsKeyboard(user.notifications_enabled, !!user.phone_number, true, user.daily_reminder_hour),
   });
 }
 
@@ -414,5 +416,43 @@ export async function handleSettingsPhone(ctx: any): Promise<void> {
       one_time_keyboard: true,
     },
   });
+}
+
+export async function handleSettingsReminder(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
+  const hours = [6, 7, 8, 9, 10, 14, 16, 18, 20, 21];
+  const keyboard = {
+    inline_keyboard: [
+      ...hours.map(h => ([{ text: `${String(h).padStart(2, '0')}:00 WAT`, callback_data: `settings:reminder:set:${h}` }])),
+      [{ text: '🔕 Turn Off Reminder', callback_data: 'settings:reminder:off' }],
+      [{ text: '← Back', callback_data: 'settings:back' }],
+    ],
+  };
+  const current = user.daily_reminder_hour != null
+    ? `Current: <b>${String(user.daily_reminder_hour).padStart(2, '0')}:00 WAT</b>\n\n`
+    : '';
+  await ctx.reply(
+    `⏰ <b>Daily Practice Reminder</b>\n\n${current}Pick what time you want a daily nudge to practise. We'll skip it on days you already studied.`,
+    { parse_mode: 'HTML', reply_markup: keyboard }
+  );
+}
+
+export async function handleReminderSet(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const parts = ctx.callbackQuery.data.split(':');
+  const hour = parts[3] === 'off' ? null : parseInt(parts[3], 10);
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Something went wrong.'); return; }
+
+  await db.updateUser(ctx.from.id, { daily_reminder_hour: hour } as any);
+
+  if (hour === null) {
+    await ctx.reply('🔕 Daily reminder turned off.');
+  } else {
+    await ctx.reply(`✅ Reminder set for <b>${String(hour).padStart(2, '0')}:00 WAT</b> every day. We'll skip it when you've already practised.`, { parse_mode: 'HTML' });
+  }
 }
 

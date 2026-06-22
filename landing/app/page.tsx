@@ -472,14 +472,14 @@ export default function Home() {
                 🎓 WAEC, JAMB &amp; NECO Prep — Nigeria
               </div>
               <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
-                Pass your exam.
+                Stop guessing. Start improving
                 <br />
-                <span className="text-blue-700 dark:text-blue-400">Study on Telegram.</span>
+                <span className="text-blue-700 dark:text-blue-400">your exam score.</span>
               </h1>
               <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0 dark:text-slate-400">
-                Practice over 41,000 real past WAEC, JAMB and NECO questions. Timed quizzes,
-                instant explanations, and progress tracking — all inside Telegram. No app to
-                download.
+                Practice real past questions, get instant AI explanations, and improve faster
+                with personalised learning — all inside Telegram. ExamBuddie doesn&apos;t just test
+                you. It trains you until you improve.
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
                 <a
@@ -488,7 +488,7 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
-                  Start Practising Free →
+                  Start Free — 14 Days Premium →
                 </a>
                 <a
                   href="#features"
@@ -498,7 +498,7 @@ export default function Home() {
                 </a>
               </div>
               <p className="mt-5 text-xs text-slate-400 sm:mt-6 sm:text-sm dark:text-slate-500">
-                Free forever · No credit card · No download required
+                14 days Premium free · No credit card · No download required
               </p>
             </div>
 
@@ -539,6 +539,37 @@ export default function Home() {
               <div className="mt-1 text-xs text-blue-200 sm:text-sm">{label}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Problem section */}
+      <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20 dark:bg-slate-900">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mb-4 text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+            Studying hard but scores aren&apos;t improving?
+          </h2>
+          <p className="mb-10 text-base text-slate-600 sm:text-lg dark:text-slate-400">
+            Most students fail not because they don&apos;t study — but because they study the wrong way.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: "📖", problem: "Memorise answers without understanding why" },
+              { icon: "🎯", problem: "Don't know which topics are costing them marks" },
+              { icon: "🔁", problem: "Repeat the same mistakes in every exam" },
+              { icon: "📉", problem: "Practice without feedback or tracking" },
+            ].map(({ icon, problem }) => (
+              <div key={problem} className="rounded-xl border border-red-100 bg-white p-5 text-left dark:border-red-900/30 dark:bg-slate-950">
+                <div className="mb-3 text-2xl">{icon}</div>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{problem}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 rounded-2xl bg-blue-700 px-6 py-6 text-white sm:px-10">
+            <p className="text-base font-bold sm:text-lg">ExamBuddie fixes this.</p>
+            <p className="mt-2 text-sm text-blue-100 sm:text-base">
+              Every question you answer becomes a learning step. ExamBuddie tracks your mistakes, explains them, and keeps drilling you on them until you get them right.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -1099,10 +1130,10 @@ export default function Home() {
       <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24 dark:bg-blue-900">
         <div className="mx-auto max-w-2xl">
           <h2 className="mb-3 text-2xl font-extrabold sm:mb-4 sm:text-3xl md:text-4xl">
-            Ready to ace your exam?
+            Ready to improve your exam score?
           </h2>
           <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">
-            Join thousands of Nigerian students already practising on ExamBuddie.
+            Start free today — 14 days Premium included, no card needed.
           </p>
           <a
             href={BOT_URL}
@@ -1110,7 +1141,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className="inline-block rounded-full bg-white px-8 py-3.5 text-base font-bold text-blue-700 shadow-xl transition-colors hover:bg-blue-50 sm:px-10 sm:py-4 sm:text-lg"
           >
-            Start Practising Free →
+            Start Free on Telegram →
           </a>
           <p className="mt-4 text-xs text-blue-200 sm:text-sm">
             No download. No sign-up. Open Telegram and go.
@@ -1149,7 +1180,7 @@ export default function Home() {
           rel="noopener noreferrer"
           className="block w-full rounded-full bg-blue-700 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800"
         >
-          Start Practising Free →
+          Start Free — 14 Days Premium →
         </a>
       </div>
     </div>
