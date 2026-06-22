@@ -32,6 +32,7 @@ export function Nav() {
           <a href="#subjects" className="transition-colors hover:text-slate-900 dark:hover:text-white">Subjects</a>
           <a href="#pricing" className="transition-colors hover:text-slate-900 dark:hover:text-white">Pricing</a>
           <a href="#faq" className="transition-colors hover:text-slate-900 dark:hover:text-white">FAQ</a>
+          <a href="/blog" className="transition-colors hover:text-slate-900 dark:hover:text-white">Blog</a>
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
@@ -68,6 +69,7 @@ export function Nav() {
             <a href="#subjects" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Subjects</a>
             <a href="#pricing" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Pricing</a>
             <a href="#faq" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">FAQ</a>
+            <a href="/blog" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Blog</a>
           </div>
         </div>
       )}

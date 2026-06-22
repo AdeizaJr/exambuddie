@@ -8,6 +8,8 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 export const metadata: Metadata = {
   metadataBase: new URL("https://exambuddie.app"),
   title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
+  // Add your Google Search Console verification code here when ready:
+  // verification: { google: "YOUR_GSC_VERIFICATION_CODE" },
   description:
     "WAEC, JAMB and NECO past question practice on Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
   keywords: [
@@ -106,6 +108,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-NG" className={`${geist.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#1D4ED8" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://t.me" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
