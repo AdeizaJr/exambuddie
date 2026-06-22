@@ -193,13 +193,30 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
   );
 }
 
+async function maybeSendBeatYourInviter(ctx: any, user: any): Promise<void> {
+  if (!user.referred_by) return;
+  try {
+    const referrer = await db.getUserById(user.referred_by);
+    if (!referrer) return;
+    const stats = await db.getUserStats(referrer.id);
+    const accuracy = Number(stats.accuracy) || 0;
+    const attempts = Number(stats.total_attempts) || 0;
+    if (attempts < 5) return; // referrer hasn't done enough to show off
+    const streakLine = (referrer.streak || 0) > 0 ? ` a <b>${referrer.streak}-day streak</b> and` : '';
+    await ctx.reply(
+      `👀 <b>${referrer.first_name} invited you.</b>\n\nThey have${streakLine} <b>${accuracy}% accuracy</b> across ${attempts.toLocaleString()} questions.\n\nThink you can beat them? 💪\n\n📚 /practice`,
+      { parse_mode: 'HTML' }
+    );
+  } catch { /* non-critical */ }
+}
+
 export async function handleContact(ctx: any): Promise<void> {
   const phone = ctx.message?.contact?.phone_number;
   if (!phone) return;
 
   if (!(await redis.getPhonePending(ctx.from.id))) return;
 
-  await db.updateUser(ctx.from.id, { phone_number: phone });
+  const user = await db.updateUser(ctx.from.id, { phone_number: phone });
   await redis.clearPhonePending(ctx.from.id);
   await redis.markPhoneNudgeSent(ctx.from.id);
 
@@ -210,12 +227,14 @@ export async function handleContact(ctx: any): Promise<void> {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
   await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
+  await maybeSendBeatYourInviter(ctx, user);
 }
 
 export async function handlePhoneSkip(ctx: any): Promise<void> {
   await redis.clearPhonePending(ctx.from.id);
   await redis.snoozePhoneNudge(ctx.from.id); // re-show after 7 days
 
+  const user = await db.getUser(ctx.from.id);
   await ctx.reply('No problem! You can always add it later in Settings.', {
     reply_markup: { remove_keyboard: true },
   });
@@ -223,6 +242,7 @@ export async function handlePhoneSkip(ctx: any): Promise<void> {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
   await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
+  if (user) await maybeSendBeatYourInviter(ctx, user);
 }
 
 // /settings command

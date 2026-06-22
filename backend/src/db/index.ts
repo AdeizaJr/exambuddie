@@ -29,6 +29,11 @@ export async function getUser(telegramId: number | string): Promise<User | null>
   return rows[0] || null;
 }
 
+export async function getUserById(id: number): Promise<User | null> {
+  const { rows } = await pool.query<User>('SELECT * FROM users WHERE id = $1', [id]);
+  return rows[0] || null;
+}
+
 function generateReferralCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
