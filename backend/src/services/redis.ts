@@ -159,6 +159,18 @@ export const setCachedAdminStats = async (data: Record<string, unknown>): Promis
   await setJson('cache:admin_stats', data, 30); // 30-second TTL
 };
 
+export const getCachedUser = async (telegramId: number | string): Promise<Record<string, unknown> | null> => {
+  return getJson<Record<string, unknown>>(`user_cache:${telegramId}`);
+};
+
+export const setCachedUser = async (telegramId: number | string, user: unknown): Promise<void> => {
+  await setJson(`user_cache:${telegramId}`, user, 60); // 60-second TTL
+};
+
+export const clearCachedUser = async (telegramId: number | string): Promise<void> => {
+  await client.del(`user_cache:${telegramId}`);
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
@@ -169,6 +181,7 @@ export const deleteUserData = async (telegramId: number | string): Promise<void>
       key === `phone_nudge:${telegramId}` ||
       key === `phone_pending:${telegramId}` ||
       key === `support_step:${telegramId}` ||
+      key === `user_cache:${telegramId}` ||
       key.startsWith(`sublimit:${telegramId}:`)
   );
   if (toDelete.length) await client.del(toDelete);

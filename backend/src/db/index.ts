@@ -1,6 +1,7 @@
 // src/db/index.ts
 import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
+import { getCachedUser, setCachedUser, clearCachedUser } from '../services/redis';
 
 // Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
 types.setTypeParser(1082, (val: string) => val);
@@ -23,10 +24,12 @@ export async function query(text: string, params?: any[]) {
 
 // Helpers
 export async function getUser(telegramId: number | string): Promise<User | null> {
-  const { rows } = await pool.query<User>('SELECT * FROM users WHERE telegram_id = $1', [
-    telegramId,
-  ]);
-  return rows[0] || null;
+  const cached = await getCachedUser(telegramId);
+  if (cached) return cached as unknown as User;
+  const { rows } = await pool.query<User>('SELECT * FROM users WHERE telegram_id = $1', [telegramId]);
+  const user = rows[0] || null;
+  if (user) setCachedUser(telegramId, user).catch(() => {});
+  return user;
 }
 
 export async function getUserById(id: number): Promise<User | null> {
@@ -53,7 +56,9 @@ export async function upsertUser(ctx: any): Promise<User> {
      RETURNING *`,
     [id, username || null, first_name || 'Student', code]
   );
-  return rows[0];
+  const user = rows[0];
+  setCachedUser(id, user).catch(() => {});
+  return user;
 }
 
 const USER_UPDATABLE_COLUMNS = new Set<string>([
@@ -78,7 +83,9 @@ export async function updateUser(
      WHERE telegram_id = $1 RETURNING *`,
     [telegramId, ...values]
   );
-  return rows[0];
+  const user = rows[0];
+  if (user) setCachedUser(telegramId, user).catch(() => {});
+  return user;
 }
 
 export async function grantTrial(telegramId: number | string): Promise<void> {
