@@ -6,6 +6,7 @@ import multer from 'multer';
 import rateLimit from 'express-rate-limit';
 import * as payments from '../services/payments';
 import * as db from '../db';
+import * as redis from '../services/redis';
 import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
 
@@ -209,6 +210,9 @@ export default function createServer(bot: any) {
 
   // ── GET /api/admin/stats ────────────────────────────────────────────────────
   app.get('/api/admin/stats', adminAuth, async (req: Request, res: Response) => {
+    const cached = await redis.getCachedAdminStats();
+    if (cached) return res.json(cached);
+
     const { rows } = await db.query(`
       SELECT
         (SELECT COUNT(*) FROM users) as total_users,
@@ -220,6 +224,7 @@ export default function createServer(bot: any) {
         (SELECT COUNT(*) FROM flagged_explanations WHERE resolved = false) as pending_flags,
         (SELECT COALESCE(SUM(amount_ngn), 0) FROM subscriptions WHERE status = 'active') as total_revenue_ngn
     `);
+    await redis.setCachedAdminStats(rows[0]);
     res.json(rows[0]);
   });
 
