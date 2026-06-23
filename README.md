@@ -117,10 +117,12 @@ npm run dev          # runs at localhost:3000
 | `/practice` | Start a practice session |
 | `/quiz` | 50-question timed CBT exam — 60 min (premium) |
 | `/drill` | Drill your weakest topics |
+| `/revision` | Practise only questions you previously got wrong |
+| `/bookmarks` | View and practise your saved questions |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
 | `/invite` | Get your referral link — invite 2 friends → 3 days Premium free + referral leaderboard |
-| `/leaderboard` | Weekly accuracy leaderboard (top 10) |
-| `/stats` | View accuracy, progress, exam countdown, and actionable score tip |
+| `/leaderboard` | Weekly accuracy leaderboard (top 10) — view last week's results too |
+| `/stats` | View accuracy, daily target progress, exam countdown, and weak topic tip |
 | `/progress` | Quick snapshot: streak, accuracy, subject coverage + shareable progress card |
 | `/subscribe` | Upgrade to Premium |
 | `/settings` | Change exam type, subjects, phone number, or daily reminder time |
@@ -143,13 +145,18 @@ npm run dev          # runs at localhost:3000
 | Topic drill | ❌ | ✅ |
 | Per-question timer | ❌ | ✅ |
 | Spaced repetition (wrong questions resurface) | ❌ | ✅ |
+| Revision mode (/revision — practise your mistakes) | ✅ | ✅ |
+| Bookmark questions (⭐ Save + /bookmarks) | ✅ | ✅ |
+| Daily auto-challenge (first question sent at reminder hour) | ✅ | ✅ |
+| Daily target progress in /stats (X/10 today) | ✅ | ✅ |
+| Shareable quiz result card after CBT | ❌ | ✅ |
 | Streak freeze (once/week) | ❌ | ✅ |
 | Daily reminder opt-in (custom WAT hour) | ✅ | ✅ |
 | Progress tracking (/progress + shareable badge card) | ✅ | ✅ |
 | Exam countdown in /stats | ✅ | ✅ |
 | Score tip in /stats (drill weakest topic) | ✅ | ✅ |
 | Weak topic detection | ✅ | ✅ |
-| Weekly leaderboard | ✅ | ✅ |
+| Weekly leaderboard + previous weeks archive | ✅ | ✅ |
 | Weekly performance reports | ❌ | ✅ |
 | Milestone celebrations | ✅ | ✅ |
 | Challenge Mode — join a room | ✅ | ✅ |

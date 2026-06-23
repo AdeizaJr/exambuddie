@@ -24,13 +24,17 @@ const subjects = [
 ];
 
 const secondaryFeatures = [
-  { icon: "📊", title: "Progress Stats", desc: "Accuracy by subject and topic — instant snapshot with /progress" },
+  { icon: "🔄", title: "Revision Mode", desc: "Practice only the questions you previously got wrong — /revision" },
+  { icon: "⭐", title: "Bookmark Questions", desc: "Save any question mid-practice and drill your bookmarks later" },
+  { icon: "📊", title: "Progress Stats", desc: "Daily target, accuracy by topic, and exam countdown — all in /stats" },
   { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one session" },
   { icon: "🔥", title: "Study Streaks", desc: "Build a daily habit — freeze your streak once a week (Premium)" },
   { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you get them right (Premium)" },
-  { icon: "📅", title: "Exam Countdown", desc: "Days left until your WAEC, JAMB or NECO — shown in /stats" },
+  { icon: "📅", title: "Daily Auto-Challenge", desc: "Your first question arrives automatically at your reminder hour" },
+  { icon: "📤", title: "Shareable Results", desc: "Share your quiz score card on WhatsApp after every CBT mock" },
   { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
   { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
+  { icon: "📜", title: "Leaderboard History", desc: "Weekly leaderboard archives — see who topped last week and beyond" },
   { icon: "⚡", title: "Works in Telegram", desc: "No app download — ever" },
 ];
 
