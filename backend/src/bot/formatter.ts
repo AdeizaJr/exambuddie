@@ -514,6 +514,7 @@ export function correctAnswer(q: Question, selected: string): string {
 ✔️ <b>${q.correct_option}.</b> ${md(optionText[q.correct_option])}
 
 💡 <b>Explanation:</b>
+
 ${q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>'}`;
 }
 
