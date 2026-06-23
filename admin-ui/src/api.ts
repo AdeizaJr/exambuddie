@@ -196,6 +196,14 @@ export async function getLeaderboard(subject?: string): Promise<{ entries: Leade
   );
 }
 
+export async function getSnapshotWeeks(): Promise<{ weeks: string[] }> {
+  return req<{ weeks: string[] }>("GET", "/leaderboard/weeks");
+}
+
+export async function getLeaderboardSnapshot(week: string): Promise<{ entries: LeaderboardEntry[] }> {
+  return req<{ entries: LeaderboardEntry[] }>("GET", "/leaderboard/snapshot", undefined, { week });
+}
+
 export type BroadcastTarget = "all" | "waec" | "jamb" | "neco" | "premium" | "free";
 
 export async function broadcast(

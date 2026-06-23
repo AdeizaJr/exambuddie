@@ -682,6 +682,22 @@ export default function createServer(bot: any) {
     res.json({ entries, active_users: parseInt(countRows[0].active_users) });
   });
 
+  // ── GET /api/admin/leaderboard/weeks ───────────────────────────────────────
+  app.get('/api/admin/leaderboard/weeks', adminAuth, async (req: Request, res: Response) => {
+    const weeks = await db.getSnapshotWeeks();
+    res.json({ weeks });
+  });
+
+  // ── GET /api/admin/leaderboard/snapshot?week=YYYY-MM-DD ────────────────────
+  app.get('/api/admin/leaderboard/snapshot', adminAuth, async (req: Request, res: Response) => {
+    const week = req.query.week as string;
+    if (!week || !/^\d{4}-\d{2}-\d{2}$/.test(week)) {
+      return res.status(400).json({ error: 'week param required (YYYY-MM-DD)' });
+    }
+    const entries = await db.getLeaderboardSnapshot(week);
+    res.json({ entries });
+  });
+
   // ── POST /api/admin/broadcast ───────────────────────────────────────────────
   app.post('/api/admin/broadcast', adminAuth, async (req: Request, res: Response) => {
     const { message, target } = req.body;
