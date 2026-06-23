@@ -545,7 +545,7 @@ export function flagReasonKeyboard() {
   };
 }
 
-export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
+export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questionId?: number) {
   if (mode === 'quiz') {
     const rows: any[] = [
       [
@@ -555,6 +555,7 @@ export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
       [{ text: '⏹ End CBT', callback_data: 'quiz:stop' }],
     ];
     if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
+    if (questionId) rows.push([{ text: '⭐ Save Question', callback_data: `bookmark:toggle:${questionId}` }]);
     return { inline_keyboard: rows };
   }
   const rows: any[] = [
@@ -568,6 +569,7 @@ export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
     ],
   ];
   if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
+  if (questionId) rows.push([{ text: '⭐ Save Question', callback_data: `bookmark:toggle:${questionId}` }]);
   return { inline_keyboard: rows };
 }
 
@@ -707,6 +709,8 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
   }
 
   const countdown = examCountdown(user.exam_type || null, user.target_year || null);
+  const dailyTarget = 10;
+  const dailyProgress = `📅 Today: ${user.daily_count || 0}/${dailyTarget} questions · 🔥 ${user.streak || 0} day streak`;
   return `📈 <b>Your ${examLabel} Stats</b>
 
 👤 ${user.first_name}
@@ -718,6 +722,7 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 • Correct Answers: ${stats.correct || 0}
 • Accuracy: ${stats.accuracy || 0}%
 • 🔥 Streak: ${user.streak || 0} days
+• ${dailyProgress}
 
 💳 <b>Plan:</b> ${plan}
 ${subjectSection}${weakSection}${drillTip}`;
@@ -1100,9 +1105,11 @@ export function progressMessage(
       return `  ${emoji} ${SUBJECT_MAP[c.subject] || c.subject}: ${pct}% (${c.seen}/${c.total})`;
     }).join('\n');
 
+  const dailyTarget = 10;
   return `⚡ <b>Your Progress</b>
 
 🔥 Streak: ${user.streak || 0} days
+📅 Today: ${user.daily_count || 0}/${dailyTarget} questions
 📝 Questions: ${totalAttempts.toLocaleString()} answered
 🎯 Accuracy: ${accuracy}%${countdown ? `\n${countdown}` : ''}${coverageLines ? `\n\n📈 <b>Coverage:</b>\n${coverageLines}` : ''}
 

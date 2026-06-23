@@ -15,6 +15,8 @@ import * as leaderboard from './bot/handlers/leaderboard';
 import * as challenge from './bot/handlers/challenge';
 import * as invite from './bot/handlers/invite';
 import * as support from './bot/handlers/support';
+import * as revision from './bot/handlers/revision';
+import * as bookmarks from './bot/handlers/bookmarks';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -71,6 +73,8 @@ bot.command('challenge', challenge.handleChallenge);
 bot.command('invite', invite.handleInvite);
 bot.command('support', support.handleSupport);
 bot.command('progress', stats.handleProgress);
+bot.command('revision', revision.handleRevision);
+bot.command('bookmarks', bookmarks.handleBookmarks);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -197,6 +201,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'quiz:stop') return quiz.handleQuizStop(ctx);
   if (data === 'quiz:stop:confirm') return quiz.handleQuizStopConfirm(ctx);
   if (data === 'quiz:stop:cancel') return quiz.handleQuizStopCancel(ctx);
+  if (data === 'quiz:share') return quiz.handleQuizShare(ctx);
 
   // Drill
   if (data.startsWith('drill:auto:')) return practice.handleAutoDrill(ctx);
@@ -230,6 +235,16 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'support:delete') return onboarding.handleSettingsDelete(ctx);
   if (data === 'support:other') return support.handleSupportOther(ctx);
 
+  // Revision
+  if (data === 'revision:start') return revision.handleRevisionStart(ctx);
+  if (data === 'revision:start_fresh') return revision.handleRevision(ctx);
+
+  // Bookmarks
+  if (data.startsWith('bookmark:toggle:')) return bookmarks.handleBookmarkToggle(ctx);
+  if (data === 'bookmark:practice') return bookmarks.handleBookmarkPractice(ctx);
+  if (data === 'bookmark:clear') return bookmarks.handleBookmarkClear(ctx);
+  if (data === 'bookmarks:show') return bookmarks.handleBookmarks(ctx);
+
   // Flag
   if (data === 'flag:question') return stats.handleFlagQuestion(ctx);
   if (data === 'flag:underline') return stats.handleFlagUnderline(ctx);
@@ -248,6 +263,10 @@ bot.on('callback_query', async (ctx: any) => {
           [
             { text: '📚 Practice', callback_data: 'practice:pick' },
             { text: '📋 Quiz', callback_data: 'quiz:pick' },
+          ],
+          [
+            { text: '🔄 Revise Mistakes', callback_data: 'revision:start_fresh' },
+            { text: '⭐ Bookmarks', callback_data: 'bookmarks:show' },
           ],
           [
             { text: '📊 Stats', callback_data: 'stats:show' },
