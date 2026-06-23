@@ -151,6 +151,14 @@ export const getQuizResult = async (telegramId: number | string): Promise<QuizRe
   return getJson<QuizResultSummary>(`quiz_result:${telegramId}`);
 };
 
+export const getCachedAdminStats = async (): Promise<Record<string, unknown> | null> => {
+  return getJson<Record<string, unknown>>('cache:admin_stats');
+};
+
+export const setCachedAdminStats = async (data: Record<string, unknown>): Promise<void> => {
+  await setJson('cache:admin_stats', data, 30); // 30-second TTL
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
