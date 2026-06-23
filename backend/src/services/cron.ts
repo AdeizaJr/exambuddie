@@ -1,7 +1,10 @@
 // src/services/cron.ts
 import cron from 'node-cron';
+import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
+import * as redis from './redis';
 import * as payments from './payments';
+import * as fmt from '../bot/formatter';
 import { SUBJECT_MAP, SUBJECT_EMOJI, examCountdown } from '../bot/formatter';
 import { endExpiredRoom } from '../bot/handlers/challenge';
 
@@ -218,17 +221,19 @@ export default function startCrons(bot: any): void {
     console.log(`[CRON] 3-day inactivity nudge sent to ${sent}/${users.length} users`);
   });
 
-  // ── Hourly — daily reminder opt-in ───────────────────────────────────────
+  // ── Hourly — daily auto-challenge ────────────────────────────────────────
   cron.schedule('0 * * * *', async () => {
     const watHour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
     const watToday = new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0];
 
     const { rows: users } = await db.query(
-      `SELECT telegram_id, first_name
+      `SELECT telegram_id, first_name, exam_type, subjects, id
        FROM users
        WHERE notifications_enabled = TRUE
          AND daily_reminder_hour = $1
-         AND (last_active_date IS NULL OR last_active_date < $2)`,
+         AND (last_active_date IS NULL OR last_active_date < $2)
+         AND exam_type IS NOT NULL
+         AND array_length(subjects, 1) > 0`,
       [watHour, watToday]
     );
 
@@ -238,17 +243,69 @@ export default function startCrons(bot: any): void {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
         try {
-          await bot.telegram.sendMessage(
-            user.telegram_id,
-            `⏰ <b>Time to practise, ${user.first_name}!</b>\n\nYour daily reminder is here. Even 5 questions keeps the momentum going.\n\n📚 /practice`,
-            { parse_mode: 'HTML' }
-          );
+          // Pick a random subject from the user's subjects
+          const subjects: string[] = user.subjects || [];
+          const subject = subjects[Math.floor(Math.random() * subjects.length)];
+          const examType = user.exam_type;
+
+          // Try to get a challenge question
+          const q = await db.getRandomQuestion(examType, subject, [], null, null, user.id);
+
+          if (!q) {
+            // Fall back to plain text reminder
+            await bot.telegram.sendMessage(
+              user.telegram_id,
+              `⏰ <b>Daily Challenge, ${user.first_name}!</b>\n\nTime to practise! Even 5 questions keeps the momentum going.\n\n📚 /practice`,
+              { parse_mode: 'HTML' }
+            );
+            sent++;
+            return;
+          }
+
+          const msgText = `⏰ <b>Daily Challenge, ${user.first_name}!</b>\n\n`
+            + fmt.formatQuestion(q, 1, 5, 'practice')
+            + fmt.answerOptions(q);
+
+          const sessionId = uuidv4();
+          const imageUrl = q.image_url?.startsWith('/')
+            ? `${process.env.APP_URL || ''}${q.image_url}`
+            : q.image_url;
+
+          if (imageUrl) {
+            await bot.telegram.sendPhoto(user.telegram_id, imageUrl, {
+              caption: msgText,
+              parse_mode: 'HTML',
+              reply_markup: fmt.answerKeyboard(!!q.option_e),
+            });
+          } else {
+            await bot.telegram.sendMessage(user.telegram_id, msgText, {
+              parse_mode: 'HTML',
+              reply_markup: fmt.answerKeyboard(!!q.option_e),
+            });
+          }
+
+          // Store session so the user can answer and continue
+          await redis.setSession(user.telegram_id, {
+            mode: 'practice',
+            subject,
+            examType,
+            sessionId,
+            qNum: 1,
+            correct: 0,
+            total: 0,
+            currentQuestion: q,
+            startTime: Date.now(),
+            usedIds: [q.id],
+            autoChallenge: true,
+            autoTotal: 5,
+          });
+
           sent++;
         } catch { /* blocked */ }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
-    if (users.length > 0) console.log(`[CRON] Daily reminder sent to ${sent}/${users.length} users at WAT ${watHour}:00`);
+    if (users.length > 0) console.log(`[CRON] Daily challenge sent to ${sent}/${users.length} users at WAT ${watHour}:00`);
   });
 
   // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────

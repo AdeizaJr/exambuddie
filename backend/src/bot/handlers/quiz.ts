@@ -456,12 +456,21 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
     }).catch(() => {});
   }
 
-  await redis.clearQuizState(ctx.from.id);
-  await redis.clearSession(ctx.from.id);
-
   const durationSecs = Math.round((Date.now() - quizState.startTime) / 1000);
   const accuracy = quizState.total > 0
     ? Math.round((quizState.correct / quizState.total) * 100) : 0;
+
+  // Save quiz result for the share feature before clearing state
+  await redis.saveQuizResult(ctx.from.id, {
+    subject: quizState.subject,
+    correct: quizState.correct,
+    total: quizState.total,
+    accuracy,
+    durationSecs,
+  });
+
+  await redis.clearQuizState(ctx.from.id);
+  await redis.clearSession(ctx.from.id);
 
   const reasonNote = reason === 'timeout' ? '\n⏰ <i>Time ran out!</i>'
     : reason === 'revoked' ? '\n🔒 <i>Your premium access was revoked.</i>'
@@ -499,8 +508,39 @@ ${accuracy >= 80 ? '🔥 You\'re exam-ready! Keep it consistent.' : ''}`;
          { text: '🎯 Drill Weak Topics', callback_data: `drill:auto:${quizState.subject}` }],
         [{ text: '📜 Quiz History', callback_data: 'quiz:history' },
          { text: '📊 My Stats', callback_data: 'stats:show' }],
+        [{ text: '📤 Share Result', callback_data: 'quiz:share' }],
         [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
       ],
     },
   });
+}
+
+export async function handleQuizShare(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const result = await redis.getQuizResult(ctx.from.id);
+  if (!result) {
+    await ctx.reply('No recent quiz result found. Complete a quiz first!');
+    return;
+  }
+
+  const subjectDisplay = fmt.SUBJECT_MAP[result.subject] || result.subject;
+  const mins = Math.floor(result.durationSecs / 60);
+  const secs = result.durationSecs % 60;
+  const grade =
+    result.accuracy >= 80 ? '🏆 Outstanding!' :
+    result.accuracy >= 65 ? '🌟 Excellent!' :
+    result.accuracy >= 50 ? '👍 Good effort!' :
+    '💪 Keep practising!';
+
+  const card = `📋 <b>ExamBuddie Quiz Result</b>
+
+📚 Subject: ${subjectDisplay}
+✅ Score: ${result.correct}/${result.total}
+🎯 Accuracy: ${result.accuracy}%
+⏱️ Time: ${mins}m ${secs}s
+${grade}
+
+Practice free at @${process.env.BOT_USERNAME || 'ExamBuddieBot'}`;
+
+  await ctx.reply(card, { parse_mode: 'HTML' });
 }

@@ -431,7 +431,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(resultText, {
     parse_mode: 'HTML',
-    reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*')),
+    reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*'), q.id),
   });
 
   if (!isCorrect) {
@@ -508,6 +508,61 @@ export async function handleNext(ctx: any): Promise<void> {
     await redis.updateSession(ctx.from.id, { questionTimerSecs: 0 });
     session.questionTimerSecs = 0;
     await ctx.reply('⚠️ <i>Your premium access has been revoked. The per-question timer has been removed.</i>', { parse_mode: 'HTML' });
+  }
+
+  // Revision / bookmark mode: serve questions from the pre-selected pool
+  if (session.revisionPool && Array.isArray(session.revisionPool)) {
+    const nextIndex = (session.revisionIndex ?? 0) + 1;
+    const revisionQuestions: any[] = session.revisionQuestions || [];
+
+    if (nextIndex >= revisionQuestions.length) {
+      // All revision questions done
+      const accuracy = session.total > 0
+        ? Math.round((session.correct / session.total) * 100) : 0;
+      await redis.clearSession(ctx.from.id);
+      await ctx.reply(
+        `🎉 <b>Revision Complete!</b>\n\n✅ ${session.correct}/${session.total} correct · 🎯 ${accuracy}% accuracy\n\n${accuracy >= 70 ? 'Great job! Keep it up 🔥' : 'Keep practising to improve! 💪'}`,
+        {
+          parse_mode: 'HTML',
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '🔄 Revise Again', callback_data: 'revision:start_fresh' }],
+              [{ text: '📚 Practice', callback_data: 'practice:pick' }],
+              [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
+            ],
+          },
+        }
+      );
+      return;
+    }
+
+    const nextQ = revisionQuestions[nextIndex];
+    const newQNum = (session.qNum || 1) + 1;
+    await redis.updateSession(ctx.from.id, {
+      qNum: newQNum,
+      subject: nextQ.subject || session.subject,
+      currentQuestion: nextQ,
+      lastQuestionTime: Date.now(),
+      awaitingNext: false,
+      revisionIndex: nextIndex,
+      usedIds: [...(session.usedIds || []), nextQ.id],
+    });
+    await sendQuestion(ctx, nextQ, { mode: session.mode || 'revision', qNum: newQNum, total: revisionQuestions.length });
+    return;
+  }
+
+  // Auto-challenge: end after autoTotal questions
+  if (session.autoChallenge && session.total >= (session.autoTotal || 5)) {
+    const accuracy = session.total > 0 ? Math.round((session.correct / session.total) * 100) : 0;
+    await redis.clearSession(ctx.from.id);
+    await ctx.reply(
+      `🎯 <b>Daily Challenge Complete!</b>\n\n✅ ${session.correct}/${session.total} correct · 🎯 ${accuracy}% accuracy\n\n${accuracy >= 70 ? '🔥 Excellent! Keep that streak going.' : '💪 Keep practising for better results!'}`,
+      {
+        parse_mode: 'HTML',
+        reply_markup: fmt.sessionKeyboard(session.subject || '', session.year),
+      }
+    );
+    return;
   }
 
   let q = null;

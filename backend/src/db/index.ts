@@ -1150,6 +1150,90 @@ export async function getTopReferrers(limit = 10): Promise<{ first_name: string;
   return rows.map((r: any) => ({ first_name: r.first_name, referrals: parseInt(r.referrals) }));
 }
 
+// ── Revision: questions where last attempt was wrong ─────────────────────────
+
+export async function getRevisionQuestions(
+  userId: number,
+  subjects: string[],
+  examType: string | null,
+  limit = 15
+): Promise<Question[]> {
+  const params: any[] = [userId, limit];
+  const subjectFilter = subjects.length > 0
+    ? `AND q.subject = ANY($${params.length + 1}::text[])`
+    : '';
+  if (subjects.length > 0) params.push(subjects);
+
+  const examFilter = examType && !isAllExams(examType)
+    ? `AND q.exam_type = $${params.length + 1}`
+    : '';
+  if (examType && !isAllExams(examType)) params.push(examType);
+
+  const { rows } = await pool.query<Question>(
+    `SELECT q.* FROM (
+       SELECT DISTINCT ON (a.question_id) a.question_id, a.is_correct, a.attempted_at
+       FROM attempts a
+       WHERE a.user_id = $1
+       ORDER BY a.question_id, a.attempted_at DESC
+     ) latest
+     JOIN questions q ON q.id = latest.question_id
+     WHERE latest.is_correct = FALSE
+       AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
+       ${subjectFilter}
+       ${examFilter}
+     ORDER BY latest.attempted_at DESC
+     LIMIT $2`,
+    params
+  );
+  return rows;
+}
+
+// ── Bookmarks ────────────────────────────────────────────────────────────────
+
+export async function addBookmark(userId: number, questionId: number): Promise<void> {
+  await pool.query(
+    `INSERT INTO bookmarks (user_id, question_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [userId, questionId]
+  );
+}
+
+export async function removeBookmark(userId: number, questionId: number): Promise<void> {
+  await pool.query(`DELETE FROM bookmarks WHERE user_id = $1 AND question_id = $2`, [userId, questionId]);
+}
+
+export async function isBookmarked(userId: number, questionId: number): Promise<boolean> {
+  const { rows } = await pool.query(
+    `SELECT 1 FROM bookmarks WHERE user_id = $1 AND question_id = $2`,
+    [userId, questionId]
+  );
+  return rows.length > 0;
+}
+
+export async function getBookmarkCount(userId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) as cnt FROM bookmarks WHERE user_id = $1`,
+    [userId]
+  );
+  return parseInt(rows[0]?.cnt || '0', 10);
+}
+
+export async function getUserBookmarks(userId: number, limit = 50): Promise<Question[]> {
+  const { rows } = await pool.query<Question>(
+    `SELECT q.* FROM bookmarks b
+     JOIN questions q ON q.id = b.question_id
+     WHERE b.user_id = $1
+       AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
+     ORDER BY b.created_at DESC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return rows;
+}
+
+export async function clearBookmarks(userId: number): Promise<void> {
+  await pool.query(`DELETE FROM bookmarks WHERE user_id = $1`, [userId]);
+}
+
 // ── Progress stats for /progress command ─────────────────────────────────────
 
 export async function getProgressStats(userId: number): Promise<{

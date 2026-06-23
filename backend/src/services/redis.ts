@@ -133,6 +133,24 @@ export const clearSupportStep = async (telegramId: number | string): Promise<voi
   await client.del(`support_step:${telegramId}`);
 };
 
+const QUIZ_RESULT_TTL = 60 * 60; // 1 hour
+
+export interface QuizResultSummary {
+  subject: string;
+  correct: number;
+  total: number;
+  accuracy: number;
+  durationSecs: number;
+}
+
+export const saveQuizResult = async (telegramId: number | string, result: QuizResultSummary): Promise<void> => {
+  await setJson(`quiz_result:${telegramId}`, result, QUIZ_RESULT_TTL);
+};
+
+export const getQuizResult = async (telegramId: number | string): Promise<QuizResultSummary | null> => {
+  return getJson<QuizResultSummary>(`quiz_result:${telegramId}`);
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
