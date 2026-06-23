@@ -41,18 +41,18 @@ export const metadata: Metadata = {
 };
 
 const necoSubjects = [
-  { icon: "📐", name: "Mathematics" },
-  { icon: "📖", name: "English Language" },
-  { icon: "🔬", name: "Biology" },
-  { icon: "⚗️", name: "Chemistry" },
-  { icon: "⚡", name: "Physics" },
-  { icon: "🌍", name: "Geography" },
-  { icon: "💰", name: "Economics" },
-  { icon: "📊", name: "Accounts" },
-  { icon: "📜", name: "History" },
-  { icon: "✝️", name: "CRK / IRK" },
-  { icon: "🌱", name: "Agric Science" },
-  { icon: "🏛️", name: "Government" },
+  { icon: "📐", name: "Mathematics", slug: "math" },
+  { icon: "📖", name: "English Language", slug: "english" },
+  { icon: "🔬", name: "Biology", slug: "biology" },
+  { icon: "⚗️", name: "Chemistry", slug: "chemistry" },
+  { icon: "⚡", name: "Physics", slug: "physics" },
+  { icon: "🌍", name: "Geography", slug: null },
+  { icon: "💰", name: "Economics", slug: "economics" },
+  { icon: "📊", name: "Accounts", slug: null },
+  { icon: "📜", name: "History", slug: null },
+  { icon: "✝️", name: "CRK / IRK", slug: null },
+  { icon: "🌱", name: "Agric Science", slug: null },
+  { icon: "🏛️", name: "Government", slug: "government" },
 ];
 
 const necoJsonLd = {
@@ -199,15 +199,26 @@ export default function NecoPage() {
             Past questions for every core NECO subject, with explanations.
           </p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
-            {necoSubjects.map(({ icon, name }) => (
-              <div
-                key={name}
-                className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center border border-slate-100 dark:bg-slate-950 dark:border-slate-800"
-              >
-                <span className="text-2xl sm:text-3xl">{icon}</span>
-                <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
-              </div>
-            ))}
+            {necoSubjects.map(({ icon, name, slug }) =>
+              slug ? (
+                <a
+                  key={name}
+                  href={`/neco/${slug}`}
+                  className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center border border-slate-100 transition-colors hover:border-blue-200 hover:bg-blue-50 dark:bg-slate-950 dark:border-slate-800 dark:hover:border-blue-800 dark:hover:bg-blue-950"
+                >
+                  <span className="text-2xl sm:text-3xl">{icon}</span>
+                  <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
+                </a>
+              ) : (
+                <div
+                  key={name}
+                  className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center border border-slate-100 dark:bg-slate-950 dark:border-slate-800"
+                >
+                  <span className="text-2xl sm:text-3xl">{icon}</span>
+                  <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
+                </div>
+              )
+            )}
           </div>
         </div>
       </section>
