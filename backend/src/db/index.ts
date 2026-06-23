@@ -521,11 +521,18 @@ export async function snapshotLeaderboard(): Promise<number> {
 }
 
 export async function getLastWeekSnapshot(): Promise<LeaderboardEntry[]> {
+  return getLeaderboardSnapshot(
+    new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]
+  );
+}
+
+export async function getLeaderboardSnapshot(weekStart: string): Promise<LeaderboardEntry[]> {
   const { rows } = await pool.query(
     `SELECT rank, telegram_id, first_name, correct, total, accuracy
      FROM leaderboard_snapshots
-     WHERE week_start = (date_trunc('week', now() at time zone 'Africa/Lagos')::date - INTERVAL '7 days')
-     ORDER BY rank ASC`
+     WHERE week_start = $1
+     ORDER BY rank ASC`,
+    [weekStart]
   );
   return rows.map(r => ({
     rank: parseInt(r.rank),
@@ -535,6 +542,15 @@ export async function getLastWeekSnapshot(): Promise<LeaderboardEntry[]> {
     total: parseInt(r.total),
     accuracy: parseFloat(r.accuracy),
   }));
+}
+
+export async function getSnapshotWeeks(): Promise<string[]> {
+  const { rows } = await pool.query(
+    `SELECT DISTINCT week_start::text
+     FROM leaderboard_snapshots
+     ORDER BY week_start DESC`
+  );
+  return rows.map(r => r.week_start);
 }
 
 export async function checkDailyLimit(
