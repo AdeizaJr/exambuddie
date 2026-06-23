@@ -360,42 +360,61 @@ export async function handlePracticeTimerPick(ctx: any): Promise<void> {
 // Handles answer:A/B/C/D callback
 export async function handleAnswer(ctx: any): Promise<void> {
   const selected = ctx.callbackQuery.data.split(':')[1];
-  const session = await redis.getSession(ctx.from.id);
+
+  // Parallel: session + user (user hits Redis cache on repeat calls)
+  const [session, user] = await Promise.all([
+    redis.getSession(ctx.from.id),
+    db.getUser(ctx.from.id),
+  ]);
 
   if (!session || !session.currentQuestion) {
     await ctx.answerCbQuery('No active session.', { show_alert: false });
     return;
   }
-
-  const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
   const q = session.currentQuestion;
 
   // Timer already fired automatically — ignore late tap
   if (session.awaitingNext && !session.questionDeadline) return;
 
-  await ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {}); // fire and forget — removes Telegram spinner immediately
 
   const isCorrect = selected === q.correct_option;
   const newConsecutive = isCorrect ? (session.consecutiveCorrect || 0) + 1 : 0;
   const hyped = fmt.consecutiveHype(newConsecutive);
+  const newTotal = (session.total || 0) + 1;
+  const newCorrect = (session.correct || 0) + (isCorrect ? 1 : 0);
 
-  // Cancel the per-question timer since user answered in time
   timerService.clearQuestionTimer(ctx.from.id);
-  await redis.updateSession(ctx.from.id, { questionDeadline: undefined });
 
-  // Log attempt and update streak on first real answer of the day
-  await db.logAttempt({
-    userId: user.id,
-    questionId: q.id,
-    selectedOption: selected,
-    isCorrect,
-    sessionId: session.sessionId || '',
-    timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
-  });
-  const streakResult = await db.updateStreak(ctx.from.id);
+  // Kick off all writes + slow reads in parallel — don't block the reply
+  const streakPromise = db.updateStreak(ctx.from.id);
+  const totalAttemptsPromise = db.getTotalAttempts(user.id);
 
-  // Referral reward: fires silently on first-ever attempt
+  Promise.all([
+    db.logAttempt({
+      userId: user.id,
+      questionId: q.id,
+      selectedOption: selected,
+      isCorrect,
+      sessionId: session.sessionId || '',
+      timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
+    }),
+    user.plan !== 'premium' ? db.incrementDailyCount(ctx.from.id) : Promise.resolve(),
+    user.plan !== 'premium' ? redis.incrementSubjectUsage(ctx.from.id, session.subject || '') : Promise.resolve(),
+    redis.updateSession(ctx.from.id, {
+      questionDeadline: undefined,
+      total: newTotal,
+      correct: newCorrect,
+      consecutiveCorrect: newConsecutive,
+      lastAnswer: selected,
+      lastQuestionTime: Date.now(),
+      awaitingNext: true,
+    }),
+  ]).catch((err) => console.error('[handleAnswer] persist error:', err));
+
+  // Referral reward — already fire-and-forget
   db.checkAndGrantReferralReward(user.id).then(({ granted, referrer }) => {
     if (granted && referrer) {
       ctx.telegram.sendMessage(
@@ -406,21 +425,8 @@ export async function handleAnswer(ctx: any): Promise<void> {
     }
   }).catch(() => {});
 
-  // Update daily count and per-subject usage (free users)
-  if (user.plan !== 'premium') {
-    await db.incrementDailyCount(ctx.from.id);
-    await redis.incrementSubjectUsage(ctx.from.id, session.subject || '');
-  }
-
-  const newTotal = (session.total || 0) + 1;
-  const newCorrect = (session.correct || 0) + (isCorrect ? 1 : 0);
-
-  const totalAttempts = await db.getTotalAttempts(user.id);
-  const milestone = fmt.totalMilestone(totalAttempts);
-
-  // Show result — edit message to remove answer buttons
+  // ── REPLY — user sees this while DB writes are still in flight ──────────────
   const resultText = fmt.correctAnswer(q, selected);
-
   try {
     await ctx.editMessageText(
       fmt.formatQuestion(q, session.qNum || 1, session.total || '?', session.mode)
@@ -433,6 +439,10 @@ export async function handleAnswer(ctx: any): Promise<void> {
     parse_mode: 'HTML',
     reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*'), q.id),
   });
+
+  // ── Follow-up messages — await the in-flight promises now ──────────────────
+  const [streakResult, totalAttempts] = await Promise.all([streakPromise, totalAttemptsPromise]);
+  const milestone = fmt.totalMilestone(totalAttempts);
 
   if (!isCorrect) {
     const totalWrong = await db.getTotalWrongAttempts(user.id);
@@ -476,16 +486,6 @@ export async function handleAnswer(ctx: any): Promise<void> {
       }
     );
   }
-
-  // Update session
-  await redis.updateSession(ctx.from.id, {
-    total: newTotal,
-    correct: newCorrect,
-    consecutiveCorrect: newConsecutive,
-    lastAnswer: selected,
-    lastQuestionTime: Date.now(),
-    awaitingNext: true,
-  });
 }
 
 // Next question in practice
