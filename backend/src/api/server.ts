@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import express, { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
+import rateLimit from 'express-rate-limit';
 import * as payments from '../services/payments';
 import * as db from '../db';
 import miniappRouter from './miniapp';
@@ -46,6 +47,10 @@ export default function createServer(bot: any) {
   });
 
   app.use(express.json());
+
+  // Rate limiting — 300 req/min per IP on API routes, 20 req/min on admin login
+  app.use('/api/', rateLimit({ windowMs: 60_000, max: 300, standardHeaders: true, legacyHeaders: false }));
+  app.use('/api/admin/login', rateLimit({ windowMs: 60_000, max: 20, standardHeaders: true, legacyHeaders: false }));
 
   // Mini App API routes
   app.use('/api/miniapp', miniappRouter);
