@@ -367,6 +367,21 @@ WHERE id = 116125`,
 
   // ── Acquisition source tracking ───────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS source VARCHAR(50) DEFAULT NULL`,
+
+  // ── Weekly leaderboard snapshots ──────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS leaderboard_snapshots (
+    id SERIAL PRIMARY KEY,
+    week_start DATE NOT NULL,
+    rank INT NOT NULL,
+    telegram_id BIGINT NOT NULL,
+    first_name TEXT NOT NULL,
+    correct INT NOT NULL,
+    total INT NOT NULL,
+    accuracy NUMERIC(5,1) NOT NULL,
+    snapshotted_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(week_start, rank)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_lb_snapshots_week ON leaderboard_snapshots(week_start)`,
 ];
 
 async function migrate(): Promise<void> {

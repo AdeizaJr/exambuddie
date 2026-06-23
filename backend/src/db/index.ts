@@ -435,8 +435,10 @@ export interface LeaderboardEntry {
   telegram_id: number;
 }
 
+// Monday 00:00 WAT — resets every week
+const WAT_WEEK_START = `(date_trunc('week', now() at time zone 'Africa/Lagos') at time zone 'Africa/Lagos')`;
+
 export async function getLeaderboard(subject?: string): Promise<LeaderboardEntry[]> {
-  const weekStart = `NOW() - INTERVAL '7 days'`;
   const subjectFilter = subject ? `AND q.subject = $1` : '';
   const params = subject ? [subject] : [];
 
@@ -450,7 +452,7 @@ export async function getLeaderboard(subject?: string): Promise<LeaderboardEntry
      FROM attempts a
      JOIN users u ON a.user_id = u.id
      JOIN questions q ON a.question_id = q.id
-     WHERE a.attempted_at >= ${weekStart}
+     WHERE a.attempted_at >= ${WAT_WEEK_START}
      ${subjectFilter}
      GROUP BY u.id, u.first_name, u.telegram_id
      HAVING COUNT(*) >= 5
@@ -470,7 +472,6 @@ export async function getLeaderboard(subject?: string): Promise<LeaderboardEntry
 }
 
 export async function getLeaderboardRank(userId: number, subject?: string): Promise<number | null> {
-  const weekStart = `NOW() - INTERVAL '7 days'`;
   const subjectFilter = subject ? `AND q.subject = $1` : '';
   const params: any[] = subject ? [subject] : [];
 
@@ -485,7 +486,7 @@ export async function getLeaderboardRank(userId: number, subject?: string): Prom
        FROM attempts a
        JOIN users u ON a.user_id = u.id
        JOIN questions q ON a.question_id = q.id
-       WHERE a.attempted_at >= ${weekStart}
+       WHERE a.attempted_at >= ${WAT_WEEK_START}
        ${subjectFilter}
        GROUP BY u.id
        HAVING COUNT(*) >= 5
@@ -496,6 +497,44 @@ export async function getLeaderboardRank(userId: number, subject?: string): Prom
   );
 
   return rows[0] ? parseInt(rows[0].rank) : null;
+}
+
+export async function snapshotLeaderboard(): Promise<number> {
+  const weekStartExpr = `date_trunc('week', now() at time zone 'Africa/Lagos')::date`;
+  const { rows: existing } = await pool.query(
+    `SELECT 1 FROM leaderboard_snapshots WHERE week_start = (${weekStartExpr}) LIMIT 1`
+  );
+  if (existing.length > 0) return 0;
+
+  const entries = await getLeaderboard();
+  if (entries.length === 0) return 0;
+
+  for (const e of entries) {
+    await pool.query(
+      `INSERT INTO leaderboard_snapshots (week_start, rank, telegram_id, first_name, correct, total, accuracy)
+       VALUES ((${weekStartExpr}), $1, $2, $3, $4, $5, $6)
+       ON CONFLICT (week_start, rank) DO NOTHING`,
+      [e.rank, e.telegram_id, e.first_name, e.correct, e.total, e.accuracy]
+    );
+  }
+  return entries.length;
+}
+
+export async function getLastWeekSnapshot(): Promise<LeaderboardEntry[]> {
+  const { rows } = await pool.query(
+    `SELECT rank, telegram_id, first_name, correct, total, accuracy
+     FROM leaderboard_snapshots
+     WHERE week_start = (date_trunc('week', now() at time zone 'Africa/Lagos')::date - INTERVAL '7 days')
+     ORDER BY rank ASC`
+  );
+  return rows.map(r => ({
+    rank: parseInt(r.rank),
+    telegram_id: parseInt(r.telegram_id),
+    first_name: r.first_name,
+    correct: parseInt(r.correct),
+    total: parseInt(r.total),
+    accuracy: parseFloat(r.accuracy),
+  }));
 }
 
 export async function checkDailyLimit(

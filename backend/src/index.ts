@@ -215,6 +215,8 @@ bot.on('callback_query', async (ctx: any) => {
   // Invite
   if (data === 'invite:link') return invite.handleInvite(ctx);
   if (data === 'invite:leaderboard') return invite.handleReferralLeaderboard(ctx);
+  if (data === 'leaderboard:lastweek') return leaderboard.handleLastWeekLeaderboard(ctx);
+  if (data === 'leaderboard:current') return leaderboard.handleCurrentLeaderboard(ctx);
   if (data.startsWith('invite:copy:')) {
     const link = data.slice('invite:copy:'.length);
     await ctx.answerCbQuery(link, { show_alert: true });

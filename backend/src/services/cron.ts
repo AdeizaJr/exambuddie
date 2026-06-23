@@ -92,6 +92,13 @@ export default function startCrons(bot: any): void {
     }
   });
 
+  // ── Sunday 22:55 UTC (23:55 WAT) — snapshot leaderboard before weekly reset ──
+  cron.schedule('55 22 * * 0', async () => {
+    console.log('[CRON] Snapshotting weekly leaderboard...');
+    const saved = await db.snapshotLeaderboard();
+    console.log(`[CRON] Leaderboard snapshot: ${saved} entries saved`);
+  }, { timezone: 'UTC' } as any);
+
   // ── Sunday 8am UTC (9am WAT) — morning wave ──────────────────────────────
   cron.schedule('0 8 * * 0', async () => {
     console.log('[CRON] Weekly summaries — morning wave...');
