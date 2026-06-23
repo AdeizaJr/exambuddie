@@ -447,6 +447,14 @@ function formatExplanation(text: string): string {
   }
   const converted = convertLatex(text, true);
   return converted
+    // equation step chains: "n = a = b = c" → one step per line
+    .replace(/^.+=.+=.+$/gm, (line) => {
+      const eqIdx = line.indexOf(' = ');
+      if (eqIdx === -1) return line;
+      const lhs = line.slice(0, eqIdx + 3);
+      const rest = line.slice(eqIdx + 3);
+      return lhs + rest.split(' = ').join('\n= ');
+    })
     // inverse trig: cos-1 / sin-1 / tan-1 → cos⁻¹ / sin⁻¹ / tan⁻¹
     .replace(/\b(sin|cos|tan)-1\b/g, '$1⁻¹')
     // packed equations: "0.5 0.8660" → "0.5\n0.8660" (two decimals with no operator)
@@ -514,6 +522,7 @@ export function correctAnswer(q: Question, selected: string): string {
 ✔️ <b>${q.correct_option}.</b> ${md(optionText[q.correct_option])}
 
 💡 <b>Explanation:</b>
+
 ${q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>'}`;
 }
 
