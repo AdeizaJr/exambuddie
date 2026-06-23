@@ -61,6 +61,13 @@ function convertLatex(text: string, block = false): string {
     .replace(/\^\{\\circ\}/g, '°').replace(/\\circ/g, '°').replace(/\\degree/g, '°')
     .replace(/([0-9]+)o\b/g, '$1°')
     .replace(/\)o(?=\s|=|,|\.|$)/g, ')°')
+    // scraping artifact: positive exponent fused "1.45x1023" / "8.0 x 106"
+    // Require decimal coefficient to avoid false positives ("10 x 1024" = computer storage bytes)
+    .replace(/(\d+\.\d+)\s*[x×]\s*10(?!\^)\s*(\d{1,3})(?=[^0-9]|$)/g, (_, c, e) => `${c} × 10^{${e}}`)
+    // scraping artifact: negative exponent "8.8 x 10-1" / "1.95 × 10-2"
+    .replace(/(\d+(?:\.\d+)?)\s*[x×]\s*10-(\d{1,3})(?=[^0-9]|$)/g, (_, c, e) => `${c} × 10^{-${e}}`)
+    // scraping artifact: unit negative exponents "NC-1" → "NC⁻¹", "Nm-2" → "Nm⁻²"
+    .replace(/\b([A-Z]{1,2}[a-z]{0,2})-(\d{1,2})\b/g, (_, u, e) => `${u}${toSup(`-${e}`)}`)
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
     .replace(/\^(\w)/g, (_, e) => toSup(e))
