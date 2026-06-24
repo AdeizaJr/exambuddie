@@ -220,7 +220,7 @@ export default function createServer(bot: any) {
         (SELECT COUNT(*) FROM users WHERE joined_at > NOW() - INTERVAL '24 hours') as new_today,
         (SELECT COUNT(*) FROM attempts WHERE attempted_at > NOW() - INTERVAL '24 hours') as attempts_today,
         (SELECT COUNT(*) FROM attempts) as total_attempts,
-        (SELECT COUNT(*) FROM questions) as total_questions,
+        (SELECT COUNT(*) FROM questions WHERE is_active = TRUE) as total_questions,
         (SELECT COUNT(*) FROM flagged_explanations WHERE resolved = false) as pending_flags,
         (SELECT COALESCE(SUM(amount_ngn), 0) FROM subscriptions WHERE status = 'active') as total_revenue_ngn
     `);
@@ -639,7 +639,7 @@ export default function createServer(bot: any) {
         ORDER BY attempts DESC
       `),
       db.query(
-        `SELECT COUNT(*) as count FROM questions WHERE explanation IS NULL OR explanation = ''`
+        `SELECT COUNT(*) as count FROM questions WHERE (explanation IS NULL OR explanation = '') AND is_active = TRUE`
       ),
       db.query(`SELECT COUNT(*) as count FROM questions WHERE flag_count > 0`),
       db.query(`
