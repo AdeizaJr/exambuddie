@@ -392,6 +392,10 @@ WHERE id = 116125`,
     UNIQUE(user_id, question_id)
   )`,
   `CREATE INDEX IF NOT EXISTS idx_bookmarks_user ON bookmarks(user_id)`,
+
+  // ── Soft-hide questions (e.g. mislabeled year) without deleting them ──────
+  `ALTER TABLE questions ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE`,
+  `CREATE INDEX IF NOT EXISTS idx_questions_is_active ON questions(is_active)`,
 ];
 
 async function migrate(): Promise<void> {

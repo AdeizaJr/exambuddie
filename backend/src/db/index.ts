@@ -107,7 +107,7 @@ export async function getSubjectAvailability(subject: string): Promise<{ examTyp
   const { rows } = await pool.query(
     `SELECT exam_type, ARRAY_AGG(DISTINCT year ORDER BY year) AS years
      FROM questions
-     WHERE subject = $1 AND year IS NOT NULL
+     WHERE subject = $1 AND year IS NOT NULL AND is_active = TRUE
      GROUP BY exam_type
      ORDER BY exam_type`,
     [subject]
@@ -123,7 +123,7 @@ export async function getTopicsForSubject(examType: string, subject: string): Pr
   const { rows } = await pool.query(
     `SELECT DISTINCT topic FROM questions
      WHERE subject = $${subjectIdx} ${examFilter}
-       AND topic IS NOT NULL AND topic != ''
+       AND topic IS NOT NULL AND topic != '' AND is_active = TRUE
      ORDER BY topic`,
     params
   );
@@ -161,6 +161,7 @@ async function getSpacedQuestion(
     `SELECT DISTINCT ON (q.id) q.* FROM questions q
      JOIN attempts a ON a.question_id = q.id
      WHERE q.subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excFilter}
+       AND q.is_active = TRUE
        AND a.user_id = $${userIdx}
        AND a.is_correct = FALSE
        AND a.attempted_at > NOW() - INTERVAL '30 days'
@@ -211,6 +212,7 @@ export async function getRandomQuestion(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excludeFilter}
+       AND is_active = TRUE
      ORDER BY RANDOM() LIMIT 1`,
     params
   );
@@ -235,6 +237,7 @@ export async function getQuestionsByTopic(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} AND topic ILIKE $${topicIdx}
+       AND is_active = TRUE
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
@@ -264,6 +267,7 @@ export async function getQuizQuestions(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
+       AND is_active = TRUE
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
@@ -296,6 +300,7 @@ export async function getQuizQuestionsMulti(
     const { rows } = await pool.query<Question>(
       `SELECT * FROM questions
        WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
+         AND is_active = TRUE
        ORDER BY RANDOM() LIMIT $${limitIdx}`,
       params
     );
@@ -654,7 +659,7 @@ export async function getSubjectQuestionCounts(subjects: string[]): Promise<Reco
   if (!subjects.length) return {};
   const { rows } = await pool.query(
     `SELECT subject, COUNT(*) as count FROM questions
-     WHERE subject = ANY($1)
+     WHERE subject = ANY($1) AND is_active = TRUE
      GROUP BY subject`,
     [subjects]
   );
@@ -725,6 +730,7 @@ export async function getWeeklyReport(userId: number): Promise<WeeklyReport> {
        JOIN (
          SELECT subject, COUNT(*) as total
          FROM questions
+         WHERE is_active = TRUE
          GROUP BY subject
        ) totals ON q.subject = totals.subject
        WHERE a.user_id = $1
@@ -888,6 +894,7 @@ export async function createRoom(data: {
   const qRes = await pool.query(
     `SELECT id FROM questions
      WHERE subject = $1 AND exam_type = $2
+       AND is_active = TRUE
      ${yearClause}
      ORDER BY RANDOM() LIMIT $3`,
     [data.subject, data.examType, data.numQuestions]
@@ -1179,6 +1186,7 @@ export async function getRevisionQuestions(
      ) latest
      JOIN questions q ON q.id = latest.question_id
      WHERE latest.is_correct = FALSE
+       AND q.is_active = TRUE
        AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
        ${subjectFilter}
        ${examFilter}
@@ -1223,6 +1231,7 @@ export async function getUserBookmarks(userId: number, limit = 50): Promise<Ques
     `SELECT q.* FROM bookmarks b
      JOIN questions q ON q.id = b.question_id
      WHERE b.user_id = $1
+       AND q.is_active = TRUE
        AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
      ORDER BY b.created_at DESC
      LIMIT $2`,
@@ -1255,6 +1264,7 @@ export async function getProgressStats(userId: number): Promise<{
        JOIN questions q ON a.question_id = q.id
        JOIN (
          SELECT subject, COUNT(*) as total FROM questions
+         WHERE is_active = TRUE
          GROUP BY subject
        ) totals ON q.subject = totals.subject
        WHERE a.user_id = $1
