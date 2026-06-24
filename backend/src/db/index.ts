@@ -161,7 +161,6 @@ async function getSpacedQuestion(
     `SELECT DISTINCT ON (q.id) q.* FROM questions q
      JOIN attempts a ON a.question_id = q.id
      WHERE q.subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excFilter}
-       AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
        AND a.user_id = $${userIdx}
        AND a.is_correct = FALSE
        AND a.attempted_at > NOW() - INTERVAL '30 days'
@@ -212,7 +211,6 @@ export async function getRandomQuestion(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excludeFilter}
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
      ORDER BY RANDOM() LIMIT 1`,
     params
   );
@@ -237,7 +235,6 @@ export async function getQuestionsByTopic(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} AND topic ILIKE $${topicIdx}
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
@@ -267,7 +264,6 @@ export async function getQuizQuestions(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
@@ -300,7 +296,6 @@ export async function getQuizQuestionsMulti(
     const { rows } = await pool.query<Question>(
       `SELECT * FROM questions
        WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
-       AND (has_diagram = FALSE OR image_url IS NOT NULL)
        ORDER BY RANDOM() LIMIT $${limitIdx}`,
       params
     );
@@ -408,7 +403,7 @@ export async function getWeakTopics(
      JOIN questions q ON a.question_id = q.id
      WHERE a.user_id = $1 AND q.subject = $2 AND q.topic IS NOT NULL
      ${filtered ? 'AND q.exam_type = $3' : ''}
-     GROUP BY q.topic HAVING COUNT(*) >= 2
+     GROUP BY q.topic HAVING COUNT(*) >= 2 AND ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) < 100
      ORDER BY accuracy ASC LIMIT 3`,
     params
   );
@@ -659,7 +654,7 @@ export async function getSubjectQuestionCounts(subjects: string[]): Promise<Reco
   if (!subjects.length) return {};
   const { rows } = await pool.query(
     `SELECT subject, COUNT(*) as count FROM questions
-     WHERE subject = ANY($1) AND (has_diagram = FALSE OR image_url IS NOT NULL)
+     WHERE subject = ANY($1)
      GROUP BY subject`,
     [subjects]
   );
@@ -729,7 +724,7 @@ export async function getWeeklyReport(userId: number): Promise<WeeklyReport> {
        JOIN questions q ON a.question_id = q.id
        JOIN (
          SELECT subject, COUNT(*) as total
-         FROM questions WHERE has_diagram = FALSE OR image_url IS NOT NULL
+         FROM questions
          GROUP BY subject
        ) totals ON q.subject = totals.subject
        WHERE a.user_id = $1
@@ -807,7 +802,7 @@ export async function getWeakTopicsAllSubjects(
      JOIN questions q ON a.question_id = q.id
      WHERE a.user_id = $1 AND q.subject = ANY($2) AND q.topic IS NOT NULL
        AND a.attempted_at > NOW() - INTERVAL '7 days'
-     GROUP BY q.subject, q.topic HAVING COUNT(*) >= 2
+     GROUP BY q.subject, q.topic HAVING COUNT(*) >= 2 AND ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) < 100
      ORDER BY accuracy ASC LIMIT 3`,
     [userId, subjects]
   );
@@ -893,7 +888,6 @@ export async function createRoom(data: {
   const qRes = await pool.query(
     `SELECT id FROM questions
      WHERE subject = $1 AND exam_type = $2
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
      ${yearClause}
      ORDER BY RANDOM() LIMIT $3`,
     [data.subject, data.examType, data.numQuestions]
@@ -1261,7 +1255,6 @@ export async function getProgressStats(userId: number): Promise<{
        JOIN questions q ON a.question_id = q.id
        JOIN (
          SELECT subject, COUNT(*) as total FROM questions
-         WHERE has_diagram = FALSE OR image_url IS NOT NULL
          GROUP BY subject
        ) totals ON q.subject = totals.subject
        WHERE a.user_id = $1
