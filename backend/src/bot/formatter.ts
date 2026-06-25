@@ -66,6 +66,12 @@ function convertLatex(text: string): string {
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
     .replace(/\^(\w)/g, (_, e) => toSup(e))
+    // scraping artifact: bare algebraic power e.g. "x2"→"x²", "D2"→"D²"
+    // word-boundary guards prevent matching inside H2O, CO2 etc. (no \b between 2 and O/O)
+    // lowercase: any single letter at word boundaries
+    .replace(/\b([a-z])([2-9])\b/g, (_, l, d) => l + toSup(d))
+    // uppercase: only when followed by space/operator (avoids D2K ambiguity but catches "D2 " and "D2=" patterns)
+    .replace(/\b([A-Z])([2-9])(?=[\s+\-=×÷·∝,.()\n]|$)/g, (_, l, d) => l + toSup(d))
     // subscripts
     .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
     .replace(/_(\w)/g, (_, e) => toSub(e))
