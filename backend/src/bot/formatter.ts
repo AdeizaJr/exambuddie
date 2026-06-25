@@ -66,12 +66,22 @@ function convertLatex(text: string): string {
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
     .replace(/\^(\w)/g, (_, e) => toSup(e))
-    // scraping artifact: bare algebraic power e.g. "x2"→"x²", "D2"→"D²"
-    // word-boundary guards prevent matching inside H2O, CO2 etc. (no \b between 2 and O/O)
-    // lowercase: any single letter at word boundaries
-    .replace(/\b([a-z])([2-9])\b/g, (_, l, d) => l + toSup(d))
-    // uppercase: only when followed by space/operator (avoids D2K ambiguity but catches "D2 " and "D2=" patterns)
-    .replace(/\b([A-Z])([2-9])(?=[\s+\-=×÷·∝,.()\n]|$)/g, (_, l, d) => l + toSup(d))
+    // trig squared: sin2θ → sin²θ, cos2x → cos²x (digit is the power; allow letters after)
+    .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + toSup(d))
+    // log base: log2 → log₂, log10 → log₁₀
+    .replace(/\blog([0-9]+)(?![0-9])/g, (_, d) => 'log' + toSub(d))
+    // chemistry two-letter elements: Na2 → Na₂, SO4 → SO₄ (two-letter symbols are unambiguous)
+    .replace(/\b([A-Z][a-z])([0-9]+)/g, (_, sym, n) => sym + toSub(n))
+    // chemistry: single-letter element before another element in formula: H in H2O, C in CH4
+    .replace(/\b([HCNOFPSBI])([0-9]+)(?=[A-Z])/g, (_, sym, n) => sym + toSub(n))
+    // chemistry: element digit at end of formula, preceded by another element: O in CO2
+    .replace(/(?<=[A-Za-z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z])/g, (_, sym, n) => sym + toSub(n))
+    // chemistry standalone diatomic/molecules: O2 → O₂, N2 → N₂
+    .replace(/\b([HCNOFPSBI])([0-9]+)\b/g, (_, sym, n) => sym + toSub(n))
+    // algebra bare power: 4x2 → 4x², x2 → x² (not preceded by letter, not followed by alphanum)
+    .replace(/(?<![a-zA-Z])([a-z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
+    // physics/math uppercase variables: D2 R → D² R (D not in chemistry list; D2K stays — letter follows)
+    .replace(/(?<![a-zA-Z])([A-Z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
     // subscripts
     .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
     .replace(/_(\w)/g, (_, e) => toSub(e))
