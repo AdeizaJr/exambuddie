@@ -33,12 +33,10 @@ export default function Quiz() {
   const [selected, setSelected] = useState('');
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [overallLeft, setOverallLeft] = useState(QUIZ_SECS);
-  const [questionLeft, setQuestionLeft] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [startTime, setStartTime] = useState(0);
   const overallRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const questionRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     api.getMe().then(u => {
@@ -47,25 +45,14 @@ export default function Quiz() {
     }).catch(() => {});
   }, []);
 
-  const clearQuestionTimer = useCallback(() => {
-    if (questionRef.current) { clearInterval(questionRef.current); questionRef.current = null; }
-  }, []);
+  useEffect(() => () => { if (overallRef.current) clearInterval(overallRef.current); }, []);
 
-  const startQuestionTimer = useCallback((secs: number, onExpire: () => void) => {
-    clearQuestionTimer();
-    setQuestionLeft(secs);
-    questionRef.current = setInterval(() => {
-      setQuestionLeft(prev => {
-        if (prev <= 1) { clearQuestionTimer(); onExpire(); return 0; }
-        return prev - 1;
-      });
-    }, 1000);
-  }, [clearQuestionTimer]);
-
-  useEffect(() => () => {
-    if (overallRef.current) clearInterval(overallRef.current);
-    clearQuestionTimer();
-  }, [clearQuestionTimer]);
+  const handleQTimerExpire = useCallback(() => {
+    haptic('error');
+    const q = questions[qIndex];
+    if (q) setAnswers(prev => [...prev, { qId: q.id, selected: '', correct: q.correct_option, isCorrect: false }]);
+    setRevealed(true);
+  }, [questions, qIndex]);
 
   async function startQuiz(subj: string, et: string, ts: number) {
     setLoading(true);
@@ -93,13 +80,6 @@ export default function Quiz() {
         });
       }, 1000);
 
-      // Per-question timer
-      if (ts > 0) {
-        startQuestionTimer(ts, () => {
-          haptic('error');
-          setRevealed(true);
-        });
-      }
     } finally {
       setLoading(false);
     }
@@ -107,7 +87,6 @@ export default function Quiz() {
 
   async function finishQuiz(qs: Question[], sid: string, endTime: number) {
     if (overallRef.current) { clearInterval(overallRef.current); overallRef.current = null; }
-    clearQuestionTimer();
     setAnswers(prev => {
       api.completeQuiz({
         sessionId: sid,
@@ -122,7 +101,6 @@ export default function Quiz() {
 
   function handleAnswer(opt: string) {
     if (revealed || !questions[qIndex]) return;
-    clearQuestionTimer();
     haptic(opt === questions[qIndex].correct_option ? 'success' : 'error');
     setSelected(opt);
     setRevealed(true);
@@ -140,14 +118,6 @@ export default function Quiz() {
     setQIndex(nextIdx);
     setSelected('');
     setRevealed(false);
-    if (timerSecs > 0) {
-      startQuestionTimer(timerSecs, () => {
-        haptic('error');
-        setRevealed(true);
-        const q = questions[nextIdx];
-        if (q) setAnswers(prev => [...prev, { qId: q.id, selected: '', correct: q.correct_option, isCorrect: false }]);
-      });
-    }
   }
 
   if (!user) return <LoadingScreen />;
@@ -276,10 +246,10 @@ export default function Quiz() {
           style={{ width: `${((qIndex) / questions.length) * 100}%` }} />
       </div>
 
-      {/* Per-question timer */}
+      {/* Per-question timer — mounts per question, unmounts on reveal (auto-clears interval) */}
       {timerSecs > 0 && !revealed && (
         <div className="mb-4">
-          <Timer secs={questionLeft} total={timerSecs} label="Question time:" />
+          <Timer key={qIndex} totalSecs={timerSecs} label="Question time:" onExpire={handleQTimerExpire} />
         </div>
       )}
 

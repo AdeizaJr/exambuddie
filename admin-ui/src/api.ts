@@ -15,6 +15,37 @@ function getToken(): string {
   return localStorage.getItem("admin_token") || "";
 }
 
+// Simple in-memory TTL cache for GET requests — avoids re-fetching unchanged data on navigate
+const _cache = new Map<string, { data: unknown; expires: number }>();
+const CACHE_TTL = 60_000; // 1 minute
+
+function cacheGet<T>(key: string): T | null {
+  const entry = _cache.get(key);
+  if (entry && Date.now() < entry.expires) return entry.data as T;
+  _cache.delete(key);
+  return null;
+}
+
+function cacheSet(key: string, data: unknown, ttl = CACHE_TTL) {
+  _cache.set(key, { data, expires: Date.now() + ttl });
+}
+
+export function invalidateCache(key?: string) {
+  if (key) _cache.delete(key);
+  else _cache.clear();
+}
+
+async function cachedReq<T>(path: string, params?: Record<string, string | number | undefined>, ttl?: number): Promise<T> {
+  const sp = new URLSearchParams();
+  if (params) for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") sp.set(k, String(v));
+  const key = path + (sp.toString() ? "?" + sp.toString() : "");
+  const hit = cacheGet<T>(key);
+  if (hit !== null) return hit;
+  const data = await req<T>("GET", path, undefined, params);
+  cacheSet(key, data, ttl);
+  return data;
+}
+
 async function req<T>(
   method: string,
   path: string,
@@ -75,11 +106,11 @@ export async function changePassword(
 }
 
 export async function getStats(): Promise<Stats> {
-  return req<Stats>("GET", "/stats");
+  return cachedReq<Stats>("/stats");
 }
 
 export async function getFlags(): Promise<Flag[]> {
-  return req<Flag[]>("GET", "/flags");
+  return cachedReq<Flag[]>("/flags", undefined, 30_000);
 }
 
 export async function resolveFlag(
@@ -171,11 +202,11 @@ export async function getUserActivity(telegramId: number): Promise<UserActivity>
 }
 
 export async function getSubscriptions(): Promise<Subscription[]> {
-  return req<Subscription[]>("GET", "/subscriptions");
+  return cachedReq<Subscription[]>("/subscriptions");
 }
 
 export async function getAnalytics(): Promise<Analytics> {
-  return req<Analytics>("GET", "/analytics");
+  return cachedReq<Analytics>("/analytics");
 }
 
 export interface LeaderboardEntry {

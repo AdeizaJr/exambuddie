@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import type { Question } from '../types';
@@ -74,7 +75,7 @@ function optionText(q: Question, opt: string): string {
   }
 }
 
-export default function QuestionCard({ question, qNum, total, selected, revealed, onSelect, disabled }: Props) {
+function QuestionCard({ question, qNum, total, selected, revealed, onSelect, disabled }: Props) {
   const options = OPTIONS.filter(o => optionText(question, o) !== '');
 
   function getOptionStyle(opt: string): React.CSSProperties {
@@ -196,3 +197,5 @@ export default function QuestionCard({ question, qNum, total, selected, revealed
     </div>
   );
 }
+
+export default memo(QuestionCard);
