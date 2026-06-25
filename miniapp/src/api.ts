@@ -7,6 +7,25 @@ const BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/miniapp';
 // Set VITE_DEV_USER_ID in miniapp/.env.local to your Telegram user ID.
 const DEV_USER_ID = import.meta.env.VITE_DEV_USER_ID;
 
+// Session-scoped TTL cache — avoids redundant fetches across page mounts
+const _cache = new Map<string, { data: unknown; expires: number }>();
+
+function cacheGet<T>(key: string): T | null {
+  const e = _cache.get(key);
+  if (e && Date.now() < e.expires) return e.data as T;
+  _cache.delete(key);
+  return null;
+}
+
+function cacheSet(key: string, data: unknown, ttlMs: number) {
+  _cache.set(key, { data, expires: Date.now() + ttlMs });
+}
+
+export function invalidateCache(key?: string) {
+  if (key) _cache.delete(key);
+  else _cache.clear();
+}
+
 function authHeader(): Record<string, string> {
   const initData = tg?.initData || '';
   const headers: Record<string, string> = {
@@ -33,12 +52,19 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
 }
 
 export const api = {
-  getMe: () => req<User>('GET', '/me'),
+  getMe: () => {
+    const cached = cacheGet<User>('me');
+    if (cached) return Promise.resolve(cached);
+    return req<User>('GET', '/me').then(u => { cacheSet('me', u, 30_000); return u; });
+  },
 
   getTopics: (subject: string, examType?: string) => {
     const qs = new URLSearchParams({ subject });
     if (examType) qs.set('examType', examType);
-    return req<string[]>('GET', `/topics?${qs}`);
+    const key = `topics:${subject}:${examType ?? ''}`;
+    const cached = cacheGet<string[]>(key);
+    if (cached) return Promise.resolve(cached);
+    return req<string[]>('GET', `/topics?${qs}`).then(t => { cacheSet(key, t, 300_000); return t; });
   },
 
   getQuestion: (params: {
@@ -81,8 +107,13 @@ export const api = {
     durationSecs: number;
   }) => req<QuizResult>('POST', '/quiz/complete', body),
 
-  getWeakTopics: (subject: string) =>
-    req<{ topic: string; accuracy: number }[]>('GET', `/weak-topics?subject=${subject}`),
+  getWeakTopics: (subject: string) => {
+    const key = `weak:${subject}`;
+    const cached = cacheGet<{ topic: string; accuracy: number }[]>(key);
+    if (cached) return Promise.resolve(cached);
+    return req<{ topic: string; accuracy: number }[]>('GET', `/weak-topics?subject=${subject}`)
+      .then(t => { cacheSet(key, t, 120_000); return t; });
+  },
 
   getDrillQuestions: (subject: string, topic: string) =>
     req<Question[]>('GET', `/drill?subject=${subject}&topic=${encodeURIComponent(topic)}`),
