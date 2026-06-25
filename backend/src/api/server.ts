@@ -67,7 +67,7 @@ export default function createServer(bot: any) {
   });
 
   // ── Health check ────────────────────────────────────────────────────────────
-  app.get('/health', (req: Request, res: Response) => {
+  app.get('/health', (_req: Request, res: Response) => {
     res.json({
       status: 'ok',
       service: 'ExamBuddie Bot',
@@ -209,7 +209,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/stats ────────────────────────────────────────────────────
-  app.get('/api/admin/stats', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/stats', adminAuth, async (_req: Request, res: Response) => {
     const cached = await redis.getCachedAdminStats();
     if (cached) return res.json(cached);
 
@@ -229,7 +229,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/acquisition ───────────────────────────────────────────
-  app.get('/api/admin/acquisition', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/acquisition', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT COALESCE(source, 'organic') as source, COUNT(*) as users
       FROM users GROUP BY source ORDER BY users DESC
@@ -238,7 +238,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/flags/top-questions ────────────────────────────────────
-  app.get('/api/admin/flags/top-questions', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/flags/top-questions', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT id, exam_type, subject, year, question_text, flag_count,
              (SELECT COUNT(*) FROM flagged_explanations f WHERE f.question_id = questions.id AND f.resolved = false) as open_flags
@@ -251,7 +251,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/flags ────────────────────────────────────────────────────
-  app.get('/api/admin/flags', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/flags', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT f.id, f.flagged_at, f.reason, f.resolved,
              q.id as question_id, q.subject, q.question_text,
@@ -601,7 +601,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/subscriptions ────────────────────────────────────────────
-  app.get('/api/admin/subscriptions', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/subscriptions', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT s.id, s.plan, s.amount_ngn, s.status,
              s.started_at, s.expires_at, s.flutterwave_tx_ref,
@@ -615,7 +615,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/analytics ────────────────────────────────────────────────
-  app.get('/api/admin/analytics', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/analytics', adminAuth, async (_req: Request, res: Response) => {
     const [dailyResult, subjectsResult, missingExpResult, flaggedResult, weakTopicsResult, dauResult] = await Promise.all([
       db.query(`
         SELECT
@@ -693,7 +693,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/leaderboard/weeks ───────────────────────────────────────
-  app.get('/api/admin/leaderboard/weeks', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/leaderboard/weeks', adminAuth, async (_req: Request, res: Response) => {
     const weeks = await db.getSnapshotWeeks();
     res.json({ weeks });
   });

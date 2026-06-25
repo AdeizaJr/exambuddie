@@ -1,7 +1,7 @@
 // src/db/index.ts
 import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
-import { getCachedUser, setCachedUser, clearCachedUser } from '../services/redis';
+import { getCachedUser, setCachedUser } from '../services/redis';
 
 // Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
 types.setTypeParser(1082, (val: string) => val);
