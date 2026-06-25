@@ -1282,3 +1282,73 @@ export async function getProgressStats(userId: number): Promise<{
     })),
   };
 }
+
+// ── Spaced Repetition ─────────────────────────────────────────────────────────
+
+export async function addSRCard(userId: number, questionId: number): Promise<void> {
+  await pool.query(
+    `INSERT INTO sr_cards (user_id, question_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [userId, questionId]
+  );
+}
+
+export async function getSRCards(userId: number, limit = 20): Promise<Question[]> {
+  const { rows } = await pool.query<Question>(
+    `SELECT q.* FROM sr_cards sr
+     JOIN questions q ON q.id = sr.question_id
+     WHERE sr.user_id = $1
+       AND sr.next_review_at <= NOW()
+       AND q.is_active = TRUE
+     ORDER BY sr.next_review_at ASC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return rows;
+}
+
+export async function updateSRCard(userId: number, questionId: number, wasCorrect: boolean): Promise<void> {
+  const { rows } = await pool.query(
+    `SELECT interval_days, ease, reps FROM sr_cards WHERE user_id = $1 AND question_id = $2`,
+    [userId, questionId]
+  );
+  if (!rows.length) return;
+  const { interval_days, ease, reps } = rows[0];
+
+  let newInterval: number;
+  let newEase: number;
+  let newReps: number;
+
+  if (wasCorrect) {
+    newReps = reps + 1;
+    newInterval = Math.min(Math.round(interval_days * ease), 30);
+    newEase = ease; // keep ease constant (simple SM-2 variant)
+  } else {
+    newReps = 0;
+    newInterval = 1;
+    newEase = Math.max(1.3, ease - 0.2);
+  }
+
+  await pool.query(
+    `UPDATE sr_cards
+     SET interval_days = $1, ease = $2, reps = $3,
+         next_review_at = NOW() + ($1 || ' days')::INTERVAL
+     WHERE user_id = $4 AND question_id = $5`,
+    [newInterval, newEase, newReps, userId, questionId]
+  );
+}
+
+export async function getSRDueCount(userId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) as cnt FROM sr_cards WHERE user_id = $1 AND next_review_at <= NOW()`,
+    [userId]
+  );
+  return parseInt(rows[0]?.cnt || '0', 10);
+}
+
+export async function getSRTotalCount(userId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) as cnt FROM sr_cards WHERE user_id = $1`,
+    [userId]
+  );
+  return parseInt(rows[0]?.cnt || '0', 10);
+}

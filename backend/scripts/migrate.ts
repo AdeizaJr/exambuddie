@@ -396,6 +396,20 @@ WHERE id = 116125`,
   // ── Soft-hide questions (e.g. mislabeled year) without deleting them ──────
   `ALTER TABLE questions ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE`,
   `CREATE INDEX IF NOT EXISTS idx_questions_is_active ON questions(is_active)`,
+
+  // ── Spaced repetition cards — per-(user, question) review intervals ────────
+  `CREATE TABLE IF NOT EXISTS sr_cards (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    question_id INT REFERENCES questions(id) ON DELETE CASCADE,
+    interval_days INT NOT NULL DEFAULT 1,
+    ease FLOAT NOT NULL DEFAULT 2.5,
+    reps INT NOT NULL DEFAULT 0,
+    next_review_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, question_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_sr_cards_user_due ON sr_cards(user_id, next_review_at)`,
 ];
 
 async function migrate(): Promise<void> {
