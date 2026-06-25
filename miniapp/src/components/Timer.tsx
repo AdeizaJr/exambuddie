@@ -1,12 +1,29 @@
+import { useEffect, useRef, useState, memo } from 'react';
+
 interface Props {
-  secs: number;
-  total: number;
+  totalSecs: number;
+  onExpire: () => void;
   label?: string;
   size?: 'sm' | 'lg';
 }
 
-export default function Timer({ secs, total, label, size = 'sm' }: Props) {
-  const pct = Math.max(0, secs / total);
+function Timer({ totalSecs, onExpire, label, size = 'sm' }: Props) {
+  const [secs, setSecs] = useState(totalSecs);
+  const onExpireRef = useRef(onExpire);
+  onExpireRef.current = onExpire;
+
+  useEffect(() => {
+    setSecs(totalSecs);
+    const id = setInterval(() => {
+      setSecs(prev => {
+        if (prev <= 1) { clearInterval(id); onExpireRef.current(); return 0; }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [totalSecs]);
+
+  const pct = Math.max(0, secs / totalSecs);
   const urgent = secs <= 10;
   const color = urgent ? '#ef4444' : secs <= 20 ? '#f97316' : 'var(--tg-button)';
 
@@ -38,3 +55,5 @@ export default function Timer({ secs, total, label, size = 'sm' }: Props) {
     </div>
   );
 }
+
+export default memo(Timer);
