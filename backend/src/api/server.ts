@@ -416,32 +416,41 @@ export default function createServer(bot: any) {
 
   // ── POST /api/admin/questions/:id/generate-explanation ───────────────────
   app.post('/api/admin/questions/:id/generate-explanation', adminAuth, async (req: Request, res: Response) => {
-    const { rows } = await db.query(`SELECT * FROM questions WHERE id = $1`, [req.params.id]);
-    if (!rows.length) return res.status(404).json({ error: 'Question not found' });
-    const q = rows[0];
+    try {
+      const { rows } = await db.query(`SELECT * FROM questions WHERE id = $1`, [req.params.id]);
+      if (!rows.length) return res.status(404).json({ error: 'Question not found' });
+      const q = rows[0];
 
-    const Anthropic = (await import('@anthropic-ai/sdk')).default;
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      if (!process.env.ANTHROPIC_API_KEY) {
+        return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured' });
+      }
 
-    const opts = [`A. ${q.option_a}`, `B. ${q.option_b}`, `C. ${q.option_c}`, `D. ${q.option_d}`];
-    if (q.option_e) opts.push(`E. ${q.option_e}`);
+      const Anthropic = (await import('@anthropic-ai/sdk')).default;
+      const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-    const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 400,
-      system: `You are an expert Nigerian secondary school teacher preparing students for WAEC, NECO, and JAMB exams. Explain why the correct answer is right and briefly why each wrong option is incorrect. Write for a 16-18 year old student. 4-7 sentences. Step-by-step for maths/sciences. Never start with "The correct answer is". Plain text only.`,
-      messages: [{
-        role: 'user',
-        content: `Subject: ${q.exam_type} ${q.subject}${q.year ? ` ${q.year}` : ''}\n\nQuestion: ${q.question_text}\n\nOptions:\n${opts.join('\n')}\n\nCorrect answer: ${q.correct_option}\n\nExplain why ${q.correct_option} is correct and why the others are wrong.`,
-      }],
-    });
+      const opts = [`A. ${q.option_a}`, `B. ${q.option_b}`, `C. ${q.option_c}`, `D. ${q.option_d}`];
+      if (q.option_e) opts.push(`E. ${q.option_e}`);
 
-    const explanation = (message.content[0] as any).text.trim();
-    await db.query(
-      `UPDATE questions SET explanation = $1, explanation_reviewed = true WHERE id = $2`,
-      [explanation, q.id]
-    );
-    res.json({ explanation });
+      const message = await anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        system: `You are an expert Nigerian secondary school teacher preparing students for WAEC, NECO, and JAMB exams. Explain why the correct answer is right and briefly why each wrong option is incorrect. Write for a 16-18 year old student. 4-7 sentences. Step-by-step for maths/sciences. Never start with "The correct answer is". Plain text only.`,
+        messages: [{
+          role: 'user',
+          content: `Subject: ${q.exam_type} ${q.subject}${q.year ? ` ${q.year}` : ''}\n\nQuestion: ${q.question_text}\n\nOptions:\n${opts.join('\n')}\n\nCorrect answer: ${q.correct_option}\n\nExplain why ${q.correct_option} is correct and why the others are wrong.`,
+        }],
+      });
+
+      const explanation = (message.content[0] as any).text.trim();
+      await db.query(
+        `UPDATE questions SET explanation = $1, explanation_reviewed = true WHERE id = $2`,
+        [explanation, q.id]
+      );
+      res.json({ explanation });
+    } catch (err: any) {
+      console.error('[generate-explanation]', err);
+      res.status(500).json({ error: err.message || 'Failed to generate explanation' });
+    }
   });
 
   // ── DELETE /api/admin/questions/:id ────────────────────────────────────────
