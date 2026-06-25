@@ -339,7 +339,7 @@ export default function createServer(bot: any) {
 
     const { rows } = await db.query(
       `SELECT id, exam_type, subject, year, question_text, option_a, option_b, option_c, option_d, option_e,
-              correct_option, explanation, explanation_reviewed, flag_count, source_id, has_diagram, created_at
+              correct_option, explanation, explanation_reviewed, flag_count, source_id, has_diagram, is_active, created_at
        FROM questions ${where}
        ORDER BY id DESC
        LIMIT $${params.length - 1} OFFSET $${params.length}`,
@@ -404,14 +404,19 @@ export default function createServer(bot: any) {
 
   // ── PATCH /api/admin/questions/:id/active ──────────────────────────────────
   app.patch('/api/admin/questions/:id/active', adminAuth, async (req: Request, res: Response) => {
-    const { is_active } = req.body;
-    if (typeof is_active !== 'boolean') return res.status(400).json({ error: 'is_active must be boolean' });
-    const { rows } = await db.query(
-      `UPDATE questions SET is_active = $1 WHERE id = $2 RETURNING id, is_active`,
-      [is_active, req.params.id]
-    );
-    if (!rows.length) return res.status(404).json({ error: 'Question not found' });
-    res.json(rows[0]);
+    try {
+      const { is_active } = req.body;
+      if (typeof is_active !== 'boolean') return res.status(400).json({ error: 'is_active must be boolean' });
+      const { rows } = await db.query(
+        `UPDATE questions SET is_active = $1 WHERE id = $2 RETURNING id, is_active`,
+        [is_active, req.params.id]
+      );
+      if (!rows.length) return res.status(404).json({ error: 'Question not found' });
+      res.json(rows[0]);
+    } catch (err: any) {
+      console.error('[toggle-active]', err);
+      res.status(500).json({ error: err.message || 'Failed to update question' });
+    }
   });
 
   // ── POST /api/admin/questions/:id/generate-explanation ───────────────────
