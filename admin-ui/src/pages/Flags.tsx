@@ -69,6 +69,14 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
                 🔤 Wrong Underline
               </span>
             )}
+            {flag.user_first_name && (
+              <span className="rounded border border-border bg-surface2 px-2 py-0.5 text-xs text-muted">
+                👤 {flag.user_first_name}
+                {flag.user_telegram_id && (
+                  <span className="ml-1 font-mono text-[10px] opacity-60">#{flag.user_telegram_id}</span>
+                )}
+              </span>
+            )}
           </div>
           <p className="text-sm leading-relaxed text-white">{flag.question_text}</p>
         </div>

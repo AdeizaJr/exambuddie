@@ -45,6 +45,8 @@ export interface Flag {
   correct_option: string;
   explanation: string | null;
   flag_count: number;
+  user_first_name: string | null;
+  user_telegram_id: number | null;
 }
 
 export interface Subscription {
