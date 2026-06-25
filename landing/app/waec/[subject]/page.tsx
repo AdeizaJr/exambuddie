@@ -76,7 +76,7 @@ export default async function WaecSubjectPage({
     educationalLevel: "Secondary School",
     teaches: `WAEC ${s.displayName} — ${s.topics.slice(0, 4).join(", ")}`,
     datePublished: "2024-01-01",
-    dateModified: "2026-06-01",
+    dateModified: "2026-06-25",
     inLanguage: "en-NG",
     isAccessibleForFree: true,
     offers: {
@@ -87,11 +87,62 @@ export default async function WaecSubjectPage({
     },
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://exambuddie.app" },
+      { "@type": "ListItem", position: 2, name: "WAEC", item: "https://exambuddie.app/waec" },
+      { "@type": "ListItem", position: 3, name: `WAEC ${s.displayName}`, item: `https://exambuddie.app/waec/${s.slug}` },
+    ],
+  };
+
+  const faqItems = [
+    {
+      q: `How many WAEC ${s.displayName} past questions are on ExamBuddie?`,
+      a: `ExamBuddie has ${s.waec.count}+ real WAEC ${s.displayName} past questions from 2010 to 2025, covering ${s.topics.length} major topics: ${s.topics.join(", ")}.`,
+    },
+    {
+      q: `Is ExamBuddie free for WAEC ${s.displayName} practice?`,
+      a: "Yes. ExamBuddie is free to start with 14 days of Premium access included. No credit card or app download required — practice directly inside Telegram.",
+    },
+    {
+      q: `Which topics does WAEC ${s.displayName} cover?`,
+      a: `WAEC ${s.displayName} covers ${s.topics.join(", ")}.`,
+    },
+    {
+      q: `Can I practice WAEC ${s.displayName} on my phone?`,
+      a: "Yes. ExamBuddie works inside Telegram, which runs on any smartphone. No download needed — just open Telegram and start practising.",
+    },
+    {
+      q: `Does ExamBuddie explain WAEC ${s.displayName} answers?`,
+      a: `Yes. Every WAEC ${s.displayName} question has a full explanation so you understand why the correct answer is right, not just what it is.`,
+    },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+
   return (
     <div className="font-[var(--font-geist)]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       <Nav />
@@ -243,6 +294,28 @@ export default async function WaecSubjectPage({
           </div>
         </section>
       )}
+
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="mb-10 text-center text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-3">
+            {faqItems.map(({ q, a }) => (
+              <details
+                key={q}
+                className="group rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-900 dark:text-white">
+                  {q}
+                  <span className="shrink-0 text-blue-600 transition-transform group-open:rotate-180">▾</span>
+                </summary>
+                <p className="px-6 pb-5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24 dark:bg-blue-900">
         <div className="mx-auto max-w-2xl">

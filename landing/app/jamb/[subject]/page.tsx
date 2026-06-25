@@ -76,7 +76,7 @@ export default async function JambSubjectPage({
     educationalLevel: "Secondary School",
     teaches: `JAMB UTME ${s.displayName} — ${s.topics.slice(0, 4).join(", ")}`,
     datePublished: "2024-01-01",
-    dateModified: "2026-06-01",
+    dateModified: "2026-06-25",
     inLanguage: "en-NG",
     isAccessibleForFree: true,
     offers: {
@@ -87,11 +87,62 @@ export default async function JambSubjectPage({
     },
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://exambuddie.app" },
+      { "@type": "ListItem", position: 2, name: "JAMB", item: "https://exambuddie.app/jamb" },
+      { "@type": "ListItem", position: 3, name: `JAMB ${s.displayName}`, item: `https://exambuddie.app/jamb/${s.slug}` },
+    ],
+  };
+
+  const faqItems = [
+    {
+      q: `How many JAMB ${s.displayName} past questions are on ExamBuddie?`,
+      a: `ExamBuddie has ${s.jamb.count}+ real JAMB UTME ${s.displayName} past questions from 2010 to 2025, covering ${s.topics.length} major topics: ${s.topics.join(", ")}.`,
+    },
+    {
+      q: `Is ExamBuddie free for JAMB ${s.displayName} practice?`,
+      a: "Yes. ExamBuddie is free to start with 14 days of Premium access included. No credit card or app download required — practice CBT-style directly inside Telegram.",
+    },
+    {
+      q: `Which topics does JAMB ${s.displayName} cover?`,
+      a: `JAMB UTME ${s.displayName} covers ${s.topics.join(", ")}.`,
+    },
+    {
+      q: `Can I practise JAMB ${s.displayName} CBT on my phone?`,
+      a: "Yes. ExamBuddie simulates CBT conditions inside Telegram, which runs on any smartphone. No download needed.",
+    },
+    {
+      q: `Does ExamBuddie explain JAMB ${s.displayName} answers?`,
+      a: `Yes. Every JAMB ${s.displayName} question has a step-by-step explanation so you understand the reasoning, not just the correct answer.`,
+    },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+
   return (
     <div className="font-[var(--font-geist)]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       <Nav />
@@ -243,6 +294,28 @@ export default async function JambSubjectPage({
           </div>
         </section>
       )}
+
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="mb-10 text-center text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-3">
+            {faqItems.map(({ q, a }) => (
+              <details
+                key={q}
+                className="group rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-900 dark:text-white">
+                  {q}
+                  <span className="shrink-0 text-blue-600 transition-transform group-open:rotate-180">▾</span>
+                </summary>
+                <p className="px-6 pb-5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24 dark:bg-blue-900">
         <div className="mx-auto max-w-2xl">
