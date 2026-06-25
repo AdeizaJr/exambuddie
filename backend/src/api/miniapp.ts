@@ -39,20 +39,22 @@ async function requireAuth(req: Request, res: Response, next: NextFunction) {
   // In dev mode, allow a fake initData with just user id
   if (process.env.NODE_ENV !== 'production' && req.headers['x-dev-user-id']) {
     (req as any).telegramId = parseInt(req.headers['x-dev-user-id'] as string);
-    return next();
+  } else {
+    const parsed = validateInitData(initData);
+    if (!parsed) return res.status(401).json({ error: 'Unauthorized' });
+    (req as any).telegramId = parsed.id;
   }
 
-  const parsed = validateInitData(initData);
-  if (!parsed) return res.status(401).json({ error: 'Unauthorized' });
-  (req as any).telegramId = parsed.id;
+  // Eager-fetch and cache user on req — eliminates duplicate getUser() calls per request
+  const user = await db.getUser((req as any).telegramId);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  (req as any).user = user;
   next();
 }
 
 // ── GET /api/miniapp/me ────────────────────────────────────────────────────────
 router.get('/me', requireAuth, async (req: Request, res: Response) => {
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
-  res.json(user);
+  res.json((req as any).user);
 });
 
 // ── PUT /api/miniapp/me ────────────────────────────────────────────────────────
@@ -73,8 +75,7 @@ router.put('/me', requireAuth, async (req: Request, res: Response) => {
 
 // ── GET /api/miniapp/limit ─────────────────────────────────────────────────────
 router.get('/limit', requireAuth, async (req: Request, res: Response) => {
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
+  const user = (req as any).user;
   const check = await db.checkDailyLimit(user);
   res.json({ allowed: check.allowed, used: user.daily_count || 0, limit: check.limit });
 });
@@ -84,9 +85,7 @@ router.get('/question', requireAuth, async (req: Request, res: Response) => {
   const { subject, examType, year, excludeIds, topic } = req.query;
   if (!subject || !examType) return res.status(400).json({ error: 'subject and examType required' });
 
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
-
+  const user = (req as any).user;
   const check = await db.checkDailyLimit(user);
   if (!check.allowed) return res.status(429).json({ error: 'Daily limit reached', limit: check.limit });
 
@@ -108,13 +107,9 @@ router.get('/question', requireAuth, async (req: Request, res: Response) => {
 // ── POST /api/miniapp/answer ───────────────────────────────────────────────────
 router.post('/answer', requireAuth, async (req: Request, res: Response) => {
   const { questionId, selectedOption, sessionId, timeTakenMs, subject } = req.body;
+  const user = (req as any).user;
 
-  const [user, { rows }] = await Promise.all([
-    db.getUser((req as any).telegramId),
-    db.query(`SELECT correct_option FROM questions WHERE id = $1`, [questionId]),
-  ]);
-
-  if (!user) return res.status(404).json({ error: 'User not found' });
+  const { rows } = await db.query(`SELECT correct_option FROM questions WHERE id = $1`, [questionId]);
   if (!rows.length) return res.status(404).json({ error: 'Question not found' });
 
   const isCorrect = selectedOption === rows[0].correct_option;
@@ -138,9 +133,7 @@ router.post('/answer', requireAuth, async (req: Request, res: Response) => {
 
 // ── GET /api/miniapp/stats ─────────────────────────────────────────────────────
 router.get('/stats', requireAuth, async (req: Request, res: Response) => {
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
-
+  const user = (req as any).user;
   const examType = req.query.examType ? String(req.query.examType) : undefined;
 
   const [statsRaw, subjectStatsRaw, weakTopicsRaw] = await Promise.all([
@@ -164,8 +157,7 @@ router.post('/quiz/start', requireAuth, async (req: Request, res: Response) => {
   const { subject, examType } = req.body;
   if (!subject || !examType) return res.status(400).json({ error: 'subject and examType required' });
 
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
+  const user = (req as any).user;
   if (user.plan !== 'premium') return res.status(403).json({ error: 'Premium required' });
 
   const questions = await db.getQuizQuestions(examType, subject, 40);
@@ -180,8 +172,7 @@ router.post('/quiz/start', requireAuth, async (req: Request, res: Response) => {
 // ── POST /api/miniapp/quiz/complete ───────────────────────────────────────────
 router.post('/quiz/complete', requireAuth, async (req: Request, res: Response) => {
   const { sessionId, answers, durationSecs } = req.body;
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
+  const user = (req as any).user;
 
   // Bulk log attempts
   if (Array.isArray(answers)) {
@@ -211,23 +202,15 @@ router.post('/quiz/complete', requireAuth, async (req: Request, res: Response) =
 router.get('/topics', requireAuth, async (req: Request, res: Response) => {
   const { subject, examType } = req.query;
   if (!subject) return res.status(400).json({ error: 'subject required' });
-  let et: string;
-  if (examType) {
-    et = String(examType);
-  } else {
-    const user = await db.getUser((req as any).telegramId);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    et = user.exam_type || 'ALL';
-  }
+  const user = (req as any).user;
+  const et = examType ? String(examType) : (user.exam_type || 'ALL');
   const topics = await db.getTopicsForSubject(et, String(subject));
   res.json(topics);
 });
 
 // ── GET /api/miniapp/weak-topics ───────────────────────────────────────────────
 router.get('/weak-topics', requireAuth, async (req: Request, res: Response) => {
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
-
+  const user = (req as any).user;
   const subject = String(req.query.subject || user.subjects?.[0] || '');
   const topics = await db.getWeakTopics(user.id, subject);
   res.json(topics);
@@ -238,9 +221,7 @@ router.get('/drill', requireAuth, async (req: Request, res: Response) => {
   const { subject, topic } = req.query;
   if (!subject || !topic) return res.status(400).json({ error: 'subject and topic required' });
 
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
-
+  const user = (req as any).user;
   const questions = await db.getQuestionsByTopic(user.exam_type || '', String(subject), String(topic), 10);
   res.json(questions);
 });

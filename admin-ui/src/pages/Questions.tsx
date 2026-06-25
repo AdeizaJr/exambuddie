@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage } from "../api";
+import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage, toggleQuestionActive } from "../api";
 import type { Question, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
@@ -180,6 +180,17 @@ export default function Questions() {
     }
   }
 
+  async function handleToggleActive(q: Question) {
+    try {
+      const updated = await toggleQuestionActive(q.id, !q.is_active);
+      setResult(prev =>
+        prev ? { ...prev, data: prev.data.map(row => row.id === q.id ? { ...row, is_active: updated.is_active } : row) } : prev
+      );
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Toggle failed");
+    }
+  }
+
   async function handleDelete() {
     if (!deleteTarget) return;
     setDeleting(true);
@@ -305,6 +316,9 @@ export default function Questions() {
                       Flags
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
+                      Active
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
                       Actions
                     </th>
                   </tr>
@@ -354,6 +368,19 @@ export default function Questions() {
                         ) : (
                           <span className="text-xs text-muted">0</span>
                         )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => handleToggleActive(q)}
+                          title={q.is_active ? "Click to disable" : "Click to enable"}
+                          className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
+                            q.is_active
+                              ? "bg-green-500/15 text-green-400 border border-green-500/20 hover:bg-red-500/15 hover:text-red-400 hover:border-red-500/20"
+                              : "bg-red-500/15 text-red-400 border border-red-500/20 hover:bg-green-500/15 hover:text-green-400 hover:border-green-500/20"
+                          }`}
+                        >
+                          {q.is_active ? "On" : "Off"}
+                        </button>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">

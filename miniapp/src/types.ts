@@ -23,6 +23,8 @@ export interface Question {
   option_e?: string;
   correct_option: string;
   explanation?: string;
+  has_diagram?: boolean;
+  image_url?: string;
 }
 
 export interface SubjectStat {

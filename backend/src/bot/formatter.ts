@@ -476,12 +476,16 @@ function formatExplanation(text: string): string {
   const converted = convertLatex(text);
   return converted
     // equation step chains: "n = a = b = c" → one step per line
+    // skip if any segment between = signs contains ≥2 English words (prose, not math)
     .replace(/^.+=.+=.+$/gm, (line) => {
       const eqIdx = line.indexOf(' = ');
       if (eqIdx === -1) return line;
       const lhs = line.slice(0, eqIdx + 3);
       const rest = line.slice(eqIdx + 3);
-      return lhs + rest.split(' = ').join('\n= ');
+      const parts = rest.split(' = ');
+      const looksEnglish = (s: string) => (s.match(/\b[a-zA-Z]{4,}\b/g) || []).length >= 2;
+      if (parts.some(looksEnglish)) return line;
+      return lhs + parts.join('\n= ');
     })
     // inverse trig: cos-1 / sin-1 / tan-1 → cos⁻¹ / sin⁻¹ / tan⁻¹
     .replace(/\b(sin|cos|tan)-1\b/g, '$1⁻¹')

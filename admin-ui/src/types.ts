@@ -31,6 +31,7 @@ export interface Question {
   source_id: string | null;
   has_diagram: boolean;
   image_url?: string;
+  is_active: boolean;
   created_at: string;
 }
 
