@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage, toggleQuestionActive } from "../api";
+import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage, toggleQuestionActive, generateExplanation } from "../api";
 import type { Question, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
@@ -67,6 +67,8 @@ export default function Questions() {
   const year = searchParams.get("year") ?? "";
   const search = searchParams.get("q") ?? "";
   const hasDiagram = searchParams.get("has_diagram") ?? "";
+  const missingExp = searchParams.get("missing_explanation") ?? "";
+  const hasFlags = searchParams.get("has_flags") ?? "";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
 
   const [result, setResult] = useState<PaginatedResponse<Question> | null>(null);
@@ -79,6 +81,7 @@ export default function Questions() {
   const [deleting, setDeleting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   // Update a single filter key; resets page to 1 unless changing the page itself
   function setFilter(key: string, value: string, keepPage = false) {
@@ -105,6 +108,8 @@ export default function Questions() {
         year: year ? parseInt(year) : undefined,
         search: search || undefined,
         has_diagram: hasDiagram === "true" ? true : hasDiagram === "false" ? false : undefined,
+        missing_explanation: missingExp === "true" ? true : undefined,
+        has_flags: hasFlags === "true" ? true : undefined,
       });
       setResult(data);
       setError(null);
@@ -113,7 +118,7 @@ export default function Questions() {
     } finally {
       setLoading(false);
     }
-  }, [page, subject, examType, year, search, hasDiagram]);
+  }, [page, subject, examType, year, search, hasDiagram, missingExp, hasFlags]);
 
   useEffect(() => {
     load();
@@ -177,6 +182,19 @@ export default function Questions() {
       alert(e instanceof Error ? e.message : "Save failed");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleGenerate() {
+    if (!editTarget || !editState) return;
+    setGenerating(true);
+    try {
+      const { explanation } = await generateExplanation(editTarget.id);
+      setEditState({ ...editState, explanation });
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setGenerating(false);
     }
   }
 
@@ -259,6 +277,24 @@ export default function Questions() {
           <option value="">All Questions</option>
           <option value="true">Has Diagram</option>
           <option value="false">No Diagram</option>
+        </select>
+
+        <select
+          value={missingExp}
+          onChange={(e) => setFilter("missing_explanation", e.target.value)}
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+        >
+          <option value="">All Explanations</option>
+          <option value="true">Missing Explanation</option>
+        </select>
+
+        <select
+          value={hasFlags}
+          onChange={(e) => setFilter("has_flags", e.target.value)}
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+        >
+          <option value="">All Flags</option>
+          <option value="true">Has Flags</option>
         </select>
 
         <input
@@ -500,9 +536,18 @@ export default function Questions() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
-                Explanation
-              </label>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="text-xs font-medium uppercase tracking-wider text-muted">
+                  Explanation
+                </label>
+                <button
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="flex items-center gap-1 rounded border border-violet-500/30 bg-violet-500/10 px-2.5 py-1 text-xs text-violet-400 transition-colors hover:bg-violet-500/20 disabled:opacity-50"
+                >
+                  {generating ? <><Spinner size="sm" /> Generating…</> : "✨ Generate AI"}
+                </button>
+              </div>
               <textarea
                 rows={4}
                 value={editState.explanation}

@@ -91,6 +91,20 @@ export default function Home() {
             desc="Track your progress"
             onClick={() => nav('/stats')}
           />
+          <ActionCard
+            icon="🔖"
+            iconBg="bg-pink-500"
+            title="Bookmarks"
+            desc="Review saved questions"
+            onClick={() => nav('/bookmarks')}
+          />
+          <ActionCard
+            icon="🏆"
+            iconBg="bg-amber-500"
+            title="Leaderboard"
+            desc="Top 10 this week"
+            onClick={() => nav('/leaderboard')}
+          />
         </div>
 
         {/* Upgrade banner */}

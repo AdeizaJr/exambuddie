@@ -226,4 +226,42 @@ router.get('/drill', requireAuth, async (req: Request, res: Response) => {
   res.json(questions);
 });
 
+// ── GET /api/miniapp/bookmarks ────────────────────────────────────────────────
+router.get('/bookmarks', requireAuth, async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const questions = await db.getUserBookmarks(user.id);
+  res.json(questions);
+});
+
+// ── POST /api/miniapp/bookmarks/:questionId ───────────────────────────────────
+router.post('/bookmarks/:questionId', requireAuth, async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  await db.addBookmark(user.id, parseInt(String(req.params.questionId)));
+  res.json({ ok: true });
+});
+
+// ── DELETE /api/miniapp/bookmarks/:questionId ─────────────────────────────────
+router.delete('/bookmarks/:questionId', requireAuth, async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  await db.removeBookmark(user.id, parseInt(String(req.params.questionId)));
+  res.json({ ok: true });
+});
+
+// ── GET /api/miniapp/bookmarks/:questionId/check ──────────────────────────────
+router.get('/bookmarks/:questionId/check', requireAuth, async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const bookmarked = await db.isBookmarked(user.id, parseInt(String(req.params.questionId)));
+  res.json({ bookmarked });
+});
+
+// ── GET /api/miniapp/leaderboard ──────────────────────────────────────────────
+router.get('/leaderboard', requireAuth, async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const [entries, myRank] = await Promise.all([
+    db.getLeaderboard(),
+    db.getLeaderboardRank(user.id),
+  ]);
+  res.json({ entries, myRank });
+});
+
 export default router;

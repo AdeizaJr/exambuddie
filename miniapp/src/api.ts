@@ -1,6 +1,15 @@
 import { tg } from './telegram';
 import type { User, Question, Stats, QuizResult } from './types';
 
+export interface LeaderboardEntry {
+  rank: number;
+  first_name: string;
+  telegram_id: number;
+  correct: number;
+  total: number;
+  accuracy: number;
+}
+
 const BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/miniapp';
 
 // In dev mode, send x-dev-user-id so the backend bypasses initData validation.
@@ -123,4 +132,18 @@ export const api = {
 
   checkDailyLimit: () =>
     req<{ allowed: boolean; used: number; limit: number }>('GET', '/limit'),
+
+  getBookmarks: () => req<Question[]>('GET', '/bookmarks'),
+
+  addBookmark: (questionId: number) =>
+    req<{ ok: boolean }>('POST', `/bookmarks/${questionId}`),
+
+  removeBookmark: (questionId: number) =>
+    req<{ ok: boolean }>('DELETE', `/bookmarks/${questionId}`),
+
+  checkBookmark: (questionId: number) =>
+    req<{ bookmarked: boolean }>('GET', `/bookmarks/${questionId}/check`),
+
+  getLeaderboard: () =>
+    req<{ entries: LeaderboardEntry[]; myRank: number | null }>('GET', '/leaderboard'),
 };

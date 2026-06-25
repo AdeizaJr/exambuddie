@@ -129,6 +129,8 @@ export interface QuestionsFilter {
   year?: number;
   search?: string;
   has_diagram?: boolean;
+  missing_explanation?: boolean;
+  has_flags?: boolean;
 }
 
 export async function getQuestions(
@@ -169,6 +171,10 @@ export async function deleteQuestionImage(id: number): Promise<{ ok: boolean }> 
 
 export async function toggleQuestionActive(id: number, is_active: boolean): Promise<{ id: number; is_active: boolean }> {
   return req<{ id: number; is_active: boolean }>("PATCH", `/questions/${id}/active`, { is_active });
+}
+
+export async function generateExplanation(id: number): Promise<{ explanation: string }> {
+  return req<{ explanation: string }>("POST", `/questions/${id}/generate-explanation`);
 }
 
 export interface UsersFilter {
