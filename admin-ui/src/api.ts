@@ -167,6 +167,10 @@ export async function deleteQuestionImage(id: number): Promise<{ ok: boolean }> 
   return req<{ ok: boolean }>("DELETE", `/questions/${id}/image`);
 }
 
+export async function toggleQuestionActive(id: number, is_active: boolean): Promise<{ id: number; is_active: boolean }> {
+  return req<{ id: number; is_active: boolean }>("PATCH", `/questions/${id}/active`, { is_active });
+}
+
 export interface UsersFilter {
   page?: number;
   limit?: number;

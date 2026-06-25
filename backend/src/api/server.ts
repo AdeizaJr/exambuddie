@@ -396,6 +396,18 @@ export default function createServer(bot: any) {
     res.json(rows[0]);
   });
 
+  // ── PATCH /api/admin/questions/:id/active ──────────────────────────────────
+  app.patch('/api/admin/questions/:id/active', adminAuth, async (req: Request, res: Response) => {
+    const { is_active } = req.body;
+    if (typeof is_active !== 'boolean') return res.status(400).json({ error: 'is_active must be boolean' });
+    const { rows } = await db.query(
+      `UPDATE questions SET is_active = $1 WHERE id = $2 RETURNING id, is_active`,
+      [is_active, req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'Question not found' });
+    res.json(rows[0]);
+  });
+
   // ── DELETE /api/admin/questions/:id ────────────────────────────────────────
   app.delete('/api/admin/questions/:id', adminAuth, async (req: Request, res: Response) => {
     const { rows } = await db.query(`DELETE FROM questions WHERE id = $1 RETURNING id`, [
