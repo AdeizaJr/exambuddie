@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getFlags, resolveFlag } from "../api";
+import { getFlags, resolveFlag, invalidateCache } from "../api";
 import type { Flag } from "../types";
 import Spinner from "../components/Spinner";
 
@@ -15,7 +15,7 @@ function formatDate(dateStr: string): string {
 
 interface FlagCardProps {
   flag: Flag;
-  onResolved: () => void;
+  onResolved: (id: number) => void;
 }
 
 function FlagCard({ flag, onResolved }: FlagCardProps) {
@@ -32,10 +32,9 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
       } else {
         await resolveFlag(flag.id, explanation);
       }
-      onResolved();
+      onResolved(flag.id);
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
-    } finally {
       setSaving(false);
     }
   }
@@ -44,10 +43,9 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
     setSaving(true);
     try {
       await resolveFlag(flag.id);
-      onResolved();
+      onResolved(flag.id);
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
-    } finally {
       setSaving(false);
     }
   }
@@ -163,6 +161,12 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
     }
   }, [onFlagsResolved]);
 
+  const handleResolved = useCallback((id: number) => {
+    setFlags(prev => prev.filter(f => f.id !== id));
+    invalidateCache("/flags");
+    onFlagsResolved?.();
+  }, [onFlagsResolved]);
+
   useEffect(() => {
     load();
   }, [load]);
@@ -203,7 +207,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
       ) : (
         <div className="space-y-4">
           {flags.map((flag) => (
-            <FlagCard key={flag.id} flag={flag} onResolved={load} />
+            <FlagCard key={flag.id} flag={flag} onResolved={handleResolved} />
           ))}
         </div>
       )}
