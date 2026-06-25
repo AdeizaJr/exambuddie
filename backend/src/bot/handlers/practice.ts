@@ -445,6 +445,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
   const milestone = fmt.totalMilestone(totalAttempts);
 
   if (!isCorrect) {
+    db.addSRCard(user.id, q.id).catch(() => {});
     const totalWrong = await db.getTotalWrongAttempts(user.id);
     if (totalWrong === 1) {
       await ctx.reply(

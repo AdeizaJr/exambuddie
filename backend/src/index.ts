@@ -17,6 +17,7 @@ import * as invite from './bot/handlers/invite';
 import * as support from './bot/handlers/support';
 import * as revision from './bot/handlers/revision';
 import * as bookmarks from './bot/handlers/bookmarks';
+import * as sr from './bot/handlers/spaced_repetition';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -75,6 +76,7 @@ bot.command('support', support.handleSupport);
 bot.command('progress', stats.handleProgress);
 bot.command('revision', revision.handleRevision);
 bot.command('bookmarks', bookmarks.handleBookmarks);
+bot.command('review', sr.handleSRMenu);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -175,11 +177,15 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'practice:add_subject') return onboarding.handleSettingsSubjects(ctx);
   if (data === 'practice:change_exam') return onboarding.handleSettingsExam(ctx);
 
-  // Answer (shared by practice + quiz + challenge)
+  // Answer (shared by practice + quiz + challenge + sr_review)
   if (data.startsWith('answer:')) {
     const session = await redis.getSession(ctx.from.id);
     if (session?.mode === 'challenge') return challenge.handleChallengeAnswer(ctx);
     if (session?.mode === 'quiz') return quiz.handleQuizAnswer(ctx);
+    if (session?.mode === 'sr_review') {
+      const selected = data.split(':')[1];
+      return sr.handleSRAnswer(ctx, selected);
+    }
     return practice.handleAnswer(ctx);
   }
 
@@ -202,6 +208,17 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'quiz:stop:confirm') return quiz.handleQuizStopConfirm(ctx);
   if (data === 'quiz:stop:cancel') return quiz.handleQuizStopCancel(ctx);
   if (data === 'quiz:share') return quiz.handleQuizShare(ctx);
+  if (data === 'quiz:review_wrong') return quiz.handleQuizReviewWrong(ctx);
+  if (data.startsWith('quiz:review_next:')) return quiz.handleQuizReviewNext(ctx, data.split(':')[2]);
+  if (data === 'quiz:review_done') return quiz.handleQuizReviewDone(ctx);
+  if (data === 'quiz:add_to_sr') return quiz.handleQuizAddToSR(ctx);
+  if (data === 'quiz:add_to_sr_final') return quiz.handleQuizAddToSRFinal(ctx);
+
+  // Spaced repetition
+  if (data === 'sr:show') return sr.handleSRMenu(ctx);
+  if (data === 'sr:start') return sr.handleSRStart(ctx);
+  if (data === 'sr:next') return sr.handleSRNext(ctx);
+  if (data === 'sr:done') return sr.handleSRDone(ctx);
 
   // Drill
   if (data.startsWith('drill:auto:')) return practice.handleAutoDrill(ctx);
@@ -365,6 +382,7 @@ bot.on('text', async (ctx: any) => {
 
   if (text === '📚 Practice') return practice.handlePractice(ctx);
   if (text === '📋 CBT') return quiz.handleQuiz(ctx);
+  if (text === '📖 Review') return sr.handleSRMenu(ctx);
 
   await ctx.reply(`${fmt.timeGreeting()}, ${user.first_name}! What would you like to do?`, {
     parse_mode: 'HTML',

@@ -5,6 +5,7 @@ import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
 import { User, QuizState } from '../../types';
+import { handleSRDone } from './spaced_repetition';
 
 const QUIZ_QUESTIONS = 50;
 const QUIZ_TIME_SECS = 60 * 60; // 60 minutes
@@ -302,6 +303,8 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
   quizState.answers.push({ qId: q.id, selected, correct: q.correct_option, isCorrect });
   if (isCorrect) quizState.correct++;
 
+  if (!isCorrect) db.addSRCard(user.id, q.id).catch(() => {});
+
   await ctx.reply(fmt.correctAnswer(q, selected), {
     parse_mode: 'HTML',
     reply_markup: fmt.afterAnswerKeyboard('quiz', q.question_text.includes('*')),
@@ -469,6 +472,19 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
     durationSecs,
   });
 
+  // Store wrong answers for post-quiz walkthrough (30 min TTL)
+  const wrongItems: redis.QuizReviewItem[] = quizState.answers
+    .filter((a: any) => !a.isCorrect && a.selected !== '')
+    .map((a: any) => ({
+      question: quizState.questions.find((q: any) => q.id === a.qId),
+      selected: a.selected,
+      correct: a.correct,
+    }))
+    .filter((item: any) => item.question);
+  if (wrongItems.length > 0) {
+    await redis.setQuizReview(ctx.from.id, wrongItems);
+  }
+
   await redis.clearQuizState(ctx.from.id);
   await redis.clearSession(ctx.from.id);
 
@@ -500,18 +516,24 @@ ${grade}
 ${accuracy < 50 ? '💡 <i>Tip: Use /drill to focus on your weak topics.</i>' : ''}
 ${accuracy >= 80 ? '🔥 You\'re exam-ready! Keep it consistent.' : ''}`;
 
+  const wrongCount = wrongItems.length;
+  const keyboard: any[][] = [
+    [{ text: '🔄 Take Another Quiz', callback_data: 'quiz:pick' },
+     { text: '🎯 Drill Weak Topics', callback_data: `drill:auto:${quizState.subject}` }],
+  ];
+  if (wrongCount > 0) {
+    keyboard.push([{ text: `📖 Review ${wrongCount} Wrong Answer${wrongCount > 1 ? 's' : ''}`, callback_data: 'quiz:review_wrong' }]);
+  }
+  keyboard.push(
+    [{ text: '📜 Quiz History', callback_data: 'quiz:history' },
+     { text: '📊 My Stats', callback_data: 'stats:show' }],
+    [{ text: '📤 Share Result', callback_data: 'quiz:share' }],
+    [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
+  );
+
   await ctx.reply(summary, {
     parse_mode: 'HTML',
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: '🔄 Take Another Quiz', callback_data: 'quiz:pick' },
-         { text: '🎯 Drill Weak Topics', callback_data: `drill:auto:${quizState.subject}` }],
-        [{ text: '📜 Quiz History', callback_data: 'quiz:history' },
-         { text: '📊 My Stats', callback_data: 'stats:show' }],
-        [{ text: '📤 Share Result', callback_data: 'quiz:share' }],
-        [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
-      ],
-    },
+    reply_markup: { inline_keyboard: keyboard },
   });
 }
 
@@ -543,4 +565,136 @@ ${grade}
 Practice free at @${process.env.BOT_USERNAME || 'ExamBuddieBot'}`;
 
   await ctx.reply(card, { parse_mode: 'HTML' });
+}
+
+export async function handleQuizReviewWrong(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const items = await redis.getQuizReview(ctx.from.id);
+  if (!items || items.length === 0) {
+    await ctx.reply('Review session expired. Take another quiz to review wrong answers.');
+    return;
+  }
+
+  await redis.clearQuizReview(ctx.from.id);
+  await redis.setSession(ctx.from.id, {
+    mode: 'quiz_review',
+    reviewItems: items,
+    reviewIndex: 0,
+    total: items.length,
+    currentQuestion: items[0].question,
+  });
+
+  await sendQuizReviewItem(ctx, items[0], 1, items.length);
+}
+
+async function sendQuizReviewItem(ctx: any, item: redis.QuizReviewItem, num: number, total: number): Promise<void> {
+  const q = item.question;
+  const text = fmt.formatQuestion(q, num, total, 'quiz_review')
+    + fmt.answerOptions(q);
+  const imageUrl = q.image_url?.startsWith('/')
+    ? `${process.env.APP_URL || ''}${q.image_url}`
+    : q.image_url;
+
+  const isLast = num >= total;
+  const nextButton = isLast
+    ? [{ text: '✅ Done', callback_data: 'quiz:review_done' }]
+    : [{ text: '➡️ Next', callback_data: `quiz:review_next:${num}` }];
+
+  const answerResult = fmt.correctAnswer(q, item.selected);
+
+  try {
+    if (imageUrl) {
+      await ctx.replyWithPhoto(imageUrl, { caption: text, parse_mode: 'HTML' });
+    } else {
+      await ctx.reply(text, { parse_mode: 'HTML' });
+    }
+  } catch {
+    await ctx.reply(text, { parse_mode: 'HTML' });
+  }
+
+  await ctx.reply(answerResult, {
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [
+        nextButton,
+        [{ text: '📖 Add All to Review Deck', callback_data: 'quiz:add_to_sr' }],
+      ],
+    },
+  });
+}
+
+export async function handleQuizReviewNext(ctx: any, indexStr: string): Promise<void> {
+  await ctx.answerCbQuery();
+  const session = await redis.getSession(ctx.from.id);
+  if (!session || session.mode !== 'quiz_review') return;
+
+  const nextIndex = parseInt(indexStr, 10);
+  const item = session.reviewItems[nextIndex];
+  if (!item) {
+    await handleQuizReviewDone(ctx);
+    return;
+  }
+
+  await redis.updateSession(ctx.from.id, { reviewIndex: nextIndex, currentQuestion: item.question });
+  await sendQuizReviewItem(ctx, item, nextIndex + 1, session.total);
+}
+
+export async function handleQuizReviewDone(ctx: any): Promise<void> {
+  if (ctx.callbackQuery) await ctx.answerCbQuery();
+  await redis.clearSession(ctx.from.id);
+  await ctx.reply(
+    '📖 Review complete!\n\nWant to add these questions to your Review Deck so they resurface automatically?',
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '📖 Add to Review Deck', callback_data: 'quiz:add_to_sr_final' }],
+          [{ text: '🔄 Take Another Quiz', callback_data: 'quiz:pick' }],
+          [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleQuizAddToSR(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const session = await redis.getSession(ctx.from.id);
+  if (!session || session.mode !== 'quiz_review') {
+    await ctx.answerCbQuery('Session expired.', { show_alert: true });
+    return;
+  }
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  const items: redis.QuizReviewItem[] = session.reviewItems || [];
+  await Promise.all(items.map((item: redis.QuizReviewItem) =>
+    db.addSRCard(user.id, item.question.id).catch(() => {})
+  ));
+
+  await ctx.reply(
+    `✅ <b>${items.length} question${items.length > 1 ? 's' : ''} added to your Review Deck!</b>\n\nUse /review or tap 📖 Review to study them later.`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '📖 Go to Review Deck', callback_data: 'sr:show' }],
+          [{ text: '🔄 Take Another Quiz', callback_data: 'quiz:pick' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleQuizAddToSRFinal(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  // Pull the review items from a short-lived session if still present,
+  // otherwise just acknowledge
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+  await ctx.reply(
+    '✅ Questions added to your Review Deck. Use /review anytime to study them.',
+    { parse_mode: 'HTML' }
+  );
 }

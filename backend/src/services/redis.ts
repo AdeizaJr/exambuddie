@@ -171,6 +171,26 @@ export const clearCachedUser = async (telegramId: number | string): Promise<void
   await client.del(`user_cache:${telegramId}`);
 };
 
+const QUIZ_REVIEW_TTL = 30 * 60; // 30 minutes
+
+export interface QuizReviewItem {
+  question: any;
+  selected: string;
+  correct: string;
+}
+
+export const setQuizReview = async (telegramId: number | string, items: QuizReviewItem[]): Promise<void> => {
+  await setJson(`quiz_review:${telegramId}`, items, QUIZ_REVIEW_TTL);
+};
+
+export const getQuizReview = async (telegramId: number | string): Promise<QuizReviewItem[] | null> => {
+  return getJson<QuizReviewItem[]>(`quiz_review:${telegramId}`);
+};
+
+export const clearQuizReview = async (telegramId: number | string): Promise<void> => {
+  await client.del(`quiz_review:${telegramId}`);
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
@@ -182,6 +202,7 @@ export const deleteUserData = async (telegramId: number | string): Promise<void>
       key === `phone_pending:${telegramId}` ||
       key === `support_step:${telegramId}` ||
       key === `user_cache:${telegramId}` ||
+      key === `quiz_review:${telegramId}` ||
       key.startsWith(`sublimit:${telegramId}:`)
   );
   if (toDelete.length) await client.del(toDelete);

@@ -362,7 +362,8 @@ export function persistentMenuKeyboard() {
     keyboard: [
       [{ text: '📚 Practice' }, { text: '📋 CBT' }],
       [{ text: '🎯 Challenge' }, { text: '🏆 Leaderboard' }],
-      [{ text: '📊 My Stats' }, { text: '⚙️ Settings' }],
+      [{ text: '📖 Review' }, { text: '📊 My Stats' }],
+      [{ text: '⚙️ Settings' }],
     ],
     resize_keyboard: true,
     persistent: true,
@@ -423,6 +424,10 @@ export function formatQuestion(q: Question, number: number, total: number | stri
     ? `🎯 <b>Topic Drill: ${q.topic || 'Mixed'}</b>`
     : mode === 'challenge'
     ? `🎯 <b>Question ${number}/${total}</b>`
+    : mode === 'sr_review'
+    ? `📖 <b>Review Card ${number}/${total}</b>`
+    : mode === 'quiz_review'
+    ? `📖 <b>Wrong Answer ${number}/${total}</b>`
     : `📚 <b>Practice Mode</b>`;
 
   let questionText = q.question_text || '';
