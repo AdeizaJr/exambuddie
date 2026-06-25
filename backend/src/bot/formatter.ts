@@ -69,8 +69,10 @@ function convertLatex(text: string): string {
     .replace(/\^\(([^)]+)\)/g, (_, e) => toSup(`(${e})`))
     // negative/decimal unbraced exponents: y^-3 → y⁻³, x^-0.5 → x⁻⁰·⁵
     .replace(/\^(-\d+(?:\.\d+)?)/g, (_, e) => toSup(e))
-    // fractional unbraced exponents: y^1/3 → y¹⁄₃, x^2/3 → x²⁄₃
-    .replace(/\^(\d+)\/(\d+)/g, (_, n, d) => `${toSup(n)}⁄${toSub(d)}`)
+    // fractional exponent WITH base (actual power): y^1/3 → y¹⁄₃
+    .replace(/(?<=[a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => `${toSup(n)}⁄${toSub(d)}`)
+    // fraction coefficient with ^ prefix, NO base (scraper artifact): ^2/5x → ⅖x, ^3/4 → ¾
+    .replace(/(?<![a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => UNICODE_FRACS[`${n}/${d}`] ?? `${n}/${d}`)
     .replace(/\^(\w)/g, (_, e) => toSup(e))
     // trig squared: sin2θ → sin²θ, cos2x → cos²x (digit is the power; allow letters after)
     .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + toSup(d))
@@ -148,13 +150,13 @@ function convertLatex(text: string): string {
     .replace(/\\[a-zA-Z]+/g, '')
     // space between digit and fraction glyph: 1⅞ → 1 ⅞
     .replace(/(\d)([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])/g, '$1 $2')
-    // fractions (numeric and algebraic): use Unicode fraction slash ⁄ (U+2044)
-    // guards: no :/ before (blocks ://), no /: after (blocks :// reversed)
-    // common numeric fractions map to glyphs (½, ¾ etc.)
-    .replace(/(?<![a-zA-Z0-9\/:.])([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)(?![\/:])/g, (_, n, d) => {
+    // numeric fractions: denominator is digits-only so trailing vars aren't consumed (2/5x → ⅖x not ⅖ₓ)
+    .replace(/(?<![a-zA-Z0-9\/:.])([a-zA-Z0-9]+)\/(\d+)(?![\/:])/g, (_, n, d) => {
       const key = `${n}/${d}`;
       return UNICODE_FRACS[key] ?? `${n}⁄${d}`;
     })
+    // single-letter algebraic fractions: m/n → m⁄n (single chars only — prevents sin/cos → s⁄c etc.)
+    .replace(/(?<![a-zA-Z0-9\/:.])([a-zA-Z])\/([a-zA-Z])(?![a-zA-Z\/:])/g, '$1⁄$2')
     .replace(/ {2,}/g, ' ')
     .trim();
 }
