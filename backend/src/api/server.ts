@@ -255,9 +255,11 @@ export default function createServer(bot: any) {
     const { rows } = await db.query(`
       SELECT f.id, f.flagged_at, f.reason, f.resolved,
              q.id as question_id, q.subject, q.question_text,
-             q.correct_option, q.explanation, q.flag_count
+             q.correct_option, q.explanation, q.flag_count,
+             u.first_name as user_first_name, u.telegram_id as user_telegram_id
       FROM flagged_explanations f
       JOIN questions q ON f.question_id = q.id
+      LEFT JOIN users u ON f.user_id = u.id
       WHERE f.resolved = false
       ORDER BY f.flagged_at DESC LIMIT 50
     `);

@@ -108,13 +108,13 @@ router.get('/question', requireAuth, async (req: Request, res: Response) => {
 // ── POST /api/miniapp/answer ───────────────────────────────────────────────────
 router.post('/answer', requireAuth, async (req: Request, res: Response) => {
   const { questionId, selectedOption, sessionId, timeTakenMs, subject } = req.body;
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
 
-  const [{ rows }] = await Promise.all([
+  const [user, { rows }] = await Promise.all([
+    db.getUser((req as any).telegramId),
     db.query(`SELECT correct_option FROM questions WHERE id = $1`, [questionId]),
   ]);
 
+  if (!user) return res.status(404).json({ error: 'User not found' });
   if (!rows.length) return res.status(404).json({ error: 'Question not found' });
 
   const isCorrect = selectedOption === rows[0].correct_option;
@@ -211,9 +211,14 @@ router.post('/quiz/complete', requireAuth, async (req: Request, res: Response) =
 router.get('/topics', requireAuth, async (req: Request, res: Response) => {
   const { subject, examType } = req.query;
   if (!subject) return res.status(400).json({ error: 'subject required' });
-  const user = await db.getUser((req as any).telegramId);
-  if (!user) return res.status(404).json({ error: 'User not found' });
-  const et = String(examType || user.exam_type || 'ALL');
+  let et: string;
+  if (examType) {
+    et = String(examType);
+  } else {
+    const user = await db.getUser((req as any).telegramId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    et = user.exam_type || 'ALL';
+  }
   const topics = await db.getTopicsForSubject(et, String(subject));
   res.json(topics);
 });
