@@ -62,7 +62,7 @@ export async function handleOnboardConsent(ctx: any): Promise<void> {
     parse_mode: 'HTML',
   });
 
-  await ctx.reply(fmt.welcome(ctx.from.first_name), {
+  await ctx.reply(fmt.welcome(), {
     parse_mode: 'HTML',
     reply_markup: fmt.onboardYearKeyboard(),
   });

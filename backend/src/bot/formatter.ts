@@ -35,14 +35,8 @@ function fracWrap(s: string): string {
   return needsParens ? `(${s})` : s;
 }
 
-function stackedFrac(n: string, d: string): string {
-  const barLen = Math.max(n.length, d.length) + 2;
-  return `${n}\n${'─'.repeat(barLen)}\n${d}`;
-}
-
 // Convert LaTeX math notation to readable plain text for Telegram.
-// block=true → fractions rendered as stacked (for explanations)
-function convertLatex(text: string, block = false): string {
+function convertLatex(text: string): string {
   return text
     // fractional exponents FIRST — must run before \frac so ^{-\frac{1}{3}} → ^(-1/3)
     .replace(/\^\{(-?)\\frac\{([^{}]+)\}\{([^{}]+)\}\}/g, (_, sign, n, d) => `^(${sign}${n.trim()}/${d.trim()})`)
@@ -258,7 +252,7 @@ export function consentKeyboard() {
   };
 }
 
-export function welcome(firstName: string): string {
+export function welcome(): string {
   return `Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
 
 📅 <b>Step 1 of 3:</b> Which exam year do you want to practice?`;
@@ -446,7 +440,7 @@ function formatExplanation(text: string): string {
   if (/<(?:b|i|code)>/.test(text)) {
     return text.replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
   }
-  const converted = convertLatex(text, true);
+  const converted = convertLatex(text);
   return converted
     // equation step chains: "n = a = b = c" → one step per line
     .replace(/^.+=.+=.+$/gm, (line) => {
@@ -909,7 +903,7 @@ Resets in <b>${timeStr}</b>.
 Switch to another subject or upgrade to Premium for unlimited access 👇`;
 }
 
-export function subjectLimitKeyboard(subject: string, plan?: string) {
+export function subjectLimitKeyboard(plan?: string) {
   const isPremium = plan === 'premium';
   return {
     inline_keyboard: [

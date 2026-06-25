@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
-import { User, Question } from '../../types';
+import { Question } from '../../types';
 
 async function sendBookmarkQuestion(
   ctx: any,
