@@ -140,6 +140,15 @@ function convertLatex(text: string): string {
     // strip remaining backslash commands (unwrap content from braces)
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')
     .replace(/\\[a-zA-Z]+/g, '')
+    // space between digit and fraction glyph: 1⅞ → 1 ⅞
+    .replace(/(\d)([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])/g, '$1 $2')
+    // fractions (numeric and algebraic): use Unicode fraction slash ⁄ (U+2044)
+    // guards: no :/ before (blocks ://), no /: after (blocks :// reversed)
+    // common numeric fractions map to glyphs (½, ¾ etc.)
+    .replace(/(?<![a-zA-Z0-9\/:.])([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)(?![\/:])/g, (_, n, d) => {
+      const key = `${n}/${d}`;
+      return UNICODE_FRACS[key] ?? `${n}⁄${d}`;
+    })
     .replace(/ {2,}/g, ' ')
     .trim();
 }
