@@ -65,6 +65,12 @@ function convertLatex(text: string): string {
     .replace(/\b([A-Z]{1,2}[a-z]{0,2})-(\d{1,2})\b/g, (_, u, e) => `${u}${toSup(`-${e}`)}`)
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
+    // parenthesized exponents: 2^(2 + n/3) → 2⁽² ⁺ ⁿ/³⁾
+    .replace(/\^\(([^)]+)\)/g, (_, e) => toSup(`(${e})`))
+    // negative/decimal unbraced exponents: y^-3 → y⁻³, x^-0.5 → x⁻⁰·⁵
+    .replace(/\^(-\d+(?:\.\d+)?)/g, (_, e) => toSup(e))
+    // fractional unbraced exponents: y^1/3 → y¹⁄₃, x^2/3 → x²⁄₃
+    .replace(/\^(\d+)\/(\d+)/g, (_, n, d) => `${toSup(n)}⁄${toSub(d)}`)
     .replace(/\^(\w)/g, (_, e) => toSup(e))
     // trig squared: sin2θ → sin²θ, cos2x → cos²x (digit is the power; allow letters after)
     .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + toSup(d))
