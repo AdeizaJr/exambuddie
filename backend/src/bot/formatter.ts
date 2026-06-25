@@ -39,9 +39,16 @@ function fracWrap(s: string): string {
 function convertLatex(text: string): string {
   return text
     // fractional exponents FIRST — must run before \frac so ^{-\frac{1}{3}} → ^(-1/3)
-    .replace(/\^\{(-?)\\frac\{([^{}]+)\}\{([^{}]+)\}\}/g, (_, sign, n, d) => `^(${sign}${n.trim()}/${d.trim()})`)
-    // general fraction with Unicode shorthand for common ones
-    .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
+    .replace(/\^\{(-?)\\?frac\{([^{}]+)\}\{([^{}]+)\}\}/g, (_, sign, n, d) => `^(${sign}${n.trim()}/${d.trim()})`)
+    // frac(n)(d) — scraping artifact using parentheses instead of braces
+    .replace(/\\?frac\(([^)]+)\)\(([^)]+)\)/g, (_, num, den) => {
+      const n = num.trim(); const d = den.trim();
+      const unicode = UNICODE_FRACS[`${n}/${d}`] ?? toFracGlyph(n, d);
+      if (unicode) return unicode;
+      return `${fracWrap(n)}/${fracWrap(d)}`;
+    })
+    // general fraction with Unicode shorthand for common ones (with or without backslash)
+    .replace(/\\?frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
       const n = num.trim(); const d = den.trim();
       const unicode = UNICODE_FRACS[`${n}/${d}`] ?? toFracGlyph(n, d);
       if (unicode) return unicode;
