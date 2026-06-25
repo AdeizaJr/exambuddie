@@ -46,6 +46,7 @@ export default function Practice() {
   const [drillTopic, setDrillTopic] = useState('');
   const [drillQuestions, setDrillQuestions] = useState<Question[]>([]);
   const [drillIndex, setDrillIndex] = useState(0);
+  const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     api.getMe().then(setUser).catch(() => {});
@@ -68,6 +69,7 @@ export default function Practice() {
       }
       setQuestion(q);
       setSelected('');
+      setBookmarked(false);
       setStage('question');
     } finally {
       setLoading(false);
@@ -342,6 +344,23 @@ export default function Practice() {
             className="flex-1 py-3 rounded-2xl font-bold text-[var(--tg-button-text)]"
             style={{ background: 'var(--tg-button)' }}>
             Next Question →
+          </button>
+          <button
+            onClick={async () => {
+              if (!question) return;
+              haptic('selection');
+              const next = !bookmarked;
+              setBookmarked(next);
+              try {
+                if (next) await api.addBookmark(question.id);
+                else await api.removeBookmark(question.id);
+              } catch { setBookmarked(!next); }
+            }}
+            className="px-4 py-3 rounded-2xl font-medium border text-base transition-colors"
+            style={bookmarked ? { background: '#FFF7ED', border: '1.5px solid #FB923C', color: '#EA580C' } : { border: '1.5px solid rgba(0,0,0,0.12)', color: 'var(--tg-hint)' }}
+            title={bookmarked ? 'Remove bookmark' : 'Bookmark'}
+          >
+            {bookmarked ? '🔖' : '☆'}
           </button>
           <button onClick={() => setStage('done')}
             className="px-4 py-3 rounded-2xl font-medium border border-gray-200 text-[var(--tg-hint)]">

@@ -8,6 +8,8 @@ const Practice = lazy(() => import('./pages/Practice'));
 const Quiz = lazy(() => import('./pages/Quiz'));
 const Stats = lazy(() => import('./pages/Stats'));
 const Settings = lazy(() => import('./pages/Settings'));
+const Bookmarks = lazy(() => import('./pages/Bookmarks'));
+const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 
 export default function App() {
   return (
@@ -19,6 +21,8 @@ export default function App() {
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
       </Suspense>
       <BottomNav />
