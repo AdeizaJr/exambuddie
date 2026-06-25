@@ -88,6 +88,23 @@ function renderBlock(block: Block, i: number) {
           </a>
         </div>
       );
+    case "related":
+      return (
+        <div key={i} className="my-8 rounded-2xl border border-blue-100 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-950/40">
+          <p className="mb-4 text-sm font-semibold text-blue-800 dark:text-blue-300">Related guides</p>
+          <div className="flex flex-wrap gap-3">
+            {block.items.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 dark:border-blue-800 dark:bg-slate-900 dark:text-blue-300 dark:hover:bg-blue-950"
+              >
+                {item.text} →
+              </a>
+            ))}
+          </div>
+        </div>
+      );
   }
 }
 
@@ -103,6 +120,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     description: post.description,
     datePublished: post.date,
     dateModified: post.date,
+    image: "https://exambuddie.app/opengraph-image",
     author: {
       "@type": "Organization",
       name: "ExamBuddie",
