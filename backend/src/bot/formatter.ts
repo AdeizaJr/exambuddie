@@ -76,6 +76,8 @@ function convertLatex(text: string): string {
     .replace(/\^\(([^)]+)\)/g, (_, e) => toSup(`(${e})`))
     // negative/decimal unbraced exponents: y^-3 → y⁻³, x^-0.5 → x⁻⁰·⁵
     .replace(/\^(-\d+(?:\.\d+)?)/g, (_, e) => toSup(e))
+    // bare charge superscripts: e^- → e⁻, e^+ → e⁺ (must run after digit patterns)
+    .replace(/\^\-(?!\d)/g, '⁻').replace(/\^\+(?!\d)/g, '⁺')
     // fractional exponent WITH base (actual power): y^1/3 → y¹⁄₃
     .replace(/(?<=[a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => `${toSup(n)}⁄${toSub(d)}`)
     // fraction coefficient with ^ prefix, NO base (scraper artifact): ^2/5x → ⅖x, ^3/4 → ¾
@@ -97,6 +99,8 @@ function convertLatex(text: string): string {
     .replace(/(?<![a-zA-Z])([a-z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
     // physics/math uppercase variables: D2 R → D² R (D not in chemistry list; D2K stays — letter follows)
     .replace(/(?<![a-zA-Z])([A-Z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
+    // chemistry state symbols: Zn_(s) → Zn(s), H2O_(l) → H₂O(l)
+    .replace(/_\(([slgaq]+)\)/gi, '($1)')
     // subscripts
     .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
     .replace(/_(\w)/g, (_, e) => toSub(e))
