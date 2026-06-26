@@ -490,14 +490,13 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
   await redis.clearSession(ctx.from.id);
 
   // Badge check
-  if (user) {
+  if (user && reason === 'complete') {
     const totalAttempts = await db.getTotalAttempts(user.id).catch(() => 0);
     achievements.checkAndGrantBadges(ctx.telegram, user.id, ctx.from.id, {
       totalAttempts,
       quizDone: !quizState.isMock,
       mockDone: !!quizState.isMock,
       quizScore: { correct: quizState.correct, total: quizState.total },
-      accuracy,
     }).catch(() => {});
   }
 
