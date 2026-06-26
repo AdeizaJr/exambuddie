@@ -156,18 +156,8 @@ func main() {
 				}
 
 				if imgURL == "" {
-					// No image on page — question is unanswerable, deactivate
-					_, err = pool.Exec(ctx,
-						`UPDATE questions SET is_active = FALSE WHERE id = $1`,
-						q.id,
-					)
-					if err != nil {
-						log.Printf("DEACTIVATE FAIL id=%-6d: %v", q.id, err)
-						atomic.AddInt64(&failed, 1)
-					} else {
-						log.Printf("DEACT id=%-6d %s (no image on source page)", q.id, q.sourceID)
-						atomic.AddInt64(&deactivated, 1)
-					}
+					log.Printf("SKIP  id=%-6d %s (no image on source page)", q.id, q.sourceID)
+					atomic.AddInt64(&deactivated, 1)
 					continue
 				}
 
