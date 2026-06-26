@@ -347,6 +347,33 @@ ${streakLine} → /practice`;
     console.log(`[CRON] Friday nudge sent to ${sent}/${users.length} users`);
   });
 
+  // ── 1st of every month — NDPA data retention: purge inactive accounts ───────
+  // Deletes free-plan users with no activity for 24+ months (data minimisation).
+  // Premium/trial users are excluded — they have an active commercial relationship.
+  cron.schedule('0 2 1 * *', async () => {
+    console.log('[CRON] NDPA retention: purging long-inactive accounts...');
+    const { rows } = await db.query(
+      `SELECT telegram_id FROM users
+       WHERE plan = 'free'
+         AND (last_active_date IS NULL OR last_active_date < CURRENT_DATE - INTERVAL '24 months')
+         AND (joined_at < NOW() - INTERVAL '24 months')
+         AND NOT EXISTS (
+           SELECT 1 FROM subscriptions s WHERE s.user_id = users.id
+         )`
+    );
+    let purged = 0;
+    for (const user of rows) {
+      try {
+        await db.deleteUser(user.telegram_id);
+        await redis.deleteUserData(user.telegram_id);
+        purged++;
+      } catch (e: any) {
+        console.error(`[CRON] retention purge error for ${user.telegram_id}:`, e.message);
+      }
+    }
+    console.log(`[CRON] NDPA retention: purged ${purged}/${rows.length} inactive accounts`);
+  });
+
   console.log('⏰ Cron jobs started');
 }
 

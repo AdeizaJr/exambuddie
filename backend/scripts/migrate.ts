@@ -397,6 +397,9 @@ WHERE id = 116125`,
   `ALTER TABLE questions ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE`,
   `CREATE INDEX IF NOT EXISTS idx_questions_is_active ON questions(is_active)`,
 
+  // ── NDPA compliance: store consent timestamp ──────────────────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS consent_given_at TIMESTAMPTZ DEFAULT NULL`,
+
   // ── Spaced repetition cards — per-(user, question) review intervals ────────
   `CREATE TABLE IF NOT EXISTS sr_cards (
     id SERIAL PRIMARY KEY,

@@ -58,6 +58,9 @@ export async function handleOnboardConsent(ctx: any): Promise<void> {
 
   await redis.updateSession(ctx.from.id, { step: 'year' });
 
+  // Record consent timestamp for NDPA compliance
+  db.updateUser(ctx.from.id, { consent_given_at: new Date().toISOString() } as any).catch(() => {});
+
   await ctx.editMessageText('✅ <b>Thanks — you\'re all set.</b> You\'ve agreed to our Terms of Use and Privacy Policy.', {
     parse_mode: 'HTML',
   });
