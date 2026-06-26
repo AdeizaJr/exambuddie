@@ -127,4 +127,5 @@ export interface QuizState {
   answers: QuizAnswer[];
   questionTimerSecs?: number;
   questionDeadline?: number;
+  isMock?: boolean;
 }

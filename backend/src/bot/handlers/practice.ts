@@ -4,6 +4,7 @@ import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
+import * as achievements from './achievements';
 import { User, Question } from '../../types';
 
 async function requireProfile(ctx: any): Promise<User | null> {
@@ -437,12 +438,18 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(resultText, {
     parse_mode: 'HTML',
-    reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*'), q.id),
+    reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*'), q.id, !!q.explanation),
   });
 
   // ── Follow-up messages — await the in-flight promises now ──────────────────
   const [streakResult, totalAttempts] = await Promise.all([streakPromise, totalAttemptsPromise]);
   const milestone = fmt.totalMilestone(totalAttempts);
+
+  // Badge check (fire-and-forget)
+  achievements.checkAndGrantBadges(ctx.telegram, user.id, ctx.from.id, {
+    totalAttempts,
+    streak: streakResult?.streak,
+  }).catch(() => {});
 
   if (!isCorrect) {
     db.addSRCard(user.id, q.id).catch(() => {});
@@ -586,7 +593,15 @@ export async function handleNext(ctx: any): Promise<void> {
     }
   } else {
     if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
-    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic, user.id);
+    // Adaptive: when no explicit topic chosen, 60% probability drill a weak topic
+    let adaptiveTopic = session.topic;
+    if (!adaptiveTopic) {
+      const weak = await db.getWeakTopics(user.id, session.subject || '', session.examType || user.exam_type || '');
+      if (weak.length > 0 && Math.random() < 0.6) {
+        adaptiveTopic = weak[Math.floor(Math.random() * Math.min(3, weak.length))].topic;
+      }
+    }
+    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, adaptiveTopic, user.id);
   }
 
   if (!q) {

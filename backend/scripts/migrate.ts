@@ -413,6 +413,27 @@ WHERE id = 116125`,
     UNIQUE(user_id, question_id)
   )`,
   `CREATE INDEX IF NOT EXISTS idx_sr_cards_user_due ON sr_cards(user_id, next_review_at)`,
+
+  // ── Achievements / badges ─────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS achievements (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    badge_code VARCHAR(50) NOT NULL,
+    unlocked_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, badge_code)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_achievements_user ON achievements(user_id)`,
+
+  // ── Explanation quality feedback ──────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS explanation_feedback (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    question_id INT REFERENCES questions(id) ON DELETE CASCADE,
+    rating SMALLINT NOT NULL CHECK (rating IN (-1, 1)),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, question_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_expl_feedback_question ON explanation_feedback(question_id)`,
 ];
 
 async function migrate(): Promise<void> {

@@ -78,11 +78,12 @@ function challengeSubjectKeyboard(subjects: string[]) {
 export async function handleChallenge(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   const isPremium = user?.plan === 'premium';
-  await ctx.reply('🎯 <b>Challenge Mode</b>\n\nCreate a new room or join an existing one:', {
+  await ctx.reply('🎯 <b>Challenge Mode</b>\n\nCreate a room or challenge a specific friend:', {
     parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [
         [{ text: isPremium ? '➕ Create Challenge' : '💎 Create Challenge (Premium)', callback_data: 'challenge:create' }],
+        [{ text: '⚔️ Duel a Friend', callback_data: 'challenge:duel' }],
         [{ text: '🔍 Join with Code', callback_data: 'challenge:search' }],
         [{ text: '❌ Cancel', callback_data: 'menu:main' }],
       ],
@@ -283,12 +284,65 @@ export async function handleChallengeCount(ctx: any): Promise<void> {
   );
 }
 
+async function createAndNotifyDuel(ctx: any, session: any, expected: number): Promise<void> {
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  let room: db.PracticeRoom;
+  try {
+    room = await db.createRoom({
+      creatorTelegramId: ctx.from.id,
+      subject: session.subject,
+      examType: session.examType || user.exam_type || 'WAEC',
+      year: session.year || null,
+      numQuestions: session.numQuestions,
+      timeLimitSecs: session.timeLimitSecs,
+      expectedPlayers: expected,
+    });
+  } catch (e: any) {
+    await ctx.reply(`❌ ${e.message}`);
+    return;
+  }
+
+  await db.joinRoom(room.id, ctx.from.id, user.first_name);
+  await db.setParticipantReady(room.id, ctx.from.id);
+  await redis.clearSession(ctx.from.id);
+  await redis.setSession(ctx.from.id, { step: 'challenge_lobby', roomCode: room.code });
+
+  const participants = await db.getRoomParticipants(room.id);
+  await ctx.reply(formatLobby(room, participants, LOBBY_SECS), {
+    parse_mode: 'HTML',
+    reply_markup: lobbyKeyboard(room.code, true, true),
+    disable_web_page_preview: true,
+  });
+
+  if (session.duelOpponentId) {
+    const sub = fmt.SUBJECT_MAP[room.subject] || room.subject;
+    ctx.telegram.sendMessage(
+      session.duelOpponentId,
+      `⚔️ <b>${user.first_name} challenged you to a duel!</b>\n\n📚 ${sub} · ${room.num_questions} questions\n\nTap below to accept:`,
+      {
+        parse_mode: 'HTML',
+        reply_markup: { inline_keyboard: [[{ text: '⚔️ Accept Duel', url: inviteLink(room.code) }]] },
+      }
+    ).catch(() => {});
+  }
+
+  scheduleAutoStart(ctx.telegram, room);
+}
+
 export async function handleChallengeTimer(ctx: any): Promise<void> {
   const timeSecs = parseInt(ctx.callbackQuery.data.split(':')[2], 10);
   await ctx.answerCbQuery();
 
   await redis.updateSession(ctx.from.id, { step: 'challenge_expected', timeLimitSecs: timeSecs });
   const session = await redis.getSession(ctx.from.id);
+
+  // Duel mode: skip expected-players picker, auto-create with 2 players
+  if (session?.duelOpponentId) {
+    await createAndNotifyDuel(ctx, session, 2);
+    return;
+  }
   const sub = fmt.SUBJECT_MAP[session.subject] || session.subject;
   const yr = session.year ? `${session.year}` : 'Any Year';
   const mins = Math.floor(timeSecs / 60);
@@ -351,6 +405,7 @@ export async function handleChallengeExpected(ctx: any): Promise<void> {
   // Auto-join and auto-ready the creator
   await db.joinRoom(room.id, ctx.from.id, user.first_name);
   await db.setParticipantReady(room.id, ctx.from.id);
+
   await redis.clearSession(ctx.from.id);
   await redis.setSession(ctx.from.id, { step: 'challenge_lobby', roomCode: room.code });
 
@@ -709,4 +764,70 @@ export async function endExpiredRoom(telegram: any, room: db.PracticeRoom): Prom
   await db.endRoom(room.id);
   const participants = await db.getRoomParticipants(room.id);
   await broadcastResults(telegram, room, participants);
+}
+
+// ── 1v1 Duel ──────────────────────────────────────────────────────────────────
+
+export async function handleDuel(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  if (user.plan !== 'premium') {
+    await ctx.reply(
+      '⚔️ <b>Duel Mode — Premium Feature</b>\n\nDuel a specific friend 1-on-1. They\'ll be notified automatically if they\'re on ExamBuddie.\n\nUpgrade to Premium to unlock!',
+      { parse_mode: 'HTML', reply_markup: { inline_keyboard: [[{ text: '💎 Upgrade', callback_data: 'menu:subscribe' }]] } }
+    );
+    return;
+  }
+
+  await redis.setSession(ctx.from.id, { step: 'duel_opponent', examType: user.exam_type || 'WAEC' });
+  await ctx.reply(
+    '⚔️ <b>Duel a Friend</b>\n\nEnter your opponent\'s Telegram username (e.g. <code>johndoe</code>):\n\n<i>They must have used ExamBuddie before to be found.</i>',
+    { parse_mode: 'HTML', reply_markup: { force_reply: true, selective: true } }
+  );
+}
+
+export async function handleDuelOpponentInput(ctx: any): Promise<void> {
+  const rawInput = ctx.message?.text?.trim() || '';
+  const username = rawInput.replace(/^@/, '');
+
+  if (!username || username.length < 3) {
+    await ctx.reply('❌ Invalid username. Try again or /start to go back.');
+    return;
+  }
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return;
+
+  if (username.toLowerCase() === (user.username || '').toLowerCase()) {
+    await ctx.reply('❌ You can\'t duel yourself! Enter someone else\'s username.');
+    return;
+  }
+
+  const opponent = await db.getUserByUsername(username);
+  if (!opponent) {
+    await ctx.reply(
+      `❌ No ExamBuddie user found with username <b>@${username}</b>.\n\nThey need to sign up at @${process.env.BOT_USERNAME || 'ExamBuddieBot'} first.\n\nYou can still create a challenge room and share the link manually.`,
+      {
+        parse_mode: 'HTML',
+        reply_markup: { inline_keyboard: [[{ text: '➕ Create Challenge Room', callback_data: 'challenge:create' }]] },
+      }
+    );
+    await redis.clearSession(ctx.from.id);
+    return;
+  }
+
+  // Store opponent telegram_id and jump straight to subject picker
+  await redis.setSession(ctx.from.id, {
+    step: 'challenge_subject',
+    examType: user.exam_type || 'WAEC',
+    duelOpponentId: opponent.telegram_id,
+    duelOpponentName: opponent.first_name,
+  });
+
+  await ctx.reply(
+    `⚔️ <b>Duel vs ${opponent.first_name}</b>\n\nPick a subject:`,
+    { parse_mode: 'HTML', reply_markup: challengeSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP)) }
+  );
 }
