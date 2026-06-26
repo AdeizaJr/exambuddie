@@ -1,5 +1,4 @@
 // src/bot/handlers/formula.ts — Quick-access formula & constant reference sheets
-import * as db from '../../db';
 
 const SHEETS: Record<string, { title: string; content: string }> = {
   physics: {
@@ -80,8 +79,8 @@ Dilution: C₁V₁ = C₂V₂
 
 <b>Energy</b>
 ΔH = H(products) − H(reactants)
-Endothermic: ΔH > 0
-Exothermic: ΔH < 0`,
+Endothermic: ΔH &gt; 0
+Exothermic: ΔH &lt; 0`,
   },
 
   maths: {
@@ -93,7 +92,7 @@ Quadratic: x = (−b ± √(b²−4ac)) / 2a
 Sum of AP: S_n = n/2 (2a + (n−1)d)
 nth term AP: T_n = a + (n−1)d
 Sum of GP: S_n = a(rⁿ−1)/(r−1)
-Sum to ∞ GP: S = a/(1−r)  |r| &lt; 1
+Sum to ∞ GP: S = a/(1−r)  (|r| &lt; 1)
 
 <b>Indices &amp; Logs</b>
 logₐ(xy) = logₐx + logₐy
