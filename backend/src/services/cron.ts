@@ -374,6 +374,91 @@ ${streakLine} → /practice`;
     console.log(`[CRON] NDPA retention: purged ${purged}/${rows.length} inactive accounts`);
   });
 
+  // ── Daily 6am UTC (7am WAT) — Question of the Day broadcast ──────────────
+  cron.schedule('0 6 * * *', async () => {
+    console.log('[CRON] Sending Question of the Day...');
+    const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
+
+    // Pick one question per exam type and cache it for the day
+    const examTypes = ['WAEC', 'JAMB', 'NECO'];
+    const qotdMap: Record<string, any> = {};
+    for (const et of examTypes) {
+      let qId: number | null = await redis.getQOTDQuestion(date, et);
+      if (!qId) {
+        // Pick a well-attempted question (has explanation) at random
+        const { rows } = await db.query(
+          `SELECT q.id FROM questions q
+           JOIN attempts a ON a.question_id = q.id
+           WHERE q.exam_type = $1
+             AND q.is_active = TRUE
+             AND q.explanation IS NOT NULL
+             AND length(q.explanation) > 20
+           GROUP BY q.id
+           HAVING COUNT(a.id) >= 5
+           ORDER BY RANDOM() LIMIT 1`,
+          [et]
+        );
+        if (!rows[0]) continue;
+        qId = rows[0].id as number;
+        await redis.setQOTDQuestion(date, et, qId);
+      }
+      const q = await db.getQuestionById(qId as number);
+      if (q) qotdMap[et] = q;
+    }
+
+    const { rows: users } = await db.query(
+      `SELECT telegram_id, first_name, exam_type FROM users
+       WHERE notifications_enabled = TRUE
+         AND exam_type IS NOT NULL`
+    );
+
+    let sent = 0;
+    const BATCH_SIZE = 25;
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      const batch = users.slice(i, i + BATCH_SIZE);
+      await Promise.allSettled(batch.map(async (user) => {
+        const q = qotdMap[user.exam_type];
+        if (!q) return;
+
+        // Skip if user already answered today's QOTD
+        if (await redis.getQOTDAnswered(user.telegram_id, date)) return;
+
+        const subjectLabel = fmt.SUBJECT_MAP[q.subject] || q.subject;
+        const msgText = `📅 <b>Question of the Day</b> — ${subjectLabel}\n\n`
+          + fmt.formatQuestion(q, 1, 1, 'qotd')
+          + fmt.answerOptions(q);
+
+        const keyboard = {
+          inline_keyboard: [
+            ['A', 'B', 'C', 'D'].filter(opt => q[`option_${opt.toLowerCase()}`]).map(opt => ({
+              text: opt,
+              callback_data: `qotd:answer:${q.id}:${opt}`,
+            })),
+          ],
+        };
+
+        try {
+          const imageUrl = q.image_url?.startsWith('/')
+            ? `${process.env.APP_URL || ''}${q.image_url}`
+            : q.image_url;
+
+          if (imageUrl) {
+            await bot.telegram.sendPhoto(user.telegram_id, imageUrl, {
+              caption: msgText, parse_mode: 'HTML', reply_markup: keyboard,
+            });
+          } else {
+            await bot.telegram.sendMessage(user.telegram_id, msgText, {
+              parse_mode: 'HTML', reply_markup: keyboard,
+            });
+          }
+          sent++;
+        } catch { /* blocked or unavailable */ }
+      }));
+      if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
+    }
+    console.log(`[CRON] QOTD sent to ${sent}/${users.length} users`);
+  });
+
   console.log('⏰ Cron jobs started');
 }
 

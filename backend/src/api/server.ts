@@ -742,6 +742,33 @@ export default function createServer(bot: any) {
     });
   });
 
+  // ── GET /api/admin/analytics/hard-questions ────────────────────────────────
+  app.get('/api/admin/analytics/hard-questions', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT
+        q.id,
+        q.exam_type,
+        q.subject,
+        q.year,
+        LEFT(q.question_text, 100) AS question_preview,
+        q.correct_option,
+        q.explanation IS NOT NULL AND length(q.explanation) > 10 AS has_explanation,
+        q.flag_count,
+        COUNT(a.id) AS attempts,
+        SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) AS correct_count,
+        ROUND(100.0 * (1 - SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END)::float / COUNT(a.id)), 1) AS wrong_rate
+      FROM questions q
+      JOIN attempts a ON a.question_id = q.id
+      WHERE q.is_active = TRUE
+      GROUP BY q.id
+      HAVING COUNT(a.id) >= 10
+        AND (1 - SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END)::float / COUNT(a.id)) >= 0.7
+      ORDER BY wrong_rate DESC, attempts DESC
+      LIMIT 50
+    `);
+    res.json({ questions: rows });
+  });
+
   // ── GET /api/admin/leaderboard ──────────────────────────────────────────────
   app.get('/api/admin/leaderboard', adminAuth, async (req: Request, res: Response) => {
     const subject = req.query.subject as string | undefined;
