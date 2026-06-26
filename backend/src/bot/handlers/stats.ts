@@ -226,7 +226,10 @@ export async function handleProgress(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
 
-  const progress = await db.getProgressStats(user.id);
+  const [progress, referralCount] = await Promise.all([
+    db.getProgressStats(user.id),
+    db.getConfirmedReferralCount(user.id),
+  ]);
 
   // Study plan: days until exam → daily target
   let studyPlanLine = '';
@@ -246,15 +249,26 @@ export async function handleProgress(ctx: any): Promise<void> {
     }
   }
 
+  // Referral summary line
+  const needed = Math.max(0, 2 - referralCount);
+  const referralLine = user.referral_reward_granted
+    ? '\n🎁 Referral reward claimed!'
+    : referralCount > 0
+      ? `\n🔗 ${referralCount} friend${referralCount !== 1 ? 's' : ''} referred${needed > 0 ? ` — ${needed} more for reward` : ' — reward pending!'}`
+      : '\n🔗 Refer 2 friends → 3 days Premium free (/invite)';
+
   await ctx.reply(
-    fmt.progressMessage(user, progress.totalAttempts, progress.accuracy, progress.subjectCoverage) + studyPlanLine,
+    fmt.progressMessage(user, progress.totalAttempts, progress.accuracy, progress.subjectCoverage) + referralLine + studyPlanLine,
     {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: [
           [{ text: '📊 Topic Mastery', callback_data: 'stats:topic_mastery' }],
           [{ text: '📤 Share Progress', callback_data: 'stats:share' }],
-          [{ text: '📊 Full Stats', callback_data: 'stats:show' }],
+          [
+            { text: '📊 Full Stats', callback_data: 'stats:show' },
+            { text: '📅 Timetable', callback_data: 'timetable:show' },
+          ],
           [{ text: '📚 Practice', callback_data: 'practice:pick' }],
         ],
       },
@@ -337,7 +351,7 @@ export async function handleShareProgress(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
   const progress = await db.getProgressStats(user.id);
-  const card = fmt.shareableProgressCard(user, progress.totalAttempts, progress.accuracy, BOT_USERNAME);
+  const card = fmt.shareableProgressCard(user, progress.totalAttempts, progress.accuracy, BOT_USERNAME, progress.subjectCoverage);
   await ctx.reply(
     `${card}\n\n<i>Copy the text above and share it on WhatsApp or anywhere you like!</i>`,
     { parse_mode: 'HTML' }

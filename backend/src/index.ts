@@ -21,6 +21,7 @@ import * as sr from './bot/handlers/spaced_repetition';
 import * as achievements from './bot/handlers/achievements';
 import * as formula from './bot/handlers/formula';
 import * as qotd from './bot/handlers/qotd';
+import * as timetable from './bot/handlers/timetable';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -83,6 +84,7 @@ bot.command('review', sr.handleSRMenu);
 bot.command('mock', quiz.handleMockExam);
 bot.command('badges', achievements.handleBadges);
 bot.command('formula', formula.handleFormula);
+bot.command('timetable', timetable.handleTimetable);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -284,6 +286,9 @@ bot.on('callback_query', async (ctx: any) => {
   // Formula sheet
   if (data === 'formula:pick') return formula.handleFormula(ctx);
   if (data.startsWith('formula:')) return formula.handleFormulaSubject(ctx, data.slice('formula:'.length));
+
+  // Timetable
+  if (data === 'timetable:show') return timetable.handleTimetable(ctx);
 
   // Question of the Day
   if (data.startsWith('qotd:answer:')) {

@@ -307,7 +307,7 @@ function buildYearKeyboard(prefix: string, backButton?: { text: string; callback
     [{ text: '📅 Any Year', callback_data: `${prefix}:any` }],
   ];
   const years: number[] = [];
-  for (let y = 2025; y >= 2010; y--) years.push(y);
+  for (let y = 2026; y >= 2010; y--) years.push(y);
   for (let i = 0; i < years.length; i += 4) {
     rows.push(years.slice(i, i + 4).map(y => ({
       text: `${y}`,
@@ -1051,7 +1051,7 @@ export function flowYearKeyboard(mode: 'practice' | 'quiz') {
     [{ text: '📅 Any Year', callback_data: `${mode}:flow_year:any` }],
   ];
   const years: number[] = [];
-  for (let y = 2025; y >= 2010; y--) years.push(y);
+  for (let y = 2026; y >= 2010; y--) years.push(y);
   for (let i = 0; i < years.length; i += 4) {
     rows.push(years.slice(i, i + 4).map(y => ({
       text: `${y}`,
@@ -1118,7 +1118,7 @@ export function yearPickerKeyboard(subject: string) {
     [{ text: '📅 Any Year', callback_data: `practice:start:${subject}:any` }],
   ];
   const years: number[] = [];
-  for (let y = 2025; y >= 2010; y--) years.push(y);
+  for (let y = 2026; y >= 2010; y--) years.push(y);
   for (let i = 0; i < years.length; i += 4) {
     rows.push(years.slice(i, i + 4).map(y => ({
       text: `${y}`,
@@ -1160,8 +1160,10 @@ export function progressMessage(
     .filter(c => user.subjects?.includes(c.subject))
     .map(c => {
       const pct = Math.round((c.seen / c.total) * 100);
+      const filled = Math.round(pct / 10);
+      const bar = '█'.repeat(filled) + '░'.repeat(10 - filled);
       const emoji = SUBJECT_EMOJI[c.subject] || '📖';
-      return `  ${emoji} ${SUBJECT_MAP[c.subject] || c.subject}: ${pct}% (${c.seen}/${c.total})`;
+      return `  ${emoji} ${SUBJECT_MAP[c.subject] || c.subject}\n  <code>${bar}</code> ${pct}% (${c.seen}/${c.total})`;
     }).join('\n');
 
   const dailyTarget = 10;
@@ -1187,25 +1189,44 @@ export function shareableProgressCard(
   user: User,
   totalAttempts: number,
   accuracy: number,
-  botUsername: string
+  botUsername: string,
+  subjectCoverage?: { subject: string; seen: number; total: number }[]
 ): string {
   const streak = user.streak || 0;
   const badge = streakBadge(streak);
-  const best = user.subjects && user.subjects.length > 0 ? user.subjects[0] : null;
-  const bestLine = best ? `\n📚 ${SUBJECT_MAP[best] || best}` : '';
-  const examLine = user.exam_type && user.target_year ? `\n🎯 ${user.exam_type} ${user.target_year}` : '';
+  const examLine = user.exam_type && user.target_year ? `🎯 ${user.exam_type} ${user.target_year}` : '';
+
+  // Best covered subject
+  let coverageLine = '';
+  if (subjectCoverage && subjectCoverage.length > 0) {
+    const best = subjectCoverage
+      .filter(c => user.subjects?.includes(c.subject) && c.total > 0)
+      .sort((a, b) => (b.seen / b.total) - (a.seen / a.total))[0];
+    if (best) {
+      const pct = Math.round((best.seen / best.total) * 100);
+      coverageLine = `📈 ${SUBJECT_MAP[best.subject] || best.subject}: ${pct}% covered`;
+    }
+  }
+
   const link = user.referral_code
     ? `https://t.me/${botUsername}?start=ref_${user.referral_code}`
     : `https://t.me/${botUsername}`;
-  return `${badge}
-━━━━━━━━━━━━━━━━
-${user.first_name} · ExamBuddie
-🔥 ${streak}-day streak
-✅ ${totalAttempts.toLocaleString()} questions answered
-🎯 ${accuracy}% accuracy${bestLine}${examLine}
 
-Studying smarter for WAEC/JAMB/NECO 📖
-Join me → ${link}`;
+  const lines = [
+    badge,
+    '━━━━━━━━━━━━━━━━',
+    `${user.first_name} · ExamBuddie`,
+    `🔥 ${streak}-day streak`,
+    `✅ ${totalAttempts.toLocaleString()} questions answered`,
+    `🎯 ${accuracy}% accuracy`,
+    examLine,
+    coverageLine,
+    '',
+    'Studying smarter for WAEC/JAMB/NECO 📖',
+    `Join me → ${link}`,
+  ].filter(Boolean);
+
+  return lines.join('\n');
 }
 
 export function onboardingGuide(): string {
