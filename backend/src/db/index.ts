@@ -66,6 +66,7 @@ const USER_UPDATABLE_COLUMNS = new Set<string>([
   'plan_expires_at', 'daily_count', 'daily_reset_at', 'streak',
   'last_active_date', 'phone_number', 'notifications_enabled',
   'streak_freeze_used_at', 'trial_used', 'daily_reminder_hour', 'source',
+  'consent_given_at',
 ]);
 
 export async function updateUser(
@@ -829,10 +830,13 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   const { rows } = await pool.query('SELECT id FROM users WHERE telegram_id = $1', [telegramId]);
   if (!rows[0]) return;
   const userId = rows[0].id;
+  // room_participants uses telegram_id directly (no FK), must delete manually
+  await pool.query('DELETE FROM room_participants WHERE telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM subscriptions WHERE user_id = $1', [userId]);
+  // bookmarks and sr_cards cascade from users ON DELETE CASCADE
   await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 }
 
