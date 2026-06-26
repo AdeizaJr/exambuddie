@@ -459,6 +459,76 @@ ${streakLine} → /practice`;
     console.log(`[CRON] QOTD sent to ${sent}/${users.length} users`);
   });
 
+  // ── Daily 7am WAT (6am UTC) — Exam timetable reminders (1, 3, 7 days out) ──
+  cron.schedule('5 6 * * *', async () => {
+    const { WAEC_2026, NECO_2026, JAMB_2026 } = await import('../bot/handlers/timetable');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    function daysUntil(iso: string): number {
+      const d = new Date(iso);
+      d.setHours(0, 0, 0, 0);
+      return Math.round((d.getTime() - today.getTime()) / 86400000);
+    }
+
+    const MILESTONES = [1, 3, 7];
+
+    // Subjects with exam exactly on a milestone day for each exam type
+    const waecDue: { subject: string; days: number }[] = [];
+    const necoDue: { subject: string; days: number }[] = [];
+
+    for (const [subject, iso] of Object.entries(WAEC_2026)) {
+      const d = daysUntil(iso);
+      if (MILESTONES.includes(d)) waecDue.push({ subject, days: d });
+    }
+    for (const [subject, iso] of Object.entries(NECO_2026)) {
+      const d = daysUntil(iso);
+      if (MILESTONES.includes(d)) necoDue.push({ subject, days: d });
+    }
+    const jambDays = daysUntil(JAMB_2026);
+    const jambDue = MILESTONES.includes(jambDays);
+
+    if (waecDue.length === 0 && necoDue.length === 0 && !jambDue) return;
+
+    const { rows: users } = await db.query(
+      `SELECT telegram_id, first_name, exam_type, subjects FROM users
+       WHERE notifications_enabled = TRUE AND exam_type IS NOT NULL`
+    );
+
+    let sent = 0;
+    for (const user of users) {
+      try {
+        const userSubjects: string[] = user.subjects || [];
+        let reminders: string[] = [];
+
+        if (user.exam_type === 'JAMB' && jambDue) {
+          reminders.push(`🎯 <b>JAMB UTME</b> is in <b>${jambDays} day${jambDays !== 1 ? 's' : ''}!</b>`);
+        } else if (user.exam_type === 'WAEC') {
+          for (const { subject, days } of waecDue) {
+            if (userSubjects.includes(subject)) {
+              const name = SUBJECT_MAP[subject] || subject;
+              reminders.push(`${SUBJECT_EMOJI[subject] || '📖'} <b>${name}</b> in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
+            }
+          }
+        } else if (user.exam_type === 'NECO') {
+          for (const { subject, days } of necoDue) {
+            if (userSubjects.includes(subject)) {
+              const name = SUBJECT_MAP[subject] || subject;
+              reminders.push(`${SUBJECT_EMOJI[subject] || '📖'} <b>${name}</b> in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
+            }
+          }
+        }
+
+        if (reminders.length === 0) continue;
+
+        const msg = `⏰ <b>Exam Alert, ${user.first_name}!</b>\n\n${reminders.join('\n')}\n\n📚 <a href="t.me/exambuddiebot?start=practice">Practise now</a>`;
+        await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
+        sent++;
+      } catch { /* blocked or unavailable */ }
+    }
+    if (sent > 0) console.log(`[CRON] Timetable reminders sent to ${sent} users`);
+  });
+
   console.log('⏰ Cron jobs started');
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getFlags, resolveFlag, invalidateCache } from "../api";
+import { getFlags, resolveFlag, toggleQuestionActive, invalidateCache } from "../api";
 import type { Flag } from "../types";
 import Spinner from "../components/Spinner";
 
@@ -23,6 +23,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
   const [explanation, setExplanation] = useState(flag.explanation || "");
   const [questionText, setQuestionText] = useState(flag.question_text || "");
   const [saving, setSaving] = useState(false);
+  const [deactivating, setDeactivating] = useState(false);
 
   async function handleSaveAndResolve() {
     setSaving(true);
@@ -47,6 +48,19 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
       setSaving(false);
+    }
+  }
+
+  async function handleDeactivate() {
+    if (!confirm(`Deactivate question #${flag.question_id}? It will be hidden from users until reactivated.`)) return;
+    setDeactivating(true);
+    try {
+      await toggleQuestionActive(flag.question_id, false);
+      await resolveFlag(flag.id);
+      onResolved(flag.id);
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Failed to deactivate");
+      setDeactivating(false);
     }
   }
 
@@ -119,15 +133,23 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
 
       <div className="flex items-center justify-end gap-3">
         <button
+          onClick={handleDeactivate}
+          disabled={saving || deactivating}
+          className="flex items-center gap-2 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-400 transition-colors hover:bg-red-500/20 disabled:opacity-50"
+        >
+          {deactivating && <Spinner size="sm" />}
+          🚫 Deactivate
+        </button>
+        <button
           onClick={handleResolveOnly}
-          disabled={saving}
+          disabled={saving || deactivating}
           className="rounded-lg border border-border bg-surface2 px-3 py-2 text-sm text-white transition-colors hover:bg-border disabled:opacity-50"
         >
           Resolve Only
         </button>
         <button
           onClick={handleSaveAndResolve}
-          disabled={saving}
+          disabled={saving || deactivating}
           className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-50"
         >
           {saving && <Spinner size="sm" />}

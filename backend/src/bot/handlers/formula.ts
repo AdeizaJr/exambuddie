@@ -197,6 +197,83 @@ Anaerobic (muscle): glucose → lactic acid + 2 ATP
 Kingdom → Phylum → Class → Order → Family → Genus → Species
 Mnemonic: <i>King Philip Came Over For Good Soup</i>`,
   },
+
+  economics: {
+    title: '💹 Economics Key Facts',
+    content: `<b>💹 Economics — Key Concepts</b>
+
+<b>Demand &amp; Supply</b>
+Law of Demand: price↑ → quantity demanded↓
+Law of Supply: price↑ → quantity supplied↑
+Equilibrium: Qd = Qs (market clears)
+PED = % change Qd / % change P
+PES = % change Qs / % change P
+PED &gt; 1 → elastic  |  PED &lt; 1 → inelastic
+
+<b>National Income</b>
+GDP = C + I + G + (X − M)
+GNP = GDP + Net factor income from abroad
+NNP = GNP − Depreciation
+Real GDP = Nominal GDP / Price Level × 100
+
+<b>Cost &amp; Revenue</b>
+TC = FC + VC
+MC = ΔTC / ΔQ
+TR = P × Q
+Profit = TR − TC
+AR = TR / Q = P  (under perfect competition)
+MR = ΔTR / ΔQ
+
+<b>Market Structures</b>
+Perfect competition: many sellers, identical goods, price taker
+Monopoly: single seller, price maker, barriers to entry
+Oligopoly: few large firms, interdependence
+Monopolistic competition: many firms, differentiated products
+
+<b>Money &amp; Banking</b>
+MV = PT  (Fisher's Quantity Theory)
+Money multiplier = 1 / Cash Reserve Ratio
+Inflation: too much money chasing too few goods
+Deflation: sustained fall in general price level`,
+  },
+
+  government: {
+    title: '🏛️ Government Key Facts',
+    content: `<b>🏛️ Government — Key Concepts</b>
+
+<b>Arms of Government</b>
+Legislature: makes laws (NASS — Senate + HOR)
+Executive: implements laws (President, Ministers)
+Judiciary: interprets laws (Supreme Court)
+Doctrine of Separation of Powers — Montesquieu
+Checks &amp; Balances: each arm limits the others
+
+<b>Nigerian Constitution</b>
+1999 Constitution (as amended) — supreme law
+Federal system: FG + 36 states + 774 LGAs
+Presidential system: executive separate from legislature
+Chapter II: Fundamental Objectives (non-justiciable)
+Chapter IV: Fundamental Human Rights (justiciable)
+
+<b>Political Concepts</b>
+Democracy: government of, by, and for the people
+Federalism: power shared between central &amp; states
+Sovereignty: supreme and absolute power of a state
+Citizenship: legal membership of a state
+Separation of powers: prevents concentration of power
+
+<b>Electoral Process</b>
+INEC: Independent National Electoral Commission
+Franchise: right to vote (18+ in Nigeria)
+Proportional Representation vs First Past the Post
+Political parties: mobilise voters, form government
+
+<b>International Relations</b>
+ECOWAS: Economic Community of West African States (1975)
+AU: African Union (2002, replaced OAU)
+UN: United Nations — 193 member states
+Commonwealth: voluntary association of former British territories`,
+  },
 };
 
 const SUBJECT_KEYBOARD = {
@@ -209,7 +286,11 @@ const SUBJECT_KEYBOARD = {
       { text: '📐 Maths', callback_data: 'formula:maths' },
       { text: '📐 Further Maths', callback_data: 'formula:further-math' },
     ],
-    [{ text: '🧬 Biology', callback_data: 'formula:biology' }],
+    [
+      { text: '🧬 Biology', callback_data: 'formula:biology' },
+      { text: '💹 Economics', callback_data: 'formula:economics' },
+    ],
+    [{ text: '🏛️ Government', callback_data: 'formula:government' }],
   ],
 };
 
