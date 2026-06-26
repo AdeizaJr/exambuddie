@@ -38,7 +38,7 @@ const (
 
 var years = func() []int {
 	ys := make([]int, 0, 16)
-	for y := 2010; y <= 2025; y++ {
+	for y := 2010; y <= 2026; y++ {
 		ys = append(ys, y)
 	}
 	return ys

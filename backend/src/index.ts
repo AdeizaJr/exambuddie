@@ -19,6 +19,8 @@ import * as revision from './bot/handlers/revision';
 import * as bookmarks from './bot/handlers/bookmarks';
 import * as sr from './bot/handlers/spaced_repetition';
 import * as achievements from './bot/handlers/achievements';
+import * as formula from './bot/handlers/formula';
+import * as qotd from './bot/handlers/qotd';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -80,6 +82,7 @@ bot.command('bookmarks', bookmarks.handleBookmarks);
 bot.command('review', sr.handleSRMenu);
 bot.command('mock', quiz.handleMockExam);
 bot.command('badges', achievements.handleBadges);
+bot.command('formula', formula.handleFormula);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -278,6 +281,16 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'bookmark:clear') return bookmarks.handleBookmarkClear(ctx);
   if (data === 'bookmarks:show') return bookmarks.handleBookmarks(ctx);
 
+  // Formula sheet
+  if (data === 'formula:pick') return formula.handleFormula(ctx);
+  if (data.startsWith('formula:')) return formula.handleFormulaSubject(ctx, data.slice('formula:'.length));
+
+  // Question of the Day
+  if (data.startsWith('qotd:answer:')) {
+    const parts = data.split(':');
+    return qotd.handleQOTDAnswer(ctx, parts[2], parts[3]);
+  }
+
   // Flag
   if (data === 'flag:question') return stats.handleFlagQuestion(ctx);
   if (data === 'flag:underline') return stats.handleFlagUnderline(ctx);
@@ -362,6 +375,7 @@ bot.on('text', async (ctx: any) => {
   if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
   if (text === '🏆 Leaderboard') return leaderboard.handleLeaderboard(ctx);
   if (text === '🎯 Challenge') return challenge.handleChallenge(ctx);
+  if (text === '📐 Formulas') return formula.handleFormula(ctx);
 
   const session = await redis.getSession(ctx.from.id);
 

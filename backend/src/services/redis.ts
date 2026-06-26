@@ -191,6 +191,26 @@ export const clearQuizReview = async (telegramId: number | string): Promise<void
   await client.del(`quiz_review:${telegramId}`);
 };
 
+// ── QOTD helpers ─────────────────────────────────────────────────────────────
+const QOTD_TTL = 26 * 3600; // 26h — survives the day
+
+export const setQOTDQuestion = async (date: string, examType: string, questionId: number): Promise<void> => {
+  await client.set(`qotd:${date}:${examType}`, String(questionId), { EX: QOTD_TTL });
+};
+
+export const getQOTDQuestion = async (date: string, examType: string): Promise<number | null> => {
+  const val = await client.get(`qotd:${date}:${examType}`);
+  return val ? parseInt(val, 10) : null;
+};
+
+export const markQOTDAnswered = async (telegramId: number | string, date: string): Promise<void> => {
+  await client.set(`qotd:answered:${telegramId}:${date}`, '1', { EX: QOTD_TTL });
+};
+
+export const getQOTDAnswered = async (telegramId: number | string, date: string): Promise<boolean> => {
+  return !!(await client.get(`qotd:answered:${telegramId}:${date}`));
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
