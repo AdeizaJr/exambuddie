@@ -373,7 +373,8 @@ export function persistentMenuKeyboard() {
     keyboard: [
       [{ text: '📚 Practice' }, { text: '📋 CBT' }],
       [{ text: '🎯 Challenge' }, { text: '🏆 Leaderboard' }],
-      [{ text: '📖 Review' }, { text: '📊 My Stats' }],
+      [{ text: '📖 Review' }, { text: '🎓 Mock Exam' }],
+      [{ text: '🏅 Badges' }, { text: '📊 My Stats' }],
       [{ text: '⚙️ Settings' }],
     ],
     resize_keyboard: true,
@@ -593,7 +594,7 @@ export function flagReasonKeyboard() {
   };
 }
 
-export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questionId?: number) {
+export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questionId?: number, hasExplanation = false) {
   if (mode === 'quiz') {
     const rows: any[] = [
       [
@@ -604,6 +605,10 @@ export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questio
     ];
     if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
     if (questionId) rows.push([{ text: '⭐ Save Question', callback_data: `bookmark:toggle:${questionId}` }]);
+    if (hasExplanation && questionId) rows.push([
+      { text: '👍 Good explanation', callback_data: `feedback:good:${questionId}` },
+      { text: '👎 Poor explanation', callback_data: `feedback:bad:${questionId}` },
+    ]);
     return { inline_keyboard: rows };
   }
   const rows: any[] = [
@@ -618,6 +623,10 @@ export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questio
   ];
   if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
   if (questionId) rows.push([{ text: '⭐ Save Question', callback_data: `bookmark:toggle:${questionId}` }]);
+  if (hasExplanation && questionId) rows.push([
+    { text: '👍 Good explanation', callback_data: `feedback:good:${questionId}` },
+    { text: '👎 Poor explanation', callback_data: `feedback:bad:${questionId}` },
+  ]);
   return { inline_keyboard: rows };
 }
 

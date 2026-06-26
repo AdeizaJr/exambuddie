@@ -4,6 +4,7 @@ import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
+import * as achievements from './achievements';
 import { User, QuizState } from '../../types';
 import { handleSRDone } from './spaced_repetition';
 
@@ -307,7 +308,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(fmt.correctAnswer(q, selected), {
     parse_mode: 'HTML',
-    reply_markup: fmt.afterAnswerKeyboard('quiz', q.question_text.includes('*')),
+    reply_markup: fmt.afterAnswerKeyboard('quiz', q.question_text.includes('*'), q.id, !!q.explanation),
   });
 
   if (!isCorrect) {
@@ -488,6 +489,18 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
   await redis.clearQuizState(ctx.from.id);
   await redis.clearSession(ctx.from.id);
 
+  // Badge check
+  if (user) {
+    const totalAttempts = await db.getTotalAttempts(user.id).catch(() => 0);
+    achievements.checkAndGrantBadges(ctx.telegram, user.id, ctx.from.id, {
+      totalAttempts,
+      quizDone: !quizState.isMock,
+      mockDone: !!quizState.isMock,
+      quizScore: { correct: quizState.correct, total: quizState.total },
+      accuracy,
+    }).catch(() => {});
+  }
+
   const reasonNote = reason === 'timeout' ? '\n⏰ <i>Time ran out!</i>'
     : reason === 'revoked' ? '\n🔒 <i>Your premium access was revoked.</i>'
     : reason === 'stopped' ? '\n⏹ <i>Quiz ended early.</i>'
@@ -502,9 +515,11 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
   const mins = Math.floor(durationSecs / 60);
   const secs = durationSecs % 60;
 
-  const subjectDisplay = fmt.SUBJECT_MAP[quizState.subject] || quizState.subject;
+  const subjectDisplay = quizState.subject === '__mock__'
+    ? '🎓 Full Mock Exam'
+    : (fmt.SUBJECT_MAP[quizState.subject] || quizState.subject);
 
-  const summary = `📋 <b>Quiz Complete!</b>${reasonNote}
+  const summary = `📋 <b>${quizState.isMock ? 'Mock Exam' : 'Quiz'} Complete!</b>${reasonNote}
 
 ${grade}
 
@@ -697,4 +712,113 @@ export async function handleQuizAddToSRFinal(ctx: any): Promise<void> {
     '✅ Questions added to your Review Deck. Use /review anytime to study them.',
     { parse_mode: 'HTML' }
   );
+}
+
+// ── Mock Exam Mode ────────────────────────────────────────────────────────────
+
+export async function handleMockExam(ctx: any): Promise<void> {
+  if (ctx.callbackQuery) await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user || !user.exam_type) {
+    await ctx.reply('Please set up your profile first using /start');
+    return;
+  }
+
+  if (user.plan !== 'premium') {
+    await ctx.reply(
+      `🎓 <b>Mock Exam — Premium Feature</b>\n\nFull mock exams simulate real ${user.exam_type || 'exam'} conditions:\n• ${user.exam_type === 'JAMB' ? '100 questions across all your subjects' : '60 questions from one subject'}\n• ${user.exam_type === 'JAMB' ? '2-hour' : '3-hour'} timer\n• Full score breakdown\n\nUpgrade to Premium to unlock!`,
+      { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() }
+    );
+    return;
+  }
+
+  const examType = user.exam_type;
+  const isMixedSubjects = examType === 'JAMB';
+  const qCount = isMixedSubjects ? 100 : 60;
+  const timeMins = isMixedSubjects ? 120 : 180;
+  const subjects = user.subjects || [];
+
+  if (subjects.length === 0) {
+    await ctx.reply('Please select subjects in /settings first.');
+    return;
+  }
+
+  await ctx.reply(
+    `🎓 <b>${examType} Full Mock Exam</b>\n\n${isMixedSubjects ? `📚 ${subjects.length} subject${subjects.length > 1 ? 's' : ''} · ${qCount} questions` : `📚 ${qCount} questions`}\n⏱️ ${timeMins} minutes\n\nThis simulates real ${examType} conditions. Ready?`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '🚀 Start Mock Exam', callback_data: 'mock:start' }],
+          [{ text: '❌ Cancel', callback_data: 'menu:main' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleMockStart(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user || !user.exam_type) { await ctx.reply('Please use /start first.'); return; }
+  if (user.plan !== 'premium') { await ctx.reply('Premium required for mock exams.'); return; }
+
+  const examType = user.exam_type;
+  const isMixedSubjects = examType === 'JAMB';
+  const qCount = isMixedSubjects ? 100 : 60;
+  const timeSecs = isMixedSubjects ? 120 * 60 : 180 * 60;
+  const subjects = user.subjects || [];
+
+  let questions;
+  if (isMixedSubjects && subjects.length > 1) {
+    questions = await db.getQuizQuestionsMulti(examType, subjects, qCount, user.target_year ?? null);
+  } else {
+    const subject = subjects[0] || 'english';
+    questions = await db.getQuizQuestions(examType, subject, qCount, user.target_year ?? null);
+  }
+
+  if (questions.length < 5) {
+    await ctx.reply('Not enough questions available. Try changing your year or subjects in /settings.');
+    return;
+  }
+
+  const sessionId = uuidv4();
+  const quizState: QuizState & { isMock?: boolean } = {
+    mode: 'quiz',
+    subject: isMixedSubjects ? '__mock__' : (subjects[0] || ''),
+    sessionId,
+    questions,
+    qIndex: 0,
+    correct: 0,
+    total: questions.length,
+    startTime: Date.now(),
+    deadline: Date.now() + timeSecs * 1000,
+    answers: [],
+    isMock: true,
+  };
+
+  await redis.saveQuizState(ctx.from.id, quizState);
+  await redis.setSession(ctx.from.id, { mode: 'quiz', subject: quizState.subject, sessionId });
+
+  const timeMins = timeSecs / 60;
+  await ctx.reply(
+    `🎓 <b>Mock Exam Started!</b>\n\n📝 ${questions.length} questions\n⏱️ ${timeMins} minutes\n\nGood luck! Tap /stop to end early.`,
+    { parse_mode: 'HTML' }
+  );
+
+  await sendQuizQuestion(ctx, quizState);
+}
+
+// ── Explanation feedback ───────────────────────────────────────────────────────
+
+export async function handleExplanationFeedback(ctx: any): Promise<void> {
+  await ctx.answerCbQuery('Thanks for your feedback!');
+  const parts = ctx.callbackQuery.data.split(':'); // feedback:good/bad:questionId
+  const rating: 1 | -1 = parts[1] === 'good' ? 1 : -1;
+  const questionId = parseInt(parts[2], 10);
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user || !questionId) return;
+
+  await db.saveExplanationFeedback(user.id, questionId, rating).catch(() => {});
 }

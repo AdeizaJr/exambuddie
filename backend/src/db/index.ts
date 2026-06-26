@@ -1356,3 +1356,76 @@ export async function getSRTotalCount(userId: number): Promise<number> {
   );
   return parseInt(rows[0]?.cnt || '0', 10);
 }
+
+// ── Achievements ──────────────────────────────────────────────────────────────
+
+export async function grantBadge(userId: number, code: string): Promise<boolean> {
+  const { rowCount } = await pool.query(
+    `INSERT INTO achievements (user_id, badge_code) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [userId, code]
+  );
+  return (rowCount ?? 0) > 0;
+}
+
+export async function getUserBadgeCodes(userId: number): Promise<string[]> {
+  const { rows } = await pool.query(
+    `SELECT badge_code FROM achievements WHERE user_id = $1 ORDER BY unlocked_at ASC`,
+    [userId]
+  );
+  return rows.map((r: any) => r.badge_code);
+}
+
+// ── Topic mastery breakdown ───────────────────────────────────────────────────
+
+export async function getTopicMastery(
+  userId: number,
+  subject: string,
+  examType?: string
+): Promise<{ topic: string; attempts: number; correct: number; accuracy: number }[]> {
+  const filtered = examType && examType !== 'all';
+  const params: any[] = filtered ? [userId, subject, examType] : [userId, subject];
+  const { rows } = await pool.query(
+    `SELECT q.topic,
+            COUNT(*) AS attempts,
+            SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) AS correct,
+            ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) AS accuracy
+     FROM attempts a
+     JOIN questions q ON a.question_id = q.id
+     WHERE a.user_id = $1 AND q.subject = $2 AND q.topic IS NOT NULL
+     ${filtered ? 'AND q.exam_type = $3' : ''}
+     GROUP BY q.topic HAVING COUNT(*) >= 1
+     ORDER BY accuracy ASC, attempts DESC`,
+    params
+  );
+  return rows.map((r: any) => ({
+    topic: r.topic,
+    attempts: parseInt(r.attempts),
+    correct: parseInt(r.correct),
+    accuracy: parseFloat(r.accuracy),
+  }));
+}
+
+// ── Explanation quality feedback ──────────────────────────────────────────────
+
+export async function saveExplanationFeedback(
+  userId: number,
+  questionId: number,
+  rating: 1 | -1
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO explanation_feedback (user_id, question_id, rating)
+     VALUES ($1, $2, $3)
+     ON CONFLICT (user_id, question_id) DO UPDATE SET rating = EXCLUDED.rating`,
+    [userId, questionId, rating]
+  );
+}
+
+// ── User lookup by Telegram username (for duel) ───────────────────────────────
+
+export async function getUserByUsername(username: string): Promise<User | null> {
+  const { rows } = await pool.query<User>(
+    `SELECT * FROM users WHERE LOWER(username) = LOWER($1) LIMIT 1`,
+    [username.replace(/^@/, '')]
+  );
+  return rows[0] || null;
+}

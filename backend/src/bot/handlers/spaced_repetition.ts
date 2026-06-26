@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
+import * as achievements from './achievements';
 
 export async function handleSRMenu(ctx: any): Promise<void> {
   if (ctx.callbackQuery) await ctx.answerCbQuery();
@@ -170,6 +171,11 @@ export async function handleSRDone(ctx: any): Promise<void> {
   const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
 
   await redis.clearSession(ctx.from.id);
+
+  const user = await db.getUser(ctx.from.id);
+  if (user) {
+    achievements.checkAndGrantBadges(ctx.telegram, user.id, ctx.from.id, { srDone: true }).catch(() => {});
+  }
 
   const grade =
     accuracy >= 80 ? '🏆 Excellent retention!' :
