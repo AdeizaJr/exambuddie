@@ -284,9 +284,12 @@ func parseQuestionPage(doc *goquery.Document, id, subject, examType string, year
 		return nil
 	}
 
-	// Question text — strip badge/nav links first
+	// Question text — strip badge/nav links first; preserve <u> as *...*
 	descClone := section.Find(".question-desc").First().Clone()
 	descClone.Find("a").Remove()
+	descClone.Find("u").Each(func(_ int, u *goquery.Selection) {
+		u.ReplaceWithHtml("*" + strings.TrimSpace(u.Text()) + "*")
+	})
 	qText := strings.TrimSpace(descClone.Text())
 	if qText == "" {
 		return nil
