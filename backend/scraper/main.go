@@ -180,6 +180,7 @@ type question struct {
 	optionE       string // may be empty
 	correctOption string
 	explanation   string // may be empty
+	imageURL      string // may be empty
 }
 
 type stats struct {
@@ -279,20 +280,36 @@ func extractIDs(doc *goquery.Document) []string {
 }
 
 func parseQuestionPage(doc *goquery.Document, id, subject, examType string, year int) *question {
-	section := doc.Find("#page-content-section")
-	if section.Length() == 0 {
-		return nil
+	// Try old layout first (legacy pages still serve this)
+	if section := doc.Find("#page-content-section"); section.Length() > 0 {
+		return parseOldLayout(doc, section, id, subject, examType, year)
 	}
+	// New Tailwind/Nuxt layout
+	return parseNewLayout(doc, id, subject, examType, year)
+}
 
-	// Question text — strip badge/nav links first
+func parseOldLayout(doc *goquery.Document, section *goquery.Selection, id, subject, examType string, year int) *question {
+	// Question text
 	descClone := section.Find(".question-desc").First().Clone()
+	imageURL := ""
+	descClone.Find("img").Each(func(_ int, img *goquery.Selection) {
+		if imageURL != "" {
+			return
+		}
+		if src, exists := img.Attr("src"); exists && strings.HasPrefix(src, "http") {
+			imageURL = src
+		}
+	})
 	descClone.Find("a").Remove()
+	descClone.Find("img").Remove()
+	descClone.Find("u,ins").Each(func(_ int, u *goquery.Selection) {
+		u.ReplaceWithHtml("*" + strings.TrimSpace(u.Text()) + "*")
+	})
 	qText := strings.TrimSpace(descClone.Text())
 	if qText == "" {
 		return nil
 	}
 
-	// Options — letter from <strong>, text from remaining content
 	opts := make(map[string]string, 5)
 	section.Find("ul.list-unstyled li").Each(func(_ int, s *goquery.Selection) {
 		letter := strings.TrimRight(strings.TrimSpace(s.Find("strong").First().Text()), ".")
@@ -308,7 +325,6 @@ func parseQuestionPage(doc *goquery.Document, id, subject, examType string, year
 		return nil
 	}
 
-	// Correct answer: "Correct Answer: Option C" → "C"
 	correct := ""
 	if m := correctAnswerRe.FindStringSubmatch(
 		strings.TrimSpace(section.Find("h5.text-success").First().Text()),
@@ -319,7 +335,6 @@ func parseQuestionPage(doc *goquery.Document, id, subject, examType string, year
 		return nil
 	}
 
-	// Explanation — remove headings and ad containers from the answer block
 	expClone := section.Find("h5.text-success").Closest("div.mb-4").Clone()
 	expClone.Find("h5").Remove()
 	expClone.Find(".t_container").Remove()
@@ -332,20 +347,102 @@ func parseQuestionPage(doc *goquery.Document, id, subject, examType string, year
 	if !ok {
 		code = subject
 	}
-
 	return &question{
-		sourceID:      "ms_" + id,
-		examType:      strings.ToUpper(examType),
-		subject:       code,
-		year:          year,
-		questionText:  qText,
-		optionA:       opts["A"],
-		optionB:       opts["B"],
-		optionC:       opts["C"],
-		optionD:       opts["D"],
-		optionE:       opts["E"],
-		correctOption: correct,
-		explanation:   explanation,
+		sourceID: "ms_" + id, examType: strings.ToUpper(examType), subject: code, year: year,
+		questionText: qText, optionA: opts["A"], optionB: opts["B"], optionC: opts["C"],
+		optionD: opts["D"], optionE: opts["E"], correctOption: correct,
+		explanation: explanation, imageURL: imageURL,
+	}
+}
+
+// parseNewLayout handles the Nuxt/Tailwind layout introduced mid-2026.
+// Question: first <h1>, Options: div.space-y-1 > div (letter=span.uppercase, text=p.font-medium),
+// Correct: green-bg option div, Explanation: p.text-tx_secondary after h4.fancy-text.
+func parseNewLayout(doc *goquery.Document, id, subject, examType string, year int) *question {
+	// Question text — first h1 on the page
+	h1 := doc.Find("h1").First()
+	if h1.Length() == 0 {
+		return nil
+	}
+	h1Clone := h1.Clone()
+	imageURL := ""
+	h1Clone.Find("img").Each(func(_ int, img *goquery.Selection) {
+		if imageURL != "" {
+			return
+		}
+		if src, exists := img.Attr("src"); exists && strings.HasPrefix(src, "http") {
+			imageURL = src
+		}
+	})
+	h1Clone.Find("img").Remove()
+	h1Clone.Find("u,ins").Each(func(_ int, u *goquery.Selection) {
+		u.ReplaceWithHtml("*" + strings.TrimSpace(u.Text()) + "*")
+	})
+	qText := strings.TrimSpace(h1Clone.Text())
+	if qText == "" {
+		return nil
+	}
+
+	// Options — each option is a child div of the first div.space-y-1 block
+	opts := make(map[string]string, 5)
+	correct := ""
+	doc.Find("div.space-y-1").First().Children().Each(func(_ int, opt *goquery.Selection) {
+		letter := strings.ToUpper(strings.TrimSpace(opt.Find("span.uppercase").First().Text()))
+		text := strings.TrimSpace(opt.Find("p.font-medium").First().Text())
+		if letter == "" || text == "" || len(letter) > 1 {
+			return
+		}
+		opts[letter] = text
+		// Correct option has a green background class
+		cls, _ := opt.Attr("class")
+		if strings.Contains(cls, "DFFFEC") {
+			correct = letter
+		}
+	})
+	if opts["A"] == "" || opts["B"] == "" {
+		return nil
+	}
+
+	// Fallback: correct from explanation section "Correct Option: A"
+	if correct == "" {
+		doc.Find("h4.fancy-text").Each(func(_ int, h4 *goquery.Selection) {
+			if correct != "" {
+				return
+			}
+			parent := h4.Parent()
+			letterSpan := parent.Find("span.uppercase.font-semibold").First()
+			if l := strings.ToUpper(strings.TrimSpace(letterSpan.Text())); l != "" {
+				correct = l
+			}
+		})
+	}
+	if correct == "" {
+		return nil
+	}
+
+	// Explanation — p.text-tx_secondary scoped to the explanation container.
+	// Skip known UI placeholder strings.
+	explanation := ""
+	skip := map[string]bool{"No video available": true, "Explanation": true}
+	doc.Find("h4.fancy-text").First().Parent().Find("p.text-tx_secondary").Each(func(_ int, p *goquery.Selection) {
+		if explanation != "" {
+			return
+		}
+		t := strings.TrimSpace(p.Text())
+		if len(t) > 10 && !skip[t] {
+			explanation = t
+		}
+	})
+
+	code, ok := subjectCode[subject]
+	if !ok {
+		code = subject
+	}
+	return &question{
+		sourceID: "ms_" + id, examType: strings.ToUpper(examType), subject: code, year: year,
+		questionText: qText, optionA: opts["A"], optionB: opts["B"], optionC: opts["C"],
+		optionD: opts["D"], optionE: opts["E"], correctOption: correct,
+		explanation: explanation, imageURL: imageURL,
 	}
 }
 
@@ -378,17 +475,21 @@ func insertQuestion(ctx context.Context, pool *pgxpool.Pool, q *question) (bool,
 	if q.explanation != "" {
 		expl = &q.explanation
 	}
+	var imgURL *string
+	if q.imageURL != "" {
+		imgURL = &q.imageURL
+	}
 
 	tag, err := pool.Exec(ctx, `
 		INSERT INTO questions
 			(exam_type, subject, year, question_text,
 			 option_a, option_b, option_c, option_d, option_e,
-			 correct_option, explanation, source_id)
-		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+			 correct_option, explanation, source_id, image_url, has_diagram)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
 		ON CONFLICT (source_id) DO NOTHING`,
 		q.examType, q.subject, q.year, q.questionText,
 		q.optionA, q.optionB, q.optionC, q.optionD, optE,
-		q.correctOption, expl, q.sourceID,
+		q.correctOption, expl, q.sourceID, imgURL, imgURL != nil,
 	)
 	if err != nil {
 		return false, err
