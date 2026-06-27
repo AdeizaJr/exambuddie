@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { broadcast, getStats } from "../api";
-import type { BroadcastTarget } from "../api";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { broadcast, getStats, searchUsers, sendDM } from "../api";
+import type { BroadcastTarget, UserSearchResult } from "../api";
 import type { Stats } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
@@ -26,6 +26,146 @@ function estimateReach(target: BroadcastTarget, stats: Stats | null): number | n
   if (target === "premium") return stats.premium_users;
   if (target === "free") return stats.total_users - stats.premium_users;
   return null; // can't estimate exam-type splits without extra data
+}
+
+function DirectMessage() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<UserSearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [selected, setSelected] = useState<UserSearchResult | null>(null);
+  const [dmMessage, setDmMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const q = e.target.value;
+    setQuery(q);
+    setSelected(null);
+    setSent(false);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (q.trim().length < 2) { setResults([]); return; }
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const r = await searchUsers(q.trim());
+        setResults(r);
+      } catch { setResults([]); }
+      finally { setSearching(false); }
+    }, 300);
+  }
+
+  async function handleSend() {
+    if (!selected || !dmMessage.trim()) return;
+    setSending(true);
+    try {
+      await sendDM(selected.telegram_id, dmMessage.trim());
+      setSent(true);
+      setDmMessage("");
+      setQuery("");
+      setSelected(null);
+      setResults([]);
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Failed to send");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  const planBadge = (plan: string) =>
+    plan === "premium"
+      ? "text-accent border-accent/30 bg-accent/10"
+      : "text-muted border-border bg-surface2";
+
+  return (
+    <div className="rounded-xl border border-border bg-surface p-5 space-y-4">
+      <div>
+        <h2 className="font-medium text-white">Direct Message</h2>
+        <p className="text-xs text-muted mt-0.5">Send a message to one specific user</p>
+      </div>
+
+      {sent && (
+        <div className="rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm text-accent">
+          ✓ Message sent!{" "}
+          <button onClick={() => setSent(false)} className="underline text-xs opacity-70 hover:opacity-100">
+            Send another
+          </button>
+        </div>
+      )}
+
+      {/* User search */}
+      <div className="relative">
+        <input
+          type="text"
+          value={selected ? `${selected.first_name}${selected.username ? ` (@${selected.username})` : ""}` : query}
+          onChange={selected ? undefined : handleQueryChange}
+          readOnly={!!selected}
+          placeholder="Type a name or username..."
+          className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
+        />
+        {selected && (
+          <button
+            onClick={() => { setSelected(null); setQuery(""); setResults([]); }}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted hover:text-white px-1"
+          >
+            ✕
+          </button>
+        )}
+        {searching && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            <Spinner size="sm" />
+          </div>
+        )}
+        {!selected && results.length > 0 && (
+          <div className="absolute z-10 mt-1 w-full rounded-lg border border-border bg-surface shadow-lg">
+            {results.map((u) => (
+              <button
+                key={u.telegram_id}
+                onClick={() => { setSelected(u); setResults([]); }}
+                className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-surface2 first:rounded-t-lg last:rounded-b-lg"
+              >
+                <div>
+                  <span className="font-medium text-white">{u.first_name}</span>
+                  {u.username && <span className="ml-1.5 text-xs text-muted">@{u.username}</span>}
+                  {u.exam_type && <span className="ml-1.5 text-xs text-muted">{u.exam_type}</span>}
+                </div>
+                <span className={`rounded border px-1.5 py-0.5 text-[10px] font-medium ${planBadge(u.plan)}`}>
+                  {u.plan}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Message input — only show once user selected */}
+      {selected && (
+        <>
+          <div className="rounded-lg border border-border bg-surface2 px-3 py-2 text-xs text-muted">
+            To: <strong className="text-white">{selected.first_name}</strong>
+            {selected.username && <span> (@{selected.username})</span>}
+            {" · "}
+            <span className={`font-medium ${selected.plan === "premium" ? "text-accent" : ""}`}>{selected.plan}</span>
+            {selected.streak > 0 && <span> · 🔥 {selected.streak} streak</span>}
+          </div>
+          <textarea
+            rows={5}
+            value={dmMessage}
+            onChange={(e) => setDmMessage(e.target.value)}
+            placeholder="Write your message... (HTML supported: <b>bold</b>, <i>italic</i>)"
+            className="w-full resize-y rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
+          />
+          <button
+            onClick={handleSend}
+            disabled={!dmMessage.trim() || sending}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {sending ? <><Spinner size="sm" /> Sending...</> : "Send Message"}
+          </button>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default function Broadcast() {
@@ -68,11 +208,15 @@ export default function Broadcast() {
   }
 
   return (
-    <div className="max-w-2xl space-y-6 p-6">
-      <div>
-        <h1 className="font-display text-xl font-bold text-white">Broadcast</h1>
-        <p className="mt-0.5 text-sm text-muted">Send a message to all or targeted users</p>
-      </div>
+    <div className="p-6">
+      {/* Two-column layout: broadcast left, DM right */}
+      <div className="flex gap-6 items-start">
+        {/* Left — bulk broadcast */}
+        <div className="min-w-0 flex-1 max-w-2xl space-y-6">
+        <div>
+          <h1 className="font-display text-xl font-bold text-white">Broadcast</h1>
+          <p className="mt-0.5 text-sm text-muted">Send a message to all or targeted users</p>
+        </div>
 
       {result && (
         <div className="rounded-xl border border-accent/30 bg-accent/10 p-4">
@@ -219,6 +363,14 @@ export default function Broadcast() {
           </div>
         </Modal>
       )}
+
+        </div>{/* end left column */}
+
+        {/* Right — direct message, sticky top */}
+        <div className="w-80 shrink-0 sticky top-6">
+          <DirectMessage />
+        </div>
+      </div>
     </div>
   );
 }

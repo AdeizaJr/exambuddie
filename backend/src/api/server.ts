@@ -799,6 +799,20 @@ export default function createServer(bot: any) {
     res.json({ entries });
   });
 
+  // ── POST /api/admin/dm ──────────────────────────────────────────────────────
+  app.post('/api/admin/dm', adminAuth, async (req: Request, res: Response) => {
+    const { telegram_id, message } = req.body;
+    if (!telegram_id || !message) {
+      return res.status(400).json({ error: 'telegram_id and message are required' });
+    }
+    try {
+      await bot.telegram.sendMessage(telegram_id, message, { parse_mode: 'HTML' });
+      res.json({ ok: true });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message || 'Failed to send message' });
+    }
+  });
+
   // ── POST /api/admin/broadcast ───────────────────────────────────────────────
   app.post('/api/admin/broadcast', adminAuth, async (req: Request, res: Response) => {
     const { message, target } = req.body;
