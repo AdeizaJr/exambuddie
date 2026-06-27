@@ -307,7 +307,7 @@ function buildYearKeyboard(prefix: string, backButton?: { text: string; callback
     [{ text: '📅 Any Year', callback_data: `${prefix}:any` }],
   ];
   const years: number[] = [];
-  for (let y = 2026; y >= 2010; y--) years.push(y);
+  for (let y = 2025; y >= 2010; y--) years.push(y);
   for (let i = 0; i < years.length; i += 4) {
     rows.push(years.slice(i, i + 4).map(y => ({
       text: `${y}`,
@@ -1051,7 +1051,7 @@ export function flowYearKeyboard(mode: 'practice' | 'quiz') {
     [{ text: '📅 Any Year', callback_data: `${mode}:flow_year:any` }],
   ];
   const years: number[] = [];
-  for (let y = 2026; y >= 2010; y--) years.push(y);
+  for (let y = 2025; y >= 2010; y--) years.push(y);
   for (let i = 0; i < years.length; i += 4) {
     rows.push(years.slice(i, i + 4).map(y => ({
       text: `${y}`,
@@ -1118,7 +1118,7 @@ export function yearPickerKeyboard(subject: string) {
     [{ text: '📅 Any Year', callback_data: `practice:start:${subject}:any` }],
   ];
   const years: number[] = [];
-  for (let y = 2026; y >= 2010; y--) years.push(y);
+  for (let y = 2025; y >= 2010; y--) years.push(y);
   for (let i = 0; i < years.length; i += 4) {
     rows.push(years.slice(i, i + 4).map(y => ({
       text: `${y}`,

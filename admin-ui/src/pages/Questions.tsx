@@ -45,7 +45,7 @@ const ALL_SUBJECTS: { code: string; label: string }[] = [
 
 const EXAM_TYPES = ["JAMB", "NECO", "WAEC"];
 
-const YEARS = Array.from({ length: 16 }, (_, i) => 2010 + i);
+const YEARS = Array.from({ length: 16 }, (_, i) => 2025 - i);
 
 interface EditState {
   question_text: string;
