@@ -256,3 +256,21 @@ export async function broadcast(
     target,
   });
 }
+
+export interface UserSearchResult {
+  telegram_id: number;
+  first_name: string;
+  username: string | null;
+  exam_type: string | null;
+  plan: string;
+  streak: number;
+}
+
+export async function searchUsers(query: string): Promise<UserSearchResult[]> {
+  const data = await req<{ data: UserSearchResult[] }>("GET", `/users?search=${encodeURIComponent(query)}&limit=8`);
+  return data.data ?? [];
+}
+
+export async function sendDM(telegramId: number, message: string): Promise<void> {
+  await req<{ ok: boolean }>("POST", "/dm", { telegram_id: telegramId, message });
+}
