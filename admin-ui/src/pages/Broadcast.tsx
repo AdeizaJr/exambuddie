@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { broadcast, getStats, searchUsers, sendDM } from "../api";
+import { broadcast, getStats, searchUsers, sendDM, getBroadcastHistory } from "../api";
 import type { BroadcastTarget, UserSearchResult } from "../api";
-import type { Stats } from "../types";
+import type { Stats, BroadcastLog } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
 
@@ -168,6 +168,37 @@ function DirectMessage() {
   );
 }
 
+function BroadcastHistory() {
+  const [history, setHistory] = useState<BroadcastLog[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getBroadcastHistory().then(setHistory).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="py-6 text-center"><Spinner size="sm" /></div>;
+  if (!history.length) return <p className="py-4 text-xs text-muted">No broadcasts sent yet.</p>;
+
+  return (
+    <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+      {history.map((b) => (
+        <div key={b.id} className="rounded-lg border border-border bg-surface2 p-3">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold uppercase text-accent">{b.target}</span>
+            <span className="text-xs text-muted">{new Date(b.sent_at).toLocaleString("en-NG", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+          </div>
+          <p className="text-xs text-white line-clamp-2 mb-1.5">{b.message}</p>
+          <div className="flex gap-4 text-xs text-muted">
+            <span>✅ {b.sent}</span>
+            {b.failed > 0 && <span className="text-red-400">❌ {b.failed}</span>}
+            <span className="ml-auto">of {b.total}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Broadcast() {
   const [target, setTarget] = useState<BroadcastTarget>("all");
   const [message, setMessage] = useState("");
@@ -177,6 +208,7 @@ export default function Broadcast() {
     null
   );
   const [stats, setStats] = useState<Stats | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   const loadStats = useCallback(async () => {
     try {
@@ -213,10 +245,24 @@ export default function Broadcast() {
       <div className="flex gap-6 items-start">
         {/* Left — bulk broadcast */}
         <div className="min-w-0 flex-1 max-w-2xl space-y-6">
-        <div>
-          <h1 className="font-display text-xl font-bold text-white">Broadcast</h1>
-          <p className="mt-0.5 text-sm text-muted">Send a message to all or targeted users</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="font-display text-xl font-bold text-white">Broadcast</h1>
+            <p className="mt-0.5 text-sm text-muted">Send a message to all or targeted users</p>
+          </div>
+          <button
+            onClick={() => setShowHistory((v) => !v)}
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-white"
+          >
+            {showHistory ? "Hide" : "Show"} History
+          </button>
         </div>
+        {showHistory && (
+          <div className="rounded-xl border border-border bg-surface p-4">
+            <h2 className="text-sm font-semibold text-white mb-3">Broadcast History</h2>
+            <BroadcastHistory />
+          </div>
+        )}
 
       {result && (
         <div className="rounded-xl border border-accent/30 bg-accent/10 p-4">

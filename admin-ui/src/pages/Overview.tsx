@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Users, Star, PenLine, Flag, RefreshCw } from "lucide-react";
-import { getStats, getUsers } from "../api";
-import type { Stats, User } from "../types";
+import { Users, Star, PenLine, Flag, RefreshCw, TrendingUp } from "lucide-react";
+import { getStats, getUsers, getGrowthAnalytics } from "../api";
+import type { Stats, User, GrowthAnalytics } from "../types";
 import StatCard from "../components/StatCard";
 import Badge from "../components/Badge";
 import Spinner from "../components/Spinner";
@@ -15,12 +15,7 @@ function formatDate(dateStr: string): string {
 }
 
 function UserAvatar({ name }: { name: string }) {
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const hue = name.charCodeAt(0) * 37 % 360;
   return (
     <div
@@ -32,9 +27,33 @@ function UserAvatar({ name }: { name: string }) {
   );
 }
 
+function Sparkline({ data, color = "bg-accent" }: { data: number[]; color?: string }) {
+  if (!data.length) return null;
+  const max = Math.max(...data, 1);
+  return (
+    <div className="flex h-10 items-end gap-0.5">
+      {data.map((v, i) => (
+        <div
+          key={i}
+          className={`flex-1 rounded-sm ${color} opacity-80`}
+          style={{ height: `${Math.max(4, Math.round((v / max) * 100))}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+const EXAM_COLORS: Record<string, string> = {
+  WAEC: "bg-blue-500",
+  JAMB: "bg-violet-500",
+  NECO: "bg-emerald-500",
+  unset: "bg-slate-500",
+};
+
 export default function Overview() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentUsers, setRecentUsers] = useState<User[]>([]);
+  const [growth, setGrowth] = useState<GrowthAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,9 +62,14 @@ export default function Overview() {
   const load = useCallback(async (manual = false) => {
     if (manual) setRefreshing(true);
     try {
-      const [s, u] = await Promise.all([getStats(), getUsers({ page: 1, limit: 8 })]);
+      const [s, u, g] = await Promise.all([
+        getStats(),
+        getUsers({ page: 1, limit: 8 }),
+        getGrowthAnalytics(),
+      ]);
       setStats(s);
       setRecentUsers(u.data);
+      setGrowth(g);
       setLastRefresh(new Date());
       setError(null);
     } catch (e: unknown) {
@@ -63,19 +87,13 @@ export default function Overview() {
   }, [load]);
 
   if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <div className="flex h-64 items-center justify-center"><Spinner size="lg" /></div>;
   }
 
   if (error) {
     return (
       <div className="p-8">
-        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
-          {error}
-        </div>
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">{error}</div>
       </div>
     );
   }
@@ -83,6 +101,10 @@ export default function Overview() {
   const premiumPct = stats && stats.total_users > 0
     ? Math.round((stats.premium_users / stats.total_users) * 100)
     : 0;
+
+  const userSpark = growth?.userGrowth.slice(-14).map((d) => d.new_users) ?? [];
+  const revSpark = growth?.revenueGrowth.slice(-14).map((d) => Number(d.revenue_ngn)) ?? [];
+  const totalExamUsers = growth?.examBreakdown.reduce((s, e) => s + Number(e.users), 0) ?? 1;
 
   return (
     <div className="space-y-6 p-6">
@@ -107,33 +129,62 @@ export default function Overview() {
       {/* Stat cards */}
       {stats && (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <StatCard
-            label="Total Users"
-            value={stats.total_users}
-            sub={`+${stats.new_today} today`}
-            icon={<Users size={18} />}
-            trend="up"
-          />
-          <StatCard
-            label="Premium Users"
-            value={stats.premium_users}
-            sub={`${premiumPct}% of total`}
-            icon={<Star size={18} />}
-            accent
-            trend="up"
-          />
-          <StatCard
-            label="Attempts Today"
-            value={stats.attempts_today}
-            sub={`${stats.total_attempts.toLocaleString()} total`}
-            icon={<PenLine size={18} />}
-          />
-          <StatCard
-            label="Pending Flags"
-            value={stats.pending_flags}
-            sub={`${stats.total_questions.toLocaleString()} questions`}
-            icon={<Flag size={18} />}
-          />
+          <StatCard label="Total Users" value={stats.total_users} sub={`+${stats.new_today} today`} icon={<Users size={18} />} trend="up" />
+          <StatCard label="Premium Users" value={stats.premium_users} sub={`${premiumPct}% of total`} icon={<Star size={18} />} accent trend="up" />
+          <StatCard label="Attempts Today" value={stats.attempts_today} sub={`${stats.total_attempts.toLocaleString()} total`} icon={<PenLine size={18} />} />
+          <StatCard label="Pending Flags" value={stats.pending_flags} sub={`${stats.total_questions.toLocaleString()} questions`} icon={<Flag size={18} />} />
+        </div>
+      )}
+
+      {/* Growth sparklines + exam breakdown */}
+      {growth && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted">New Users (14d)</p>
+                <p className="font-display text-2xl font-bold text-white mt-0.5">
+                  {userSpark.reduce((a, b) => a + b, 0).toLocaleString()}
+                </p>
+              </div>
+              <TrendingUp size={18} className="text-accent" />
+            </div>
+            <Sparkline data={userSpark} color="bg-accent" />
+          </div>
+
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted">Revenue (14d)</p>
+                <p className="font-display text-2xl font-bold text-accent-light mt-0.5">
+                  ₦{revSpark.reduce((a, b) => a + b, 0).toLocaleString()}
+                </p>
+              </div>
+              <span className="text-lg">💰</span>
+            </div>
+            <Sparkline data={revSpark} color="bg-amber-400" />
+          </div>
+
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-3">Users by Exam Type</p>
+            <div className="space-y-2.5">
+              {growth.examBreakdown.map((e) => {
+                const pct = Math.round((Number(e.users) / totalExamUsers) * 100);
+                const color = EXAM_COLORS[e.exam_type] ?? "bg-slate-500";
+                return (
+                  <div key={e.exam_type}>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="font-medium text-white">{e.exam_type}</span>
+                      <span className="text-muted">{Number(e.users).toLocaleString()} ({pct}%)</span>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-surface2">
+                      <div className={`h-1.5 rounded-full ${color}`} style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 
@@ -148,9 +199,7 @@ export default function Overview() {
             <thead>
               <tr className="border-b border-border bg-surface2/50">
                 {["Name", "Exam", "Plan", "Streak", "Joined"].map((h) => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted">
-                    {h}
-                  </th>
+                  <th key={h} className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -197,7 +246,7 @@ export default function Overview() {
             </p>
           </div>
           <div className="rounded-xl border border-border bg-gradient-card p-5 shadow-card">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted">Revenue (Active)</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted">Revenue (Active Subs)</p>
             <p className="font-display text-3xl font-bold tracking-tight text-accent-light">
               ₦{Number(stats.total_revenue_ngn).toLocaleString()}
             </p>

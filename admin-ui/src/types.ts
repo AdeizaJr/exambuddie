@@ -154,3 +154,62 @@ export interface PaginatedResponse<T> {
   limit: number;
   pages: number;
 }
+
+export interface GrowthData {
+  date: string;
+  new_users: number;
+  new_premium: number;
+}
+
+export interface RevenueData {
+  date: string;
+  subs: number;
+  revenue_ngn: number;
+}
+
+export interface ExamBreakdown {
+  exam_type: string;
+  users: number;
+  premium: number;
+}
+
+export interface GrowthAnalytics {
+  userGrowth: GrowthData[];
+  revenueGrowth: RevenueData[];
+  examBreakdown: ExamBreakdown[];
+}
+
+export interface RetentionData {
+  total_users: number;
+  d1: number;
+  d7: number;
+  d30: number;
+  d1_rate: number;
+  d7_rate: number;
+  d30_rate: number;
+}
+
+export interface FunnelData {
+  total_users: number;
+  premium_users: number;
+  active_free: number;
+  active_subs: number;
+  churned_30d: number;
+  mrr: number;
+}
+
+export interface BroadcastLog {
+  id: number;
+  message: string;
+  target: string;
+  sent: number;
+  failed: number;
+  total: number;
+  sent_at: string;
+}
+
+export interface BulkImportResult {
+  inserted: number;
+  skipped: number;
+  errors: string[];
+}

@@ -434,6 +434,18 @@ WHERE id = 116125`,
     UNIQUE(user_id, question_id)
   )`,
   `CREATE INDEX IF NOT EXISTS idx_expl_feedback_question ON explanation_feedback(question_id)`,
+
+  // ── Broadcast log ─────────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS broadcast_log (
+    id SERIAL PRIMARY KEY,
+    message TEXT NOT NULL,
+    target VARCHAR(20) NOT NULL,
+    sent INT NOT NULL DEFAULT 0,
+    failed INT NOT NULL DEFAULT 0,
+    total INT NOT NULL DEFAULT 0,
+    sent_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_broadcast_log_sent_at ON broadcast_log(sent_at DESC)`,
 ];
 
 async function migrate(): Promise<void> {
