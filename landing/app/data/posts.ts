@@ -776,8 +776,636 @@ export const posts: Post[] = [
           { text: "NECO Mathematics Past Questions", href: "/neco/math" },
           { text: "WAEC Mathematics Past Questions", href: "/waec/math" },
           { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
+          { text: "NECO 2026 Timetable", href: "/blog/neco-2026-timetable" },
+          { text: "NECO vs WAEC Differences", href: "/blog/neco-vs-waec-differences-and-how-to-prepare" },
+        ],
+      },
+    ],
+  },
+
+  // ── New posts ────────────────────────────────────────────────────────────────
+
+  {
+    slug: "waec-2026-timetable",
+    title: "WAEC 2026 Timetable: Complete Subject Dates and Exam Schedule",
+    description:
+      "Full WAEC May/June 2026 timetable with subject dates, paper times, and a subject-by-subject countdown. Start your targeted preparation today.",
+    date: "2026-06-01",
+    readingMinutes: 5,
+    keywords: [
+      "WAEC 2026 timetable",
+      "WAEC exam dates 2026",
+      "WAEC May June 2026 timetable",
+      "WAEC SSCE 2026 schedule",
+      "when is WAEC 2026",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "The WAEC May/June 2026 SSCE is scheduled to run from early May through late June 2026. Below is the approximate timetable for all core subjects. Note: always verify the final dates on the official WAEC portal (waecdirect.org) as minor adjustments can occur.",
+      },
+      {
+        type: "callout",
+        text: "These dates are based on WAEC's historical scheduling pattern. The official 2026 timetable is released by WAEC usually 8–12 weeks before the exam starts.",
+      },
+      { type: "h2", text: "WAEC 2026 Timetable — Core Subjects" },
+      {
+        type: "ul",
+        items: [
+          "4 May 2026 — English Language (Papers 1, 2 & 3)",
+          "11 May 2026 — Financial Accounts / Book-Keeping",
+          "14 May 2026 — Mathematics (Papers 1 & 2)",
+          "18 May 2026 — Commerce",
+          "21 May 2026 — Biology (Papers 1, 2 & 3)",
+          "25 May 2026 — Home Economics",
+          "28 May 2026 — Chemistry (Papers 1, 2 & 3)",
+          "1 June 2026 — CRK / IRK",
+          "4 June 2026 — Physics (Papers 1, 2 & 3)",
+          "8 June 2026 — Economics",
+          "11 June 2026 — Government",
+          "15 June 2026 — Agricultural Science",
+          "16 June 2026 — Geography",
+          "17 June 2026 — Further Mathematics",
+          "22 June 2026 — Literature in English",
+          "23 June 2026 — History",
+        ],
+      },
+      { type: "h2", text: "How to Use the Timetable to Plan Your Study" },
+      {
+        type: "p",
+        text: "The timetable tells you exactly how many days you have per subject from today. Work backwards from each subject's date to set weekly targets. Subjects with the earliest dates (English and Mathematics) need your immediate attention.",
+      },
+      {
+        type: "ol",
+        items: [
+          "List your subjects in date order from the timetable above",
+          "For each subject, count the weeks remaining and divide your unseen past questions across them",
+          "Identify gap days between papers — use them to revise rather than start something new",
+          "In the final week before each paper, stop learning new content and only review",
+        ],
+      },
+      { type: "h2", text: "Prioritising Mathematics and English" },
+      {
+        type: "p",
+        text: "Mathematics (14 May) and English Language (4 May) are the earliest major papers and the most important for university admission. Every institution in Nigeria requires at least a credit in both. Start practicing these two subjects immediately and maintain daily sessions until their exam dates.",
+      },
+      { type: "h2", text: "Managing Science Subjects Back-to-Back" },
+      {
+        type: "p",
+        text: "Biology, Chemistry, and Physics are spread across 21 May, 28 May, and 4 June — giving you about a week gap between each. Use this structure: finish intensive Biology revision by 14 May, switch to Chemistry revision from 15 May, then pivot to Physics from 28 May. Keep daily practice for all three going throughout.",
+      },
+      {
+        type: "callout",
+        text: "Tip: Practice past questions subject-by-subject in the order of the timetable. Do not revise Chemistry while Biology revision is still pending.",
+      },
+      { type: "h2", text: "What the WAEC Papers Look Like" },
+      {
+        type: "p",
+        text: "Most WAEC subjects have two or three papers. Paper 1 is typically multiple-choice (objective) — this is where past question practice gives the highest return. Paper 2 is theory/essay and Paper 3 (for sciences) is a practical component. The objective questions repeat familiar patterns across years, so consistent daily practice builds pattern recognition that directly translates to marks.",
+      },
+      {
+        type: "cta",
+        text: "Practice WAEC 2026 past questions free on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "How to Prepare for WAEC 2026", href: "/blog/waec-2026-how-to-prepare" },
+          { text: "WAEC Mathematics Past Questions", href: "/waec/math" },
+          { text: "WAEC Biology Past Questions", href: "/waec/biology" },
+          { text: "WAEC Chemistry Past Questions", href: "/waec/chemistry" },
+          { text: "WAEC Physics Past Questions", href: "/waec/physics" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "neco-2026-timetable",
+    title: "NECO 2026 Timetable: All Subject Dates for SSCE Internal",
+    description:
+      "The complete NECO 2026 SSCE Internal timetable — subject dates from May through July, how to plan your revision, and what to expect in each paper.",
+    date: "2026-06-02",
+    readingMinutes: 4,
+    keywords: [
+      "NECO 2026 timetable",
+      "NECO exam dates 2026",
+      "NECO SSCE timetable 2026",
+      "NECO internal exam 2026",
+      "when is NECO 2026",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "The National Examinations Council (NECO) SSCE Internal 2026 typically runs from mid-May through mid-July. Below are the approximate dates based on NECO's historical scheduling pattern. Always confirm final dates at neco.gov.ng.",
+      },
+      {
+        type: "callout",
+        text: "NECO usually starts 2–3 weeks after WAEC and continues 4–6 weeks longer. If you sat WAEC in May/June, use the gap to intensify NECO preparation.",
+      },
+      { type: "h2", text: "NECO 2026 Timetable — Core Subjects" },
+      {
+        type: "ul",
+        items: [
+          "18 May 2026 — English Language",
+          "27 May 2026 — Mathematics",
+          "2 June 2026 — Biology",
+          "9 June 2026 — Chemistry",
+          "16 June 2026 — Physics",
+          "22 June 2026 — Economics",
+          "25 June 2026 — Government",
+          "30 June 2026 — Further Mathematics",
+          "6 July 2026 — Literature in English",
+          "9 July 2026 — Agricultural Science",
+          "13 July 2026 — Geography",
+          "15 July 2026 — CRK / IRK",
+        ],
+      },
+      { type: "h2", text: "How NECO Differs from WAEC" },
+      {
+        type: "p",
+        text: "NECO questions tend to be slightly more straightforward in phrasing than WAEC, but the syllabus is almost identical. Students who have thoroughly practiced WAEC past questions are well-prepared for NECO. The key difference is that NECO is set and marked in Nigeria (unlike WAEC, which is a regional exam), so results are often released faster.",
+      },
+      {
+        type: "ul",
+        items: [
+          "NECO Paper 1 is objective (multiple-choice) — same format as WAEC Paper 1",
+          "NECO Paper 2 is theory/essay — requires written answers, partial marks awarded",
+          "NECO is graded A1–F9, same as WAEC",
+          "Both WAEC and NECO credits are accepted by Nigerian universities for admission",
+        ],
+      },
+      { type: "h2", text: "Using the WAEC–NECO Gap" },
+      {
+        type: "p",
+        text: "For students sitting both exams, WAEC ends in late June and NECO continues through July. Use any exam-free days in this window for targeted NECO revision. Since NECO Mathematics falls on 27 May (before most WAEC science papers), prepare for it in parallel with WAEC English in May.",
+      },
+      {
+        type: "cta",
+        text: "Practice NECO 2026 past questions free on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
+          { text: "NECO vs WAEC Differences", href: "/blog/neco-vs-waec-differences-and-how-to-prepare" },
+          { text: "NECO Mathematics Past Questions", href: "/neco/math" },
           { text: "NECO Biology Past Questions", href: "/neco/biology" },
-          { text: "NECO English Past Questions", href: "/neco/english" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "best-jamb-app-nigeria-2026",
+    title: "Best JAMB Preparation Apps in Nigeria 2026 (Tested and Ranked)",
+    description:
+      "A straight comparison of the top JAMB prep apps and platforms in Nigeria in 2026 — what each does well, what each lacks, and which is best for serious candidates.",
+    date: "2026-06-03",
+    readingMinutes: 6,
+    keywords: [
+      "best JAMB app Nigeria 2026",
+      "JAMB CBT practice app",
+      "JAMB preparation app Nigeria",
+      "best app for JAMB 2026",
+      "JAMB past questions app",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "Preparing for JAMB UTME without a good practice app in 2026 is like training for a sprint without ever running. The CBT format means you need to practice on a screen, under time pressure, with instant feedback. Here are the apps and platforms Nigerian students are actually using — and how they compare.",
+      },
+      { type: "h2", text: "What to Look for in a JAMB Prep App" },
+      {
+        type: "ul",
+        items: [
+          "Real JAMB past questions — not reworded or guessed questions",
+          "Timed CBT mode that simulates the 2-hour JAMB exam",
+          "Instant explanations after every question — not just the correct letter",
+          "Works on low-end Android phones and poor internet connections",
+          "Progress tracking so you know exactly where you are weak",
+        ],
+      },
+      { type: "h2", text: "1. ExamBuddie (Telegram)" },
+      {
+        type: "p",
+        text: "ExamBuddie runs entirely inside Telegram, meaning no app download is needed — if you already have Telegram (and virtually every Nigerian student does), you are ready to start. It has 50,000+ real WAEC, JAMB, and NECO past questions from 2010 to 2026, with detailed explanations for every answer.",
+      },
+      {
+        type: "ul",
+        items: [
+          "✅ Actual JAMB past questions with full explanations",
+          "✅ Timed CBT mock exams (50 questions, 60 minutes)",
+          "✅ Spaced repetition — wrong answers resurface until you master them",
+          "✅ Works on any phone with Telegram, even 2G/3G connections",
+          "✅ Daily practice streaks and weekly leaderboard for motivation",
+          "✅ Formula sheets for Physics, Chemistry, Mathematics, and more",
+          "✅ Free to start — 5 questions per day free, unlimited with Premium (₦1,500/month)",
+        ],
+      },
+      { type: "h2", text: "2. Myschool.ng" },
+      {
+        type: "p",
+        text: "Myschool.ng has a large question bank and is web-based. It is a solid option for students who prefer studying on a browser. The site has WAEC, JAMB, and NECO questions going back many years. The main limitation is that it requires a good data connection and can be slow on older Android devices.",
+      },
+      { type: "h2", text: "3. Passnownow" },
+      {
+        type: "p",
+        text: "Passnownow offers video lessons alongside past questions, which makes it useful for students who need concept explanations before practice. However, it is heavier on data and requires more phone storage than most alternatives.",
+      },
+      { type: "h2", text: "4. CBT Practice on JAMB's Official Portal" },
+      {
+        type: "p",
+        text: "JAMB itself provides a free CBT practice platform at jamb.gov.ng. It is worth using at least once to familiarise yourself with the official interface — the font size, button layout, and timer look exactly as they will on exam day. However, the question bank is limited and it lacks explanations.",
+      },
+      {
+        type: "callout",
+        text: "Verdict: Use ExamBuddie daily for volume practice and spaced repetition. Use JAMB's official portal for at least 2 full timed mock sessions to familiarise yourself with the exact exam interface.",
+      },
+      { type: "h2", text: "How to Make the Most of Any JAMB App" },
+      {
+        type: "ol",
+        items: [
+          "Practice at least 40 questions daily from now until your exam date",
+          "Always read the explanation — even when you got the answer right",
+          "Simulate real exam conditions at least twice a week: 50 questions, 2 hours, no interruptions",
+          "Track your accuracy by subject and focus time on your weakest area",
+          "In the final week, do only past questions — no new theory",
+        ],
+      },
+      {
+        type: "cta",
+        text: "Start practicing JAMB past questions free on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "How to Score 300+ in JAMB 2026", href: "/blog/how-to-score-300-in-jamb-utme-2026" },
+          { text: "JAMB Cut-Off Marks 2026", href: "/blog/jamb-score-university-admission-2026" },
+          { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
+          { text: "JAMB English Past Questions", href: "/jamb/english" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "waec-chemistry-past-questions",
+    title: "WAEC Chemistry Past Questions: High-Frequency Topics and How to Score A",
+    description:
+      "The most important WAEC Chemistry topics from 15 years of past questions — what appears every year, what to skip, and how to study for Paper 1 and Paper 2.",
+    date: "2026-06-05",
+    readingMinutes: 6,
+    keywords: [
+      "WAEC chemistry past questions",
+      "WAEC chemistry topics 2026",
+      "how to pass WAEC chemistry",
+      "WAEC chemistry study guide",
+      "WAEC chemistry objective questions",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "WAEC Chemistry is one of the most important papers for science students — it is required for admission into Medicine, Pharmacy, Biochemistry, Chemical Engineering, and most sciences. The good news is that Chemistry past questions repeat heavily, and a student who has drilled the top topics will recognise the majority of exam questions.",
+      },
+      { type: "h2", text: "Topics That Appear in Almost Every WAEC Chemistry Sitting" },
+      {
+        type: "ul",
+        items: [
+          "Mole concept and stoichiometry — always 3–5 questions",
+          "Electrolysis — anode/cathode products, Faraday's laws",
+          "Organic chemistry — hydrocarbons, functional groups, IUPAC naming",
+          "Acids, bases, and salts — pH, neutralisation, titration calculations",
+          "Periodic table trends — atomic radius, ionisation energy, electronegativity",
+          "Kinetics and equilibrium — Le Chatelier's principle, rate factors",
+          "Gases — Boyle's law, Charles' law, ideal gas law PV=nRT",
+          "Electrochemistry — standard electrode potentials, cell notation",
+          "Nuclear chemistry — radioactive decay, half-life calculations",
+          "Water of crystallisation and solubility",
+        ],
+      },
+      { type: "h2", text: "How WAEC Chemistry Papers Are Structured" },
+      {
+        type: "p",
+        text: "WAEC Chemistry has three papers. Paper 1 is 50 multiple-choice questions in 50 minutes. Paper 2 is theory (essay and structured questions) — 2 hours 40 minutes. Paper 3 is a practical examination. Papers 1 and 2 together make up 80% of your final grade; Paper 3 is 20%.",
+      },
+      {
+        type: "callout",
+        text: "Paper 1 strategy: answer all 50 questions — there is no negative marking. Skip difficult questions first, secure easy marks, then return. Most Paper 1 questions test definitions, equations, and mole calculations.",
+      },
+      { type: "h2", text: "Mole Calculations — The Highest-Yield Topic" },
+      {
+        type: "p",
+        text: "Mole calculations appear in virtually every WAEC Chemistry paper, often in both the objective and theory sections. The three key formulas to master are: n = m/M (moles from mass), n = CV (moles from concentration and volume), and n = V/22.4 (moles from gas volume at STP). Practice calculating empirical formulas, percentage composition, and limiting reagent problems from past questions.",
+      },
+      { type: "h2", text: "Organic Chemistry — Guaranteed 8–12 Marks" },
+      {
+        type: "p",
+        text: "Organic chemistry questions test nomenclature, reactions, and functional group identification. WAEC expects students to name compounds correctly using IUPAC rules, write balanced equations for reactions like esterification, fermentation, and cracking, and identify functional groups from structural formulas. Practice drawing and naming at least 5 examples of each major functional group.",
+      },
+      { type: "h2", text: "How to Approach Paper 2 (Theory)" },
+      {
+        type: "ul",
+        items: [
+          "Section A is compulsory — attempt all questions, show all working for calculations",
+          "Section B: choose 3 from 5 — pick the topics you are most confident in",
+          "State definitions precisely — examiners have a marking scheme with specific key words",
+          "For electrochemistry questions, always draw and label the cell diagram",
+          "For kinetics, always state the specific factors and explain the mechanism (collision theory)",
+        ],
+      },
+      {
+        type: "cta",
+        text: "Practice WAEC Chemistry past questions free on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "WAEC Chemistry Past Questions", href: "/waec/chemistry" },
+          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
+          { text: "WAEC Biology Past Questions", href: "/blog/waec-biology-past-questions-topics-and-tips" },
+          { text: "WAEC Physics Past Questions", href: "/blog/waec-physics-past-questions" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "waec-physics-past-questions",
+    title: "WAEC Physics Past Questions: Most Important Topics and How to Score High",
+    description:
+      "Analysis of WAEC Physics from 2010–2025: which topics appear every year, how to tackle calculations, and a Paper 1 and Paper 2 strategy for scoring A or B.",
+    date: "2026-06-06",
+    readingMinutes: 6,
+    keywords: [
+      "WAEC physics past questions",
+      "WAEC physics topics 2026",
+      "how to pass WAEC physics",
+      "WAEC physics study guide",
+      "WAEC physics objective questions",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "Physics is the most calculation-heavy WAEC science subject — and for many students, the most feared. But the questions repeat remarkably predictable patterns. A student who has practiced 400+ WAEC Physics past questions from 2010 to 2025 will recognise 70–80% of what appears on exam day.",
+      },
+      { type: "h2", text: "Topics That Appear in Almost Every WAEC Physics Sitting" },
+      {
+        type: "ul",
+        items: [
+          "Motion — equations of motion (v=u+at, s=ut+½at², v²=u²+2as), projectile, circular motion",
+          "Forces — Newton's laws, momentum, impulse, friction, tension",
+          "Energy — work, power, kinetic and potential energy, efficiency",
+          "Waves — speed, frequency, wavelength (v=fλ), reflection, refraction, Snell's law",
+          "Electricity — Ohm's law (V=IR), series/parallel circuits, power (P=IV=I²R)",
+          "Magnetism — electromagnetic induction, transformers, the motor principle",
+          "Heat — specific heat capacity, latent heat, gas laws",
+          "Light — lenses, mirrors, ray diagrams, magnification",
+          "Modern physics — photoelectric effect, nuclear reactions, radioactive decay",
+          "Measurement — significant figures, scientific notation, unit conversions",
+        ],
+      },
+      { type: "h2", text: "Paper 1 Strategy (50 Multiple-Choice Questions)" },
+      {
+        type: "p",
+        text: "WAEC Physics Paper 1 is 50 questions in 50 minutes. The key to scoring well is recognising question types from practice rather than deriving from first principles under time pressure. Most Paper 1 questions test: formula substitution and calculation, definition of terms, unit identification, and qualitative understanding of concepts.",
+      },
+      {
+        type: "callout",
+        text: "For Paper 1: whenever you see a physics calculation question, write down the formula first, then substitute. This single habit prevents most arithmetic mistakes and saves time.",
+      },
+      { type: "h2", text: "Motion and Forces — Always Worth 10–15 Marks" },
+      {
+        type: "p",
+        text: "The equations of motion (SUVAT) appear in every WAEC Physics sitting. Master the four equations, know which to use when (depends on which variable is missing), and practice at least 30 past questions on motion. Common scenarios: object dropped from height, car braking, projectile at angle, body on inclined plane.",
+      },
+      { type: "h2", text: "Electricity — 8–12 Marks in Every Paper" },
+      {
+        type: "p",
+        text: "Electricity questions test Ohm's law, resistor combinations, power calculations, and reading circuit diagrams. For series circuits: total resistance = R1+R2+R3, current is the same throughout. For parallel circuits: 1/R = 1/R1 + 1/R2, voltage is the same across each branch. Practice at least 5 full circuit problems from past questions.",
+      },
+      { type: "h2", text: "Paper 2 (Theory) Approach" },
+      {
+        type: "ul",
+        items: [
+          "Section A has short compulsory questions — answer all, show every step in calculations",
+          "Section B: choose 4 from 6 — pick the topics where you have practiced the most past questions",
+          "Define each term precisely before calculating — marks are awarded for definitions",
+          "Draw labelled diagrams for optics, electricity circuits, and wave questions",
+          "State the formula, substitute with units, calculate — always write SI units in your answer",
+        ],
+      },
+      {
+        type: "cta",
+        text: "Practice WAEC Physics past questions free on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "WAEC Physics Past Questions", href: "/waec/physics" },
+          { text: "WAEC Chemistry Past Questions", href: "/blog/waec-chemistry-past-questions" },
+          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
+          { text: "How to Prepare for WAEC 2026", href: "/blog/waec-2026-how-to-prepare" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "how-to-pass-waec-without-teacher",
+    title: "How to Pass WAEC Without Attending Lesson (Complete Self-Study Guide)",
+    description:
+      "A practical guide to passing WAEC 2026 without a private lesson teacher — the tools, schedule, and strategies that self-study students use to score A and B grades.",
+    date: "2026-06-08",
+    readingMinutes: 7,
+    keywords: [
+      "how to pass WAEC without lesson",
+      "WAEC self study guide",
+      "pass WAEC at home Nigeria",
+      "WAEC home study 2026",
+      "prepare for WAEC without teacher",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "Thousands of Nigerian students pass WAEC every year without attending a single private lesson. What they share is not a secret teacher — it is a structured daily routine, the right resources, and consistent practice. This guide gives you exactly that.",
+      },
+      { type: "h2", text: "Why Self-Study Works for WAEC" },
+      {
+        type: "p",
+        text: "WAEC is a past-question exam. The syllabus has not changed significantly in 20 years, and the types of questions that appear every year are predictable. A dedicated student with access to good past question resources can prepare just as effectively as one attending expensive lesson classes — often more effectively, because self-study forces active recall rather than passive listening.",
+      },
+      {
+        type: "callout",
+        text: "The honest truth: a student who practices 30 past questions daily with full explanations will outperform a student who attends lesson three times a week but does no practice at home.",
+      },
+      { type: "h2", text: "What You Actually Need" },
+      {
+        type: "ul",
+        items: [
+          "A smartphone with Telegram (for ExamBuddie's past questions)",
+          "WAEC syllabus — downloadable free from waecdirect.org",
+          "A notebook for formulas, definitions, and weak topics",
+          "Your school textbooks — New School Chemistry, Further Maths Project, Comprehensive Biology, etc.",
+          "A study timetable — 3–4 hours of focused daily study minimum",
+        ],
+      },
+      { type: "h2", text: "Daily Self-Study Routine That Actually Works" },
+      {
+        type: "ol",
+        items: [
+          "Morning (45 min): Review notes from yesterday. Answer 15 past questions on that topic.",
+          "Afternoon (90 min): Study one new topic from your textbook. Take your own short notes.",
+          "Evening (45 min): Answer 20 past questions on the new topic. Read every explanation.",
+          "Night (15 min): Review your wrong answers from today. Mark the topic for extra drill.",
+        ],
+      },
+      { type: "h2", text: "The Subject Priority Order" },
+      {
+        type: "p",
+        text: "Not all subjects deserve equal time. Prioritise based on: how many questions appear in the exam, how much your score depends on it for university admission, and how weak you currently are in it.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Tier 1 (daily): Mathematics, English Language — compulsory for all universities",
+          "Tier 2 (5× per week): Your strongest science/arts subjects — these are your university admission subjects",
+          "Tier 3 (3× per week): Remaining subjects — aim for at minimum a credit (C6)",
+          "Tier 4 (1× per week): Your strongest electives — maintain, don't neglect",
+        ],
+      },
+      { type: "h2", text: "How to Use Past Questions Effectively" },
+      {
+        type: "p",
+        text: "Past questions are not just a revision tool — they are your primary study material. After covering a topic in your textbook, immediately practice at least 20 past questions on that specific topic. Read the explanation for every question, including the ones you got right. The goal is to understand why an answer is correct, not just to memorise it.",
+      },
+      { type: "h2", text: "The Final 30 Days" },
+      {
+        type: "ul",
+        items: [
+          "Stop introducing new topics — only review and practice",
+          "Take 2 full timed mock exams per week (simulate actual exam conditions)",
+          "Identify your 3 weakest topics per subject and drill them intensively",
+          "Prepare your exam materials 2 days before: pens, pencils, HB for OMR sheet, ruler",
+          "Sleep 8 hours the night before each paper — fatigue kills performance",
+        ],
+      },
+      {
+        type: "cta",
+        text: "Start your WAEC self-study with free past questions on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "5 Study Habits of Top WAEC Students", href: "/blog/5-study-habits-top-waec-jamb-students" },
+          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
+          { text: "How to Pass WAEC English", href: "/blog/how-to-pass-waec-english-language" },
+          { text: "WAEC Mathematics Past Questions", href: "/waec/math" },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "jamb-score-university-admission-2026",
+    title: "JAMB Cut-Off Marks for Universities in Nigeria 2026",
+    description:
+      "JAMB UTME cut-off scores for federal, state, and private universities in Nigeria 2026 — what score you need per course, how aggregate is calculated, and how to boost your chances.",
+    date: "2026-06-10",
+    readingMinutes: 6,
+    keywords: [
+      "JAMB cut off mark 2026",
+      "JAMB score for university admission Nigeria",
+      "JAMB aggregate score 2026",
+      "JAMB score to study medicine Nigeria",
+      "university admission requirements Nigeria 2026",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "Getting a good JAMB score is only the first step — your score must meet both JAMB's minimum cut-off and your chosen institution's departmental cut-off. Here is what you need to know about cut-off marks, aggregate scores, and how to maximise your admission chances in 2026.",
+      },
+      { type: "h2", text: "JAMB National Minimum Cut-Off Marks 2026" },
+      {
+        type: "p",
+        text: "JAMB sets a national minimum for each institution category. These are the floor — institutions can (and do) set higher departmental cut-offs.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Federal Universities: 140 (general minimum) — competitive courses often require 200+",
+          "State Universities: 130",
+          "Private Universities: 100",
+          "Monotechnics / Colleges of Education: 100",
+          "Polytechnics: 100",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Important: the national minimum is not what you need to get in. For competitive courses at top institutions, you need 250–300+. The national minimum just makes you eligible to apply.",
+      },
+      { type: "h2", text: "What Score Do You Need by Course?" },
+      {
+        type: "ul",
+        items: [
+          "Medicine & Surgery (UNILAG, UI, ABU): 280–320+",
+          "Law (UNILAG, OAU, UI): 260–300+",
+          "Engineering (UNILAG, UI, FUTO): 240–280+",
+          "Computer Science (federal universities): 220–260+",
+          "Accounting / Business Admin: 200–240+",
+          "Education courses: 160–200+",
+          "Agriculture / Forestry: 150–180+",
+          "Arts & Humanities: 150–180+",
+        ],
+      },
+      { type: "h2", text: "How Aggregate Score Is Calculated" },
+      {
+        type: "p",
+        text: "Most universities use an aggregate formula that combines your JAMB score, O'Level results, and Post-UTME score. The exact weighting varies by institution — UNILAG uses 60% Post-UTME + 40% O'Level, while UI and OAU have their own formulas. Your JAMB score is used to qualify you for Post-UTME, not directly in the aggregate.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Step 1: JAMB score must meet the institution's cut-off to be invited for Post-UTME",
+          "Step 2: Post-UTME score is combined with O'Level grades using the institution's formula",
+          "Step 3: Final aggregate score determines admission — not JAMB alone",
+          "Result: You can score 280 in JAMB but not gain admission if your Post-UTME or O'Level is weak",
+        ],
+      },
+      { type: "h2", text: "How to Improve Your Chances" },
+      {
+        type: "ol",
+        items: [
+          "Score as high as possible in JAMB — aim 30+ above your target institution's cut-off",
+          "Get strong O'Level grades — 5 As and Bs are more competitive than 5 Cs",
+          "Prepare separately for Post-UTME — most institutions test the same subjects as JAMB",
+          "Apply to three institutions: your dream school, a realistic school, and a safety school",
+          "Check your chosen department's previous admission cut-off on the institution's portal",
+        ],
+      },
+      { type: "h2", text: "Preparing for Both JAMB and Post-UTME" },
+      {
+        type: "p",
+        text: "Post-UTME tests the same four subjects as JAMB (Use of English + 3 course-related subjects) in a shorter format. The best preparation for Post-UTME is the same past question practice you do for JAMB. Students who score high in JAMB because they practiced consistently tend to score high in Post-UTME for the same reason — they have seen and understood a wide range of question types.",
+      },
+      {
+        type: "cta",
+        text: "Practice JAMB past questions free on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "How to Score 300+ in JAMB 2026", href: "/blog/how-to-score-300-in-jamb-utme-2026" },
+          { text: "Best JAMB Prep Apps 2026", href: "/blog/best-jamb-app-nigeria-2026" },
+          { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
+          { text: "JAMB English Past Questions", href: "/jamb/english" },
         ],
       },
     ],
