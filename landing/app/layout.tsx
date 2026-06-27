@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
     description:
-      "Practice 41,000+ past WAEC, JAMB and NECO questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
+      "Practice 50,000+ past WAEC, JAMB and NECO questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
     type: "website",
     url: "https://exambuddie.app",
     siteName: "ExamBuddie",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
     description:
-      "Practice 41,000+ past WAEC, JAMB and NECO questions directly in Telegram. Free to start.",
+      "Practice 50,000+ past WAEC, JAMB and NECO questions directly in Telegram. Free to start.",
     images: ["/opengraph-image"],
   },
 };
