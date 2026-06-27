@@ -1,6 +1,6 @@
 # 🎓 ExamBuddie — WAEC, JAMB & NECO Exam Prep on Telegram
 
-> Practice 41,000+ real past questions with instant explanations and progress tracking — right inside Telegram.
+> Practice 50,000+ real past questions with instant explanations and progress tracking — right inside Telegram.
 
 ---
 
@@ -114,19 +114,24 @@ npm run dev          # runs at localhost:3000
 | Command | Description |
 |---------|-------------|
 | `/start` | Onboarding or main menu |
-| `/practice` | Start a practice session |
+| `/practice` | Start a practice session (year picker, multi-subject for premium) |
 | `/quiz` | 50-question timed CBT exam — 60 min (premium) |
+| `/mock` | Full mock exam (simulates real WAEC/JAMB/NECO experience) |
 | `/drill` | Drill your weakest topics |
+| `/review` | Spaced repetition — review cards due today |
 | `/revision` | Practise only questions you previously got wrong |
 | `/bookmarks` | View and practise your saved questions |
+| `/formula` | Quick-access formula sheets (Physics, Chemistry, Maths, Further Maths, Biology, Economics, Government) |
+| `/timetable` | 2026 exam timetable with countdown per subject (WAEC/NECO/JAMB) |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
-| `/invite` | Get your referral link — invite 2 friends → 3 days Premium free + referral leaderboard |
-| `/leaderboard` | Weekly accuracy leaderboard (top 10) — view last week's results too |
-| `/stats` | View accuracy, daily target progress, exam countdown, and weak topic tip |
-| `/progress` | Quick snapshot: streak, accuracy, subject coverage + shareable progress card |
+| `/invite` | Referral link — invite 2 friends → 3 days Premium free |
+| `/leaderboard` | Weekly accuracy leaderboard (top 10) + last week's results |
+| `/stats` | Accuracy, daily target, exam countdown, weak topic tip |
+| `/progress` | Streak, subject coverage bars, referral status + shareable card |
+| `/badges` | Achievement badges (streak milestones, accuracy, volume) |
 | `/subscribe` | Upgrade to Premium |
-| `/settings` | Change exam type, subjects, phone number, or daily reminder time |
-| `/support` | Report a bug, request your data, or delete your account |
+| `/settings` | Exam type, subjects, phone number, daily reminder time |
+| `/support` | Report a bug, request data, or delete your account |
 | `/app` | Open the ExamBuddie Web App |
 | `/stop` | End current session |
 | `/help` | List all commands |
@@ -139,31 +144,38 @@ npm run dev          # runs at localhost:3000
 |---------|------|---------|
 | 14-day Premium trial on first signup | ✅ | — |
 | Questions per day | 5 (configurable) | Unlimited |
-| Practice mode | ✅ | ✅ |
-| Year picker in practice | ✅ | ✅ |
+| Practice mode (with year picker 2010–2026) | ✅ | ✅ |
+| Multi-subject practice session | ❌ | ✅ |
 | CBT mode (50Q, 60 min) | ❌ | ✅ |
+| Mock exam | ❌ | ✅ |
 | Topic drill | ❌ | ✅ |
 | Per-question timer | ❌ | ✅ |
-| Spaced repetition (wrong questions resurface) | ❌ | ✅ |
-| Revision mode (/revision — practise your mistakes) | ✅ | ✅ |
-| Bookmark questions (⭐ Save + /bookmarks) | ✅ | ✅ |
-| Daily auto-challenge (first question sent at reminder hour) | ✅ | ✅ |
-| Daily target progress in /stats (X/10 today) | ✅ | ✅ |
+| Spaced repetition review (/review) | ❌ | ✅ |
+| Post-quiz wrong answer walkthrough | ❌ | ✅ |
+| Revision mode (/revision) | ✅ | ✅ |
+| Bookmark questions (/bookmarks) | ✅ | ✅ |
+| Formula sheets (/formula) | ✅ | ✅ |
+| Exam timetable with countdown (/timetable) | ✅ | ✅ |
+| Question of the Day (QOTD broadcast) | ✅ | ✅ |
+| Daily auto-challenge at reminder hour | ✅ | ✅ |
+| Daily target progress in /stats | ✅ | ✅ |
 | Shareable quiz result card after CBT | ❌ | ✅ |
 | Streak freeze (once/week) | ❌ | ✅ |
 | Daily reminder opt-in (custom WAT hour) | ✅ | ✅ |
-| Progress tracking (/progress + shareable badge card) | ✅ | ✅ |
+| Subject coverage bars in /progress | ✅ | ✅ |
+| Shareable progress card | ✅ | ✅ |
+| Achievement badges (/badges) | ✅ | ✅ |
 | Exam countdown in /stats | ✅ | ✅ |
-| Score tip in /stats (drill weakest topic) | ✅ | ✅ |
-| Weak topic detection | ✅ | ✅ |
-| Weekly leaderboard + previous weeks archive | ✅ | ✅ |
+| Weak topic detection + drill tip | ✅ | ✅ |
+| Topic mastery breakdown | ✅ | ✅ |
+| Weekly leaderboard + archive | ✅ | ✅ |
 | Weekly performance reports | ❌ | ✅ |
 | Milestone celebrations | ✅ | ✅ |
 | Challenge Mode — join a room | ✅ | ✅ |
 | Challenge Mode — create a room | ❌ | ✅ |
-| Referral rewards (/invite) — invite 2 friends → 3 days free | ✅ | ✅ |
+| 1v1 Duel | ❌ | ✅ |
+| Referral rewards (/invite) — 2 friends → 3 days free | ✅ | ✅ |
 | Referral leaderboard | ✅ | ✅ |
-| "Beat your inviter" onboarding hook | ✅ | ✅ |
 
 **Pricing:** ₦1,500/month · ₦3,500/term (3 months) · ₦12,000/year
 
@@ -171,15 +183,27 @@ npm run dev          # runs at localhost:3000
 
 ## Admin API Endpoints
 
-All endpoints require HTTP Basic Auth (`ADMIN_USERNAME` / `ADMIN_PASSWORD`).
+All endpoints require a JWT Bearer token (obtained via `POST /api/admin/login`).
 
 | Endpoint | Description |
 |----------|-------------|
-| `GET /api/admin/stats` | Total users, premium count, attempts today, revenue |
-| `GET /api/admin/acquisition` | Signup breakdown by source (landing, organic, referral) |
+| `POST /api/admin/login` | Authenticate, returns JWT |
+| `GET /api/admin/stats` | Users, premium count, attempts today, revenue |
+| `GET /api/admin/acquisition` | Signup breakdown by source |
+| `GET /api/admin/flags` | Open flagged explanations |
 | `GET /api/admin/flags/top-questions` | Most-flagged questions (top 20) |
-| `GET /api/admin/flags` | All open flagged explanations |
-| `POST /api/admin/flags/:id/resolve` | Mark a flag as resolved |
+| `POST /api/admin/flags/:id/resolve` | Resolve a flag (optionally save edited explanation/text) |
+| `GET /api/admin/questions` | Paginated question list with search + filters |
+| `PUT /api/admin/questions/:id` | Edit question text, options, correct answer, explanation |
+| `PATCH /api/admin/questions/:id/active` | Toggle question active/inactive |
+| `POST /api/admin/questions/:id/generate-explanation` | AI-generate explanation via Claude API |
+| `DELETE /api/admin/questions/:id` | Delete a question |
+| `GET /api/admin/users` | Paginated user list with search |
+| `PUT /api/admin/users/:telegramId/plan` | Change user plan (free/premium) + expiry |
+| `DELETE /api/admin/users` | Delete users by ID list or search filter |
+| `GET /api/admin/analytics/hard-questions` | Questions with ≥10 attempts and ≥70% wrong rate |
+| `POST /api/admin/broadcast` | Send message to all/waec/jamb/neco/premium/free users |
+| `POST /api/admin/dm` | Send direct message to a single user by telegram_id |
 
 ---
 
