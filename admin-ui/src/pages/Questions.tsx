@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage, toggleQuestionActive, generateExplanation } from "../api";
-import type { Question, PaginatedResponse } from "../types";
+import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage, toggleQuestionActive, generateExplanation, bulkImportQuestions } from "../api";
+import type { Question, PaginatedResponse, BulkImportResult } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
 import Badge from "../components/Badge";
@@ -82,6 +82,10 @@ export default function Questions() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<BulkImportResult | null>(null);
 
   // Update a single filter key; resets page to 1 unless changing the page itself
   function setFilter(key: string, value: string, keepPage = false) {
@@ -225,10 +229,78 @@ export default function Questions() {
 
   return (
     <div className="space-y-5 p-6">
-      <div>
-        <h1 className="font-display text-xl font-bold text-white">Questions</h1>
-        <p className="mt-0.5 text-sm text-muted">Browse, edit and manage exam questions</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-display text-xl font-bold text-white">Questions</h1>
+          <p className="mt-0.5 text-sm text-muted">Browse, edit and manage exam questions</p>
+        </div>
+        <button
+          onClick={() => { setShowImport(true); setImportResult(null); setImportFile(null); }}
+          className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:text-white"
+        >
+          ⬆ Import CSV
+        </button>
       </div>
+
+      {showImport && (
+        <Modal title="Bulk Import Questions" onClose={() => setShowImport(false)}>
+          <div className="space-y-4">
+            <div className="rounded-lg border border-border bg-surface2 p-3 text-xs text-muted space-y-1">
+              <p className="font-semibold text-white">Required CSV columns:</p>
+              <p>exam_type, subject, year, question_text, option_a, option_b, option_c, option_d, correct_option</p>
+              <p className="font-semibold text-white mt-2">Optional:</p>
+              <p>option_e, topic, explanation</p>
+              <p className="mt-2 text-amber-400">Max 500 rows per import. First row must be the header.</p>
+            </div>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={(e) => setImportFile(e.target.files?.[0] ?? null)}
+              className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white file:mr-3 file:rounded file:border-0 file:bg-accent file:px-2 file:py-1 file:text-xs file:text-white"
+            />
+            {importResult && (
+              <div className={`rounded-lg border p-3 text-sm ${importResult.skipped > 0 ? "border-amber-500/30 bg-amber-500/10" : "border-accent/30 bg-accent/10"}`}>
+                <p className="font-medium text-white">Import complete</p>
+                <p className="text-xs text-muted mt-1">✅ {importResult.inserted} inserted · ⚠ {importResult.skipped} skipped</p>
+                {importResult.errors.length > 0 && (
+                  <div className="mt-2 space-y-0.5">
+                    {importResult.errors.map((e, i) => <p key={i} className="text-xs text-red-400">{e}</p>)}
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowImport(false)} className="px-4 py-2 text-sm text-muted hover:text-white">Cancel</button>
+              <button
+                onClick={async () => {
+                  if (!importFile) return;
+                  setImporting(true);
+                  try {
+                    const text = await importFile.text();
+                    const lines = text.trim().split('\n');
+                    const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, ''));
+                    const rows = lines.slice(1).map((line) => {
+                      const vals = line.split(',').map((v) => v.trim().replace(/^"|"$/g, ''));
+                      return Object.fromEntries(headers.map((h, i) => [h, vals[i] ?? '']));
+                    });
+                    const result = await bulkImportQuestions(rows);
+                    setImportResult(result);
+                    if (result.inserted > 0) load();
+                  } catch (e: unknown) {
+                    alert(e instanceof Error ? e.message : "Import failed");
+                  } finally {
+                    setImporting(false);
+                  }
+                }}
+                disabled={!importFile || importing}
+                className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+              >
+                {importing ? <><Spinner size="sm" /> Importing...</> : "Import"}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">

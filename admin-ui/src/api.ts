@@ -7,6 +7,11 @@ import type {
   Subscription,
   Analytics,
   PaginatedResponse,
+  GrowthAnalytics,
+  RetentionData,
+  FunnelData,
+  BroadcastLog,
+  BulkImportResult,
 } from "./types";
 
 const BASE = (import.meta.env.VITE_API_URL ?? "") + "/api/admin";
@@ -273,4 +278,38 @@ export async function searchUsers(query: string): Promise<UserSearchResult[]> {
 
 export async function sendDM(telegramId: number, message: string): Promise<void> {
   await req<{ ok: boolean }>("POST", "/dm", { telegram_id: telegramId, message });
+}
+
+export async function getGrowthAnalytics(): Promise<GrowthAnalytics> {
+  return cachedReq<GrowthAnalytics>("/analytics/growth");
+}
+
+export async function getRetention(): Promise<RetentionData> {
+  return cachedReq<RetentionData>("/analytics/retention");
+}
+
+export async function getFunnel(): Promise<FunnelData> {
+  return cachedReq<FunnelData>("/analytics/funnel");
+}
+
+export async function getBroadcastHistory(): Promise<BroadcastLog[]> {
+  const data = await req<{ history: BroadcastLog[] }>("GET", "/broadcast/history");
+  return data.history;
+}
+
+export async function exportUsersCSV(): Promise<void> {
+  const token = getToken();
+  const url = `${BASE}/users/export`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (!res.ok) throw new Error("Export failed");
+  const blob = await res.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `users-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+export async function bulkImportQuestions(questions: unknown[]): Promise<BulkImportResult> {
+  return req<BulkImportResult>("POST", "/questions/bulk-import", { questions });
 }

@@ -14,6 +14,7 @@ import {
   Menu,
   Zap,
   Trophy,
+  CalendarDays,
 } from "lucide-react";
 import Modal from "./Modal";
 import { changePassword } from "../api";
@@ -38,6 +39,7 @@ const NAV_ITEMS: NavItem[] = [
   { path: "/analytics",     label: "Analytics",     icon: <BarChart2 size={16} />       },
   { path: "/leaderboard",   label: "Leaderboard",   icon: <Trophy size={16} />          },
   { path: "/broadcast",     label: "Broadcast",     icon: <Megaphone size={16} />       },
+  { path: "/qotd",          label: "QOTD",          icon: <CalendarDays size={16} />     },
 ];
 
 function ChangePasswordModal({ onClose }: { onClose: () => void }) {

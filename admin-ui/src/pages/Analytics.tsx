@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getAnalytics } from "../api";
-import type { Analytics, DailyData, SubjectData, WeakTopicData } from "../types";
+import { getAnalytics, getRetention, getFunnel } from "../api";
+import type { Analytics, DailyData, SubjectData, WeakTopicData, RetentionData, FunnelData } from "../types";
 import Spinner from "../components/Spinner";
 
 function accuracyColor(acc: number): string {
@@ -48,14 +48,18 @@ function BarChart({ data }: BarChartProps) {
 
 export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
+  const [retention, setRetention] = useState<RetentionData | null>(null);
+  const [funnel, setFunnel] = useState<FunnelData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getAnalytics();
+      const [data, ret, fun] = await Promise.all([getAnalytics(), getRetention(), getFunnel()]);
       setAnalytics(data);
+      setRetention(ret);
+      setFunnel(fun);
       setError(null);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to load analytics");
@@ -89,6 +93,7 @@ export default function AnalyticsPage() {
   if (!analytics) return null;
 
   const totalAttempts = analytics.subjects.reduce((sum, s) => sum + Number(s.attempts), 0);
+  const conversionRate = funnel ? Math.round((Number(funnel.premium_users) / Math.max(Number(funnel.total_users), 1)) * 100) : 0;
 
   return (
     <div className="space-y-6 p-6">
@@ -119,6 +124,76 @@ export default function AnalyticsPage() {
           </div>
         ))}
       </div>
+
+      {/* Retention */}
+      {retention && (
+        <div className="rounded-xl border border-border bg-surface p-5">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-white">User Retention (60-day cohort)</h2>
+            <p className="mt-0.5 text-xs text-muted">% of new users who returned on day 1 / 7 / 30</p>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { label: "D1 Retention", rate: retention.d1_rate, count: retention.d1, color: retention.d1_rate >= 20 ? "text-accent" : retention.d1_rate >= 10 ? "text-amber-400" : "text-red-400" },
+              { label: "D7 Retention", rate: retention.d7_rate, count: retention.d7, color: retention.d7_rate >= 10 ? "text-accent" : retention.d7_rate >= 5 ? "text-amber-400" : "text-red-400" },
+              { label: "D30 Retention", rate: retention.d30_rate, count: retention.d30, color: retention.d30_rate >= 5 ? "text-accent" : retention.d30_rate >= 2 ? "text-amber-400" : "text-red-400" },
+            ].map(({ label, rate, count, color }) => (
+              <div key={label} className="text-center">
+                <p className="text-xs text-muted mb-1">{label}</p>
+                <p className={`font-display text-3xl font-bold ${color}`}>{rate}%</p>
+                <p className="text-xs text-muted mt-1">{count} / {retention.total_users} users</p>
+                <div className="mt-2 h-1.5 w-full rounded-full bg-surface2">
+                  <div className={`h-1.5 rounded-full ${rate >= 10 ? "bg-accent" : rate >= 5 ? "bg-amber-400" : "bg-red-400"}`} style={{ width: `${Math.min(rate * 3, 100)}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Conversion Funnel */}
+      {funnel && (
+        <div className="rounded-xl border border-border bg-surface p-5">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-white">Conversion Funnel</h2>
+            <p className="mt-0.5 text-xs text-muted">Free → Premium conversion and churn</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div>
+              <p className="text-xs text-muted mb-1">Total Users</p>
+              <p className="font-display text-2xl font-bold text-white">{Number(funnel.total_users).toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted mb-1">Active Free (7d)</p>
+              <p className="font-display text-2xl font-bold text-white">{Number(funnel.active_free).toLocaleString()}</p>
+              <p className="text-xs text-muted mt-0.5">potential converts</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted mb-1">Premium</p>
+              <p className="font-display text-2xl font-bold text-accent">{Number(funnel.premium_users).toLocaleString()}</p>
+              <p className="text-xs text-muted mt-0.5">{conversionRate}% conversion</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted mb-1">Churned (30d)</p>
+              <p className={`font-display text-2xl font-bold ${Number(funnel.churned_30d) > 0 ? "text-red-400" : "text-accent"}`}>
+                {Number(funnel.churned_30d).toLocaleString()}
+              </p>
+              <p className="text-xs text-muted mt-0.5">MRR: ₦{Number(funnel.mrr).toLocaleString()}</p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="flex h-2 w-full overflow-hidden rounded-full bg-surface2">
+              <div className="bg-accent" style={{ width: `${conversionRate}%` }} title={`${conversionRate}% premium`} />
+              <div className="bg-amber-400/60" style={{ width: `${Math.round((Number(funnel.active_free) / Math.max(Number(funnel.total_users), 1)) * 100)}%` }} title="active free" />
+            </div>
+            <div className="mt-1 flex gap-4 text-xs text-muted">
+              <span><span className="inline-block h-2 w-2 rounded-sm bg-accent mr-1" />Premium {conversionRate}%</span>
+              <span><span className="inline-block h-2 w-2 rounded-sm bg-amber-400/60 mr-1" />Active free</span>
+              <span><span className="inline-block h-2 w-2 rounded-sm bg-surface2 mr-1" />Inactive</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Content Health */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

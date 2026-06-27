@@ -852,7 +852,223 @@ export default function createServer(bot: any) {
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
 
+    await db.query(
+      `INSERT INTO broadcast_log (message, target, sent, failed, total) VALUES ($1, $2, $3, $4, $5)`,
+      [message, target, sent, failed, total]
+    );
+
     res.json({ sent, failed, total });
+  });
+
+  // ── GET /api/admin/broadcast/history ───────────────────────────────────────
+  app.get('/api/admin/broadcast/history', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(
+      `SELECT id, message, target, sent, failed, total, sent_at
+       FROM broadcast_log ORDER BY sent_at DESC LIMIT 50`
+    );
+    res.json({ history: rows });
+  });
+
+  // ── GET /api/admin/analytics/growth ────────────────────────────────────────
+  app.get('/api/admin/analytics/growth', adminAuth, async (_req: Request, res: Response) => {
+    const [usersResult, revenueResult, examBreakdownResult] = await Promise.all([
+      db.query(`
+        SELECT
+          DATE(joined_at) as date,
+          COUNT(*) as new_users,
+          COUNT(CASE WHEN plan = 'premium' THEN 1 END) as new_premium
+        FROM users
+        WHERE joined_at >= NOW() - INTERVAL '30 days'
+        GROUP BY DATE(joined_at)
+        ORDER BY date ASC
+      `),
+      db.query(`
+        SELECT
+          DATE(started_at) as date,
+          COUNT(*) as subs,
+          SUM(amount_ngn) as revenue_ngn
+        FROM subscriptions
+        WHERE started_at >= NOW() - INTERVAL '30 days'
+          AND status = 'active'
+        GROUP BY DATE(started_at)
+        ORDER BY date ASC
+      `),
+      db.query(`
+        SELECT
+          COALESCE(exam_type, 'unset') as exam_type,
+          COUNT(*) as users,
+          COUNT(CASE WHEN plan = 'premium' THEN 1 END) as premium
+        FROM users
+        GROUP BY exam_type
+        ORDER BY users DESC
+      `),
+    ]);
+    res.json({
+      userGrowth: usersResult.rows,
+      revenueGrowth: revenueResult.rows,
+      examBreakdown: examBreakdownResult.rows,
+    });
+  });
+
+  // ── GET /api/admin/analytics/retention ─────────────────────────────────────
+  app.get('/api/admin/analytics/retention', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      WITH cohort AS (
+        SELECT id, joined_at::date AS join_date FROM users
+        WHERE joined_at >= NOW() - INTERVAL '60 days'
+      ),
+      activity AS (
+        SELECT DISTINCT user_id, attempted_at::date AS active_date FROM attempts
+      )
+      SELECT
+        COUNT(DISTINCT c.id) AS total_users,
+        COUNT(DISTINCT CASE
+          WHEN a1.active_date >= c.join_date + 1 AND a1.active_date <= c.join_date + 1 THEN c.id
+        END) AS d1,
+        COUNT(DISTINCT CASE
+          WHEN a7.active_date >= c.join_date + 7 AND a7.active_date <= c.join_date + 7 THEN c.id
+        END) AS d7,
+        COUNT(DISTINCT CASE
+          WHEN a30.active_date >= c.join_date + 30 AND a30.active_date <= c.join_date + 30 THEN c.id
+        END) AS d30
+      FROM cohort c
+      LEFT JOIN activity a1 ON a1.user_id = c.id AND a1.active_date = c.join_date + 1
+      LEFT JOIN activity a7 ON a7.user_id = c.id AND a7.active_date = c.join_date + 7
+      LEFT JOIN activity a30 ON a30.user_id = c.id AND a30.active_date = c.join_date + 30
+    `);
+    const r = rows[0];
+    const total = parseInt(r.total_users) || 1;
+    res.json({
+      total_users: parseInt(r.total_users),
+      d1: parseInt(r.d1),
+      d7: parseInt(r.d7),
+      d30: parseInt(r.d30),
+      d1_rate: Math.round((parseInt(r.d1) / total) * 100),
+      d7_rate: Math.round((parseInt(r.d7) / total) * 100),
+      d30_rate: Math.round((parseInt(r.d30) / total) * 100),
+    });
+  });
+
+  // ── GET /api/admin/analytics/funnel ────────────────────────────────────────
+  app.get('/api/admin/analytics/funnel', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT
+        COUNT(*) as total_users,
+        COUNT(CASE WHEN plan = 'premium' THEN 1 END) as premium_users,
+        COUNT(CASE WHEN plan = 'free' AND last_active_date >= CURRENT_DATE - 7 THEN 1 END) as active_free,
+        (SELECT COUNT(*) FROM subscriptions WHERE status = 'active') as active_subs,
+        (SELECT COUNT(*) FROM subscriptions
+          WHERE status = 'expired' AND expires_at >= NOW() - INTERVAL '30 days') as churned_30d,
+        (SELECT COALESCE(SUM(amount_ngn),0) FROM subscriptions
+          WHERE status = 'active') as mrr
+      FROM users
+    `);
+    res.json(rows[0]);
+  });
+
+  // ── GET /api/admin/users/export ─────────────────────────────────────────────
+  app.get('/api/admin/users/export', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT telegram_id, first_name, username, exam_type, plan,
+             streak, joined_at, last_active_date, daily_count
+      FROM users ORDER BY joined_at DESC
+    `);
+    const header = 'telegram_id,first_name,username,exam_type,plan,streak,joined_at,last_active_date,daily_count\n';
+    const csv = rows.map(r =>
+      [r.telegram_id, `"${(r.first_name||'').replace(/"/g,'""')}"`,
+       r.username||'', r.exam_type||'', r.plan, r.streak,
+       r.joined_at?.toISOString()||'', r.last_active_date||'', r.daily_count
+      ].join(',')
+    ).join('\n');
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="users.csv"');
+    res.send(header + csv);
+  });
+
+  // ── POST /api/admin/questions/bulk-import ───────────────────────────────────
+  app.post('/api/admin/questions/bulk-import', adminAuth, async (req: Request, res: Response) => {
+    const { questions } = req.body as { questions: any[] };
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ error: 'questions array required' });
+    }
+    if (questions.length > 500) {
+      return res.status(400).json({ error: 'max 500 questions per import' });
+    }
+
+    const required = ['exam_type','subject','year','question_text','option_a','option_b','option_c','option_d','correct_option'];
+    const validExams = ['WAEC','JAMB','NECO'];
+    const validOpts = ['A','B','C','D','E'];
+
+    let inserted = 0;
+    let skipped = 0;
+    const errors: string[] = [];
+
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i];
+      const row = i + 1;
+
+      const missing = required.filter(f => !q[f]);
+      if (missing.length) { errors.push(`Row ${row}: missing ${missing.join(', ')}`); skipped++; continue; }
+      if (!validExams.includes(q.exam_type)) { errors.push(`Row ${row}: invalid exam_type '${q.exam_type}'`); skipped++; continue; }
+      if (!validOpts.includes(String(q.correct_option).toUpperCase())) { errors.push(`Row ${row}: invalid correct_option`); skipped++; continue; }
+      const yr = parseInt(q.year);
+      if (isNaN(yr) || yr < 1990 || yr > 2030) { errors.push(`Row ${row}: invalid year`); skipped++; continue; }
+
+      try {
+        await db.query(`
+          INSERT INTO questions (exam_type, subject, year, topic, question_text, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, is_active)
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,TRUE)
+        `, [
+          q.exam_type.toUpperCase(), q.subject.toLowerCase(), yr,
+          q.topic || null, q.question_text,
+          q.option_a, q.option_b, q.option_c, q.option_d, q.option_e || null,
+          String(q.correct_option).toUpperCase(), q.explanation || null,
+        ]);
+        inserted++;
+      } catch (err: any) {
+        errors.push(`Row ${row}: ${err.message}`);
+        skipped++;
+      }
+    }
+
+    res.json({ inserted, skipped, errors: errors.slice(0, 20) });
+  });
+
+  // ── GET /api/admin/qotd ─────────────────────────────────────────────────────
+  app.get('/api/admin/qotd', adminAuth, async (_req: Request, res: Response) => {
+    const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0];
+    const examTypes = ['WAEC', 'JAMB', 'NECO'];
+    const result: Record<string, any> = {};
+    for (const et of examTypes) {
+      const { rows } = await db.query(
+        `SELECT k.value as question_id FROM
+           (SELECT current_setting('myapp.dummy', true)) dummy
+         LIMIT 0`
+      ).catch(() => ({ rows: [] }));
+      void rows;
+
+      const { rows: cached } = await db.query(
+        `SELECT 'cached' as source, q.id, q.exam_type, q.subject, q.year,
+                LEFT(q.question_text, 120) as question_preview, q.correct_option
+         FROM questions q
+         WHERE q.id = (
+           SELECT NULLIF(current_setting('app.qotd_${et}_${date}', true), '')::int
+         ) LIMIT 0`
+      ).catch(() => ({ rows: [] }));
+      void cached;
+
+      result[et] = null;
+    }
+
+    const { rows: recentBroadcasts } = await db.query(
+      `SELECT q.id, q.exam_type, q.subject, q.year,
+              LEFT(q.question_text, 120) as question_preview, q.correct_option
+       FROM questions q
+       WHERE q.is_active = TRUE AND q.explanation IS NOT NULL AND length(q.explanation) > 20
+       ORDER BY RANDOM() LIMIT 3`
+    );
+
+    res.json({ date, qotd: result, sample: recentBroadcasts });
   });
 
   return app;
