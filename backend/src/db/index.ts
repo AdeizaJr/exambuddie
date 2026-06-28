@@ -1420,6 +1420,46 @@ export async function saveExplanationFeedback(
   );
 }
 
+// ── Theory questions ──────────────────────────────────────────────────────────
+
+export interface TheoryQuestion {
+  id: number;
+  source_id: string;
+  exam_type: string;
+  subject: string;
+  year: number;
+  question_text: string;
+  worked_solution: string | null;
+}
+
+export async function getRandomTheoryQuestion(
+  subject: string,
+  examType?: string
+): Promise<TheoryQuestion | null> {
+  const params: any[] = [subject];
+  const examFilter = examType ? `AND exam_type = $2` : '';
+  if (examType) params.push(examType.toUpperCase());
+  const { rows } = await pool.query<TheoryQuestion>(
+    `SELECT id, source_id, exam_type, subject, year, question_text, worked_solution
+     FROM theory_questions
+     WHERE is_active = TRUE AND subject = $1 ${examFilter}
+     ORDER BY RANDOM() LIMIT 1`,
+    params
+  );
+  return rows[0] || null;
+}
+
+export async function logTheoryAttempt(
+  userId: number,
+  questionId: number,
+  userAnswer: string
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO theory_attempts (user_id, question_id, user_answer) VALUES ($1, $2, $3)`,
+    [userId, questionId, userAnswer]
+  );
+}
+
 // ── User lookup by Telegram username (for duel) ───────────────────────────────
 
 export async function getUserByUsername(username: string): Promise<User | null> {

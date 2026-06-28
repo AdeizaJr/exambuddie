@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -244,6 +245,52 @@ func fetchDoc(ctx context.Context, url string) (*goquery.Document, error) {
 		return doc, nil
 	}
 	return nil, lastErr
+}
+
+// fetchRaw fetches a URL and returns the raw HTML body as a string.
+// Used by the theory scraper which needs the full HTML for regex/JSON parsing.
+func fetchRaw(ctx context.Context, url string) (string, error) {
+	var lastErr error
+	for attempt := 1; attempt <= maxRetries; attempt++ {
+		if err := limiter.Wait(ctx); err != nil {
+			return "", err
+		}
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err != nil {
+			return "", err
+		}
+		req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+		req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+
+		resp, err := client.Do(req)
+		if err != nil {
+			lastErr = err
+			if attempt < maxRetries {
+				time.Sleep(time.Duration(attempt*2) * time.Second)
+			}
+			continue
+		}
+		if resp.StatusCode == http.StatusNotFound {
+			resp.Body.Close()
+			return "", nil
+		}
+		if resp.StatusCode != http.StatusOK {
+			resp.Body.Close()
+			lastErr = fmt.Errorf("HTTP %d", resp.StatusCode)
+			if attempt < maxRetries {
+				time.Sleep(time.Duration(attempt*2) * time.Second)
+			}
+			continue
+		}
+		body, readErr := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if readErr != nil {
+			lastErr = readErr
+			continue
+		}
+		return string(body), nil
+	}
+	return "", lastErr
 }
 
 // ── HTML parsing ─────────────────────────────────────────────────────────────
@@ -667,10 +714,14 @@ func main() {
 	if ctx.Err() != nil {
 		log.Println("\nInterrupted — partial results below")
 	}
-	log.Printf("\nDone in %s\n  inserted : %d\n  skipped  : %d\n  failed   : %d\n",
+	log.Printf("\n[MCQ] Done in %s\n  inserted : %d\n  skipped  : %d\n  failed   : %d\n",
 		time.Since(start).Round(time.Second),
 		atomic.LoadInt64(&st.inserted),
 		atomic.LoadInt64(&st.skipped),
 		atomic.LoadInt64(&st.failed),
 	)
+
+	if ctx.Err() == nil {
+		RunTheoryScraper(ctx, pool)
+	}
 }

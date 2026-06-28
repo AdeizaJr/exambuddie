@@ -318,6 +318,17 @@ function buildYearKeyboard(prefix: string, backButton?: { text: string; callback
   return { inline_keyboard: rows };
 }
 
+export function questionTypeKeyboard(subject: string) {
+  return {
+    inline_keyboard: [
+      [
+        { text: '📝 Objective (MCQ)', callback_data: `practice:type:obj:${subject}` },
+        { text: '✍️ Theory', callback_data: `practice:type:theory:${subject}` },
+      ],
+    ],
+  };
+}
+
 export function onboardYearKeyboard() {
   return buildYearKeyboard('onboard:year');
 }
