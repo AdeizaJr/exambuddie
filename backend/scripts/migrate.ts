@@ -446,6 +446,31 @@ WHERE id = 116125`,
     sent_at TIMESTAMPTZ DEFAULT NOW()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_broadcast_log_sent_at ON broadcast_log(sent_at DESC)`,
+
+  // ── Theory questions ──────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS theory_questions (
+    id SERIAL PRIMARY KEY,
+    source_id VARCHAR(30) UNIQUE NOT NULL,
+    exam_type VARCHAR(10) NOT NULL,
+    subject VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    question_text TEXT NOT NULL,
+    worked_solution TEXT,
+    is_active BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_theory_subject_year ON theory_questions(subject, year, exam_type)`,
+  `CREATE INDEX IF NOT EXISTS idx_theory_active ON theory_questions(is_active, subject)`,
+
+  // ── Theory attempts ───────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS theory_attempts (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    question_id INT REFERENCES theory_questions(id) ON DELETE CASCADE,
+    user_answer TEXT,
+    attempted_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_theory_attempts_user ON theory_attempts(user_id, attempted_at DESC)`,
 ];
 
 async function migrate(): Promise<void> {

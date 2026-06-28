@@ -161,13 +161,54 @@ export async function handleMultiSubjectStart(ctx: any): Promise<void> {
   );
 }
 
-// Subject tapped from the subject picker — show year picker for all users
+// Subject tapped — ask question type (Objective / Theory) before year
 export async function handleSubjectPick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const subject = ctx.callbackQuery.data.split(':')[2];
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await redis.updateSession(ctx.from.id, { pendingSubject: subject });
+  const subjectName = fmt.SUBJECT_MAP[subject] || subject;
+  await ctx.reply(
+    `📚 <b>${subjectName}</b>\n\nWhat type of questions do you want to practise?`,
+    { parse_mode: 'HTML', reply_markup: fmt.questionTypeKeyboard(subject) }
+  );
+}
+
+// Question type selected: Objective → year picker, Theory → theory question
+export async function handleQuestionTypePick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const parts = ctx.callbackQuery.data.split(':'); // practice:type:obj|theory:subject
+  const type = parts[2];
+  const subject = parts[3];
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
+  if (type === 'theory') {
+    const q = await db.getRandomTheoryQuestion(subject, user.exam_type || undefined);
+    if (!q) {
+      await ctx.reply(
+        `No theory questions available for <b>${fmt.SUBJECT_MAP[subject] || subject}</b> yet. Try Objective for now!`,
+        { parse_mode: 'HTML', reply_markup: fmt.questionTypeKeyboard(subject) }
+      );
+      return;
+    }
+    await redis.updateSession(ctx.from.id, {
+      mode: 'theory_attempt',
+      theoryQuestionId: q.id,
+      theorySubject: q.subject,
+      theoryYear: q.year,
+      theoryExamType: q.exam_type,
+    });
+    const subjectName = fmt.SUBJECT_MAP[q.subject] || q.subject;
+    await ctx.reply(
+      `✍️ <b>Theory Question</b>\n${subjectName} • ${q.exam_type} ${q.year}\n\n${q.question_text}\n\n<i>Type your answer below:</i>`,
+      { parse_mode: 'HTML' }
+    );
+    return;
+  }
+
+  // Objective: proceed to year picker (existing flow)
   const subjectName = fmt.SUBJECT_MAP[subject] || subject;
   await ctx.reply(
     `📅 <b>${subjectName}</b>\n\nWhich year would you like to practise?`,
