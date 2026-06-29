@@ -22,7 +22,6 @@ import * as achievements from './bot/handlers/achievements';
 import * as formula from './bot/handlers/formula';
 import * as qotd from './bot/handlers/qotd';
 import * as timetable from './bot/handlers/timetable';
-import * as theory from './bot/handlers/theory';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -166,7 +165,6 @@ bot.on('callback_query', async (ctx: any) => {
     return practice.handleMultiSubjectToggle(ctx);
   if (data === 'practice:multisubject:start') return practice.handleMultiSubjectStart(ctx);
   if (data.startsWith('practice:subject:')) return practice.handleSubjectPick(ctx);
-  if (data.startsWith('practice:type:')) return practice.handleQuestionTypePick(ctx);
   if (data.startsWith('practice:flow_year:')) return practice.handlePracticeFlowYear(ctx);
   if (data.startsWith('practice:year:')) return practice.handleYearPick(ctx);
   if (data.startsWith('practice:start:')) {
@@ -417,9 +415,6 @@ bot.on('text', async (ctx: any) => {
     );
     return;
   }
-
-  // Theory answer input — intercept before activeSession guard
-  if (session?.mode === 'theory_attempt') return theory.handleTheoryAnswer(ctx);
 
   if (activeSession) return; // mid-session free text — ignore
 
