@@ -654,7 +654,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl space-y-4">
           <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left dark:text-slate-400">
             <a href="#" className="text-sm font-bold text-slate-700 hover:text-blue-700 sm:text-base dark:text-slate-200 dark:hover:text-blue-400">ExamBuddie</a>
-            <span>© {new Date().getFullYear()} ExamBuddie. Built with ❤️ for Nigerian students.</span>
+            <span>© {new Date().getFullYear()} ExamBuddie. All rights reserved.</span>
             <a
               href={BOT_URL}
               target="_blank"
