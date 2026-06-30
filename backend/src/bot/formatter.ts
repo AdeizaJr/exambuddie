@@ -1,6 +1,55 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
 
+const RANKS = [
+  { tier: 'Rookie',    level: 'I',   min: 0    },
+  { tier: 'Rookie',    level: 'II',  min: 50   },
+  { tier: 'Rookie',    level: 'III', min: 120  },
+  { tier: 'Rookie',    level: 'IV',  min: 200  },
+  { tier: 'Rookie',    level: 'V',   min: 300  },
+  { tier: 'Hustler',   level: 'I',   min: 420  },
+  { tier: 'Hustler',   level: 'II',  min: 560  },
+  { tier: 'Hustler',   level: 'III', min: 720  },
+  { tier: 'Hustler',   level: 'IV',  min: 900  },
+  { tier: 'Hustler',   level: 'V',   min: 1100 },
+  { tier: 'Grinder',   level: 'I',   min: 1320 },
+  { tier: 'Grinder',   level: 'II',  min: 1560 },
+  { tier: 'Grinder',   level: 'III', min: 1820 },
+  { tier: 'Grinder',   level: 'IV',  min: 2100 },
+  { tier: 'Grinder',   level: 'V',   min: 2400 },
+  { tier: 'Sharp Guy', level: 'I',   min: 2720 },
+  { tier: 'Sharp Guy', level: 'II',  min: 3060 },
+  { tier: 'Sharp Guy', level: 'III', min: 3420 },
+  { tier: 'Sharp Guy', level: 'IV',  min: 3800 },
+  { tier: 'Sharp Guy', level: 'V',   min: 4200 },
+  { tier: 'Odogwu',    level: 'I',   min: 4620 },
+  { tier: 'Odogwu',    level: 'II',  min: 5060 },
+  { tier: 'Odogwu',    level: 'III', min: 5520 },
+  { tier: 'Odogwu',    level: 'IV',  min: 6000 },
+  { tier: 'Odogwu',    level: 'V',   min: 6500 },
+  { tier: 'Legend',    level: 'I',   min: 7020 },
+  { tier: 'Legend',    level: 'II',  min: 7560 },
+  { tier: 'Legend',    level: 'III', min: 8120 },
+  { tier: 'Legend',    level: 'IV',  min: 8700 },
+  { tier: 'Legend',    level: 'V',   min: 9300 },
+];
+
+export function getRank(totalAnswered: number): { tier: string; level: string; label: string; next: number | null } {
+  let current = RANKS[0];
+  for (const r of RANKS) {
+    if (totalAnswered >= r.min) current = r;
+    else break;
+  }
+  const idx = RANKS.indexOf(current);
+  const next = RANKS[idx + 1] ?? null;
+  return {
+    tier: current.tier,
+    level: current.level,
+    label: `${current.tier} ${current.level}`,
+    next: next ? next.min : null,
+  };
+}
+
 // Nigeria is UTC+1 (WAT)
 export function timeGreeting(): string {
   const hour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
@@ -781,6 +830,11 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
   const countdown = examCountdown(user.exam_type || null, user.target_year || null);
   const dailyTarget = 10;
   const dailyProgress = `📅 Today: ${user.daily_count || 0}/${dailyTarget} questions · 🔥 ${user.streak || 0} day streak`;
+  const totalAnswered = Number(stats.total_attempts || 0);
+  const rank = getRank(totalAnswered);
+  const rankLine = rank.next
+    ? `🏅 Rank: <b>${rank.label}</b> · ${rank.next - totalAnswered} questions to next rank`
+    : `🏅 Rank: <b>${rank.label}</b> · 👑 Max rank reached!`;
   return `📈 <b>Your ${examLabel} Stats</b>
 
 👤 ${user.first_name}
@@ -792,6 +846,7 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 • Correct Answers: ${stats.correct || 0}
 • Accuracy: ${stats.accuracy || 0}%
 • 🔥 Streak: ${user.streak || 0} days
+• ${rankLine}
 • ${dailyProgress}
 
 💳 <b>Plan:</b> ${plan}

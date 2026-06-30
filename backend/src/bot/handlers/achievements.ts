@@ -5,26 +5,44 @@ export interface Badge {
   name: string;
   emoji: string;
   desc: string;
+  group: 'questions' | 'streaks' | 'quiz' | 'accuracy';
 }
 
 export const ALL_BADGES: Badge[] = [
-  { code: 'first_question',  name: 'First Step',     emoji: '🎯', desc: 'Answered your first question' },
-  { code: 'questions_10',    name: 'Getting Started', emoji: '📚', desc: 'Answered 10 questions' },
-  { code: 'questions_50',    name: 'On a Roll',       emoji: '📈', desc: 'Answered 50 questions' },
-  { code: 'questions_100',   name: 'Century Club',    emoji: '💯', desc: 'Answered 100 questions' },
-  { code: 'questions_500',   name: 'Power User',      emoji: '⚡', desc: 'Answered 500 questions' },
-  { code: 'questions_1000',  name: 'Legend',          emoji: '🌟', desc: 'Answered 1,000 questions' },
-  { code: 'streak_3',        name: 'Hat Trick',       emoji: '🔥', desc: '3-day practice streak' },
-  { code: 'streak_7',        name: 'Week Warrior',    emoji: '🔥', desc: '7-day practice streak' },
-  { code: 'streak_30',       name: 'Month Master',    emoji: '🏆', desc: '30-day practice streak' },
-  { code: 'perfect_quiz',    name: 'Flawless',        emoji: '✨', desc: '100% on a CBT quiz (10+ questions)' },
-  { code: 'quiz_complete',   name: 'Quiz Finisher',   emoji: '📋', desc: 'Completed your first CBT quiz' },
-  { code: 'mock_exam',       name: 'Mock Master',     emoji: '🎓', desc: 'Completed a full mock exam' },
-  { code: 'sr_complete',     name: 'Deep Reviewer',   emoji: '📖', desc: 'Completed a spaced repetition session' },
-  { code: 'accuracy_80',     name: 'Sharp Mind',      emoji: '🧠', desc: '80%+ accuracy over 50+ questions' },
+  // Questions milestones
+  { code: 'first_question',  name: 'First Step',     emoji: '🎯', desc: 'Answered your first question',      group: 'questions' },
+  { code: 'questions_10',    name: 'Getting Started', emoji: '📚', desc: 'Answered 10 questions',             group: 'questions' },
+  { code: 'questions_50',    name: 'On a Roll',       emoji: '📈', desc: 'Answered 50 questions',             group: 'questions' },
+  { code: 'questions_100',   name: 'Century Club',    emoji: '💯', desc: 'Answered 100 questions',            group: 'questions' },
+  { code: 'questions_500',   name: 'Power User',      emoji: '⚡', desc: 'Answered 500 questions',            group: 'questions' },
+  { code: 'questions_1000',  name: 'Hustler',         emoji: '🌟', desc: 'Answered 1,000 questions',          group: 'questions' },
+  { code: 'questions_2500',  name: 'Grinder',         emoji: '💪', desc: 'Answered 2,500 questions',          group: 'questions' },
+  { code: 'questions_5000',  name: 'Odogwu',          emoji: '👑', desc: 'Answered 5,000 questions',          group: 'questions' },
+  { code: 'questions_7500',  name: 'Legend',          emoji: '🏆', desc: 'Answered 7,500 questions',          group: 'questions' },
+
+  // Streaks
+  { code: 'streak_3',        name: 'Hat Trick',       emoji: '🔥', desc: '3-day practice streak',             group: 'streaks' },
+  { code: 'streak_7',        name: 'Week Warrior',    emoji: '🔥', desc: '7-day practice streak',             group: 'streaks' },
+  { code: 'streak_30',       name: 'Month Master',    emoji: '🏆', desc: '30-day practice streak',            group: 'streaks' },
+
+  // Quiz & Exams
+  { code: 'quiz_complete',   name: 'Quiz Finisher',   emoji: '📋', desc: 'Completed your first CBT quiz',     group: 'quiz' },
+  { code: 'mock_exam',       name: 'Mock Master',     emoji: '🎓', desc: 'Completed a full mock exam',        group: 'quiz' },
+  { code: 'perfect_quiz',    name: 'Flawless',        emoji: '✨', desc: '100% on a CBT quiz (10+ questions)', group: 'quiz' },
+  { code: 'sr_complete',     name: 'Deep Reviewer',   emoji: '📖', desc: 'Completed a spaced repetition session', group: 'quiz' },
+
+  // Accuracy
+  { code: 'accuracy_80',     name: 'Sharp Mind',      emoji: '🧠', desc: '80%+ accuracy over 50+ questions', group: 'accuracy' },
 ];
 
 const BADGE_MAP = new Map(ALL_BADGES.map(b => [b.code, b]));
+
+const GROUP_LABELS: Record<string, string> = {
+  questions: '📚 Questions',
+  streaks:   '🔥 Streaks',
+  quiz:      '📋 Quiz & Exams',
+  accuracy:  '🧠 Accuracy',
+};
 
 export async function checkAndGrantBadges(
   telegram: any,
@@ -49,6 +67,9 @@ export async function checkAndGrantBadges(
     if (context.totalAttempts >= 100)  toCheck.push('questions_100');
     if (context.totalAttempts >= 500)  toCheck.push('questions_500');
     if (context.totalAttempts >= 1000) toCheck.push('questions_1000');
+    if (context.totalAttempts >= 2500) toCheck.push('questions_2500');
+    if (context.totalAttempts >= 5000) toCheck.push('questions_5000');
+    if (context.totalAttempts >= 7500) toCheck.push('questions_7500');
   }
 
   if (context.streak !== undefined) {
@@ -97,14 +118,19 @@ export async function handleBadges(ctx: any): Promise<void> {
 
   const unlocked = new Set(await db.getUserBadgeCodes(user.id));
 
-  const lines = ALL_BADGES.map(b =>
-    unlocked.has(b.code)
-      ? `${b.emoji} <b>${b.name}</b> — <i>${b.desc}</i>`
-      : `🔒 <b>${b.name}</b> — <i>${b.desc}</i>`
-  );
+  const groups = ['questions', 'streaks', 'quiz', 'accuracy'] as const;
+  const sections = groups.map(group => {
+    const badges = ALL_BADGES.filter(b => b.group === group);
+    const lines = badges.map(b =>
+      unlocked.has(b.code)
+        ? `  ${b.emoji} <b>${b.name}</b> — <i>${b.desc}</i>`
+        : `  🔒 <b>${b.name}</b> — <i>${b.desc}</i>`
+    );
+    return `<b>${GROUP_LABELS[group]}</b>\n${lines.join('\n')}`;
+  });
 
   await ctx.reply(
-    `🏅 <b>Achievements</b>\n\n${unlocked.size}/${ALL_BADGES.length} unlocked\n\n${lines.join('\n')}`,
+    `🏅 <b>Achievements</b>\n\n${unlocked.size}/${ALL_BADGES.length} unlocked\n\n${sections.join('\n\n')}`,
     {
       parse_mode: 'HTML',
       reply_markup: { inline_keyboard: [[{ text: '🏠 Main Menu', callback_data: 'menu:main' }]] },

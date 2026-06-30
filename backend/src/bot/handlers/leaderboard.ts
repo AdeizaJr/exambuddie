@@ -1,4 +1,5 @@
 import * as db from '../../db';
+import { getRank } from '../formatter';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
 
@@ -22,7 +23,8 @@ function formatLeaderboard(
 
   const rows = entries.map((e) => {
     const you = e.telegram_id === callerTelegramId ? ' ← you' : '';
-    return `${rankLabel(e.rank)} <b>${e.first_name}</b> — ${e.accuracy}% (${e.correct}/${e.total})${you}`;
+    const userRank = getRank(Number(e.total));
+    return `${rankLabel(e.rank)} <b>${e.first_name}</b> [${userRank.label}] — ${e.accuracy}% (${e.correct}/${e.total})${you}`;
   });
 
   const yourRankLine =
