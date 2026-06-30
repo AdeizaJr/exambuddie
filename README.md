@@ -125,10 +125,10 @@ npm run dev          # runs at localhost:3000
 | `/timetable` | 2026 exam timetable with countdown per subject (WAEC/NECO/JAMB) |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
 | `/invite` | Referral link — invite 2 friends → 3 days Premium free |
-| `/leaderboard` | Weekly accuracy leaderboard (top 10) + last week's results |
-| `/stats` | Accuracy, daily target, exam countdown, weak topic tip |
+| `/leaderboard` | Weekly accuracy leaderboard (top 10) with rank badges + last week's results |
+| `/stats` | Accuracy, daily target, exam countdown, rank badge, weak topic tip |
 | `/progress` | Streak, subject coverage bars, referral status + shareable card |
-| `/badges` | Achievement badges (streak milestones, accuracy, volume) |
+| `/badges` | Achievement badges — grouped by Questions, Streaks, Quiz & Exams, Accuracy (17 total) |
 | `/subscribe` | Upgrade to Premium |
 | `/settings` | Exam type, subjects, phone number, daily reminder time |
 | `/support` | Report a bug, request data, or delete your account |
@@ -164,7 +164,8 @@ npm run dev          # runs at localhost:3000
 | Daily reminder opt-in (custom WAT hour) | ✅ | ✅ |
 | Subject coverage bars in /progress | ✅ | ✅ |
 | Shareable progress card | ✅ | ✅ |
-| Achievement badges (/badges) | ✅ | ✅ |
+| Achievement badges (/badges) — 17 badges, 4 categories | ✅ | ✅ |
+| Rank system — 30 ranks (Rookie → Legend), based on total questions answered | ✅ | ✅ |
 | Exam countdown in /stats | ✅ | ✅ |
 | Weak topic detection + drill tip | ✅ | ✅ |
 | Topic mastery breakdown | ✅ | ✅ |

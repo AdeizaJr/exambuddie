@@ -33,7 +33,7 @@ const secondaryFeatures = [
   { icon: "🔥", title: "Study Streaks", desc: "Build a daily habit — freeze your streak once a week (Premium)" },
   { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you master them — /review" },
   { icon: "📅", title: "Daily Question", desc: "Question of the Day broadcast every morning with your exam type" },
-  { icon: "🏅", title: "Achievement Badges", desc: "Earn badges for streaks, accuracy milestones, and question volume — /badges" },
+  { icon: "🏅", title: "Achievements & Ranks", desc: "Earn badges for streaks, accuracy, and milestones. Rise through 30 ranks — Rookie to Legend — based on questions answered." },
   { icon: "📤", title: "Shareable Results", desc: "Share your quiz score card on WhatsApp after every CBT mock" },
   { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
   { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
