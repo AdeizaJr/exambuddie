@@ -667,7 +667,7 @@ export default function Home() {
               Open in Telegram →
             </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 md:justify-start dark:text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-500 md:justify-start dark:text-slate-400">
             <a href="/privacy" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Privacy Policy</a>
             <a href="/terms" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Terms of Use</a>
             <a href="/refunds" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Refund Policy</a>
