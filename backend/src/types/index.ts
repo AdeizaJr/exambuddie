@@ -45,6 +45,7 @@ export interface Question {
   flag_count: number;
   source_id: string | null;
   image_url: string | null;
+  has_diagram: boolean;
   created_at: string;
 }
 
@@ -82,7 +83,7 @@ export interface SessionState {
   selectedSubjects?: string[];
   examType?: string;
   targetYear?: number | null;
-  mode?: 'practice' | 'quiz' | 'drill';
+  mode?: 'practice' | 'quiz' | 'drill' | 'challenge' | 'sr_review' | 'quiz_review' | 'theory_attempt';
   subject?: string;
   year?: number | null;
   topic?: string;

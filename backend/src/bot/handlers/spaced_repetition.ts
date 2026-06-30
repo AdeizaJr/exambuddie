@@ -9,6 +9,10 @@ export async function handleSRMenu(ctx: any): Promise<void> {
   if (ctx.callbackQuery) await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
+  if (user.plan !== 'premium') {
+    await ctx.reply(fmt.upgradeMessage(), { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() });
+    return;
+  }
 
   const [due, total] = await Promise.all([
     db.getSRDueCount(user.id),

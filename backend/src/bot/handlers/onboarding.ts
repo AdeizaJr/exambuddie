@@ -230,7 +230,7 @@ export async function handleContact(ctx: any): Promise<void> {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
   await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
-  await maybeSendBeatYourInviter(ctx, user);
+  if (user) await maybeSendBeatYourInviter(ctx, user);
 }
 
 export async function handlePhoneSkip(ctx: any): Promise<void> {
