@@ -339,7 +339,10 @@ export default async function JambSubjectPage({
       <footer className="border-t border-slate-100 px-4 py-8 sm:px-6 sm:py-10 dark:border-slate-800">
         <div className="mx-auto max-w-6xl flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left dark:text-slate-400">
           <a href="/" className="text-sm font-bold text-slate-700 hover:text-blue-700 sm:text-base dark:text-slate-200 dark:hover:text-blue-400">ExamBuddie</a>
-          <span>© {new Date().getFullYear()} ExamBuddie. All rights reserved.</span>
+          <div className="flex flex-col items-center gap-1">
+            <span>© {new Date().getFullYear()} ExamBuddie. All Rights Reserved.</span>
+            <span>Built with ❤️ for Nigerian students.</span>
+          </div>
           <div className="flex gap-4">
             <a href="/waec" className="hover:text-blue-700 dark:hover:text-blue-400">WAEC →</a>
             <a href="/jamb" className="hover:text-blue-700 dark:hover:text-blue-400">JAMB →</a>

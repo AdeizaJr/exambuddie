@@ -654,7 +654,10 @@ export default function Home() {
         <div className="mx-auto max-w-6xl space-y-4">
           <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left dark:text-slate-400">
             <a href="#" className="text-sm font-bold text-slate-700 hover:text-blue-700 sm:text-base dark:text-slate-200 dark:hover:text-blue-400">ExamBuddie</a>
-            <span>© {new Date().getFullYear()} ExamBuddie. All rights reserved.</span>
+            <div className="flex flex-col items-center gap-1">
+              <span>© {new Date().getFullYear()} ExamBuddie. All Rights Reserved.</span>
+              <span>Built with ❤️ for Nigerian students.</span>
+            </div>
             <a
               href={BOT_URL}
               target="_blank"
@@ -664,7 +667,7 @@ export default function Home() {
               Open in Telegram →
             </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 md:justify-start dark:text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-500 md:justify-start dark:text-slate-400">
             <a href="/privacy" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Privacy Policy</a>
             <a href="/terms" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Terms of Use</a>
             <a href="/refunds" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Refund Policy</a>
