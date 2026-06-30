@@ -583,6 +583,12 @@ Practice free at @${process.env.BOT_USERNAME || 'ExamBuddieBot'}`;
 
 export async function handleQuizReviewWrong(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Please use /start first.'); return; }
+  if (user.plan !== 'premium') {
+    await ctx.reply(fmt.upgradeMessage(), { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() });
+    return;
+  }
   const items = await redis.getQuizReview(ctx.from.id);
   if (!items || items.length === 0) {
     await ctx.reply('Review session expired. Take another quiz to review wrong answers.');

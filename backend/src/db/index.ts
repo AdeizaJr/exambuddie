@@ -669,10 +669,6 @@ export async function getSubjectQuestionCounts(subjects: string[]): Promise<Reco
   return map;
 }
 
-export async function getSubjects(): Promise<any[]> {
-  const { rows } = await pool.query('SELECT * FROM subjects ORDER BY name');
-  return rows;
-}
 
 export interface WeeklyReport {
   thisWeek: { attempts: number; accuracy: number };

@@ -691,6 +691,10 @@ export async function handleChangeSubject(ctx: any): Promise<void> {
 export async function handleDrill(ctx: any, topicOverride?: string): Promise<void> {
   const user = await requireProfile(ctx);
   if (!user) return;
+  if (user.plan !== 'premium') {
+    await ctx.reply(fmt.upgradeMessage(), { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() });
+    return;
+  }
   // Get topic from command args or auto-detect weak topic
   const args = ctx.message?.text?.split(' ').slice(1).join(' ');
   const topic = topicOverride || args;
