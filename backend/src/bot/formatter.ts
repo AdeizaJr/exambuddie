@@ -552,7 +552,27 @@ function formatExplanation(text: string): string {
   if (/<(?:b|i|code)>/.test(text)) {
     return text.replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
   }
-  const converted = convertLatex(text);
+  // General pre-formatting — works across all subjects
+  const preFormatted = text
+    // Bold section headers: "Given:", "Find:", "Solution:", "Step N:", "Where:", "Note:"
+    .replace(/\b(Given|Find|Solution|Where|Note|Step\s*\d+)\s*:/gi, '\n\n<b>$1:</b>')
+    // Comma-separated variable assignments: ", WORD(optional) = value" → new line
+    // e.g. "C = 0.25mol/dm3, volume = ?" → "C = 0.25mol/dm3\nvolume = ?"
+    .replace(/,\s*([A-Za-z][A-Za-z ]{1,20}(?:\([^)]{1,10}\))?\s*=\s*[^,\n]{1,40})/g, '\n$1')
+    // After a numeric value/unit, a new word phrase leading to "=" = new fact
+    // Require first part to contain a digit so "number of" doesn't match
+    // e.g. "0.25mol/dm3 volume =" → "0.25mol/dm3\nvolume ="
+    .replace(/(\b\d[\d./]*[a-z³²]*)\s+([a-z][a-z ]{2,20}(?:\([^)]{1,10}\))?\s*=)/g, '$1\n$2')
+    // "and WORD_PHRASE =" starting a new clause mid-sentence
+    // e.g. "and number of mole(n) =" → new line
+    .replace(/\s+and\s+([a-z][a-z ]{2,20}(?:\([^)]{1,10}\))?\s*=)/g, '\n\nand $1')
+    // Closing paren/bracket followed by a new multi-word noun phrase leading to "="
+    // e.g. "volume(dm³) molar concentration(C) =" → break before "molar"
+    .replace(/\)\s+([a-z][a-z ]{2,25}(?:\([^)]{1,15}\))?\s*=)/g, ')\n$1')
+    // "( where X = " → on its own line
+    .replace(/\(\s*where\b/gi, '\n(where')
+    .trim();
+  const converted = convertLatex(preFormatted);
   return converted
     // equation step chains: "n = a = b = c" → one step per line
     // skip if any segment between = signs contains ≥2 English words (prose, not math)
@@ -628,13 +648,18 @@ export function correctAnswer(q: Question, selected: string): string {
     A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d, E: q.option_e,
   };
 
+  const correctText = md(optionText[q.correct_option] ?? '');
+  const explanation = q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>';
+
   return `${header}
 
-✔️ <b>${q.correct_option}.</b> ${md(optionText[q.correct_option])}
+✔️ <b>Answer ${q.correct_option}:</b> ${correctText}
 
-💡 <b>Explanation:</b>
+━━━━━━━━━━━━━━
+💡 <b>Explanation</b>
+━━━━━━━━━━━━━━
 
-${q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>'}`;
+${explanation}`;
 }
 
 export const FLAG_REASONS: Record<string, string> = {
