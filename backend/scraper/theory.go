@@ -19,16 +19,39 @@ import (
 
 var theorySubjects = []string{
 	"mathematics",
+	"english-language",
 	"physics",
 	"chemistry",
 	"further-mathematics",
 	"biology",
 	"economics",
-	"accounts-principles-of-accounts",
 	"geography",
-	"computer-studies",
-	"agricultural-science",
+	"accounts-principles-of-accounts",
 	"commerce",
+	"government",
+	"christian-religious-knowledge-crk",
+	"agricultural-science",
+	"islamic-religious-knowledge-irk",
+	"history",
+	"literature-in-english",
+	"fine-arts",
+	"music",
+	"french",
+	"animal-husbandry",
+	"insurance",
+	"civic-education",
+	"yoruba",
+	"igbo",
+	"arabic",
+	"home-economics",
+	"hausa",
+	"book-keeping",
+	"data-processing",
+	"catering-craft-practice",
+	"computer-studies",
+	"marketing",
+	"physical-education",
+	"office-practice",
 }
 
 var theoryExamTypes = []string{"waec", "neco"}
@@ -173,11 +196,14 @@ func insertTheoryQuestion(ctx context.Context, pool *pgxpool.Pool, q *theoryQues
 	return tag.RowsAffected() > 0, nil
 }
 
+const theoryTailPages = 3 // scan last N pages of main listing for open-ended questions
+
 func collectTheoryIDs(ctx context.Context, subject, examType string, year int) ([]string, error) {
-	url := fmt.Sprintf("%s/classroom/%s?exam_type=%s&exam_year=%d&paper_type=theory&page=1",
+	// Use main listing (no paper_type filter) — open-ended questions appear at the end
+	page1URL := fmt.Sprintf("%s/classroom/%s?exam_type=%s&exam_year=%d&page=1",
 		baseURL, subject, examType, year)
 
-	doc, err := fetchDoc(ctx, url)
+	doc, err := fetchDoc(ctx, page1URL)
 	if err != nil {
 		return nil, err
 	}
@@ -186,13 +212,22 @@ func collectTheoryIDs(ctx context.Context, subject, examType string, year int) (
 	}
 
 	maxPage := parseMaxPage(doc)
-	ids := extractIDs(doc)
+	if maxPage == 0 {
+		maxPage = 1
+	}
 
-	for page := 2; page <= maxPage; page++ {
+	// Only fetch the last theoryTailPages pages — that's where open-ended Qs live
+	startPage := maxPage - theoryTailPages + 1
+	if startPage < 1 {
+		startPage = 1
+	}
+
+	var ids []string
+	for page := startPage; page <= maxPage; page++ {
 		if ctx.Err() != nil {
 			break
 		}
-		pageURL := fmt.Sprintf("%s/classroom/%s?exam_type=%s&exam_year=%d&paper_type=theory&page=%d",
+		pageURL := fmt.Sprintf("%s/classroom/%s?exam_type=%s&exam_year=%d&page=%d",
 			baseURL, subject, examType, year, page)
 		d, err := fetchDoc(ctx, pageURL)
 		if err != nil || d == nil {
