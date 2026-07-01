@@ -23,7 +23,7 @@ export default function PrivacyPage() {
           </Link>
         </div>
         <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white">Privacy Policy</h1>
-        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: June 2026</p>
+        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: July 2026</p>
 
         <div className="space-y-8 text-slate-700 dark:text-slate-300 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_p]:leading-relaxed [&_ul]:ml-4 [&_ul]:list-disc [&_ul]:space-y-1">
           <section>
@@ -31,7 +31,10 @@ export default function PrivacyPage() {
             <p>
               ExamBuddie is a Telegram-based exam preparation service for Nigerian students
               preparing for WAEC, JAMB, and NECO. We are operated by ExamBuddie (Nigeria).
-              Questions or concerns: <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>.
+            </p>
+            <p className="mt-2">
+              <strong>Data Controller &amp; Responsible Person:</strong> Hassan Adeiza, ExamBuddie — Oyo, Nigeria.<br />
+              <strong>Contact:</strong> <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>
             </p>
           </section>
 
@@ -85,10 +88,15 @@ export default function PrivacyPage() {
             <p>
               Your data is stored in a PostgreSQL database and Redis cache hosted on{" "}
               <a href="https://railway.app" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Railway</a>{" "}
-              (US region). We use industry-standard access controls and encrypted connections.
+              (US region). We use industry-standard access controls and encrypted connections (TLS in transit, AES-256 at rest).
               Payment processing is handled by{" "}
               <a href="https://flutterwave.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Flutterwave</a>{" "}
               — we never store your card details.
+            </p>
+            <p className="mt-2">
+              <strong>Cross-border transfers:</strong> Your data is transferred from Nigeria to the United States (Railway infrastructure).
+              This transfer is covered by contractual data processing agreements with Railway, which provide equivalent protections to those required under the Nigeria Data Protection Act 2023.
+              By using ExamBuddie, you acknowledge this transfer.
             </p>
           </section>
 
@@ -120,12 +128,16 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2>7. Third-Party Services</h2>
+            <h2>7. Third-Party Services &amp; Data Processors</h2>
+            <p>We share data with the following processors only to the extent necessary to deliver the service:</p>
             <ul>
-              <li><strong>Telegram</strong> — powers the chat interface. Subject to Telegram&apos;s own privacy policy.</li>
-              <li><strong>Flutterwave</strong> — processes subscription payments.</li>
-              <li><strong>Railway</strong> — hosts our database and backend infrastructure.</li>
+              <li><strong>Telegram</strong> — powers the chat interface. Your Telegram profile data (user ID, name, username) is provided by Telegram when you use the bot. Subject to <a href="https://telegram.org/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Telegram&apos;s Privacy Policy</a>.</li>
+              <li><strong>Flutterwave</strong> — processes subscription payments. We share only a payment reference; we never store or transmit your card details.</li>
+              <li><strong>Railway</strong> — hosts our database and backend infrastructure in the US. Data is transferred from Nigeria to the US under contractual safeguards.</li>
+              <li><strong>Anthropic</strong> — when an admin generates an AI explanation for a question, the question text and answer options (no personal data) are sent to Anthropic&apos;s API. No user identifiers are included in these requests. Subject to <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Anthropic&apos;s Privacy Policy</a>.</li>
+              <li><strong>Zoho Mail</strong> — used to send support email responses. Only your name and Telegram ID are included when you submit a support request.</li>
             </ul>
+            <p className="mt-3">We do not sell your data to any third party and do not use your data for advertising.</p>
           </section>
 
           <section>

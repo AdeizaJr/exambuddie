@@ -5,7 +5,7 @@ interface TimerEntry {
 
 const timers = new Map<number | string, TimerEntry>();
 
-export function setQuestionTimer(
+function setQuestionTimer(
   telegramId: number | string,
   timerSecs: number,
   onTick: (secsLeft: number) => void,

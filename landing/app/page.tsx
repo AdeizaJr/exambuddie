@@ -24,11 +24,17 @@ const subjects = [
 ];
 
 const secondaryFeatures = [
-  { icon: "📊", title: "Progress Stats", desc: "Accuracy by subject and topic — instant snapshot with /progress" },
-  { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one session" },
+  { icon: "🔄", title: "Revision Mode", desc: "Practice only the questions you previously got wrong — /revision" },
+  { icon: "⭐", title: "Bookmark Questions", desc: "Save any question mid-practice and drill your bookmarks later" },
+  { icon: "📊", title: "Progress Stats", desc: "Daily target, accuracy by topic, and exam countdown — all in /stats" },
+  { icon: "📐", title: "Formula Sheets", desc: "Instant formula reference for Physics, Chemistry, Maths, Economics, Government — /formula" },
+  { icon: "📅", title: "Exam Timetable", desc: "2026 WAEC/NECO/JAMB subject dates with countdown — /timetable" },
+  { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one practice session (Premium)" },
   { icon: "🔥", title: "Study Streaks", desc: "Build a daily habit — freeze your streak once a week (Premium)" },
-  { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you get them right (Premium)" },
-  { icon: "📅", title: "Exam Countdown", desc: "Days left until your WAEC, JAMB or NECO — shown in /stats" },
+  { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you master them — /review" },
+  { icon: "📅", title: "Daily Question", desc: "Question of the Day broadcast every morning with your exam type" },
+  { icon: "🏅", title: "Achievements & Ranks", desc: "Earn badges for streaks, accuracy, and milestones. Rise through 30 ranks — Rookie to Legend — based on questions answered." },
+  { icon: "📤", title: "Shareable Results", desc: "Share your quiz score card on WhatsApp after every CBT mock" },
   { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
   { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
   { icon: "⚡", title: "Works in Telegram", desc: "No app download — ever" },
@@ -648,7 +654,10 @@ export default function Home() {
         <div className="mx-auto max-w-6xl space-y-4">
           <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left dark:text-slate-400">
             <a href="#" className="text-sm font-bold text-slate-700 hover:text-blue-700 sm:text-base dark:text-slate-200 dark:hover:text-blue-400">ExamBuddie</a>
-            <span>© {new Date().getFullYear()} ExamBuddie. Built with ❤️ for Nigerian students.</span>
+            <div className="flex flex-col items-center gap-1">
+              <span>© {new Date().getFullYear()} ExamBuddie. All Rights Reserved.</span>
+              <span>Built with ❤️ for Nigerian students.</span>
+            </div>
             <a
               href={BOT_URL}
               target="_blank"
@@ -658,7 +667,7 @@ export default function Home() {
               Open in Telegram →
             </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 md:justify-start dark:text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-500 md:justify-start dark:text-slate-400">
             <a href="/privacy" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Privacy Policy</a>
             <a href="/terms" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Terms of Use</a>
             <a href="/refunds" className="hover:text-blue-700 hover:underline dark:hover:text-blue-400">Refund Policy</a>

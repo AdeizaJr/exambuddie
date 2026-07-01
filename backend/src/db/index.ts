@@ -1,15 +1,16 @@
 // src/db/index.ts
 import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
+import { getCachedUser, setCachedUser } from '../services/redis';
 
 // Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
 types.setTypeParser(1082, (val: string) => val);
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  max: 20,
+  max: 50,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 5000,
 });
 
 pool.on('error', (err) => {
@@ -23,10 +24,12 @@ export async function query(text: string, params?: any[]) {
 
 // Helpers
 export async function getUser(telegramId: number | string): Promise<User | null> {
-  const { rows } = await pool.query<User>('SELECT * FROM users WHERE telegram_id = $1', [
-    telegramId,
-  ]);
-  return rows[0] || null;
+  const cached = await getCachedUser(telegramId);
+  if (cached) return cached as unknown as User;
+  const { rows } = await pool.query<User>('SELECT * FROM users WHERE telegram_id = $1', [telegramId]);
+  const user = rows[0] || null;
+  if (user) setCachedUser(telegramId, user).catch(() => {});
+  return user;
 }
 
 export async function getUserById(id: number): Promise<User | null> {
@@ -53,7 +56,9 @@ export async function upsertUser(ctx: any): Promise<User> {
      RETURNING *`,
     [id, username || null, first_name || 'Student', code]
   );
-  return rows[0];
+  const user = rows[0];
+  setCachedUser(id, user).catch(() => {});
+  return user;
 }
 
 const USER_UPDATABLE_COLUMNS = new Set<string>([
@@ -61,6 +66,7 @@ const USER_UPDATABLE_COLUMNS = new Set<string>([
   'plan_expires_at', 'daily_count', 'daily_reset_at', 'streak',
   'last_active_date', 'phone_number', 'notifications_enabled',
   'streak_freeze_used_at', 'trial_used', 'daily_reminder_hour', 'source',
+  'consent_given_at',
 ]);
 
 export async function updateUser(
@@ -78,7 +84,9 @@ export async function updateUser(
      WHERE telegram_id = $1 RETURNING *`,
     [telegramId, ...values]
   );
-  return rows[0];
+  const user = rows[0];
+  if (user) setCachedUser(telegramId, user).catch(() => {});
+  return user;
 }
 
 export async function grantTrial(telegramId: number | string): Promise<void> {
@@ -100,7 +108,7 @@ export async function getSubjectAvailability(subject: string): Promise<{ examTyp
   const { rows } = await pool.query(
     `SELECT exam_type, ARRAY_AGG(DISTINCT year ORDER BY year) AS years
      FROM questions
-     WHERE subject = $1 AND year IS NOT NULL
+     WHERE subject = $1 AND year IS NOT NULL AND is_active = TRUE
      GROUP BY exam_type
      ORDER BY exam_type`,
     [subject]
@@ -116,7 +124,7 @@ export async function getTopicsForSubject(examType: string, subject: string): Pr
   const { rows } = await pool.query(
     `SELECT DISTINCT topic FROM questions
      WHERE subject = $${subjectIdx} ${examFilter}
-       AND topic IS NOT NULL AND topic != ''
+       AND topic IS NOT NULL AND topic != '' AND is_active = TRUE
      ORDER BY topic`,
     params
   );
@@ -154,7 +162,7 @@ async function getSpacedQuestion(
     `SELECT DISTINCT ON (q.id) q.* FROM questions q
      JOIN attempts a ON a.question_id = q.id
      WHERE q.subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excFilter}
-       AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
+       AND q.is_active = TRUE
        AND a.user_id = $${userIdx}
        AND a.is_correct = FALSE
        AND a.attempted_at > NOW() - INTERVAL '30 days'
@@ -205,7 +213,7 @@ export async function getRandomQuestion(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excludeFilter}
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
+       AND is_active = TRUE
      ORDER BY RANDOM() LIMIT 1`,
     params
   );
@@ -230,7 +238,7 @@ export async function getQuestionsByTopic(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} AND topic ILIKE $${topicIdx}
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
+       AND is_active = TRUE
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
@@ -260,7 +268,7 @@ export async function getQuizQuestions(
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
      WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
+       AND is_active = TRUE
      ORDER BY RANDOM() LIMIT $${limitIdx}`,
     params
   );
@@ -293,7 +301,7 @@ export async function getQuizQuestionsMulti(
     const { rows } = await pool.query<Question>(
       `SELECT * FROM questions
        WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
-       AND (has_diagram = FALSE OR image_url IS NOT NULL)
+         AND is_active = TRUE
        ORDER BY RANDOM() LIMIT $${limitIdx}`,
       params
     );
@@ -401,7 +409,7 @@ export async function getWeakTopics(
      JOIN questions q ON a.question_id = q.id
      WHERE a.user_id = $1 AND q.subject = $2 AND q.topic IS NOT NULL
      ${filtered ? 'AND q.exam_type = $3' : ''}
-     GROUP BY q.topic HAVING COUNT(*) >= 2
+     GROUP BY q.topic HAVING COUNT(*) >= 2 AND ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) < 100
      ORDER BY accuracy ASC LIMIT 3`,
     params
   );
@@ -521,11 +529,18 @@ export async function snapshotLeaderboard(): Promise<number> {
 }
 
 export async function getLastWeekSnapshot(): Promise<LeaderboardEntry[]> {
+  return getLeaderboardSnapshot(
+    new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]
+  );
+}
+
+export async function getLeaderboardSnapshot(weekStart: string): Promise<LeaderboardEntry[]> {
   const { rows } = await pool.query(
     `SELECT rank, telegram_id, first_name, correct, total, accuracy
      FROM leaderboard_snapshots
-     WHERE week_start = (date_trunc('week', now() at time zone 'Africa/Lagos')::date - INTERVAL '7 days')
-     ORDER BY rank ASC`
+     WHERE week_start = $1
+     ORDER BY rank ASC`,
+    [weekStart]
   );
   return rows.map(r => ({
     rank: parseInt(r.rank),
@@ -535,6 +550,15 @@ export async function getLastWeekSnapshot(): Promise<LeaderboardEntry[]> {
     total: parseInt(r.total),
     accuracy: parseFloat(r.accuracy),
   }));
+}
+
+export async function getSnapshotWeeks(): Promise<string[]> {
+  const { rows } = await pool.query(
+    `SELECT DISTINCT week_start::text
+     FROM leaderboard_snapshots
+     ORDER BY week_start DESC`
+  );
+  return rows.map(r => r.week_start);
 }
 
 export async function checkDailyLimit(
@@ -636,7 +660,7 @@ export async function getSubjectQuestionCounts(subjects: string[]): Promise<Reco
   if (!subjects.length) return {};
   const { rows } = await pool.query(
     `SELECT subject, COUNT(*) as count FROM questions
-     WHERE subject = ANY($1) AND (has_diagram = FALSE OR image_url IS NOT NULL)
+     WHERE subject = ANY($1) AND is_active = TRUE
      GROUP BY subject`,
     [subjects]
   );
@@ -645,10 +669,6 @@ export async function getSubjectQuestionCounts(subjects: string[]): Promise<Reco
   return map;
 }
 
-export async function getSubjects(): Promise<any[]> {
-  const { rows } = await pool.query('SELECT * FROM subjects ORDER BY name');
-  return rows;
-}
 
 export interface WeeklyReport {
   thisWeek: { attempts: number; accuracy: number };
@@ -706,7 +726,8 @@ export async function getWeeklyReport(userId: number): Promise<WeeklyReport> {
        JOIN questions q ON a.question_id = q.id
        JOIN (
          SELECT subject, COUNT(*) as total
-         FROM questions WHERE has_diagram = FALSE OR image_url IS NOT NULL
+         FROM questions
+         WHERE is_active = TRUE
          GROUP BY subject
        ) totals ON q.subject = totals.subject
        WHERE a.user_id = $1
@@ -784,7 +805,7 @@ export async function getWeakTopicsAllSubjects(
      JOIN questions q ON a.question_id = q.id
      WHERE a.user_id = $1 AND q.subject = ANY($2) AND q.topic IS NOT NULL
        AND a.attempted_at > NOW() - INTERVAL '7 days'
-     GROUP BY q.subject, q.topic HAVING COUNT(*) >= 2
+     GROUP BY q.subject, q.topic HAVING COUNT(*) >= 2 AND ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) < 100
      ORDER BY accuracy ASC LIMIT 3`,
     [userId, subjects]
   );
@@ -805,10 +826,17 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   const { rows } = await pool.query('SELECT id FROM users WHERE telegram_id = $1', [telegramId]);
   if (!rows[0]) return;
   const userId = rows[0].id;
+  // room_participants uses telegram_id directly (no FK), must delete manually
+  await pool.query('DELETE FROM room_participants WHERE telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
-  await pool.query('DELETE FROM subscriptions WHERE user_id = $1', [userId]);
+  // Anonymise payment records instead of deleting — 7-year retention required by FIRS
+  await pool.query(
+    `UPDATE subscriptions SET user_id = NULL, tx_ref = CONCAT('deleted_', tx_ref) WHERE user_id = $1`,
+    [userId]
+  );
+  // bookmarks and sr_cards cascade from users ON DELETE CASCADE
   await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 }
 
@@ -870,7 +898,7 @@ export async function createRoom(data: {
   const qRes = await pool.query(
     `SELECT id FROM questions
      WHERE subject = $1 AND exam_type = $2
-     AND (has_diagram = FALSE OR image_url IS NOT NULL)
+       AND is_active = TRUE
      ${yearClause}
      ORDER BY RANDOM() LIMIT $3`,
     [data.subject, data.examType, data.numQuestions]
@@ -1134,6 +1162,92 @@ export async function getTopReferrers(limit = 10): Promise<{ first_name: string;
   return rows.map((r: any) => ({ first_name: r.first_name, referrals: parseInt(r.referrals) }));
 }
 
+// ── Revision: questions where last attempt was wrong ─────────────────────────
+
+export async function getRevisionQuestions(
+  userId: number,
+  subjects: string[],
+  examType: string | null,
+  limit = 15
+): Promise<Question[]> {
+  const params: any[] = [userId, limit];
+  const subjectFilter = subjects.length > 0
+    ? `AND q.subject = ANY($${params.length + 1}::text[])`
+    : '';
+  if (subjects.length > 0) params.push(subjects);
+
+  const examFilter = examType && !isAllExams(examType)
+    ? `AND q.exam_type = $${params.length + 1}`
+    : '';
+  if (examType && !isAllExams(examType)) params.push(examType);
+
+  const { rows } = await pool.query<Question>(
+    `SELECT q.* FROM (
+       SELECT DISTINCT ON (a.question_id) a.question_id, a.is_correct, a.attempted_at
+       FROM attempts a
+       WHERE a.user_id = $1
+       ORDER BY a.question_id, a.attempted_at DESC
+     ) latest
+     JOIN questions q ON q.id = latest.question_id
+     WHERE latest.is_correct = FALSE
+       AND q.is_active = TRUE
+       AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
+       ${subjectFilter}
+       ${examFilter}
+     ORDER BY latest.attempted_at DESC
+     LIMIT $2`,
+    params
+  );
+  return rows;
+}
+
+// ── Bookmarks ────────────────────────────────────────────────────────────────
+
+export async function addBookmark(userId: number, questionId: number): Promise<void> {
+  await pool.query(
+    `INSERT INTO bookmarks (user_id, question_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [userId, questionId]
+  );
+}
+
+export async function removeBookmark(userId: number, questionId: number): Promise<void> {
+  await pool.query(`DELETE FROM bookmarks WHERE user_id = $1 AND question_id = $2`, [userId, questionId]);
+}
+
+export async function isBookmarked(userId: number, questionId: number): Promise<boolean> {
+  const { rows } = await pool.query(
+    `SELECT 1 FROM bookmarks WHERE user_id = $1 AND question_id = $2`,
+    [userId, questionId]
+  );
+  return rows.length > 0;
+}
+
+export async function getBookmarkCount(userId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) as cnt FROM bookmarks WHERE user_id = $1`,
+    [userId]
+  );
+  return parseInt(rows[0]?.cnt || '0', 10);
+}
+
+export async function getUserBookmarks(userId: number, limit = 50): Promise<Question[]> {
+  const { rows } = await pool.query<Question>(
+    `SELECT q.* FROM bookmarks b
+     JOIN questions q ON q.id = b.question_id
+     WHERE b.user_id = $1
+       AND q.is_active = TRUE
+       AND (q.has_diagram = FALSE OR q.image_url IS NOT NULL)
+     ORDER BY b.created_at DESC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return rows;
+}
+
+export async function clearBookmarks(userId: number): Promise<void> {
+  await pool.query(`DELETE FROM bookmarks WHERE user_id = $1`, [userId]);
+}
+
 // ── Progress stats for /progress command ─────────────────────────────────────
 
 export async function getProgressStats(userId: number): Promise<{
@@ -1154,7 +1268,7 @@ export async function getProgressStats(userId: number): Promise<{
        JOIN questions q ON a.question_id = q.id
        JOIN (
          SELECT subject, COUNT(*) as total FROM questions
-         WHERE has_diagram = FALSE OR image_url IS NOT NULL
+         WHERE is_active = TRUE
          GROUP BY subject
        ) totals ON q.subject = totals.subject
        WHERE a.user_id = $1
@@ -1171,4 +1285,150 @@ export async function getProgressStats(userId: number): Promise<{
       total: parseInt(r.total),
     })),
   };
+}
+
+// ── Spaced Repetition ─────────────────────────────────────────────────────────
+
+export async function addSRCard(userId: number, questionId: number): Promise<void> {
+  await pool.query(
+    `INSERT INTO sr_cards (user_id, question_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [userId, questionId]
+  );
+}
+
+export async function getSRCards(userId: number, limit = 20): Promise<Question[]> {
+  const { rows } = await pool.query<Question>(
+    `SELECT q.* FROM sr_cards sr
+     JOIN questions q ON q.id = sr.question_id
+     WHERE sr.user_id = $1
+       AND sr.next_review_at <= NOW()
+       AND q.is_active = TRUE
+     ORDER BY sr.next_review_at ASC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return rows;
+}
+
+export async function updateSRCard(userId: number, questionId: number, wasCorrect: boolean): Promise<void> {
+  const { rows } = await pool.query(
+    `SELECT interval_days, ease, reps FROM sr_cards WHERE user_id = $1 AND question_id = $2`,
+    [userId, questionId]
+  );
+  if (!rows.length) return;
+  const { interval_days, ease, reps } = rows[0];
+
+  let newInterval: number;
+  let newEase: number;
+  let newReps: number;
+
+  if (wasCorrect) {
+    newReps = reps + 1;
+    newInterval = Math.min(Math.round(interval_days * ease), 30);
+    newEase = ease; // keep ease constant (simple SM-2 variant)
+  } else {
+    newReps = 0;
+    newInterval = 1;
+    newEase = Math.max(1.3, ease - 0.2);
+  }
+
+  await pool.query(
+    `UPDATE sr_cards
+     SET interval_days = $1, ease = $2, reps = $3,
+         next_review_at = NOW() + ($1 || ' days')::INTERVAL
+     WHERE user_id = $4 AND question_id = $5`,
+    [newInterval, newEase, newReps, userId, questionId]
+  );
+}
+
+export async function getSRDueCount(userId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) as cnt FROM sr_cards WHERE user_id = $1 AND next_review_at <= NOW()`,
+    [userId]
+  );
+  return parseInt(rows[0]?.cnt || '0', 10);
+}
+
+export async function getSRTotalCount(userId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) as cnt FROM sr_cards WHERE user_id = $1`,
+    [userId]
+  );
+  return parseInt(rows[0]?.cnt || '0', 10);
+}
+
+// ── Achievements ──────────────────────────────────────────────────────────────
+
+export async function grantBadge(userId: number, code: string): Promise<boolean> {
+  const { rowCount } = await pool.query(
+    `INSERT INTO achievements (user_id, badge_code) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [userId, code]
+  );
+  return (rowCount ?? 0) > 0;
+}
+
+export async function getUserBadgeCodes(userId: number): Promise<string[]> {
+  const { rows } = await pool.query(
+    `SELECT badge_code FROM achievements WHERE user_id = $1 ORDER BY unlocked_at ASC`,
+    [userId]
+  );
+  return rows.map((r: any) => r.badge_code);
+}
+
+// ── Topic mastery breakdown ───────────────────────────────────────────────────
+
+export async function getTopicMastery(
+  userId: number,
+  subject: string,
+  examType?: string
+): Promise<{ topic: string; attempts: number; correct: number; accuracy: number }[]> {
+  const filtered = examType && examType !== 'all';
+  const params: any[] = filtered ? [userId, subject, examType] : [userId, subject];
+  const { rows } = await pool.query(
+    `SELECT q.topic,
+            COUNT(*) AS attempts,
+            SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) AS correct,
+            ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) AS accuracy
+     FROM attempts a
+     JOIN questions q ON a.question_id = q.id
+     WHERE a.user_id = $1 AND q.subject = $2 AND q.topic IS NOT NULL
+     ${filtered ? 'AND q.exam_type = $3' : ''}
+     GROUP BY q.topic HAVING COUNT(*) >= 1
+     ORDER BY accuracy ASC, attempts DESC`,
+    params
+  );
+  return rows.map((r: any) => ({
+    topic: r.topic,
+    attempts: parseInt(r.attempts),
+    correct: parseInt(r.correct),
+    accuracy: parseFloat(r.accuracy),
+  }));
+}
+
+// ── Explanation quality feedback ──────────────────────────────────────────────
+
+export async function saveExplanationFeedback(
+  userId: number,
+  questionId: number,
+  rating: 1 | -1
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO explanation_feedback (user_id, question_id, rating)
+     VALUES ($1, $2, $3)
+     ON CONFLICT (user_id, question_id) DO UPDATE SET rating = EXCLUDED.rating`,
+    [userId, questionId, rating]
+  );
+}
+
+// ── Theory questions ──────────────────────────────────────────────────────────
+
+
+// ── User lookup by Telegram username (for duel) ───────────────────────────────
+
+export async function getUserByUsername(username: string): Promise<User | null> {
+  const { rows } = await pool.query<User>(
+    `SELECT * FROM users WHERE LOWER(username) = LOWER($1) LIMIT 1`,
+    [username.replace(/^@/, '')]
+  );
+  return rows[0] || null;
 }

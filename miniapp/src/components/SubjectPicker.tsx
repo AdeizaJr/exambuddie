@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { haptic } from '../telegram';
 
 const SUBJECT_LABELS: Record<string, string> = {
@@ -34,7 +35,7 @@ interface Props {
   onSelect: (subject: string) => void;
 }
 
-export default function SubjectPicker({ subjects, onSelect }: Props) {
+function SubjectPicker({ subjects, onSelect }: Props) {
   return (
     <div className="grid grid-cols-2 gap-3">
       {subjects.map(s => (
@@ -51,4 +52,5 @@ export default function SubjectPicker({ subjects, onSelect }: Props) {
   );
 }
 
+export default memo(SubjectPicker);
 export { SUBJECT_LABELS, SUBJECT_ICONS };

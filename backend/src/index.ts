@@ -15,6 +15,13 @@ import * as leaderboard from './bot/handlers/leaderboard';
 import * as challenge from './bot/handlers/challenge';
 import * as invite from './bot/handlers/invite';
 import * as support from './bot/handlers/support';
+import * as revision from './bot/handlers/revision';
+import * as bookmarks from './bot/handlers/bookmarks';
+import * as sr from './bot/handlers/spaced_repetition';
+import * as achievements from './bot/handlers/achievements';
+import * as formula from './bot/handlers/formula';
+import * as qotd from './bot/handlers/qotd';
+import * as timetable from './bot/handlers/timetable';
 
 import createServer from './api/server';
 import startCrons from './services/cron';
@@ -71,6 +78,13 @@ bot.command('challenge', challenge.handleChallenge);
 bot.command('invite', invite.handleInvite);
 bot.command('support', support.handleSupport);
 bot.command('progress', stats.handleProgress);
+bot.command('revision', revision.handleRevision);
+bot.command('bookmarks', bookmarks.handleBookmarks);
+bot.command('review', sr.handleSRMenu);
+bot.command('mock', quiz.handleMockExam);
+bot.command('badges', achievements.handleBadges);
+bot.command('formula', formula.handleFormula);
+bot.command('timetable', timetable.handleTimetable);
 bot.command('app', async (ctx) => {
   const APP_URL = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
   await ctx.reply('Open the ExamBuddie app 🎓', {
@@ -131,6 +145,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'challenge:pick') return challenge.handleChallenge(ctx);
   if (data === 'challenge:create') return challenge.handleChallengeCreate(ctx);
   if (data === 'challenge:search') return challenge.handleChallengeSearch(ctx);
+  if (data === 'challenge:duel') return challenge.handleDuel(ctx);
   if (data.startsWith('challenge:subject:')) return challenge.handleChallengeSubject(ctx);
   if (data.startsWith('challenge:examtype:')) return challenge.handleChallengeExamType(ctx);
   if (data.startsWith('challenge:year:')) return challenge.handleChallengeYear(ctx);
@@ -171,15 +186,29 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'practice:add_subject') return onboarding.handleSettingsSubjects(ctx);
   if (data === 'practice:change_exam') return onboarding.handleSettingsExam(ctx);
 
-  // Answer (shared by practice + quiz + challenge)
+  // Answer (shared by practice + quiz + challenge + sr_review)
   if (data.startsWith('answer:')) {
     const session = await redis.getSession(ctx.from.id);
     if (session?.mode === 'challenge') return challenge.handleChallengeAnswer(ctx);
     if (session?.mode === 'quiz') return quiz.handleQuizAnswer(ctx);
+    if (session?.mode === 'sr_review') {
+      const selected = data.split(':')[1];
+      return sr.handleSRAnswer(ctx, selected);
+    }
     return practice.handleAnswer(ctx);
   }
 
   // Quiz
+  // Mock exam
+  if (data === 'mock:pick') return quiz.handleMockExam(ctx);
+  if (data === 'mock:start') return quiz.handleMockStart(ctx);
+
+  // Explanation feedback
+  if (data.startsWith('feedback:')) return quiz.handleExplanationFeedback(ctx);
+
+  // Achievements
+  if (data === 'badges:show') return achievements.handleBadges(ctx);
+
   if (data === 'quiz:pick') return quiz.handleQuiz(ctx);
   if (data.startsWith('quiz:subject:')) return quiz.handleQuizSubjectPick(ctx);
   if (data.startsWith('quiz:flow_year:')) return quiz.handleQuizFlowYear(ctx);
@@ -197,6 +226,18 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'quiz:stop') return quiz.handleQuizStop(ctx);
   if (data === 'quiz:stop:confirm') return quiz.handleQuizStopConfirm(ctx);
   if (data === 'quiz:stop:cancel') return quiz.handleQuizStopCancel(ctx);
+  if (data === 'quiz:share') return quiz.handleQuizShare(ctx);
+  if (data === 'quiz:review_wrong') return quiz.handleQuizReviewWrong(ctx);
+  if (data.startsWith('quiz:review_next:')) return quiz.handleQuizReviewNext(ctx, data.split(':')[2]);
+  if (data === 'quiz:review_done') return quiz.handleQuizReviewDone(ctx);
+  if (data === 'quiz:add_to_sr') return quiz.handleQuizAddToSR(ctx);
+  if (data === 'quiz:add_to_sr_final') return quiz.handleQuizAddToSRFinal(ctx);
+
+  // Spaced repetition
+  if (data === 'sr:show') return sr.handleSRMenu(ctx);
+  if (data === 'sr:start') return sr.handleSRStart(ctx);
+  if (data === 'sr:next') return sr.handleSRNext(ctx);
+  if (data === 'sr:done') return sr.handleSRDone(ctx);
 
   // Drill
   if (data.startsWith('drill:auto:')) return practice.handleAutoDrill(ctx);
@@ -207,6 +248,8 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'stats:progress') return stats.handleProgress(ctx);
   if (data === 'stats:share') return stats.handleShareProgress(ctx);
   if (data.startsWith('stats:filter:')) return stats.handleStatsFilter(ctx);
+  if (data === 'stats:topic_mastery') return stats.handleTopicMastery(ctx);
+  if (data.startsWith('stats:topic_mastery:')) return stats.handleTopicMasterySubject(ctx);
 
   // Subscribe
   if (data === 'menu:subscribe') return stats.handleSubscribe(ctx);
@@ -230,6 +273,29 @@ bot.on('callback_query', async (ctx: any) => {
   if (data === 'support:delete') return onboarding.handleSettingsDelete(ctx);
   if (data === 'support:other') return support.handleSupportOther(ctx);
 
+  // Revision
+  if (data === 'revision:start') return revision.handleRevisionStart(ctx);
+  if (data === 'revision:start_fresh') return revision.handleRevision(ctx);
+
+  // Bookmarks
+  if (data.startsWith('bookmark:toggle:')) return bookmarks.handleBookmarkToggle(ctx);
+  if (data === 'bookmark:practice') return bookmarks.handleBookmarkPractice(ctx);
+  if (data === 'bookmark:clear') return bookmarks.handleBookmarkClear(ctx);
+  if (data === 'bookmarks:show') return bookmarks.handleBookmarks(ctx);
+
+  // Formula sheet
+  if (data === 'formula:pick') return formula.handleFormula(ctx);
+  if (data.startsWith('formula:')) return formula.handleFormulaSubject(ctx, data.slice('formula:'.length));
+
+  // Timetable
+  if (data === 'timetable:show') return timetable.handleTimetable(ctx);
+
+  // Question of the Day
+  if (data.startsWith('qotd:answer:')) {
+    const parts = data.split(':');
+    return qotd.handleQOTDAnswer(ctx, parts[2], parts[3]);
+  }
+
   // Flag
   if (data === 'flag:question') return stats.handleFlagQuestion(ctx);
   if (data === 'flag:underline') return stats.handleFlagUnderline(ctx);
@@ -248,6 +314,10 @@ bot.on('callback_query', async (ctx: any) => {
           [
             { text: '📚 Practice', callback_data: 'practice:pick' },
             { text: '📋 Quiz', callback_data: 'quiz:pick' },
+          ],
+          [
+            { text: '🔄 Revise Mistakes', callback_data: 'revision:start_fresh' },
+            { text: '⭐ Bookmarks', callback_data: 'bookmarks:show' },
           ],
           [
             { text: '📊 Stats', callback_data: 'stats:show' },
@@ -310,11 +380,15 @@ bot.on('text', async (ctx: any) => {
   if (text === '⚙️ Settings') return onboarding.handleSettings(ctx);
   if (text === '🏆 Leaderboard') return leaderboard.handleLeaderboard(ctx);
   if (text === '🎯 Challenge') return challenge.handleChallenge(ctx);
+  if (text === '📐 Formulas') return formula.handleFormula(ctx);
 
   const session = await redis.getSession(ctx.from.id);
 
   // Challenge room code input
   if (session?.step === 'challenge_enter_code') return challenge.handleChallengeCodeInput(ctx);
+
+  // Duel opponent username input
+  if (session?.step === 'duel_opponent') return challenge.handleDuelOpponentInput(ctx);
 
   // Support bug report awaiting user text
   const supportStep = await redis.getSupportStep(ctx.from.id);
@@ -346,6 +420,9 @@ bot.on('text', async (ctx: any) => {
 
   if (text === '📚 Practice') return practice.handlePractice(ctx);
   if (text === '📋 CBT') return quiz.handleQuiz(ctx);
+  if (text === '📖 Review') return sr.handleSRMenu(ctx);
+  if (text === '🎓 Mock Exam') return quiz.handleMockExam(ctx);
+  if (text === '🏅 Badges') return achievements.handleBadges(ctx);
 
   await ctx.reply(`${fmt.timeGreeting()}, ${user.first_name}! What would you like to do?`, {
     parse_mode: 'HTML',
@@ -469,7 +546,7 @@ async function launch() {
     `);
   }
 
-  app.listen(PORT, () => console.log(`🌐 API server listening on port ${PORT}`));
+  app.listen(Number(PORT), '0.0.0.0', 1024, () => console.log(`🌐 API server listening on port ${PORT}`));
 
   startCrons(bot);
 

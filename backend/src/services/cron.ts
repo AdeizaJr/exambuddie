@@ -1,7 +1,10 @@
 // src/services/cron.ts
 import cron from 'node-cron';
+import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
+import * as redis from './redis';
 import * as payments from './payments';
+import * as fmt from '../bot/formatter';
 import { SUBJECT_MAP, SUBJECT_EMOJI, examCountdown } from '../bot/formatter';
 import { endExpiredRoom } from '../bot/handlers/challenge';
 
@@ -218,17 +221,19 @@ export default function startCrons(bot: any): void {
     console.log(`[CRON] 3-day inactivity nudge sent to ${sent}/${users.length} users`);
   });
 
-  // ── Hourly — daily reminder opt-in ───────────────────────────────────────
+  // ── Hourly — daily auto-challenge ────────────────────────────────────────
   cron.schedule('0 * * * *', async () => {
     const watHour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
     const watToday = new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0];
 
     const { rows: users } = await db.query(
-      `SELECT telegram_id, first_name
+      `SELECT telegram_id, first_name, exam_type, subjects, id
        FROM users
        WHERE notifications_enabled = TRUE
          AND daily_reminder_hour = $1
-         AND (last_active_date IS NULL OR last_active_date < $2)`,
+         AND (last_active_date IS NULL OR last_active_date < $2)
+         AND exam_type IS NOT NULL
+         AND array_length(subjects, 1) > 0`,
       [watHour, watToday]
     );
 
@@ -238,17 +243,69 @@ export default function startCrons(bot: any): void {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
         try {
-          await bot.telegram.sendMessage(
-            user.telegram_id,
-            `⏰ <b>Time to practise, ${user.first_name}!</b>\n\nYour daily reminder is here. Even 5 questions keeps the momentum going.\n\n📚 /practice`,
-            { parse_mode: 'HTML' }
-          );
+          // Pick a random subject from the user's subjects
+          const subjects: string[] = user.subjects || [];
+          const subject = subjects[Math.floor(Math.random() * subjects.length)];
+          const examType = user.exam_type;
+
+          // Try to get a challenge question
+          const q = await db.getRandomQuestion(examType, subject, [], null, null, user.id);
+
+          if (!q) {
+            // Fall back to plain text reminder
+            await bot.telegram.sendMessage(
+              user.telegram_id,
+              `⏰ <b>Daily Challenge, ${user.first_name}!</b>\n\nTime to practise! Even 5 questions keeps the momentum going.\n\n📚 /practice`,
+              { parse_mode: 'HTML' }
+            );
+            sent++;
+            return;
+          }
+
+          const msgText = `⏰ <b>Daily Challenge, ${user.first_name}!</b>\n\n`
+            + fmt.formatQuestion(q, 1, 5, 'practice')
+            + fmt.answerOptions(q);
+
+          const sessionId = uuidv4();
+          const imageUrl = q.image_url?.startsWith('/')
+            ? `${process.env.APP_URL || ''}${q.image_url}`
+            : q.image_url;
+
+          if (imageUrl) {
+            await bot.telegram.sendPhoto(user.telegram_id, imageUrl, {
+              caption: msgText,
+              parse_mode: 'HTML',
+              reply_markup: fmt.answerKeyboard(!!q.option_e),
+            });
+          } else {
+            await bot.telegram.sendMessage(user.telegram_id, msgText, {
+              parse_mode: 'HTML',
+              reply_markup: fmt.answerKeyboard(!!q.option_e),
+            });
+          }
+
+          // Store session so the user can answer and continue
+          await redis.setSession(user.telegram_id, {
+            mode: 'practice',
+            subject,
+            examType,
+            sessionId,
+            qNum: 1,
+            correct: 0,
+            total: 0,
+            currentQuestion: q,
+            startTime: Date.now(),
+            usedIds: [q.id],
+            autoChallenge: true,
+            autoTotal: 5,
+          });
+
           sent++;
         } catch { /* blocked */ }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
-    if (users.length > 0) console.log(`[CRON] Daily reminder sent to ${sent}/${users.length} users at WAT ${watHour}:00`);
+    if (users.length > 0) console.log(`[CRON] Daily challenge sent to ${sent}/${users.length} users at WAT ${watHour}:00`);
   });
 
   // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────
@@ -288,6 +345,188 @@ ${streakLine} → /practice`;
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
     console.log(`[CRON] Friday nudge sent to ${sent}/${users.length} users`);
+  });
+
+  // ── 1st of every month — NDPA data retention: purge inactive accounts ───────
+  // Deletes free-plan users with no activity for 24+ months (data minimisation).
+  // Premium/trial users are excluded — they have an active commercial relationship.
+  cron.schedule('0 2 1 * *', async () => {
+    console.log('[CRON] NDPA retention: purging long-inactive accounts...');
+    const { rows } = await db.query(
+      `SELECT telegram_id FROM users
+       WHERE plan = 'free'
+         AND (last_active_date IS NULL OR last_active_date < CURRENT_DATE - INTERVAL '24 months')
+         AND (joined_at < NOW() - INTERVAL '24 months')
+         AND NOT EXISTS (
+           SELECT 1 FROM subscriptions s WHERE s.user_id = users.id
+         )`
+    );
+    let purged = 0;
+    for (const user of rows) {
+      try {
+        await db.deleteUser(user.telegram_id);
+        await redis.deleteUserData(user.telegram_id);
+        purged++;
+      } catch (e: any) {
+        console.error(`[CRON] retention purge error for ${user.telegram_id}:`, e.message);
+      }
+    }
+    console.log(`[CRON] NDPA retention: purged ${purged}/${rows.length} inactive accounts`);
+  });
+
+  // ── Daily 6am UTC (7am WAT) — Question of the Day broadcast ──────────────
+  cron.schedule('0 6 * * *', async () => {
+    console.log('[CRON] Sending Question of the Day...');
+    const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
+
+    // Pick one question per exam type and cache it for the day
+    const examTypes = ['WAEC', 'JAMB', 'NECO'];
+    const qotdMap: Record<string, any> = {};
+    for (const et of examTypes) {
+      let qId: number | null = await redis.getQOTDQuestion(date, et);
+      if (!qId) {
+        // Pick a well-attempted question (has explanation) at random
+        const { rows } = await db.query(
+          `SELECT q.id FROM questions q
+           JOIN attempts a ON a.question_id = q.id
+           WHERE q.exam_type = $1
+             AND q.is_active = TRUE
+             AND q.explanation IS NOT NULL
+             AND length(q.explanation) > 20
+           GROUP BY q.id
+           HAVING COUNT(a.id) >= 5
+           ORDER BY RANDOM() LIMIT 1`,
+          [et]
+        );
+        if (!rows[0]) continue;
+        qId = rows[0].id as number;
+        await redis.setQOTDQuestion(date, et, qId);
+      }
+      const q = await db.getQuestionById(qId as number);
+      if (q) qotdMap[et] = q;
+    }
+
+    const { rows: users } = await db.query(
+      `SELECT telegram_id, first_name, exam_type FROM users
+       WHERE notifications_enabled = TRUE
+         AND exam_type IS NOT NULL`
+    );
+
+    let sent = 0;
+    const BATCH_SIZE = 25;
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      const batch = users.slice(i, i + BATCH_SIZE);
+      await Promise.allSettled(batch.map(async (user) => {
+        const q = qotdMap[user.exam_type];
+        if (!q) return;
+
+        // Skip if user already answered today's QOTD
+        if (await redis.getQOTDAnswered(user.telegram_id, date)) return;
+
+        const subjectLabel = fmt.SUBJECT_MAP[q.subject] || q.subject;
+        const msgText = `📅 <b>Question of the Day</b> — ${subjectLabel}\n\n`
+          + fmt.formatQuestion(q, 1, 1, 'qotd')
+          + fmt.answerOptions(q);
+
+        const keyboard = {
+          inline_keyboard: [
+            ['A', 'B', 'C', 'D'].filter(opt => q[`option_${opt.toLowerCase()}`]).map(opt => ({
+              text: opt,
+              callback_data: `qotd:answer:${q.id}:${opt}`,
+            })),
+          ],
+        };
+
+        try {
+          const imageUrl = q.image_url?.startsWith('/')
+            ? `${process.env.APP_URL || ''}${q.image_url}`
+            : q.image_url;
+
+          if (imageUrl) {
+            await bot.telegram.sendPhoto(user.telegram_id, imageUrl, {
+              caption: msgText, parse_mode: 'HTML', reply_markup: keyboard,
+            });
+          } else {
+            await bot.telegram.sendMessage(user.telegram_id, msgText, {
+              parse_mode: 'HTML', reply_markup: keyboard,
+            });
+          }
+          sent++;
+        } catch { /* blocked or unavailable */ }
+      }));
+      if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
+    }
+    console.log(`[CRON] QOTD sent to ${sent}/${users.length} users`);
+  });
+
+  // ── Daily 7am WAT (6am UTC) — Exam timetable reminders (1, 3, 7 days out) ──
+  cron.schedule('5 6 * * *', async () => {
+    const { WAEC_2026, NECO_2026, JAMB_2026 } = await import('../bot/handlers/timetable');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    function daysUntil(iso: string): number {
+      const d = new Date(iso);
+      d.setHours(0, 0, 0, 0);
+      return Math.round((d.getTime() - today.getTime()) / 86400000);
+    }
+
+    const MILESTONES = [1, 3, 7];
+
+    // Subjects with exam exactly on a milestone day for each exam type
+    const waecDue: { subject: string; days: number }[] = [];
+    const necoDue: { subject: string; days: number }[] = [];
+
+    for (const [subject, iso] of Object.entries(WAEC_2026)) {
+      const d = daysUntil(iso);
+      if (MILESTONES.includes(d)) waecDue.push({ subject, days: d });
+    }
+    for (const [subject, iso] of Object.entries(NECO_2026)) {
+      const d = daysUntil(iso);
+      if (MILESTONES.includes(d)) necoDue.push({ subject, days: d });
+    }
+    const jambDays = daysUntil(JAMB_2026);
+    const jambDue = MILESTONES.includes(jambDays);
+
+    if (waecDue.length === 0 && necoDue.length === 0 && !jambDue) return;
+
+    const { rows: users } = await db.query(
+      `SELECT telegram_id, first_name, exam_type, subjects FROM users
+       WHERE notifications_enabled = TRUE AND exam_type IS NOT NULL`
+    );
+
+    let sent = 0;
+    for (const user of users) {
+      try {
+        const userSubjects: string[] = user.subjects || [];
+        let reminders: string[] = [];
+
+        if (user.exam_type === 'JAMB' && jambDue) {
+          reminders.push(`🎯 <b>JAMB UTME</b> is in <b>${jambDays} day${jambDays !== 1 ? 's' : ''}!</b>`);
+        } else if (user.exam_type === 'WAEC') {
+          for (const { subject, days } of waecDue) {
+            if (userSubjects.includes(subject)) {
+              const name = SUBJECT_MAP[subject] || subject;
+              reminders.push(`${SUBJECT_EMOJI[subject] || '📖'} <b>${name}</b> in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
+            }
+          }
+        } else if (user.exam_type === 'NECO') {
+          for (const { subject, days } of necoDue) {
+            if (userSubjects.includes(subject)) {
+              const name = SUBJECT_MAP[subject] || subject;
+              reminders.push(`${SUBJECT_EMOJI[subject] || '📖'} <b>${name}</b> in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
+            }
+          }
+        }
+
+        if (reminders.length === 0) continue;
+
+        const msg = `⏰ <b>Exam Alert, ${user.first_name}!</b>\n\n${reminders.join('\n')}\n\n📚 <a href="t.me/exambuddiebot?start=practice">Practise now</a>`;
+        await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
+        sent++;
+      } catch { /* blocked or unavailable */ }
+    }
+    if (sent > 0) console.log(`[CRON] Timetable reminders sent to ${sent} users`);
   });
 
   console.log('⏰ Cron jobs started');

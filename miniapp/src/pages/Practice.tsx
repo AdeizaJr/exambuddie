@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../api';
 import { haptic } from '../telegram';
@@ -39,7 +39,6 @@ export default function Practice() {
   const [correct, setCorrect] = useState(0);
   const [total, setTotal] = useState(0);
   const [sessionId] = useState(randomUUID);
-  const [timeLeft, setTimeLeft] = useState(0);
   const [loading, setLoading] = useState(false);
   const [topic, setTopic] = useState<string | null>(null);
   const [topics, setTopics] = useState<string[]>([]);
@@ -47,28 +46,18 @@ export default function Practice() {
   const [drillTopic, setDrillTopic] = useState('');
   const [drillQuestions, setDrillQuestions] = useState<Question[]>([]);
   const [drillIndex, setDrillIndex] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     api.getMe().then(setUser).catch(() => {});
   }, []);
 
-  const clearTimer = useCallback(() => {
-    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  const handleTimerExpire = useCallback(() => {
+    haptic('error');
+    setSelected('');
+    setTotal(t => t + 1);
+    setStage('revealed');
   }, []);
-
-  const startTimer = useCallback((secs: number, onExpire: () => void) => {
-    clearTimer();
-    setTimeLeft(secs);
-    timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) { clearTimer(); onExpire(); return 0; }
-        return prev - 1;
-      });
-    }, 1000);
-  }, [clearTimer]);
-
-  useEffect(() => () => clearTimer(), [clearTimer]);
 
   async function loadQuestion(subj: string, et: string, t: string | null = topic) {
     setLoading(true);
@@ -80,15 +69,8 @@ export default function Practice() {
       }
       setQuestion(q);
       setSelected('');
+      setBookmarked(false);
       setStage('question');
-      if (timerSecs > 0) {
-        startTimer(timerSecs, () => {
-          haptic('error');
-          setStage('revealed');
-          setSelected('');
-          setTotal(t => t + 1);
-        });
-      }
     } finally {
       setLoading(false);
     }
@@ -147,7 +129,6 @@ export default function Practice() {
 
   async function handleAnswer(opt: string) {
     if (stage !== 'question' || !question) return;
-    clearTimer();
     haptic(opt === question.correct_option ? 'success' : 'error');
     setSelected(opt);
     setStage('revealed');
@@ -174,7 +155,6 @@ export default function Practice() {
       setQuestion(drillQuestions[next]);
       setSelected('');
       setStage('question');
-      if (timerSecs > 0) startTimer(timerSecs, () => { haptic('error'); setStage('revealed'); });
     } else {
       loadQuestion(subject, examType);
     }
@@ -333,10 +313,15 @@ export default function Practice() {
   // ── Active question ─────────────────────────────────────────────────────────
   return (
     <div className="page px-4 pt-4">
-      {/* Timer bar */}
+      {/* Timer bar — mounts per question, unmounts on reveal (auto-clears interval) */}
       {timerSecs > 0 && stage === 'question' && (
         <div className="mb-4">
-          <Timer secs={timeLeft} total={timerSecs} label="Time left:" />
+          <Timer
+            key={question?.id}
+            totalSecs={timerSecs}
+            label="Time left:"
+            onExpire={handleTimerExpire}
+          />
         </div>
       )}
 
@@ -359,6 +344,23 @@ export default function Practice() {
             className="flex-1 py-3 rounded-2xl font-bold text-[var(--tg-button-text)]"
             style={{ background: 'var(--tg-button)' }}>
             Next Question →
+          </button>
+          <button
+            onClick={async () => {
+              if (!question) return;
+              haptic('selection');
+              const next = !bookmarked;
+              setBookmarked(next);
+              try {
+                if (next) await api.addBookmark(question.id);
+                else await api.removeBookmark(question.id);
+              } catch { setBookmarked(!next); }
+            }}
+            className="px-4 py-3 rounded-2xl font-medium border text-base transition-colors"
+            style={bookmarked ? { background: '#FFF7ED', border: '1.5px solid #FB923C', color: '#EA580C' } : { border: '1.5px solid rgba(0,0,0,0.12)', color: 'var(--tg-hint)' }}
+            title={bookmarked ? 'Remove bookmark' : 'Bookmark'}
+          >
+            {bookmarked ? '🔖' : '☆'}
           </button>
           <button onClick={() => setStage('done')}
             className="px-4 py-3 rounded-2xl font-medium border border-gray-200 text-[var(--tg-hint)]">

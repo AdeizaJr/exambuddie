@@ -382,6 +382,95 @@ WHERE id = 116125`,
     UNIQUE(week_start, rank)
   )`,
   `CREATE INDEX IF NOT EXISTS idx_lb_snapshots_week ON leaderboard_snapshots(week_start)`,
+
+  // ── Bookmarks ─────────────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS bookmarks (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    question_id INTEGER NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, question_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_bookmarks_user ON bookmarks(user_id)`,
+
+  // ── Soft-hide questions (e.g. mislabeled year) without deleting them ──────
+  `ALTER TABLE questions ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE`,
+  `CREATE INDEX IF NOT EXISTS idx_questions_is_active ON questions(is_active)`,
+
+  // ── NDPA compliance: store consent timestamp ──────────────────────────────
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS consent_given_at TIMESTAMPTZ DEFAULT NULL`,
+
+  // ── Spaced repetition cards — per-(user, question) review intervals ────────
+  `CREATE TABLE IF NOT EXISTS sr_cards (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    question_id INT REFERENCES questions(id) ON DELETE CASCADE,
+    interval_days INT NOT NULL DEFAULT 1,
+    ease FLOAT NOT NULL DEFAULT 2.5,
+    reps INT NOT NULL DEFAULT 0,
+    next_review_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, question_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_sr_cards_user_due ON sr_cards(user_id, next_review_at)`,
+
+  // ── Achievements / badges ─────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS achievements (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    badge_code VARCHAR(50) NOT NULL,
+    unlocked_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, badge_code)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_achievements_user ON achievements(user_id)`,
+
+  // ── Explanation quality feedback ──────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS explanation_feedback (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    question_id INT REFERENCES questions(id) ON DELETE CASCADE,
+    rating SMALLINT NOT NULL CHECK (rating IN (-1, 1)),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, question_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_expl_feedback_question ON explanation_feedback(question_id)`,
+
+  // ── Broadcast log ─────────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS broadcast_log (
+    id SERIAL PRIMARY KEY,
+    message TEXT NOT NULL,
+    target VARCHAR(20) NOT NULL,
+    sent INT NOT NULL DEFAULT 0,
+    failed INT NOT NULL DEFAULT 0,
+    total INT NOT NULL DEFAULT 0,
+    sent_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_broadcast_log_sent_at ON broadcast_log(sent_at DESC)`,
+
+  // ── Theory questions ──────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS theory_questions (
+    id SERIAL PRIMARY KEY,
+    source_id VARCHAR(30) UNIQUE NOT NULL,
+    exam_type VARCHAR(10) NOT NULL,
+    subject VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    question_text TEXT NOT NULL,
+    worked_solution TEXT,
+    is_active BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_theory_subject_year ON theory_questions(subject, year, exam_type)`,
+  `CREATE INDEX IF NOT EXISTS idx_theory_active ON theory_questions(is_active, subject)`,
+
+  // ── Theory attempts ───────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS theory_attempts (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    question_id INT REFERENCES theory_questions(id) ON DELETE CASCADE,
+    user_answer TEXT,
+    attempted_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_theory_attempts_user ON theory_attempts(user_id, attempted_at DESC)`,
 ];
 
 async function migrate(): Promise<void> {

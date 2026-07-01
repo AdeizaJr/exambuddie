@@ -3,8 +3,10 @@ import path from 'path';
 import fs from 'fs';
 import express, { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
+import rateLimit from 'express-rate-limit';
 import * as payments from '../services/payments';
 import * as db from '../db';
+import * as redis from '../services/redis';
 import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
 
@@ -38,7 +40,7 @@ export default function createServer(bot: any) {
     const origin = req.headers.origin || '';
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
     }
     if (req.method === 'OPTIONS') return res.sendStatus(204);
@@ -46,6 +48,10 @@ export default function createServer(bot: any) {
   });
 
   app.use(express.json());
+
+  // Rate limiting — 300 req/min per IP on API routes, 20 req/min on admin login
+  app.use('/api/', rateLimit({ windowMs: 60_000, max: 300, standardHeaders: true, legacyHeaders: false }));
+  app.use('/api/admin/login', rateLimit({ windowMs: 60_000, max: 20, standardHeaders: true, legacyHeaders: false }));
 
   // Mini App API routes
   app.use('/api/miniapp', miniappRouter);
@@ -61,7 +67,7 @@ export default function createServer(bot: any) {
   });
 
   // ── Health check ────────────────────────────────────────────────────────────
-  app.get('/health', (req: Request, res: Response) => {
+  app.get('/health', (_req: Request, res: Response) => {
     res.json({
       status: 'ok',
       service: 'ExamBuddie Bot',
@@ -203,7 +209,10 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/stats ────────────────────────────────────────────────────
-  app.get('/api/admin/stats', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/stats', adminAuth, async (_req: Request, res: Response) => {
+    const cached = await redis.getCachedAdminStats();
+    if (cached) return res.json(cached);
+
     const { rows } = await db.query(`
       SELECT
         (SELECT COUNT(*) FROM users) as total_users,
@@ -211,15 +220,16 @@ export default function createServer(bot: any) {
         (SELECT COUNT(*) FROM users WHERE joined_at > NOW() - INTERVAL '24 hours') as new_today,
         (SELECT COUNT(*) FROM attempts WHERE attempted_at > NOW() - INTERVAL '24 hours') as attempts_today,
         (SELECT COUNT(*) FROM attempts) as total_attempts,
-        (SELECT COUNT(*) FROM questions) as total_questions,
+        (SELECT COUNT(*) FROM questions WHERE is_active = TRUE) as total_questions,
         (SELECT COUNT(*) FROM flagged_explanations WHERE resolved = false) as pending_flags,
         (SELECT COALESCE(SUM(amount_ngn), 0) FROM subscriptions WHERE status = 'active') as total_revenue_ngn
     `);
+    await redis.setCachedAdminStats(rows[0]);
     res.json(rows[0]);
   });
 
   // ── GET /api/admin/acquisition ───────────────────────────────────────────
-  app.get('/api/admin/acquisition', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/acquisition', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT COALESCE(source, 'organic') as source, COUNT(*) as users
       FROM users GROUP BY source ORDER BY users DESC
@@ -228,7 +238,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/flags/top-questions ────────────────────────────────────
-  app.get('/api/admin/flags/top-questions', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/flags/top-questions', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT id, exam_type, subject, year, question_text, flag_count,
              (SELECT COUNT(*) FROM flagged_explanations f WHERE f.question_id = questions.id AND f.resolved = false) as open_flags
@@ -241,13 +251,15 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/flags ────────────────────────────────────────────────────
-  app.get('/api/admin/flags', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/flags', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT f.id, f.flagged_at, f.reason, f.resolved,
              q.id as question_id, q.subject, q.question_text,
-             q.correct_option, q.explanation, q.flag_count
+             q.correct_option, q.explanation, q.flag_count,
+             u.first_name as user_first_name, u.telegram_id as user_telegram_id
       FROM flagged_explanations f
       JOIN questions q ON f.question_id = q.id
+      LEFT JOIN users u ON f.user_id = u.id
       WHERE f.resolved = false
       ORDER BY f.flagged_at DESC LIMIT 50
     `);
@@ -313,6 +325,12 @@ export default function createServer(bot: any) {
     if (req.query.has_diagram !== undefined) {
       conditions.push(`has_diagram = ${req.query.has_diagram === 'true'}`);
     }
+    if (req.query.missing_explanation === 'true') {
+      conditions.push(`(explanation IS NULL OR explanation = '')`);
+    }
+    if (req.query.has_flags === 'true') {
+      conditions.push(`flag_count > 0`);
+    }
 
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
@@ -321,7 +339,7 @@ export default function createServer(bot: any) {
 
     const { rows } = await db.query(
       `SELECT id, exam_type, subject, year, question_text, option_a, option_b, option_c, option_d, option_e,
-              correct_option, explanation, explanation_reviewed, flag_count, source_id, has_diagram, created_at
+              correct_option, explanation, explanation_reviewed, flag_count, source_id, has_diagram, is_active, created_at
        FROM questions ${where}
        ORDER BY id DESC
        LIMIT $${params.length - 1} OFFSET $${params.length}`,
@@ -382,6 +400,62 @@ export default function createServer(bot: any) {
     );
     if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
     res.json(rows[0]);
+  });
+
+  // ── PATCH /api/admin/questions/:id/active ──────────────────────────────────
+  app.patch('/api/admin/questions/:id/active', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const { is_active } = req.body;
+      if (typeof is_active !== 'boolean') return res.status(400).json({ error: 'is_active must be boolean' });
+      const { rows } = await db.query(
+        `UPDATE questions SET is_active = $1 WHERE id = $2 RETURNING id, is_active`,
+        [is_active, req.params.id]
+      );
+      if (!rows.length) return res.status(404).json({ error: 'Question not found' });
+      res.json(rows[0]);
+    } catch (err: any) {
+      console.error('[toggle-active]', err);
+      res.status(500).json({ error: err.message || 'Failed to update question' });
+    }
+  });
+
+  // ── POST /api/admin/questions/:id/generate-explanation ───────────────────
+  app.post('/api/admin/questions/:id/generate-explanation', adminAuth, async (req: Request, res: Response) => {
+    try {
+      const { rows } = await db.query(`SELECT * FROM questions WHERE id = $1`, [req.params.id]);
+      if (!rows.length) return res.status(404).json({ error: 'Question not found' });
+      const q = rows[0];
+
+      if (!process.env.ANTHROPIC_API_KEY) {
+        return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured' });
+      }
+
+      const Anthropic = (await import('@anthropic-ai/sdk')).default;
+      const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+      const opts = [`A. ${q.option_a}`, `B. ${q.option_b}`, `C. ${q.option_c}`, `D. ${q.option_d}`];
+      if (q.option_e) opts.push(`E. ${q.option_e}`);
+
+      const message = await anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        system: `You are an expert Nigerian secondary school teacher preparing students for WAEC, NECO, and JAMB exams. Explain why the correct answer is right and briefly why each wrong option is incorrect. Write for a 16-18 year old student. 4-7 sentences. Step-by-step for maths/sciences. Never start with "The correct answer is". Plain text only.`,
+        messages: [{
+          role: 'user',
+          content: `Subject: ${q.exam_type} ${q.subject}${q.year ? ` ${q.year}` : ''}\n\nQuestion: ${q.question_text}\n\nOptions:\n${opts.join('\n')}\n\nCorrect answer: ${q.correct_option}\n\nExplain why ${q.correct_option} is correct and why the others are wrong.`,
+        }],
+      });
+
+      const explanation = (message.content[0] as any).text.trim();
+      await db.query(
+        `UPDATE questions SET explanation = $1, explanation_reviewed = true WHERE id = $2`,
+        [explanation, q.id]
+      );
+      res.json({ explanation });
+    } catch (err: any) {
+      console.error('[generate-explanation]', err);
+      res.status(500).json({ error: err.message || 'Failed to generate explanation' });
+    }
   });
 
   // ── DELETE /api/admin/questions/:id ────────────────────────────────────────
@@ -591,7 +665,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/subscriptions ────────────────────────────────────────────
-  app.get('/api/admin/subscriptions', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/subscriptions', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT s.id, s.plan, s.amount_ngn, s.status,
              s.started_at, s.expires_at, s.flutterwave_tx_ref,
@@ -605,7 +679,7 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/analytics ────────────────────────────────────────────────
-  app.get('/api/admin/analytics', adminAuth, async (req: Request, res: Response) => {
+  app.get('/api/admin/analytics', adminAuth, async (_req: Request, res: Response) => {
     const [dailyResult, subjectsResult, missingExpResult, flaggedResult, weakTopicsResult, dauResult] = await Promise.all([
       db.query(`
         SELECT
@@ -629,7 +703,7 @@ export default function createServer(bot: any) {
         ORDER BY attempts DESC
       `),
       db.query(
-        `SELECT COUNT(*) as count FROM questions WHERE explanation IS NULL OR explanation = ''`
+        `SELECT COUNT(*) as count FROM questions WHERE (explanation IS NULL OR explanation = '') AND is_active = TRUE`
       ),
       db.query(`SELECT COUNT(*) as count FROM questions WHERE flag_count > 0`),
       db.query(`
@@ -668,6 +742,33 @@ export default function createServer(bot: any) {
     });
   });
 
+  // ── GET /api/admin/analytics/hard-questions ────────────────────────────────
+  app.get('/api/admin/analytics/hard-questions', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT
+        q.id,
+        q.exam_type,
+        q.subject,
+        q.year,
+        LEFT(q.question_text, 100) AS question_preview,
+        q.correct_option,
+        q.explanation IS NOT NULL AND length(q.explanation) > 10 AS has_explanation,
+        q.flag_count,
+        COUNT(a.id) AS attempts,
+        SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) AS correct_count,
+        ROUND(100.0 * (1 - SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END)::float / COUNT(a.id)), 1) AS wrong_rate
+      FROM questions q
+      JOIN attempts a ON a.question_id = q.id
+      WHERE q.is_active = TRUE
+      GROUP BY q.id
+      HAVING COUNT(a.id) >= 10
+        AND (1 - SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END)::float / COUNT(a.id)) >= 0.7
+      ORDER BY wrong_rate DESC, attempts DESC
+      LIMIT 50
+    `);
+    res.json({ questions: rows });
+  });
+
   // ── GET /api/admin/leaderboard ──────────────────────────────────────────────
   app.get('/api/admin/leaderboard', adminAuth, async (req: Request, res: Response) => {
     const subject = req.query.subject as string | undefined;
@@ -680,6 +781,36 @@ export default function createServer(bot: any) {
       ),
     ]);
     res.json({ entries, active_users: parseInt(countRows[0].active_users) });
+  });
+
+  // ── GET /api/admin/leaderboard/weeks ───────────────────────────────────────
+  app.get('/api/admin/leaderboard/weeks', adminAuth, async (_req: Request, res: Response) => {
+    const weeks = await db.getSnapshotWeeks();
+    res.json({ weeks });
+  });
+
+  // ── GET /api/admin/leaderboard/snapshot?week=YYYY-MM-DD ────────────────────
+  app.get('/api/admin/leaderboard/snapshot', adminAuth, async (req: Request, res: Response) => {
+    const week = req.query.week as string;
+    if (!week || !/^\d{4}-\d{2}-\d{2}$/.test(week)) {
+      return res.status(400).json({ error: 'week param required (YYYY-MM-DD)' });
+    }
+    const entries = await db.getLeaderboardSnapshot(week);
+    res.json({ entries });
+  });
+
+  // ── POST /api/admin/dm ──────────────────────────────────────────────────────
+  app.post('/api/admin/dm', adminAuth, async (req: Request, res: Response) => {
+    const { telegram_id, message } = req.body;
+    if (!telegram_id || !message) {
+      return res.status(400).json({ error: 'telegram_id and message are required' });
+    }
+    try {
+      await bot.telegram.sendMessage(telegram_id, message, { parse_mode: 'HTML' });
+      res.json({ ok: true });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message || 'Failed to send message' });
+    }
   });
 
   // ── POST /api/admin/broadcast ───────────────────────────────────────────────
@@ -721,7 +852,267 @@ export default function createServer(bot: any) {
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
 
+    await db.query(
+      `INSERT INTO broadcast_log (message, target, sent, failed, total) VALUES ($1, $2, $3, $4, $5)`,
+      [message, target, sent, failed, total]
+    );
+
     res.json({ sent, failed, total });
+  });
+
+  // ── GET /api/admin/broadcast/history ───────────────────────────────────────
+  app.get('/api/admin/broadcast/history', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(
+      `SELECT id, message, target, sent, failed, total, sent_at
+       FROM broadcast_log ORDER BY sent_at DESC LIMIT 50`
+    );
+    res.json({ history: rows });
+  });
+
+  // ── GET /api/admin/analytics/growth ────────────────────────────────────────
+  app.get('/api/admin/analytics/growth', adminAuth, async (_req: Request, res: Response) => {
+    const [usersResult, revenueResult, examBreakdownResult] = await Promise.all([
+      db.query(`
+        SELECT
+          DATE(joined_at) as date,
+          COUNT(*) as new_users,
+          COUNT(CASE WHEN plan = 'premium' THEN 1 END) as new_premium
+        FROM users
+        WHERE joined_at >= NOW() - INTERVAL '30 days'
+        GROUP BY DATE(joined_at)
+        ORDER BY date ASC
+      `),
+      db.query(`
+        SELECT
+          DATE(started_at) as date,
+          COUNT(*) as subs,
+          SUM(amount_ngn) as revenue_ngn
+        FROM subscriptions
+        WHERE started_at >= NOW() - INTERVAL '30 days'
+          AND status = 'active'
+        GROUP BY DATE(started_at)
+        ORDER BY date ASC
+      `),
+      db.query(`
+        SELECT
+          COALESCE(exam_type, 'unset') as exam_type,
+          COUNT(*) as users,
+          COUNT(CASE WHEN plan = 'premium' THEN 1 END) as premium
+        FROM users
+        GROUP BY exam_type
+        ORDER BY users DESC
+      `),
+    ]);
+    res.json({
+      userGrowth: usersResult.rows,
+      revenueGrowth: revenueResult.rows,
+      examBreakdown: examBreakdownResult.rows,
+    });
+  });
+
+  // ── GET /api/admin/analytics/retention ─────────────────────────────────────
+  app.get('/api/admin/analytics/retention', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      WITH cohort AS (
+        SELECT id, joined_at::date AS join_date FROM users
+        WHERE joined_at >= NOW() - INTERVAL '60 days'
+      ),
+      activity AS (
+        SELECT DISTINCT user_id, attempted_at::date AS active_date FROM attempts
+      )
+      SELECT
+        COUNT(DISTINCT c.id) AS total_users,
+        COUNT(DISTINCT CASE
+          WHEN a1.active_date >= c.join_date + 1 AND a1.active_date <= c.join_date + 1 THEN c.id
+        END) AS d1,
+        COUNT(DISTINCT CASE
+          WHEN a7.active_date >= c.join_date + 7 AND a7.active_date <= c.join_date + 7 THEN c.id
+        END) AS d7,
+        COUNT(DISTINCT CASE
+          WHEN a30.active_date >= c.join_date + 30 AND a30.active_date <= c.join_date + 30 THEN c.id
+        END) AS d30
+      FROM cohort c
+      LEFT JOIN activity a1 ON a1.user_id = c.id AND a1.active_date = c.join_date + 1
+      LEFT JOIN activity a7 ON a7.user_id = c.id AND a7.active_date = c.join_date + 7
+      LEFT JOIN activity a30 ON a30.user_id = c.id AND a30.active_date = c.join_date + 30
+    `);
+    const r = rows[0];
+    const total = parseInt(r.total_users) || 1;
+    res.json({
+      total_users: parseInt(r.total_users),
+      d1: parseInt(r.d1),
+      d7: parseInt(r.d7),
+      d30: parseInt(r.d30),
+      d1_rate: Math.round((parseInt(r.d1) / total) * 100),
+      d7_rate: Math.round((parseInt(r.d7) / total) * 100),
+      d30_rate: Math.round((parseInt(r.d30) / total) * 100),
+    });
+  });
+
+  // ── GET /api/admin/analytics/funnel ────────────────────────────────────────
+  app.get('/api/admin/analytics/funnel', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT
+        COUNT(*) as total_users,
+        COUNT(CASE WHEN plan = 'premium' THEN 1 END) as premium_users,
+        COUNT(CASE WHEN plan = 'free' AND last_active_date >= CURRENT_DATE - 7 THEN 1 END) as active_free,
+        (SELECT COUNT(*) FROM subscriptions WHERE status = 'active') as active_subs,
+        (SELECT COUNT(*) FROM subscriptions
+          WHERE status = 'expired' AND expires_at >= NOW() - INTERVAL '30 days') as churned_30d,
+        (SELECT COALESCE(SUM(amount_ngn),0) FROM subscriptions
+          WHERE status = 'active') as mrr
+      FROM users
+    `);
+    res.json(rows[0]);
+  });
+
+  // ── GET /api/admin/users/export ─────────────────────────────────────────────
+  app.get('/api/admin/users/export', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT telegram_id, first_name, username, exam_type, plan,
+             streak, joined_at, last_active_date, daily_count
+      FROM users ORDER BY joined_at DESC
+    `);
+    const header = 'telegram_id,first_name,username,exam_type,plan,streak,joined_at,last_active_date,daily_count\n';
+    const csv = rows.map(r =>
+      [r.telegram_id, `"${(r.first_name||'').replace(/"/g,'""')}"`,
+       r.username||'', r.exam_type||'', r.plan, r.streak,
+       r.joined_at?.toISOString()||'', r.last_active_date||'', r.daily_count
+      ].join(',')
+    ).join('\n');
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="users.csv"');
+    res.send(header + csv);
+  });
+
+  // ── POST /api/admin/questions/bulk-import ───────────────────────────────────
+  app.post('/api/admin/questions/bulk-import', adminAuth, async (req: Request, res: Response) => {
+    const { questions } = req.body as { questions: any[] };
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ error: 'questions array required' });
+    }
+    if (questions.length > 500) {
+      return res.status(400).json({ error: 'max 500 questions per import' });
+    }
+
+    const required = ['exam_type','subject','year','question_text','option_a','option_b','option_c','option_d','correct_option'];
+    const validExams = ['WAEC','JAMB','NECO'];
+    const validOpts = ['A','B','C','D','E'];
+
+    let inserted = 0;
+    let skipped = 0;
+    const errors: string[] = [];
+
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i];
+      const row = i + 1;
+
+      const missing = required.filter(f => !q[f]);
+      if (missing.length) { errors.push(`Row ${row}: missing ${missing.join(', ')}`); skipped++; continue; }
+      if (!validExams.includes(q.exam_type)) { errors.push(`Row ${row}: invalid exam_type '${q.exam_type}'`); skipped++; continue; }
+      if (!validOpts.includes(String(q.correct_option).toUpperCase())) { errors.push(`Row ${row}: invalid correct_option`); skipped++; continue; }
+      const yr = parseInt(q.year);
+      if (isNaN(yr) || yr < 1990 || yr > 2030) { errors.push(`Row ${row}: invalid year`); skipped++; continue; }
+
+      try {
+        await db.query(`
+          INSERT INTO questions (exam_type, subject, year, topic, question_text, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, is_active)
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,TRUE)
+        `, [
+          q.exam_type.toUpperCase(), q.subject.toLowerCase(), yr,
+          q.topic || null, q.question_text,
+          q.option_a, q.option_b, q.option_c, q.option_d, q.option_e || null,
+          String(q.correct_option).toUpperCase(), q.explanation || null,
+        ]);
+        inserted++;
+      } catch (err: any) {
+        errors.push(`Row ${row}: ${err.message}`);
+        skipped++;
+      }
+    }
+
+    res.json({ inserted, skipped, errors: errors.slice(0, 20) });
+  });
+
+  // ── GET /api/admin/qotd ─────────────────────────────────────────────────────
+  app.get('/api/admin/qotd', adminAuth, async (_req: Request, res: Response) => {
+    const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0];
+    const examTypes = ['WAEC', 'JAMB', 'NECO'];
+    const result: Record<string, any> = {};
+    for (const et of examTypes) {
+      const { rows } = await db.query(
+        `SELECT k.value as question_id FROM
+           (SELECT current_setting('myapp.dummy', true)) dummy
+         LIMIT 0`
+      ).catch(() => ({ rows: [] }));
+      void rows;
+
+      const { rows: cached } = await db.query(
+        `SELECT 'cached' as source, q.id, q.exam_type, q.subject, q.year,
+                LEFT(q.question_text, 120) as question_preview, q.correct_option
+         FROM questions q
+         WHERE q.id = (
+           SELECT NULLIF(current_setting('app.qotd_${et}_${date}', true), '')::int
+         ) LIMIT 0`
+      ).catch(() => ({ rows: [] }));
+      void cached;
+
+      result[et] = null;
+    }
+
+    const { rows: recentBroadcasts } = await db.query(
+      `SELECT q.id, q.exam_type, q.subject, q.year,
+              LEFT(q.question_text, 120) as question_preview, q.correct_option
+       FROM questions q
+       WHERE q.is_active = TRUE AND q.explanation IS NOT NULL AND length(q.explanation) > 20
+       ORDER BY RANDOM() LIMIT 3`
+    );
+
+    res.json({ date, qotd: result, sample: recentBroadcasts });
+  });
+
+  // ── GET /api/admin/analytics/ranks ─────────────────────────────────────────
+  app.get('/api/admin/analytics/ranks', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT
+        u.telegram_id,
+        COUNT(a.id)::int as total_answered
+      FROM users u
+      LEFT JOIN attempts a ON a.user_id = u.id
+      GROUP BY u.telegram_id
+    `);
+
+    const tierCounts: Record<string, number> = {
+      'Rookie': 0, 'Hustler': 0, 'Grinder': 0,
+      'Sharp Guy': 0, 'Odogwu': 0, 'Legend': 0,
+    };
+    const RANKS = [
+      { tier: 'Rookie',    min: 0    }, { tier: 'Rookie',    min: 50   },
+      { tier: 'Rookie',    min: 120  }, { tier: 'Rookie',    min: 200  },
+      { tier: 'Rookie',    min: 300  }, { tier: 'Hustler',   min: 420  },
+      { tier: 'Hustler',   min: 560  }, { tier: 'Hustler',   min: 720  },
+      { tier: 'Hustler',   min: 900  }, { tier: 'Hustler',   min: 1100 },
+      { tier: 'Grinder',   min: 1320 }, { tier: 'Grinder',   min: 1560 },
+      { tier: 'Grinder',   min: 1820 }, { tier: 'Grinder',   min: 2100 },
+      { tier: 'Grinder',   min: 2400 }, { tier: 'Sharp Guy', min: 2720 },
+      { tier: 'Sharp Guy', min: 3060 }, { tier: 'Sharp Guy', min: 3420 },
+      { tier: 'Sharp Guy', min: 3800 }, { tier: 'Sharp Guy', min: 4200 },
+      { tier: 'Odogwu',    min: 4620 }, { tier: 'Odogwu',    min: 5060 },
+      { tier: 'Odogwu',    min: 5520 }, { tier: 'Odogwu',    min: 6000 },
+      { tier: 'Odogwu',    min: 6500 }, { tier: 'Legend',    min: 7020 },
+      { tier: 'Legend',    min: 7560 }, { tier: 'Legend',    min: 8120 },
+      { tier: 'Legend',    min: 8700 }, { tier: 'Legend',    min: 9300 },
+    ];
+    const getTier = (n: number) => {
+      let t = RANKS[0].tier;
+      for (const r of RANKS) { if (n >= r.min) t = r.tier; else break; }
+      return t;
+    };
+    for (const row of rows) {
+      const tier = getTier(Number(row.total_answered));
+      tierCounts[tier] = (tierCounts[tier] || 0) + 1;
+    }
+    res.json({ distribution: tierCounts, total: rows.length });
   });
 
   return app;

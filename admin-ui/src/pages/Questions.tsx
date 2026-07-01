@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage } from "../api";
-import type { Question, PaginatedResponse } from "../types";
+import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage, toggleQuestionActive, generateExplanation, bulkImportQuestions } from "../api";
+import type { Question, PaginatedResponse, BulkImportResult } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
 import Badge from "../components/Badge";
@@ -45,7 +45,7 @@ const ALL_SUBJECTS: { code: string; label: string }[] = [
 
 const EXAM_TYPES = ["JAMB", "NECO", "WAEC"];
 
-const YEARS = Array.from({ length: 16 }, (_, i) => 2010 + i);
+const YEARS = Array.from({ length: 16 }, (_, i) => 2025 - i);
 
 interface EditState {
   question_text: string;
@@ -67,6 +67,8 @@ export default function Questions() {
   const year = searchParams.get("year") ?? "";
   const search = searchParams.get("q") ?? "";
   const hasDiagram = searchParams.get("has_diagram") ?? "";
+  const missingExp = searchParams.get("missing_explanation") ?? "";
+  const hasFlags = searchParams.get("has_flags") ?? "";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
 
   const [result, setResult] = useState<PaginatedResponse<Question> | null>(null);
@@ -79,6 +81,11 @@ export default function Questions() {
   const [deleting, setDeleting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<BulkImportResult | null>(null);
 
   // Update a single filter key; resets page to 1 unless changing the page itself
   function setFilter(key: string, value: string, keepPage = false) {
@@ -105,6 +112,8 @@ export default function Questions() {
         year: year ? parseInt(year) : undefined,
         search: search || undefined,
         has_diagram: hasDiagram === "true" ? true : hasDiagram === "false" ? false : undefined,
+        missing_explanation: missingExp === "true" ? true : undefined,
+        has_flags: hasFlags === "true" ? true : undefined,
       });
       setResult(data);
       setError(null);
@@ -113,7 +122,7 @@ export default function Questions() {
     } finally {
       setLoading(false);
     }
-  }, [page, subject, examType, year, search, hasDiagram]);
+  }, [page, subject, examType, year, search, hasDiagram, missingExp, hasFlags]);
 
   useEffect(() => {
     load();
@@ -180,6 +189,30 @@ export default function Questions() {
     }
   }
 
+  async function handleGenerate() {
+    if (!editTarget || !editState) return;
+    setGenerating(true);
+    try {
+      const { explanation } = await generateExplanation(editTarget.id);
+      setEditState({ ...editState, explanation });
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function handleToggleActive(q: Question) {
+    try {
+      const updated = await toggleQuestionActive(q.id, !q.is_active);
+      setResult(prev =>
+        prev ? { ...prev, data: prev.data.map(row => row.id === q.id ? { ...row, is_active: updated.is_active } : row) } : prev
+      );
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Toggle failed");
+    }
+  }
+
   async function handleDelete() {
     if (!deleteTarget) return;
     setDeleting(true);
@@ -196,10 +229,78 @@ export default function Questions() {
 
   return (
     <div className="space-y-5 p-6">
-      <div>
-        <h1 className="font-display text-xl font-bold text-white">Questions</h1>
-        <p className="mt-0.5 text-sm text-muted">Browse, edit and manage exam questions</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-display text-xl font-bold text-white">Questions</h1>
+          <p className="mt-0.5 text-sm text-muted">Browse, edit and manage exam questions</p>
+        </div>
+        <button
+          onClick={() => { setShowImport(true); setImportResult(null); setImportFile(null); }}
+          className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:text-white"
+        >
+          ⬆ Import CSV
+        </button>
       </div>
+
+      {showImport && (
+        <Modal title="Bulk Import Questions" onClose={() => setShowImport(false)}>
+          <div className="space-y-4">
+            <div className="rounded-lg border border-border bg-surface2 p-3 text-xs text-muted space-y-1">
+              <p className="font-semibold text-white">Required CSV columns:</p>
+              <p>exam_type, subject, year, question_text, option_a, option_b, option_c, option_d, correct_option</p>
+              <p className="font-semibold text-white mt-2">Optional:</p>
+              <p>option_e, topic, explanation</p>
+              <p className="mt-2 text-amber-400">Max 500 rows per import. First row must be the header.</p>
+            </div>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={(e) => setImportFile(e.target.files?.[0] ?? null)}
+              className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white file:mr-3 file:rounded file:border-0 file:bg-accent file:px-2 file:py-1 file:text-xs file:text-white"
+            />
+            {importResult && (
+              <div className={`rounded-lg border p-3 text-sm ${importResult.skipped > 0 ? "border-amber-500/30 bg-amber-500/10" : "border-accent/30 bg-accent/10"}`}>
+                <p className="font-medium text-white">Import complete</p>
+                <p className="text-xs text-muted mt-1">✅ {importResult.inserted} inserted · ⚠ {importResult.skipped} skipped</p>
+                {importResult.errors.length > 0 && (
+                  <div className="mt-2 space-y-0.5">
+                    {importResult.errors.map((e, i) => <p key={i} className="text-xs text-red-400">{e}</p>)}
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowImport(false)} className="px-4 py-2 text-sm text-muted hover:text-white">Cancel</button>
+              <button
+                onClick={async () => {
+                  if (!importFile) return;
+                  setImporting(true);
+                  try {
+                    const text = await importFile.text();
+                    const lines = text.trim().split('\n');
+                    const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, ''));
+                    const rows = lines.slice(1).map((line) => {
+                      const vals = line.split(',').map((v) => v.trim().replace(/^"|"$/g, ''));
+                      return Object.fromEntries(headers.map((h, i) => [h, vals[i] ?? '']));
+                    });
+                    const result = await bulkImportQuestions(rows);
+                    setImportResult(result);
+                    if (result.inserted > 0) load();
+                  } catch (e: unknown) {
+                    alert(e instanceof Error ? e.message : "Import failed");
+                  } finally {
+                    setImporting(false);
+                  }
+                }}
+                disabled={!importFile || importing}
+                className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+              >
+                {importing ? <><Spinner size="sm" /> Importing...</> : "Import"}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
@@ -248,6 +349,24 @@ export default function Questions() {
           <option value="">All Questions</option>
           <option value="true">Has Diagram</option>
           <option value="false">No Diagram</option>
+        </select>
+
+        <select
+          value={missingExp}
+          onChange={(e) => setFilter("missing_explanation", e.target.value)}
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+        >
+          <option value="">All Explanations</option>
+          <option value="true">Missing Explanation</option>
+        </select>
+
+        <select
+          value={hasFlags}
+          onChange={(e) => setFilter("has_flags", e.target.value)}
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+        >
+          <option value="">All Flags</option>
+          <option value="true">Has Flags</option>
         </select>
 
         <input
@@ -305,6 +424,9 @@ export default function Questions() {
                       Flags
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
+                      Active
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
                       Actions
                     </th>
                   </tr>
@@ -354,6 +476,19 @@ export default function Questions() {
                         ) : (
                           <span className="text-xs text-muted">0</span>
                         )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => handleToggleActive(q)}
+                          title={q.is_active ? "Click to disable" : "Click to enable"}
+                          className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
+                            q.is_active
+                              ? "bg-green-500/15 text-green-400 border border-green-500/20 hover:bg-red-500/15 hover:text-red-400 hover:border-red-500/20"
+                              : "bg-red-500/15 text-red-400 border border-red-500/20 hover:bg-green-500/15 hover:text-green-400 hover:border-green-500/20"
+                          }`}
+                        >
+                          {q.is_active ? "On" : "Off"}
+                        </button>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -473,9 +608,18 @@ export default function Questions() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
-                Explanation
-              </label>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="text-xs font-medium uppercase tracking-wider text-muted">
+                  Explanation
+                </label>
+                <button
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="flex items-center gap-1 rounded border border-violet-500/30 bg-violet-500/10 px-2.5 py-1 text-xs text-violet-400 transition-colors hover:bg-violet-500/20 disabled:opacity-50"
+                >
+                  {generating ? <><Spinner size="sm" /> Generating…</> : "✨ Generate AI"}
+                </button>
+              </div>
               <textarea
                 rows={4}
                 value={editState.explanation}

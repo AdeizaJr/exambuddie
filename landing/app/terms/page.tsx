@@ -23,7 +23,7 @@ export default function TermsPage() {
           </Link>
         </div>
         <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white">Terms of Use</h1>
-        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: June 2026</p>
+        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: July 2026</p>
 
         <div className="space-y-8 text-slate-700 dark:text-slate-300 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_p]:leading-relaxed [&_ul]:ml-4 [&_ul]:list-disc [&_ul]:space-y-1">
           <section>
@@ -65,7 +65,7 @@ export default function TermsPage() {
           <section>
             <h2>5. Subscriptions &amp; Payment</h2>
             <ul>
-              <li>Premium plans are billed monthly (₦800) or yearly (₦7,000).</li>
+              <li>Premium plans are available as: monthly (₦1,500/month), a 3-month exam-season bundle (₦3,500), or yearly (₦12,000/year). Current pricing is always shown at the point of purchase inside the bot.</li>
               <li>Payments are processed by Flutterwave. By subscribing, you agree to Flutterwave&apos;s payment terms.</li>
               <li>Subscriptions do not auto-renew. You must manually renew when your plan expires.</li>
               <li>Access to premium features ends immediately upon plan expiry.</li>

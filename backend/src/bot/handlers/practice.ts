@@ -4,6 +4,8 @@ import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
+import * as achievements from './achievements';
+import { checkRankUp } from './achievements';
 import { User, Question } from '../../types';
 
 async function requireProfile(ctx: any): Promise<User | null> {
@@ -22,7 +24,7 @@ async function checkSubjectLimit(ctx: any, user: User, subject: string): Promise
     const msLeft = usage.expiresAt - Date.now();
     await ctx.reply(
       fmt.subjectLimitMessage(fmt.SUBJECT_MAP[subject] || subject, msLeft),
-      { parse_mode: 'HTML', reply_markup: fmt.subjectLimitKeyboard(subject, user.plan) }
+      { parse_mode: 'HTML', reply_markup: fmt.subjectLimitKeyboard(user.plan) }
     );
     return false;
   }
@@ -360,42 +362,61 @@ export async function handlePracticeTimerPick(ctx: any): Promise<void> {
 // Handles answer:A/B/C/D callback
 export async function handleAnswer(ctx: any): Promise<void> {
   const selected = ctx.callbackQuery.data.split(':')[1];
-  const session = await redis.getSession(ctx.from.id);
+
+  // Parallel: session + user (user hits Redis cache on repeat calls)
+  const [session, user] = await Promise.all([
+    redis.getSession(ctx.from.id),
+    db.getUser(ctx.from.id),
+  ]);
 
   if (!session || !session.currentQuestion) {
     await ctx.answerCbQuery('No active session.', { show_alert: false });
     return;
   }
-
-  const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
   const q = session.currentQuestion;
 
   // Timer already fired automatically — ignore late tap
   if (session.awaitingNext && !session.questionDeadline) return;
 
-  await ctx.answerCbQuery();
+  ctx.answerCbQuery().catch(() => {}); // fire and forget — removes Telegram spinner immediately
 
   const isCorrect = selected === q.correct_option;
   const newConsecutive = isCorrect ? (session.consecutiveCorrect || 0) + 1 : 0;
   const hyped = fmt.consecutiveHype(newConsecutive);
+  const newTotal = (session.total || 0) + 1;
+  const newCorrect = (session.correct || 0) + (isCorrect ? 1 : 0);
 
-  // Cancel the per-question timer since user answered in time
   timerService.clearQuestionTimer(ctx.from.id);
-  await redis.updateSession(ctx.from.id, { questionDeadline: undefined });
 
-  // Log attempt and update streak on first real answer of the day
-  await db.logAttempt({
-    userId: user.id,
-    questionId: q.id,
-    selectedOption: selected,
-    isCorrect,
-    sessionId: session.sessionId || '',
-    timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
-  });
-  const streakResult = await db.updateStreak(ctx.from.id);
+  // Kick off all writes + slow reads in parallel — don't block the reply
+  const streakPromise = db.updateStreak(ctx.from.id);
+  const totalAttemptsPromise = db.getTotalAttempts(user.id);
 
-  // Referral reward: fires silently on first-ever attempt
+  Promise.all([
+    db.logAttempt({
+      userId: user.id,
+      questionId: q.id,
+      selectedOption: selected,
+      isCorrect,
+      sessionId: session.sessionId || '',
+      timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
+    }),
+    user.plan !== 'premium' ? db.incrementDailyCount(ctx.from.id) : Promise.resolve(),
+    user.plan !== 'premium' ? redis.incrementSubjectUsage(ctx.from.id, session.subject || '') : Promise.resolve(),
+    redis.updateSession(ctx.from.id, {
+      questionDeadline: undefined,
+      total: newTotal,
+      correct: newCorrect,
+      consecutiveCorrect: newConsecutive,
+      lastAnswer: selected,
+      lastQuestionTime: Date.now(),
+      awaitingNext: true,
+    }),
+  ]).catch((err) => console.error('[handleAnswer] persist error:', err));
+
+  // Referral reward — already fire-and-forget
   db.checkAndGrantReferralReward(user.id).then(({ granted, referrer }) => {
     if (granted && referrer) {
       ctx.telegram.sendMessage(
@@ -406,21 +427,8 @@ export async function handleAnswer(ctx: any): Promise<void> {
     }
   }).catch(() => {});
 
-  // Update daily count and per-subject usage (free users)
-  if (user.plan !== 'premium') {
-    await db.incrementDailyCount(ctx.from.id);
-    await redis.incrementSubjectUsage(ctx.from.id, session.subject || '');
-  }
-
-  const newTotal = (session.total || 0) + 1;
-  const newCorrect = (session.correct || 0) + (isCorrect ? 1 : 0);
-
-  const totalAttempts = await db.getTotalAttempts(user.id);
-  const milestone = fmt.totalMilestone(totalAttempts);
-
-  // Show result — edit message to remove answer buttons
+  // ── REPLY — user sees this while DB writes are still in flight ──────────────
   const resultText = fmt.correctAnswer(q, selected);
-
   try {
     await ctx.editMessageText(
       fmt.formatQuestion(q, session.qNum || 1, session.total || '?', session.mode)
@@ -431,10 +439,24 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(resultText, {
     parse_mode: 'HTML',
-    reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*')),
+    reply_markup: fmt.afterAnswerKeyboard(session.mode, q.question_text.includes('*'), q.id, !!q.explanation),
   });
 
+  // ── Follow-up messages — await the in-flight promises now ──────────────────
+  const [streakResult, totalAttempts] = await Promise.all([streakPromise, totalAttemptsPromise]);
+  const milestone = fmt.totalMilestone(totalAttempts);
+
+  // Badge check (fire-and-forget)
+  achievements.checkAndGrantBadges(ctx.telegram, user.id, ctx.from.id, {
+    totalAttempts,
+    streak: streakResult?.streak,
+  }).catch(() => {});
+
+  // Rank-up check — notify if user just crossed a rank threshold
+  checkRankUp(ctx.telegram, ctx.from.id, totalAttempts - 1, totalAttempts).catch(() => {});
+
   if (!isCorrect) {
+    db.addSRCard(user.id, q.id).catch(() => {});
     const totalWrong = await db.getTotalWrongAttempts(user.id);
     if (totalWrong === 1) {
       await ctx.reply(
@@ -476,16 +498,6 @@ export async function handleAnswer(ctx: any): Promise<void> {
       }
     );
   }
-
-  // Update session
-  await redis.updateSession(ctx.from.id, {
-    total: newTotal,
-    correct: newCorrect,
-    consecutiveCorrect: newConsecutive,
-    lastAnswer: selected,
-    lastQuestionTime: Date.now(),
-    awaitingNext: true,
-  });
 }
 
 // Next question in practice
@@ -510,6 +522,61 @@ export async function handleNext(ctx: any): Promise<void> {
     await ctx.reply('⚠️ <i>Your premium access has been revoked. The per-question timer has been removed.</i>', { parse_mode: 'HTML' });
   }
 
+  // Revision / bookmark mode: serve questions from the pre-selected pool
+  if (session.revisionPool && Array.isArray(session.revisionPool)) {
+    const nextIndex = (session.revisionIndex ?? 0) + 1;
+    const revisionQuestions: any[] = session.revisionQuestions || [];
+
+    if (nextIndex >= revisionQuestions.length) {
+      // All revision questions done
+      const accuracy = session.total > 0
+        ? Math.round((session.correct / session.total) * 100) : 0;
+      await redis.clearSession(ctx.from.id);
+      await ctx.reply(
+        `🎉 <b>Revision Complete!</b>\n\n✅ ${session.correct}/${session.total} correct · 🎯 ${accuracy}% accuracy\n\n${accuracy >= 70 ? 'Great job! Keep it up 🔥' : 'Keep practising to improve! 💪'}`,
+        {
+          parse_mode: 'HTML',
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '🔄 Revise Again', callback_data: 'revision:start_fresh' }],
+              [{ text: '📚 Practice', callback_data: 'practice:pick' }],
+              [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
+            ],
+          },
+        }
+      );
+      return;
+    }
+
+    const nextQ = revisionQuestions[nextIndex];
+    const newQNum = (session.qNum || 1) + 1;
+    await redis.updateSession(ctx.from.id, {
+      qNum: newQNum,
+      subject: nextQ.subject || session.subject,
+      currentQuestion: nextQ,
+      lastQuestionTime: Date.now(),
+      awaitingNext: false,
+      revisionIndex: nextIndex,
+      usedIds: [...(session.usedIds || []), nextQ.id],
+    });
+    await sendQuestion(ctx, nextQ, { mode: session.mode || 'revision', qNum: newQNum, total: revisionQuestions.length });
+    return;
+  }
+
+  // Auto-challenge: end after autoTotal questions
+  if (session.autoChallenge && session.total >= (session.autoTotal || 5)) {
+    const accuracy = session.total > 0 ? Math.round((session.correct / session.total) * 100) : 0;
+    await redis.clearSession(ctx.from.id);
+    await ctx.reply(
+      `🎯 <b>Daily Challenge Complete!</b>\n\n✅ ${session.correct}/${session.total} correct · 🎯 ${accuracy}% accuracy\n\n${accuracy >= 70 ? '🔥 Excellent! Keep that streak going.' : '💪 Keep practising for better results!'}`,
+      {
+        parse_mode: 'HTML',
+        reply_markup: fmt.sessionKeyboard(session.subject || '', session.year),
+      }
+    );
+    return;
+  }
+
   let q = null;
   let pickedSubject = session.subject || '';
 
@@ -530,7 +597,15 @@ export async function handleNext(ctx: any): Promise<void> {
     }
   } else {
     if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
-    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, session.topic, user.id);
+    // Adaptive: when no explicit topic chosen, 60% probability drill a weak topic
+    let adaptiveTopic = session.topic;
+    if (!adaptiveTopic) {
+      const weak = await db.getWeakTopics(user.id, session.subject || '', session.examType || user.exam_type || '');
+      if (weak.length > 0 && Math.random() < 0.6) {
+        adaptiveTopic = weak[Math.floor(Math.random() * Math.min(3, weak.length))].topic;
+      }
+    }
+    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, adaptiveTopic, user.id);
   }
 
   if (!q) {
@@ -620,6 +695,10 @@ export async function handleChangeSubject(ctx: any): Promise<void> {
 export async function handleDrill(ctx: any, topicOverride?: string): Promise<void> {
   const user = await requireProfile(ctx);
   if (!user) return;
+  if (user.plan !== 'premium') {
+    await ctx.reply(fmt.upgradeMessage(), { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() });
+    return;
+  }
   // Get topic from command args or auto-detect weak topic
   const args = ctx.message?.text?.split(' ').slice(1).join(' ');
   const topic = topicOverride || args;

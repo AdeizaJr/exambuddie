@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getUsers, updateUserPlan, deleteUsers, getUserActivity } from "../api";
+import { getUsers, updateUserPlan, deleteUsers, getUserActivity, exportUsersCSV } from "../api";
 import type { User, UserActivity, UserWeakTopic, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
 import Badge from "../components/Badge";
@@ -210,9 +210,17 @@ export default function Users() {
 
   return (
     <div className="space-y-5 p-6">
-      <div>
-        <h1 className="font-display text-xl font-bold text-white">Users</h1>
-        <p className="mt-0.5 text-sm text-muted">Manage user accounts and plans</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-display text-xl font-bold text-white">Users</h1>
+          <p className="mt-0.5 text-sm text-muted">Manage user accounts and plans</p>
+        </div>
+        <button
+          onClick={() => exportUsersCSV().catch((e) => alert(e.message))}
+          className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:text-white"
+        >
+          ⬇ Export CSV
+        </button>
       </div>
 
       {/* Plan filter tabs */}

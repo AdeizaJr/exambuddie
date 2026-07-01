@@ -62,11 +62,12 @@ const softwareAppJsonLd = {
     "Past question practice for WAEC, JAMB and NECO — timed quizzes, instant explanations, and progress tracking on Telegram.",
   datePublished: "2024-01-01",
   dateModified: "2026-06-01",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "NGN",
-  },
+  offers: [
+    { "@type": "Offer", price: "0", priceCurrency: "NGN", name: "Free" },
+    { "@type": "Offer", price: "1500", priceCurrency: "NGN", name: "Premium Monthly" },
+    { "@type": "Offer", price: "3500", priceCurrency: "NGN", name: "Premium 3-Month" },
+    { "@type": "Offer", price: "12000", priceCurrency: "NGN", name: "Premium Yearly" },
+  ],
 };
 
 const organizationJsonLd = {
@@ -100,6 +101,23 @@ const faqJsonLd = {
   })),
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "ExamBuddie",
+  url: "https://exambuddie.app",
+  description: "WAEC, JAMB and NECO past question practice on Telegram.",
+  inLanguage: "en-NG",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://exambuddie.app/blog?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -121,6 +139,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
       <body className="bg-white text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100" suppressHydrationWarning>

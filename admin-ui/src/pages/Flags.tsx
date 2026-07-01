@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getFlags, resolveFlag } from "../api";
+import { getFlags, resolveFlag, toggleQuestionActive, invalidateCache } from "../api";
 import type { Flag } from "../types";
 import Spinner from "../components/Spinner";
 
@@ -15,7 +15,7 @@ function formatDate(dateStr: string): string {
 
 interface FlagCardProps {
   flag: Flag;
-  onResolved: () => void;
+  onResolved: (id: number) => void;
 }
 
 function FlagCard({ flag, onResolved }: FlagCardProps) {
@@ -23,6 +23,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
   const [explanation, setExplanation] = useState(flag.explanation || "");
   const [questionText, setQuestionText] = useState(flag.question_text || "");
   const [saving, setSaving] = useState(false);
+  const [deactivating, setDeactivating] = useState(false);
 
   async function handleSaveAndResolve() {
     setSaving(true);
@@ -32,10 +33,9 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
       } else {
         await resolveFlag(flag.id, explanation);
       }
-      onResolved();
+      onResolved(flag.id);
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
-    } finally {
       setSaving(false);
     }
   }
@@ -44,11 +44,23 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
     setSaving(true);
     try {
       await resolveFlag(flag.id);
-      onResolved();
+      onResolved(flag.id);
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
-    } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleDeactivate() {
+    if (!confirm(`Deactivate question #${flag.question_id}? It will be hidden from users until reactivated.`)) return;
+    setDeactivating(true);
+    try {
+      await toggleQuestionActive(flag.question_id, false);
+      await resolveFlag(flag.id);
+      onResolved(flag.id);
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Failed to deactivate");
+      setDeactivating(false);
     }
   }
 
@@ -67,6 +79,14 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
             {isUnderline && (
               <span className="rounded border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-400">
                 🔤 Wrong Underline
+              </span>
+            )}
+            {flag.user_first_name && (
+              <span className="rounded border border-border bg-surface2 px-2 py-0.5 text-xs text-muted">
+                👤 {flag.user_first_name}
+                {flag.user_telegram_id && (
+                  <span className="ml-1 font-mono text-[10px] opacity-60">#{flag.user_telegram_id}</span>
+                )}
               </span>
             )}
           </div>
@@ -113,15 +133,23 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
 
       <div className="flex items-center justify-end gap-3">
         <button
+          onClick={handleDeactivate}
+          disabled={saving || deactivating}
+          className="flex items-center gap-2 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-400 transition-colors hover:bg-red-500/20 disabled:opacity-50"
+        >
+          {deactivating && <Spinner size="sm" />}
+          🚫 Deactivate
+        </button>
+        <button
           onClick={handleResolveOnly}
-          disabled={saving}
+          disabled={saving || deactivating}
           className="rounded-lg border border-border bg-surface2 px-3 py-2 text-sm text-white transition-colors hover:bg-border disabled:opacity-50"
         >
           Resolve Only
         </button>
         <button
           onClick={handleSaveAndResolve}
-          disabled={saving}
+          disabled={saving || deactivating}
           className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-50"
         >
           {saving && <Spinner size="sm" />}
@@ -153,6 +181,12 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
     } finally {
       setLoading(false);
     }
+  }, [onFlagsResolved]);
+
+  const handleResolved = useCallback((id: number) => {
+    setFlags(prev => prev.filter(f => f.id !== id));
+    invalidateCache("/flags");
+    onFlagsResolved?.();
   }, [onFlagsResolved]);
 
   useEffect(() => {
@@ -195,7 +229,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
       ) : (
         <div className="space-y-4">
           {flags.map((flag) => (
-            <FlagCard key={flag.id} flag={flag} onResolved={load} />
+            <FlagCard key={flag.id} flag={flag} onResolved={handleResolved} />
           ))}
         </div>
       )}

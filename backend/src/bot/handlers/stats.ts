@@ -226,16 +226,120 @@ export async function handleProgress(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
 
-  const progress = await db.getProgressStats(user.id);
+  const [progress, referralCount] = await Promise.all([
+    db.getProgressStats(user.id),
+    db.getConfirmedReferralCount(user.id),
+  ]);
+
+  // Study plan: days until exam → daily target
+  let studyPlanLine = '';
+  if (user.exam_type && user.target_year) {
+    const now = new Date();
+    const examMonth = user.exam_type === 'JAMB' ? 3 : user.exam_type === 'NECO' ? 7 : 5;
+    const examDate = new Date(user.target_year, examMonth - 1, 15);
+    const daysLeft = Math.ceil((examDate.getTime() - now.getTime()) / 86400000);
+    if (daysLeft > 0) {
+      const unseen = progress.subjectCoverage
+        .filter(c => user.subjects?.includes(c.subject))
+        .reduce((s, c) => s + Math.max(0, c.total - c.seen), 0);
+      if (unseen > 0 && daysLeft > 0) {
+        const dailyTarget = Math.ceil(unseen / daysLeft);
+        studyPlanLine = `\n\n📅 <b>Study Plan:</b> ~${dailyTarget} questions/day to cover all content before your ${user.exam_type} exam (${daysLeft} days left)`;
+      }
+    }
+  }
+
+  // Referral summary line
+  const needed = Math.max(0, 2 - referralCount);
+  const referralLine = user.referral_reward_granted
+    ? '\n🎁 Referral reward claimed!'
+    : referralCount > 0
+      ? `\n🔗 ${referralCount} friend${referralCount !== 1 ? 's' : ''} referred${needed > 0 ? ` — ${needed} more for reward` : ' — reward pending!'}`
+      : '\n🔗 Refer 2 friends → 3 days Premium free (/invite)';
+
   await ctx.reply(
-    fmt.progressMessage(user, progress.totalAttempts, progress.accuracy, progress.subjectCoverage),
+    fmt.progressMessage(user, progress.totalAttempts, progress.accuracy, progress.subjectCoverage) + referralLine + studyPlanLine,
     {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: [
+          [{ text: '📊 Topic Mastery', callback_data: 'stats:topic_mastery' }],
           [{ text: '📤 Share Progress', callback_data: 'stats:share' }],
-          [{ text: '📊 Full Stats', callback_data: 'stats:show' }],
+          [
+            { text: '📊 Full Stats', callback_data: 'stats:show' },
+            { text: '📅 Timetable', callback_data: 'timetable:show' },
+          ],
           [{ text: '📚 Practice', callback_data: 'practice:pick' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleTopicMastery(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Please use /start first.'); return; }
+
+  const subjects = user.subjects || [];
+  if (subjects.length === 0) {
+    await ctx.reply('No subjects selected. Go to /settings to pick your subjects.');
+    return;
+  }
+
+  if (subjects.length === 1) {
+    return showTopicMasteryForSubject(ctx, user, subjects[0]);
+  }
+
+  // Multiple subjects — show picker
+  await ctx.reply(
+    '📊 <b>Topic Mastery</b>\n\nWhich subject would you like to drill into?',
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          ...subjects.map(s => [{ text: `${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s}`, callback_data: `stats:topic_mastery:${s}` }]),
+          [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
+        ],
+      },
+    }
+  );
+}
+
+export async function handleTopicMasterySubject(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const subject = ctx.callbackQuery.data.split(':')[3];
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+  await showTopicMasteryForSubject(ctx, user, subject);
+}
+
+async function showTopicMasteryForSubject(ctx: any, user: any, subject: string): Promise<void> {
+  const topics = await db.getTopicMastery(user.id, subject, user.exam_type || '');
+  const subjectName = SUBJECT_MAP[subject] || subject;
+  const emoji = SUBJECT_EMOJI[subject] || '📖';
+
+  if (topics.length === 0) {
+    await ctx.reply(
+      `${emoji} <b>${subjectName} — Topic Mastery</b>\n\nNo data yet. Answer some ${subjectName} questions first!`,
+      { parse_mode: 'HTML', reply_markup: { inline_keyboard: [[{ text: `📚 Practice ${subjectName}`, callback_data: `practice:subject:${subject}` }]] } }
+    );
+    return;
+  }
+
+  const lines = topics.map(t => {
+    const bar = t.accuracy >= 80 ? '🟢' : t.accuracy >= 50 ? '🟡' : '🔴';
+    return `${bar} <b>${t.topic}</b>: ${t.accuracy}% (${t.correct}/${t.attempts})`;
+  });
+
+  await ctx.reply(
+    `${emoji} <b>${subjectName} — Topic Mastery</b>\n\n${lines.join('\n')}\n\n🟢 Strong  🟡 Needs work  🔴 Weak`,
+    {
+      parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: `📚 Practice ${subjectName}`, callback_data: `practice:subject:${subject}` }],
+          [{ text: '⬅️ Back', callback_data: 'stats:topic_mastery' }],
         ],
       },
     }
@@ -247,7 +351,7 @@ export async function handleShareProgress(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
   const progress = await db.getProgressStats(user.id);
-  const card = fmt.shareableProgressCard(user, progress.totalAttempts, progress.accuracy, BOT_USERNAME);
+  const card = fmt.shareableProgressCard(user, progress.totalAttempts, progress.accuracy, BOT_USERNAME, progress.subjectCoverage);
   await ctx.reply(
     `${card}\n\n<i>Copy the text above and share it on WhatsApp or anywhere you like!</i>`,
     { parse_mode: 'HTML' }

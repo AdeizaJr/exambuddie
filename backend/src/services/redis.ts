@@ -133,6 +133,84 @@ export const clearSupportStep = async (telegramId: number | string): Promise<voi
   await client.del(`support_step:${telegramId}`);
 };
 
+const QUIZ_RESULT_TTL = 60 * 60; // 1 hour
+
+export interface QuizResultSummary {
+  subject: string;
+  correct: number;
+  total: number;
+  accuracy: number;
+  durationSecs: number;
+}
+
+export const saveQuizResult = async (telegramId: number | string, result: QuizResultSummary): Promise<void> => {
+  await setJson(`quiz_result:${telegramId}`, result, QUIZ_RESULT_TTL);
+};
+
+export const getQuizResult = async (telegramId: number | string): Promise<QuizResultSummary | null> => {
+  return getJson<QuizResultSummary>(`quiz_result:${telegramId}`);
+};
+
+export const getCachedAdminStats = async (): Promise<Record<string, unknown> | null> => {
+  return getJson<Record<string, unknown>>('cache:admin_stats');
+};
+
+export const setCachedAdminStats = async (data: Record<string, unknown>): Promise<void> => {
+  await setJson('cache:admin_stats', data, 30); // 30-second TTL
+};
+
+export const getCachedUser = async (telegramId: number | string): Promise<Record<string, unknown> | null> => {
+  return getJson<Record<string, unknown>>(`user_cache:${telegramId}`);
+};
+
+export const setCachedUser = async (telegramId: number | string, user: unknown): Promise<void> => {
+  await setJson(`user_cache:${telegramId}`, user, 60); // 60-second TTL
+};
+
+export const clearCachedUser = async (telegramId: number | string): Promise<void> => {
+  await client.del(`user_cache:${telegramId}`);
+};
+
+const QUIZ_REVIEW_TTL = 30 * 60; // 30 minutes
+
+export interface QuizReviewItem {
+  question: any;
+  selected: string;
+  correct: string;
+}
+
+export const setQuizReview = async (telegramId: number | string, items: QuizReviewItem[]): Promise<void> => {
+  await setJson(`quiz_review:${telegramId}`, items, QUIZ_REVIEW_TTL);
+};
+
+export const getQuizReview = async (telegramId: number | string): Promise<QuizReviewItem[] | null> => {
+  return getJson<QuizReviewItem[]>(`quiz_review:${telegramId}`);
+};
+
+export const clearQuizReview = async (telegramId: number | string): Promise<void> => {
+  await client.del(`quiz_review:${telegramId}`);
+};
+
+// ── QOTD helpers ─────────────────────────────────────────────────────────────
+const QOTD_TTL = 26 * 3600; // 26h — survives the day
+
+export const setQOTDQuestion = async (date: string, examType: string, questionId: number): Promise<void> => {
+  await client.set(`qotd:${date}:${examType}`, String(questionId), { EX: QOTD_TTL });
+};
+
+export const getQOTDQuestion = async (date: string, examType: string): Promise<number | null> => {
+  const val = await client.get(`qotd:${date}:${examType}`);
+  return val ? parseInt(val, 10) : null;
+};
+
+export const markQOTDAnswered = async (telegramId: number | string, date: string): Promise<void> => {
+  await client.set(`qotd:answered:${telegramId}:${date}`, '1', { EX: QOTD_TTL });
+};
+
+export const getQOTDAnswered = async (telegramId: number | string, date: string): Promise<boolean> => {
+  return !!(await client.get(`qotd:answered:${telegramId}:${date}`));
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
@@ -143,6 +221,8 @@ export const deleteUserData = async (telegramId: number | string): Promise<void>
       key === `phone_nudge:${telegramId}` ||
       key === `phone_pending:${telegramId}` ||
       key === `support_step:${telegramId}` ||
+      key === `user_cache:${telegramId}` ||
+      key === `quiz_review:${telegramId}` ||
       key.startsWith(`sublimit:${telegramId}:`)
   );
   if (toDelete.length) await client.del(toDelete);

@@ -58,11 +58,14 @@ export async function handleOnboardConsent(ctx: any): Promise<void> {
 
   await redis.updateSession(ctx.from.id, { step: 'year' });
 
+  // Record consent timestamp for NDPA compliance
+  db.updateUser(ctx.from.id, { consent_given_at: new Date().toISOString() } as any).catch(() => {});
+
   await ctx.editMessageText('✅ <b>Thanks — you\'re all set.</b> You\'ve agreed to our Terms of Use and Privacy Policy.', {
     parse_mode: 'HTML',
   });
 
-  await ctx.reply(fmt.welcome(ctx.from.first_name), {
+  await ctx.reply(fmt.welcome(), {
     parse_mode: 'HTML',
     reply_markup: fmt.onboardYearKeyboard(),
   });
@@ -227,7 +230,7 @@ export async function handleContact(ctx: any): Promise<void> {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
   await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
-  await maybeSendBeatYourInviter(ctx, user);
+  if (user) await maybeSendBeatYourInviter(ctx, user);
 }
 
 export async function handlePhoneSkip(ctx: any): Promise<void> {

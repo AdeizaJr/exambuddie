@@ -1,12 +1,62 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
 
+const RANKS = [
+  { tier: 'Rookie',    level: 'I',   min: 0    },
+  { tier: 'Rookie',    level: 'II',  min: 50   },
+  { tier: 'Rookie',    level: 'III', min: 120  },
+  { tier: 'Rookie',    level: 'IV',  min: 200  },
+  { tier: 'Rookie',    level: 'V',   min: 300  },
+  { tier: 'Hustler',   level: 'I',   min: 420  },
+  { tier: 'Hustler',   level: 'II',  min: 560  },
+  { tier: 'Hustler',   level: 'III', min: 720  },
+  { tier: 'Hustler',   level: 'IV',  min: 900  },
+  { tier: 'Hustler',   level: 'V',   min: 1100 },
+  { tier: 'Grinder',   level: 'I',   min: 1320 },
+  { tier: 'Grinder',   level: 'II',  min: 1560 },
+  { tier: 'Grinder',   level: 'III', min: 1820 },
+  { tier: 'Grinder',   level: 'IV',  min: 2100 },
+  { tier: 'Grinder',   level: 'V',   min: 2400 },
+  { tier: 'Sharp Guy', level: 'I',   min: 2720 },
+  { tier: 'Sharp Guy', level: 'II',  min: 3060 },
+  { tier: 'Sharp Guy', level: 'III', min: 3420 },
+  { tier: 'Sharp Guy', level: 'IV',  min: 3800 },
+  { tier: 'Sharp Guy', level: 'V',   min: 4200 },
+  { tier: 'Odogwu',    level: 'I',   min: 4620 },
+  { tier: 'Odogwu',    level: 'II',  min: 5060 },
+  { tier: 'Odogwu',    level: 'III', min: 5520 },
+  { tier: 'Odogwu',    level: 'IV',  min: 6000 },
+  { tier: 'Odogwu',    level: 'V',   min: 6500 },
+  { tier: 'Legend',    level: 'I',   min: 7020 },
+  { tier: 'Legend',    level: 'II',  min: 7560 },
+  { tier: 'Legend',    level: 'III', min: 8120 },
+  { tier: 'Legend',    level: 'IV',  min: 8700 },
+  { tier: 'Legend',    level: 'V',   min: 9300 },
+];
+
+export function getRank(totalAnswered: number): { tier: string; level: string; label: string; next: number | null } {
+  let current = RANKS[0];
+  for (const r of RANKS) {
+    if (totalAnswered >= r.min) current = r;
+    else break;
+  }
+  const idx = RANKS.indexOf(current);
+  const next = RANKS[idx + 1] ?? null;
+  return {
+    tier: current.tier,
+    level: current.level,
+    label: `${current.tier} ${current.level}`,
+    next: next ? next.min : null,
+  };
+}
+
 // Nigeria is UTC+1 (WAT)
 export function timeGreeting(): string {
   const hour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
   if (hour >= 5 && hour < 12)  return 'Good morning';
   if (hour >= 12 && hour < 17) return 'Good afternoon';
-  return 'Good evening';
+  if (hour >= 17 && hour < 21) return 'Good evening';
+  return 'Hey, night owl 🦉';
 }
 
 
@@ -34,19 +84,20 @@ function fracWrap(s: string): string {
   return needsParens ? `(${s})` : s;
 }
 
-function stackedFrac(n: string, d: string): string {
-  const barLen = Math.max(n.length, d.length) + 2;
-  return `${n}\n${'─'.repeat(barLen)}\n${d}`;
-}
-
 // Convert LaTeX math notation to readable plain text for Telegram.
-// block=true → fractions rendered as stacked (for explanations)
-function convertLatex(text: string, block = false): string {
+function convertLatex(text: string): string {
   return text
     // fractional exponents FIRST — must run before \frac so ^{-\frac{1}{3}} → ^(-1/3)
-    .replace(/\^\{(-?)\\frac\{([^{}]+)\}\{([^{}]+)\}\}/g, (_, sign, n, d) => `^(${sign}${n.trim()}/${d.trim()})`)
-    // general fraction with Unicode shorthand for common ones
-    .replace(/\\frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
+    .replace(/\^\{(-?)\\?frac\{([^{}]+)\}\{([^{}]+)\}\}/g, (_, sign, n, d) => `^(${sign}${n.trim()}/${d.trim()})`)
+    // frac(n)(d) — scraping artifact using parentheses instead of braces
+    .replace(/\\?frac\(([^)]+)\)\(([^)]+)\)/g, (_, num, den) => {
+      const n = num.trim(); const d = den.trim();
+      const unicode = UNICODE_FRACS[`${n}/${d}`] ?? toFracGlyph(n, d);
+      if (unicode) return unicode;
+      return `${fracWrap(n)}/${fracWrap(d)}`;
+    })
+    // general fraction with Unicode shorthand for common ones (with or without backslash)
+    .replace(/\\?frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
       const n = num.trim(); const d = den.trim();
       const unicode = UNICODE_FRACS[`${n}/${d}`] ?? toFracGlyph(n, d);
       if (unicode) return unicode;
@@ -70,7 +121,35 @@ function convertLatex(text: string, block = false): string {
     .replace(/\b([A-Z]{1,2}[a-z]{0,2})-(\d{1,2})\b/g, (_, u, e) => `${u}${toSup(`-${e}`)}`)
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
+    // parenthesized exponents: 2^(2 + n/3) → 2⁽² ⁺ ⁿ/³⁾
+    .replace(/\^\(([^)]+)\)/g, (_, e) => toSup(`(${e})`))
+    // negative/decimal unbraced exponents: y^-3 → y⁻³, x^-0.5 → x⁻⁰·⁵
+    .replace(/\^(-\d+(?:\.\d+)?)/g, (_, e) => toSup(e))
+    // bare charge superscripts: e^- → e⁻, e^+ → e⁺ (must run after digit patterns)
+    .replace(/\^\-(?!\d)/g, '⁻').replace(/\^\+(?!\d)/g, '⁺')
+    // fractional exponent WITH base (actual power): y^1/3 → y¹⁄₃
+    .replace(/(?<=[a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => `${toSup(n)}⁄${toSub(d)}`)
+    // fraction coefficient with ^ prefix, NO base (scraper artifact): ^2/5x → ⅖x, ^3/4 → ¾
+    .replace(/(?<![a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => UNICODE_FRACS[`${n}/${d}`] ?? `${n}/${d}`)
     .replace(/\^(\w)/g, (_, e) => toSup(e))
+    // trig squared: sin2θ → sin²θ, cos2x → cos²x (digit is the power; allow letters after)
+    .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + toSup(d))
+    // log base: log2 → log₂, log10 → log₁₀
+    .replace(/\blog([0-9]+)(?![0-9])/g, (_, d) => 'log' + toSub(d))
+    // chemistry two-letter elements: Na2 → Na₂, SO4 → SO₄ (two-letter symbols are unambiguous)
+    .replace(/\b([A-Z][a-z])([0-9]+)/g, (_, sym, n) => sym + toSub(n))
+    // chemistry: single-letter element before another element in formula: H in H2O, C in CH4
+    .replace(/\b([HCNOFPSBI])([0-9]+)(?=[A-Z])/g, (_, sym, n) => sym + toSub(n))
+    // chemistry: element digit at end of formula, preceded by another element: O in CO2
+    .replace(/(?<=[A-Za-z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z])/g, (_, sym, n) => sym + toSub(n))
+    // chemistry standalone diatomic/molecules: O2 → O₂, N2 → N₂
+    .replace(/\b([HCNOFPSBI])([0-9]+)\b/g, (_, sym, n) => sym + toSub(n))
+    // algebra bare power: 4x2 → 4x², x2 → x² (not preceded by letter, not followed by alphanum)
+    .replace(/(?<![a-zA-Z])([a-z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
+    // physics/math uppercase variables: D2 R → D² R (D not in chemistry list; D2K stays — letter follows)
+    .replace(/(?<![a-zA-Z])([A-Z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
+    // chemistry state symbols: Zn_(s) → Zn(s), H2O_(l) → H₂O(l)
+    .replace(/_\(([slgaq]+)\)/gi, '($1)')
     // subscripts
     .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
     .replace(/_(\w)/g, (_, e) => toSub(e))
@@ -129,6 +208,15 @@ function convertLatex(text: string, block = false): string {
     // strip remaining backslash commands (unwrap content from braces)
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')
     .replace(/\\[a-zA-Z]+/g, '')
+    // space between digit and fraction glyph: 1⅞ → 1 ⅞
+    .replace(/(\d)([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])/g, '$1 $2')
+    // numeric fractions: denominator is digits-only so trailing vars aren't consumed (2/5x → ⅖x not ⅖ₓ)
+    .replace(/(?<![a-zA-Z0-9\/:.])([a-zA-Z0-9]+)\/(\d+)(?![\/:])/g, (_, n, d) => {
+      const key = `${n}/${d}`;
+      return UNICODE_FRACS[key] ?? `${n}⁄${d}`;
+    })
+    // single-letter algebraic fractions: m/n → m⁄n (single chars only — prevents sin/cos → s⁄c etc.)
+    .replace(/(?<![a-zA-Z0-9\/:.])([a-zA-Z])\/([a-zA-Z])(?![a-zA-Z\/:])/g, '$1⁄$2')
     .replace(/ {2,}/g, ' ')
     .trim();
 }
@@ -257,7 +345,7 @@ export function consentKeyboard() {
   };
 }
 
-export function welcome(firstName: string): string {
+export function welcome(): string {
   return `Let's set up your profile in 3 quick steps so I can tailor questions to your exam.
 
 📅 <b>Step 1 of 3:</b> Which exam year do you want to practice?`;
@@ -277,6 +365,17 @@ function buildYearKeyboard(prefix: string, backButton?: { text: string; callback
   }
   if (backButton) rows.push([backButton]);
   return { inline_keyboard: rows };
+}
+
+export function questionTypeKeyboard(subject: string) {
+  return {
+    inline_keyboard: [
+      [
+        { text: '📝 Objective (MCQ)', callback_data: `practice:type:obj:${subject}` },
+        { text: '✍️ Theory', callback_data: `practice:type:theory:${subject}` },
+      ],
+    ],
+  };
 }
 
 export function onboardYearKeyboard() {
@@ -334,7 +433,9 @@ export function persistentMenuKeyboard() {
     keyboard: [
       [{ text: '📚 Practice' }, { text: '📋 CBT' }],
       [{ text: '🎯 Challenge' }, { text: '🏆 Leaderboard' }],
-      [{ text: '📊 My Stats' }, { text: '⚙️ Settings' }],
+      [{ text: '📖 Review' }, { text: '🎓 Mock Exam' }],
+      [{ text: '🏅 Badges' }, { text: '📊 My Stats' }],
+      [{ text: '📐 Formulas' }, { text: '⚙️ Settings' }],
     ],
     resize_keyboard: true,
     persistent: true,
@@ -395,6 +496,12 @@ export function formatQuestion(q: Question, number: number, total: number | stri
     ? `🎯 <b>Topic Drill: ${q.topic || 'Mixed'}</b>`
     : mode === 'challenge'
     ? `🎯 <b>Question ${number}/${total}</b>`
+    : mode === 'sr_review'
+    ? `📖 <b>Review Card ${number}/${total}</b>`
+    : mode === 'quiz_review'
+    ? `📖 <b>Wrong Answer ${number}/${total}</b>`
+    : mode === 'qotd'
+    ? `📅 <b>Question of the Day</b>`
     : `📚 <b>Practice Mode</b>`;
 
   let questionText = q.question_text || '';
@@ -445,8 +552,40 @@ function formatExplanation(text: string): string {
   if (/<(?:b|i|code)>/.test(text)) {
     return text.replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
   }
-  const converted = convertLatex(text, true);
+  // General pre-formatting — works across all subjects
+  const preFormatted = text
+    // Bold section headers: "Given:", "Find:", "Solution:", "Step N:", "Where:", "Note:"
+    .replace(/\b(Given|Find|Solution|Where|Note|Step\s*\d+)\s*:/gi, '\n\n<b>$1:</b>')
+    // Comma-separated variable assignments: ", WORD(optional) = value" → new line
+    // e.g. "C = 0.25mol/dm3, volume = ?" → "C = 0.25mol/dm3\nvolume = ?"
+    .replace(/,\s*([A-Za-z][A-Za-z ]{1,20}(?:\([^)]{1,10}\))?\s*=\s*[^,\n]{1,40})/g, '\n$1')
+    // After a numeric value/unit, a new word phrase leading to "=" = new fact
+    // Require first part to contain a digit so "number of" doesn't match
+    // e.g. "0.25mol/dm3 volume =" → "0.25mol/dm3\nvolume ="
+    .replace(/(\b\d[\d./]*[a-z³²]*)\s+([a-z][a-z ]{2,20}(?:\([^)]{1,10}\))?\s*=)/g, '$1\n$2')
+    // "and WORD_PHRASE =" starting a new clause mid-sentence
+    // e.g. "and number of mole(n) =" → new line
+    .replace(/\s+and\s+([a-z][a-z ]{2,20}(?:\([^)]{1,10}\))?\s*=)/g, '\n\nand $1')
+    // Closing paren/bracket followed by a new multi-word noun phrase leading to "="
+    // e.g. "volume(dm³) molar concentration(C) =" → break before "molar"
+    .replace(/\)\s+([a-z][a-z ]{2,25}(?:\([^)]{1,15}\))?\s*=)/g, ')\n$1')
+    // "( where X = " → on its own line
+    .replace(/\(\s*where\b/gi, '\n(where')
+    .trim();
+  const converted = convertLatex(preFormatted);
   return converted
+    // equation step chains: "n = a = b = c" → one step per line
+    // skip if any segment between = signs contains ≥2 English words (prose, not math)
+    .replace(/^.+=.+=.+$/gm, (line) => {
+      const eqIdx = line.indexOf(' = ');
+      if (eqIdx === -1) return line;
+      const lhs = line.slice(0, eqIdx + 3);
+      const rest = line.slice(eqIdx + 3);
+      const parts = rest.split(' = ');
+      const looksEnglish = (s: string) => (s.match(/\b[a-zA-Z]{4,}\b/g) || []).length >= 2;
+      if (parts.some(looksEnglish)) return line;
+      return lhs + parts.join('\n= ');
+    })
     // inverse trig: cos-1 / sin-1 / tan-1 → cos⁻¹ / sin⁻¹ / tan⁻¹
     .replace(/\b(sin|cos|tan)-1\b/g, '$1⁻¹')
     // packed equations: "0.5 0.8660" → "0.5\n0.8660" (two decimals with no operator)
@@ -509,12 +648,18 @@ export function correctAnswer(q: Question, selected: string): string {
     A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d, E: q.option_e,
   };
 
+  const correctText = md(optionText[q.correct_option] ?? '');
+  const explanation = q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>';
+
   return `${header}
 
-✔️ <b>${q.correct_option}.</b> ${md(optionText[q.correct_option])}
+✔️ <b>Answer ${q.correct_option}:</b> ${correctText}
 
-💡 <b>Explanation:</b>
-${q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>'}`;
+━━━━━━━━━━━━━━
+💡 <b>Explanation</b>
+━━━━━━━━━━━━━━
+
+${explanation}`;
 }
 
 export const FLAG_REASONS: Record<string, string> = {
@@ -536,7 +681,7 @@ export function flagReasonKeyboard() {
   };
 }
 
-export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
+export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questionId?: number, hasExplanation = false) {
   if (mode === 'quiz') {
     const rows: any[] = [
       [
@@ -546,6 +691,11 @@ export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
       [{ text: '⏹ End CBT', callback_data: 'quiz:stop' }],
     ];
     if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
+    if (questionId) rows.push([{ text: '⭐ Save Question', callback_data: `bookmark:toggle:${questionId}` }]);
+    if (hasExplanation && questionId) rows.push([
+      { text: '👍 Good explanation', callback_data: `feedback:good:${questionId}` },
+      { text: '👎 Poor explanation', callback_data: `feedback:bad:${questionId}` },
+    ]);
     return { inline_keyboard: rows };
   }
   const rows: any[] = [
@@ -559,6 +709,11 @@ export function afterAnswerKeyboard(mode?: string, hasUnderline = false) {
     ],
   ];
   if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
+  if (questionId) rows.push([{ text: '⭐ Save Question', callback_data: `bookmark:toggle:${questionId}` }]);
+  if (hasExplanation && questionId) rows.push([
+    { text: '👍 Good explanation', callback_data: `feedback:good:${questionId}` },
+    { text: '👎 Poor explanation', callback_data: `feedback:bad:${questionId}` },
+  ]);
   return { inline_keyboard: rows };
 }
 
@@ -698,6 +853,13 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
   }
 
   const countdown = examCountdown(user.exam_type || null, user.target_year || null);
+  const dailyTarget = 10;
+  const dailyProgress = `📅 Today: ${user.daily_count || 0}/${dailyTarget} questions · 🔥 ${user.streak || 0} day streak`;
+  const totalAnswered = Number(stats.total_attempts || 0);
+  const rank = getRank(totalAnswered);
+  const rankLine = rank.next
+    ? `🏅 Rank: <b>${rank.label}</b> · ${rank.next - totalAnswered} questions to next rank`
+    : `🏅 Rank: <b>${rank.label}</b> · 👑 Max rank reached!`;
   return `📈 <b>Your ${examLabel} Stats</b>
 
 👤 ${user.first_name}
@@ -709,6 +871,8 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 • Correct Answers: ${stats.correct || 0}
 • Accuracy: ${stats.accuracy || 0}%
 • 🔥 Streak: ${user.streak || 0} days
+• ${rankLine}
+• ${dailyProgress}
 
 💳 <b>Plan:</b> ${plan}
 ${subjectSection}${weakSection}${drillTip}`;
@@ -894,7 +1058,7 @@ Resets in <b>${timeStr}</b>.
 Switch to another subject or upgrade to Premium for unlimited access 👇`;
 }
 
-export function subjectLimitKeyboard(subject: string, plan?: string) {
+export function subjectLimitKeyboard(plan?: string) {
   const isPremium = plan === 'premium';
   return {
     inline_keyboard: [
@@ -949,29 +1113,6 @@ export function practiceMultiSubjectKeyboard(allSubjects: string[], selected: st
   return { inline_keyboard: rows };
 }
 
-export function quizMultiSubjectKeyboard(allSubjects: string[], selected: string[]) {
-  const sorted = [...allSubjects].sort((a, b) => {
-    if (a === 'english') return -1;
-    if (b === 'english') return 1;
-    return (SUBJECT_MAP[a] || a).localeCompare(SUBJECT_MAP[b] || b);
-  });
-  const buttons = sorted.map(s => {
-    const isSelected = selected.includes(s);
-    return {
-      text: `${isSelected ? '✅ ' : ''}${SUBJECT_EMOJI[s] || '📖'} ${SUBJECT_MAP[s] || s}`,
-      callback_data: `quiz:multisubject:toggle:${s}`,
-    };
-  });
-  const rows: any[][] = [];
-  for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
-  rows.push([{
-    text: selected.length > 0
-      ? `▶️ Start Quiz (${selected.length} subject${selected.length > 1 ? 's' : ''})`
-      : '⚠️ Select at least one subject',
-    callback_data: 'quiz:multisubject:start',
-  }]);
-  return { inline_keyboard: rows };
-}
 
 export function flowYearKeyboard(mode: 'practice' | 'quiz') {
   const rows: any[][] = [
@@ -1087,13 +1228,17 @@ export function progressMessage(
     .filter(c => user.subjects?.includes(c.subject))
     .map(c => {
       const pct = Math.round((c.seen / c.total) * 100);
+      const filled = Math.round(pct / 10);
+      const bar = '█'.repeat(filled) + '░'.repeat(10 - filled);
       const emoji = SUBJECT_EMOJI[c.subject] || '📖';
-      return `  ${emoji} ${SUBJECT_MAP[c.subject] || c.subject}: ${pct}% (${c.seen}/${c.total})`;
+      return `  ${emoji} ${SUBJECT_MAP[c.subject] || c.subject}\n  <code>${bar}</code> ${pct}% (${c.seen}/${c.total})`;
     }).join('\n');
 
+  const dailyTarget = 10;
   return `⚡ <b>Your Progress</b>
 
 🔥 Streak: ${user.streak || 0} days
+📅 Today: ${user.daily_count || 0}/${dailyTarget} questions
 📝 Questions: ${totalAttempts.toLocaleString()} answered
 🎯 Accuracy: ${accuracy}%${countdown ? `\n${countdown}` : ''}${coverageLines ? `\n\n📈 <b>Coverage:</b>\n${coverageLines}` : ''}
 
@@ -1112,25 +1257,47 @@ export function shareableProgressCard(
   user: User,
   totalAttempts: number,
   accuracy: number,
-  botUsername: string
+  botUsername: string,
+  subjectCoverage?: { subject: string; seen: number; total: number }[]
 ): string {
   const streak = user.streak || 0;
   const badge = streakBadge(streak);
-  const best = user.subjects && user.subjects.length > 0 ? user.subjects[0] : null;
-  const bestLine = best ? `\n📚 ${SUBJECT_MAP[best] || best}` : '';
-  const examLine = user.exam_type && user.target_year ? `\n🎯 ${user.exam_type} ${user.target_year}` : '';
+  const examLine = user.exam_type && user.target_year ? `🎯 ${user.exam_type} ${user.target_year}` : '';
+
+  // Best covered subject
+  let coverageLine = '';
+  if (subjectCoverage && subjectCoverage.length > 0) {
+    const best = subjectCoverage
+      .filter(c => user.subjects?.includes(c.subject) && c.total > 0)
+      .sort((a, b) => (b.seen / b.total) - (a.seen / a.total))[0];
+    if (best) {
+      const pct = Math.round((best.seen / best.total) * 100);
+      coverageLine = `📈 ${SUBJECT_MAP[best.subject] || best.subject}: ${pct}% covered`;
+    }
+  }
+
   const link = user.referral_code
     ? `https://t.me/${botUsername}?start=ref_${user.referral_code}`
     : `https://t.me/${botUsername}`;
-  return `${badge}
-━━━━━━━━━━━━━━━━
-${user.first_name} · ExamBuddie
-🔥 ${streak}-day streak
-✅ ${totalAttempts.toLocaleString()} questions answered
-🎯 ${accuracy}% accuracy${bestLine}${examLine}
 
-Studying smarter for WAEC/JAMB/NECO 📖
-Join me → ${link}`;
+  const rank = getRank(totalAttempts);
+
+  const lines = [
+    badge,
+    '━━━━━━━━━━━━━━━━',
+    `${user.first_name} · ExamBuddie`,
+    `🏅 ${rank.label}`,
+    `🔥 ${streak}-day streak`,
+    `✅ ${totalAttempts.toLocaleString()} questions answered`,
+    `🎯 ${accuracy}% accuracy`,
+    examLine,
+    coverageLine,
+    '',
+    'Studying smarter for WAEC/JAMB/NECO 📖',
+    `Join me → ${link}`,
+  ].filter(Boolean);
+
+  return lines.join('\n');
 }
 
 export function onboardingGuide(): string {

@@ -41,18 +41,18 @@ export const metadata: Metadata = {
 };
 
 const jambSubjects = [
-  { icon: "📐", name: "Mathematics" },
-  { icon: "📖", name: "English Language" },
-  { icon: "🔬", name: "Biology" },
-  { icon: "⚗️", name: "Chemistry" },
-  { icon: "⚡", name: "Physics" },
-  { icon: "🌍", name: "Geography" },
-  { icon: "💰", name: "Economics" },
-  { icon: "📊", name: "Accounts" },
-  { icon: "📜", name: "History" },
-  { icon: "✝️", name: "CRK / IRK" },
-  { icon: "🏛️", name: "Government" },
-  { icon: "📚", name: "Literature" },
+  { icon: "📐", name: "Mathematics", slug: "math" },
+  { icon: "📖", name: "English Language", slug: "english" },
+  { icon: "🔬", name: "Biology", slug: "biology" },
+  { icon: "⚗️", name: "Chemistry", slug: "chemistry" },
+  { icon: "⚡", name: "Physics", slug: "physics" },
+  { icon: "🌍", name: "Geography", slug: "geography" },
+  { icon: "💰", name: "Economics", slug: "economics" },
+  { icon: "📊", name: "Accounts", slug: "accounts" },
+  { icon: "📜", name: "History", slug: null },
+  { icon: "✝️", name: "CRK / IRK", slug: null },
+  { icon: "🏛️", name: "Government", slug: "government" },
+  { icon: "📚", name: "Literature", slug: "literature" },
 ];
 
 const jambJsonLd = {
@@ -199,15 +199,26 @@ export default function JambPage() {
             Practice your 4 UTME subjects with real past questions and explanations.
           </p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
-            {jambSubjects.map(({ icon, name }) => (
-              <div
-                key={name}
-                className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center border border-slate-100 dark:bg-slate-950 dark:border-slate-800"
-              >
-                <span className="text-2xl sm:text-3xl">{icon}</span>
-                <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
-              </div>
-            ))}
+            {jambSubjects.map(({ icon, name, slug }) =>
+              slug ? (
+                <a
+                  key={name}
+                  href={`/jamb/${slug}`}
+                  className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center border border-slate-100 transition-colors hover:border-blue-200 hover:bg-blue-50 dark:bg-slate-950 dark:border-slate-800 dark:hover:border-blue-800 dark:hover:bg-blue-950"
+                >
+                  <span className="text-2xl sm:text-3xl">{icon}</span>
+                  <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
+                </a>
+              ) : (
+                <div
+                  key={name}
+                  className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center border border-slate-100 dark:bg-slate-950 dark:border-slate-800"
+                >
+                  <span className="text-2xl sm:text-3xl">{icon}</span>
+                  <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
+                </div>
+              )
+            )}
           </div>
         </div>
       </section>
@@ -236,7 +247,10 @@ export default function JambPage() {
       <footer className="border-t border-slate-100 px-4 py-8 sm:px-6 sm:py-10 dark:border-slate-800">
         <div className="mx-auto max-w-6xl flex flex-col items-center justify-between gap-3 text-center text-xs text-slate-500 sm:gap-4 sm:text-sm md:flex-row md:text-left dark:text-slate-400">
           <a href="/" className="text-sm font-bold text-slate-700 hover:text-blue-700 sm:text-base dark:text-slate-200 dark:hover:text-blue-400">ExamBuddie</a>
-          <span>© {new Date().getFullYear()} ExamBuddie. Built for Nigerian students.</span>
+          <div className="flex flex-col items-center gap-1">
+            <span>© {new Date().getFullYear()} ExamBuddie. All Rights Reserved.</span>
+            <span>Built with ❤️ for Nigerian students.</span>
+          </div>
           <div className="flex gap-4">
             <a href="/waec" className="hover:text-blue-700 dark:hover:text-blue-400">WAEC →</a>
             <a href="/neco" className="hover:text-blue-700 dark:hover:text-blue-400">NECO →</a>

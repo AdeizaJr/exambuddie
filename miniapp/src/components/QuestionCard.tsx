@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import type { Question } from '../types';
@@ -13,9 +14,37 @@ function tryKatex(expr: string, display: boolean): string {
 // Regex that matches bare LaTeX math sequences (no delimiters)
 const BARE_LATEX = /(?:\\(?:frac|sqrt|sum|prod|int|partial|lim|infty|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|lambda|mu|nu|xi|pi|rho|sigma|tau|phi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|times|div|pm|geq|leq|neq|approx|equiv|cdot|angle|parallel|perp|rightarrow|leftarrow|sin|cos|tan|log|ln|vec|hat|overline)(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?)+(?:\s*[+\-=\/()\[\]a-zA-Z0-9.,]*(?:\\[a-zA-Z]+(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?|(?:\^|_)(?:\{[^{}]+\}|[a-zA-Z0-9]))*)*/g;
 
+const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+const SUB = '₀₁₂₃₄₅₆₇₈₉';
+const FRAC_GLYPHS: Record<string, string> = {
+  '1/2':'½','1/3':'⅓','2/3':'⅔','1/4':'¼','3/4':'¾',
+  '1/5':'⅕','2/5':'⅖','3/5':'⅗','4/5':'⅘',
+  '1/6':'⅙','5/6':'⅚','1/8':'⅛','3/8':'⅜','5/8':'⅝','7/8':'⅞',
+};
+
+// Pre-process plain-text math notation that KaTeX won't handle
+function preMath(text: string): string {
+  return text
+    // fraction coefficient with ^ prefix (no base): ^2/5x → ⅖x
+    .replace(/(?<![a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => FRAC_GLYPHS[`${n}/${d}`] ?? `${n}/${d}`)
+    // space between digit and fraction glyph: 1⅞ → 1 ⅞
+    .replace(/(\d)([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])/g, '$1 $2')
+    // plain numeric fractions (digits only denominator): 15/16 → 15⁄16, 2/5x → ⅖x
+    .replace(/(?<![a-zA-Z0-9\/:.])(\d+)\/(\d+)/g, (_, n, d) => FRAC_GLYPHS[`${n}/${d}`] ?? `${n}⁄${d}`)
+    // trig squared: sin2θ → sin²θ
+    .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + SUP[parseInt(d)])
+    // log base: log2 → log₂
+    .replace(/\blog([0-9]+)(?![0-9])/g, (_, d) => 'log' + [...d].map(c => SUB[parseInt(c)]).join(''))
+    // algebra bare power: x2 → x²
+    .replace(/(?<![a-zA-Z])([a-z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + SUP[parseInt(d)]);
+}
+
 function renderMath(text: string): string {
+  // Pre-process plain-text notation before HTML escaping
+  const preprocessed = preMath(text);
+
   // Escape HTML
-  let result = text
+  let result = preprocessed
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
@@ -74,7 +103,7 @@ function optionText(q: Question, opt: string): string {
   }
 }
 
-export default function QuestionCard({ question, qNum, total, selected, revealed, onSelect, disabled }: Props) {
+function QuestionCard({ question, qNum, total, selected, revealed, onSelect, disabled }: Props) {
   const options = OPTIONS.filter(o => optionText(question, o) !== '');
 
   function getOptionStyle(opt: string): React.CSSProperties {
@@ -148,6 +177,16 @@ export default function QuestionCard({ question, qNum, total, selected, revealed
           className="question-text text-sm font-medium text-[var(--tg-text)] leading-relaxed whitespace-pre-wrap"
           dangerouslySetInnerHTML={{ __html: renderMath(question.question_text) }}
         />
+        {question.image_url && (
+          <img
+            src={question.image_url}
+            alt="diagram"
+            className="mt-3 max-h-52 w-full rounded-xl object-contain bg-white"
+          />
+        )}
+        {question.has_diagram && !question.image_url && (
+          <p className="mt-2 text-xs text-amber-600 italic">⚠️ This question has a diagram not yet available.</p>
+        )}
       </div>
 
       {/* Options */}
@@ -196,3 +235,5 @@ export default function QuestionCard({ question, qNum, total, selected, revealed
     </div>
   );
 }
+
+export default memo(QuestionCard);
