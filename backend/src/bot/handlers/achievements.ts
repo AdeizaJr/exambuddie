@@ -1,4 +1,5 @@
 import * as db from '../../db';
+import { getRank } from '../formatter';
 
 export interface Badge {
   code: string;
@@ -136,4 +137,30 @@ export async function handleBadges(ctx: any): Promise<void> {
       reply_markup: { inline_keyboard: [[{ text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
     }
   );
+}
+
+const RANK_UP_MESSAGES: Record<string, string> = {
+  'Hustler I':    "You're grinding now. Keep it up! 💪",
+  'Grinder I':    "You're in the top half — serious student energy. 🔥",
+  'Sharp Guy I':  "Sharp Guy tier. You're outpacing most students. ⚡",
+  'Odogwu I':     "Odogwu! You've answered more questions than 90% of users. 👑",
+  'Legend I':     "LEGEND. You've reached the highest tier. Hall of fame. 🏆",
+};
+
+export async function checkRankUp(
+  telegram: any,
+  telegramId: number,
+  prevTotal: number,
+  newTotal: number
+): Promise<void> {
+  const prevRank = getRank(Math.max(0, prevTotal));
+  const newRank = getRank(newTotal);
+  if (prevRank.label === newRank.label) return;
+
+  const extra = RANK_UP_MESSAGES[newRank.label] ?? '';
+  await telegram.sendMessage(
+    telegramId,
+    `🎉 <b>Rank Up!</b>\n\nYou're now <b>${newRank.label}</b>!\n${extra}\n\n<i>Check your rank anytime with /stats</i>`,
+    { parse_mode: 'HTML' }
+  ).catch(() => {});
 }

@@ -5,6 +5,7 @@ import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
 import * as achievements from './achievements';
+import { checkRankUp } from './achievements';
 import { User, Question } from '../../types';
 
 async function requireProfile(ctx: any): Promise<User | null> {
@@ -450,6 +451,9 @@ export async function handleAnswer(ctx: any): Promise<void> {
     totalAttempts,
     streak: streakResult?.streak,
   }).catch(() => {});
+
+  // Rank-up check — notify if user just crossed a rank threshold
+  checkRankUp(ctx.telegram, ctx.from.id, totalAttempts - 1, totalAttempts).catch(() => {});
 
   if (!isCorrect) {
     db.addSRCard(user.id, q.id).catch(() => {});
