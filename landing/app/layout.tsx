@@ -86,6 +86,10 @@ const organizationJsonLd = {
   },
   areaServed: "NG",
   knowsLanguage: "en-NG",
+  sameAs: [
+    "https://x.com/exambuddie",
+    "https://linkedin.com/company/exambuddie",
+  ],
 };
 
 const faqJsonLd = {
