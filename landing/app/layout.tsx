@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
   verification: { google: "googleb86b6e207e3f7ae9" },
   description:
-    "WAEC, JAMB and NECO past question practice on Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
+    "WAEC, JAMB and NECO past questions practice on Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
   keywords: [
     "WAEC past questions",
     "JAMB practice questions",
