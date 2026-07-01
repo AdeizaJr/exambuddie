@@ -56,7 +56,7 @@ npm run dev                  # development (long polling)
 | `ALLOWED_ORIGINS` | Comma-separated CORS origins (miniapp + admin-ui URLs) |
 | `FREE_DAILY_LIMIT` | Max questions per day for free users (default: 5) |
 | `SUPPORT_CHAT_ID` | Telegram chat/group ID to receive bug reports (optional) |
-| `ZOHO_SMTP_USER` | Zoho Mail address e.g. `support@exambuddie.app` |
+| `ZOHO_SMTP_USER` | Zoho Mail address e.g. `hello@exambuddie.app` |
 | `ZOHO_SMTP_PASS` | Zoho app-specific password |
 | `ZOHO_SMTP_TO` | Inbox that receives support emails (defaults to `ZOHO_SMTP_USER`) |
 | `MONTHLY_PRICE_NGN` | Monthly plan price in kobo (default: `1500`) |

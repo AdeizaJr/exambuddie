@@ -38,7 +38,7 @@ export async function handleSupportBug(ctx: any): Promise<void> {
 export async function handleSupportData(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   await ctx.reply(
-    `📋 <b>Data Request</b>\n\nYou can request access to, correction of, export of, or deletion of your personal data under the Nigeria Data Protection Act 2023.\n\nEmail us at <a href="mailto:support@exambuddie.app">support@exambuddie.app</a> with:\n• Your name\n• Your Telegram username or ID (<code>${ctx.from.id}</code>)\n• What you want (access / correct / export / delete)\n\nWe will respond within <b>30 days</b>.`,
+    `📋 <b>Data Request</b>\n\nYou can request access to, correction of, export of, or deletion of your personal data under the Nigeria Data Protection Act 2023.\n\nEmail us at <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a> with:\n• Your name\n• Your Telegram username or ID (<code>${ctx.from.id}</code>)\n• What you want (access / correct / export / delete)\n\nWe will respond within <b>30 days</b>.`,
     {
       parse_mode: 'HTML',
       reply_markup: { inline_keyboard: [[{ text: '← Back', callback_data: 'support:menu' }]] },
@@ -49,7 +49,7 @@ export async function handleSupportData(ctx: any): Promise<void> {
 export async function handleSupportOther(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   await ctx.reply(
-    '💬 <b>Get in Touch</b>\n\nFor any other questions or feedback:\n\n• DM <b>@ExamBuddiSupport</b> on Telegram\n• Email <a href="mailto:support@exambuddie.app">support@exambuddie.app</a>\n\nWe usually reply within 24–48 hours.',
+    '💬 <b>Get in Touch</b>\n\nFor any other questions or feedback:\n\n• DM <b>@ExamBuddiSupport</b> on Telegram\n• Email <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a>\n\nWe usually reply within 24–48 hours.',
     {
       parse_mode: 'HTML',
       reply_markup: { inline_keyboard: [[{ text: '← Back', callback_data: 'support:menu' }]] },
