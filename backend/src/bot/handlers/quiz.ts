@@ -5,6 +5,7 @@ import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
 import * as achievements from './achievements';
+import { checkRankUp } from './achievements';
 import { User, QuizState } from '../../types';
 import { handleSRDone } from './spaced_repetition';
 
@@ -489,7 +490,7 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
   await redis.clearQuizState(ctx.from.id);
   await redis.clearSession(ctx.from.id);
 
-  // Badge check
+  // Badge + rank-up check
   if (user && reason === 'complete') {
     const totalAttempts = await db.getTotalAttempts(user.id).catch(() => 0);
     achievements.checkAndGrantBadges(ctx.telegram, user.id, ctx.from.id, {
@@ -498,6 +499,7 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
       mockDone: !!quizState.isMock,
       quizScore: { correct: quizState.correct, total: quizState.total },
     }).catch(() => {});
+    checkRankUp(ctx.telegram, ctx.from.id, totalAttempts - quizState.total, totalAttempts).catch(() => {});
   }
 
   const reasonNote = reason === 'timeout' ? '\n⏰ <i>Time ran out!</i>'

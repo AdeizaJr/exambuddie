@@ -1071,5 +1071,49 @@ export default function createServer(bot: any) {
     res.json({ date, qotd: result, sample: recentBroadcasts });
   });
 
+  // ── GET /api/admin/analytics/ranks ─────────────────────────────────────────
+  app.get('/api/admin/analytics/ranks', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(`
+      SELECT
+        u.telegram_id,
+        COUNT(a.id)::int as total_answered
+      FROM users u
+      LEFT JOIN attempts a ON a.user_id = u.id
+      GROUP BY u.telegram_id
+    `);
+
+    const tierCounts: Record<string, number> = {
+      'Rookie': 0, 'Hustler': 0, 'Grinder': 0,
+      'Sharp Guy': 0, 'Odogwu': 0, 'Legend': 0,
+    };
+    const RANKS = [
+      { tier: 'Rookie',    min: 0    }, { tier: 'Rookie',    min: 50   },
+      { tier: 'Rookie',    min: 120  }, { tier: 'Rookie',    min: 200  },
+      { tier: 'Rookie',    min: 300  }, { tier: 'Hustler',   min: 420  },
+      { tier: 'Hustler',   min: 560  }, { tier: 'Hustler',   min: 720  },
+      { tier: 'Hustler',   min: 900  }, { tier: 'Hustler',   min: 1100 },
+      { tier: 'Grinder',   min: 1320 }, { tier: 'Grinder',   min: 1560 },
+      { tier: 'Grinder',   min: 1820 }, { tier: 'Grinder',   min: 2100 },
+      { tier: 'Grinder',   min: 2400 }, { tier: 'Sharp Guy', min: 2720 },
+      { tier: 'Sharp Guy', min: 3060 }, { tier: 'Sharp Guy', min: 3420 },
+      { tier: 'Sharp Guy', min: 3800 }, { tier: 'Sharp Guy', min: 4200 },
+      { tier: 'Odogwu',    min: 4620 }, { tier: 'Odogwu',    min: 5060 },
+      { tier: 'Odogwu',    min: 5520 }, { tier: 'Odogwu',    min: 6000 },
+      { tier: 'Odogwu',    min: 6500 }, { tier: 'Legend',    min: 7020 },
+      { tier: 'Legend',    min: 7560 }, { tier: 'Legend',    min: 8120 },
+      { tier: 'Legend',    min: 8700 }, { tier: 'Legend',    min: 9300 },
+    ];
+    const getTier = (n: number) => {
+      let t = RANKS[0].tier;
+      for (const r of RANKS) { if (n >= r.min) t = r.tier; else break; }
+      return t;
+    };
+    for (const row of rows) {
+      const tier = getTier(Number(row.total_answered));
+      tierCounts[tier] = (tierCounts[tier] || 0) + 1;
+    }
+    res.json({ distribution: tierCounts, total: rows.length });
+  });
+
   return app;
 }

@@ -1280,10 +1280,13 @@ export function shareableProgressCard(
     ? `https://t.me/${botUsername}?start=ref_${user.referral_code}`
     : `https://t.me/${botUsername}`;
 
+  const rank = getRank(totalAttempts);
+
   const lines = [
     badge,
     '━━━━━━━━━━━━━━━━',
     `${user.first_name} · ExamBuddie`,
+    `🏅 ${rank.label}`,
     `🔥 ${streak}-day streak`,
     `✅ ${totalAttempts.toLocaleString()} questions answered`,
     `🎯 ${accuracy}% accuracy`,
