@@ -62,11 +62,12 @@ const softwareAppJsonLd = {
     "Past question practice for WAEC, JAMB and NECO — timed quizzes, instant explanations, and progress tracking on Telegram.",
   datePublished: "2024-01-01",
   dateModified: "2026-06-01",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "NGN",
-  },
+  offers: [
+    { "@type": "Offer", price: "0", priceCurrency: "NGN", name: "Free" },
+    { "@type": "Offer", price: "1500", priceCurrency: "NGN", name: "Premium Monthly" },
+    { "@type": "Offer", price: "3500", priceCurrency: "NGN", name: "Premium 3-Month" },
+    { "@type": "Offer", price: "12000", priceCurrency: "NGN", name: "Premium Yearly" },
+  ],
 };
 
 const organizationJsonLd = {
