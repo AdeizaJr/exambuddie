@@ -1,7 +1,6 @@
 // src/bot/handlers/qotd.ts — Question of the Day answer handler
 import * as db from '../../db';
 import * as redis from '../../services/redis';
-import * as fmt from '../formatter';
 
 // QOTD answer is handled outside a session — look up the question directly
 export async function handleQOTDAnswer(ctx: any, questionId: string, option: string): Promise<void> {
@@ -14,7 +13,6 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
 
   // Prevent double-answering
   const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
-  const answeredKey = `qotd:answered:${ctx.from.id}:${date}`;
   const alreadyAnswered = await redis.getQOTDAnswered(ctx.from.id, date);
   if (alreadyAnswered) {
     await ctx.answerCbQuery('You already answered today\'s question!', { show_alert: true });

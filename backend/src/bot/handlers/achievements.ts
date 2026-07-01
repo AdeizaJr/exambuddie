@@ -1,7 +1,7 @@
 import * as db from '../../db';
 import { getRank } from '../formatter';
 
-export interface Badge {
+interface Badge {
   code: string;
   name: string;
   emoji: string;
@@ -9,7 +9,7 @@ export interface Badge {
   group: 'questions' | 'streaks' | 'quiz' | 'accuracy';
 }
 
-export const ALL_BADGES: Badge[] = [
+const ALL_BADGES: Badge[] = [
   // Questions milestones
   { code: 'first_question',  name: 'First Step',     emoji: '🎯', desc: 'Answered your first question',      group: 'questions' },
   { code: 'questions_10',    name: 'Getting Started', emoji: '📚', desc: 'Answered 10 questions',             group: 'questions' },
