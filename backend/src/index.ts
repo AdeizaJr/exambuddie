@@ -29,6 +29,18 @@ import { hashPassword } from './services/auth';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '');
 
+// ── Middleware: dev-mode allowlist ─────────────────────────────────────────────
+const DEV_ALLOWED = process.env.DEV_ALLOWED_IDS
+  ? new Set(process.env.DEV_ALLOWED_IDS.split(',').map(s => Number(s.trim())))
+  : null;
+
+bot.use(async (ctx, next) => {
+  if (DEV_ALLOWED && ctx.from && !DEV_ALLOWED.has(ctx.from.id)) {
+    return; // silently drop — bot is in dev mode
+  }
+  return next();
+});
+
 // ── Middleware: log + burst protection ─────────────────────────────────────────
 bot.use(async (ctx, next) => {
   const id = ctx.from?.id;
