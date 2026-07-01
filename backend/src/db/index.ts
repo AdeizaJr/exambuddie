@@ -831,7 +831,11 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
-  await pool.query('DELETE FROM subscriptions WHERE user_id = $1', [userId]);
+  // Anonymise payment records instead of deleting — 7-year retention required by FIRS
+  await pool.query(
+    `UPDATE subscriptions SET user_id = NULL, tx_ref = CONCAT('deleted_', tx_ref) WHERE user_id = $1`,
+    [userId]
+  );
   // bookmarks and sr_cards cascade from users ON DELETE CASCADE
   await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 }
