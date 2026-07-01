@@ -134,7 +134,7 @@ export default function TermsPage() {
             <h2>12. Contact</h2>
             <p>
               For questions about these terms:{" "}
-              <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>.
+              <a href="mailto:hello@exambuddie.app" className="text-blue-600 hover:underline">hello@exambuddie.app</a>.
             </p>
           </section>
         </div>

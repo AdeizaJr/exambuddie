@@ -34,7 +34,7 @@ export default function PrivacyPage() {
             </p>
             <p className="mt-2">
               <strong>Data Controller &amp; Responsible Person:</strong> Hassan Adeiza, ExamBuddie — Oyo, Nigeria.<br />
-              <strong>Contact:</strong> <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>
+              <strong>Contact:</strong> <a href="mailto:hello@exambuddie.app" className="text-blue-600 hover:underline">hello@exambuddie.app</a>
             </p>
           </section>
 
@@ -123,7 +123,7 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-3">
               To report a suspected security issue, email{" "}
-              <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>.
+              <a href="mailto:hello@exambuddie.app" className="text-blue-600 hover:underline">hello@exambuddie.app</a>.
             </p>
           </section>
 
@@ -153,7 +153,7 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-3">
               To exercise any of these rights, email us at{" "}
-              <a href="mailto:support@exambuddie.app" className="text-blue-600 hover:underline">support@exambuddie.app</a>{" "}
+              <a href="mailto:hello@exambuddie.app" className="text-blue-600 hover:underline">hello@exambuddie.app</a>{" "}
               or use the <strong>/support</strong> command in the ExamBuddie Telegram bot and select <em>Data Request</em>. We will respond within 30 days.
             </p>
             <p className="mt-3">
