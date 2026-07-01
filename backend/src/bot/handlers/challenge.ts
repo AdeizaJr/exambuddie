@@ -421,7 +421,7 @@ export async function handleChallengeExpected(ctx: any): Promise<void> {
 
 // ── Auto-start timer ──────────────────────────────────────────────────────────
 
-export function scheduleAutoStart(telegram: any, room: db.PracticeRoom): void {
+function scheduleAutoStart(telegram: any, room: db.PracticeRoom): void {
   setTimeout(async () => {
     try {
       const fresh = await db.getRoomById(room.id);
@@ -727,7 +727,7 @@ async function finishParticipant(ctx: any, session: any): Promise<void> {
 
 // ── Results ───────────────────────────────────────────────────────────────────
 
-export async function broadcastResults(telegram: any, room: db.PracticeRoom, participants: db.RoomParticipant[]): Promise<void> {
+async function broadcastResults(telegram: any, room: db.PracticeRoom, participants: db.RoomParticipant[]): Promise<void> {
   const sorted = [...participants].sort((a, b) => {
     if (b.correct !== a.correct) return b.correct - a.correct;
     if (a.finished_at && b.finished_at) {
