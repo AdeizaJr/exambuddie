@@ -167,6 +167,12 @@ function convertLatex(text: string): string {
     .replace(/\\Rightarrow/g, '⇒').replace(/\\Leftarrow/g, '⇐')
     .replace(/\\rightarrow/g, '→').replace(/\\leftarrow/g, '←')
     .replace(/\\leftrightarrow/g, '↔').replace(/\\to/g, '→')
+    // implication — without this, \implies is silently stripped by the generic
+    // command-stripper below, merging two separate derivation steps into one run-on line.
+    // Leading newline (not just inline arrow) so the result starts its own step — otherwise
+    // the equation-chain splitter further down sees one long "a = b ⇒ c = d" line and slices
+    // it at the wrong "=", breaking "⇒ c" away from "= d".
+    .replace(/\s*\\implies\s*/g, '\n⇒ ').replace(/\s*\\iff\s*/g, '\n⇔ ')
     // geometry
     .replace(/\\angle/g, '∠').replace(/\\parallel/g, '∥').replace(/\\perp/g, '⊥')
     .replace(/\\triangle/g, '△').replace(/\\sim/g, '∼').replace(/\\cong/g, '≅')
@@ -555,11 +561,25 @@ function formatExplanation(text: string): string {
   }
   // General pre-formatting — works across all subjects
   const preFormatted = text
+    // Back-to-back LaTeX groups "\(...\) \(...\)" with nothing but whitespace between them
+    // are separate derivation steps (common in AI-generated math/physics explanations).
+    // Must run before convertLatex strips the \( \) delimiters, or the step boundary is lost
+    // and later heuristics mangle the run-on line (e.g. "L = 2λ 4m = 2λ ⇒ λ = 4m⁄2 =2m").
+    // A literal "=" or prose between the groups means it's glue/continuation, not a new step —
+    // \s* only matches whitespace so those cases correctly fall through untouched.
+    .replace(/\\\)\s*\\\(/g, '\\)\n\\(')
+    // A LaTeX group closing directly into a capitalized word is math handing off to prose
+    // (e.g. "...\(2m\) Recall, ..."). Break it into its own paragraph so the glued math on
+    // the previous line doesn't drag trailing prose into the equation-chain splitter below.
+    .replace(/\\\)\s+(?=[A-Z])/g, '\\)\n\n')
     // Bold section headers: "Given:", "Find:", "Solution:", "Step N:", "Where:", "Note:"
     .replace(/\b(Given|Find|Solution|Where|Note|Step\s*\d+)\s*:/gi, '\n\n<b>$1:</b>')
     // Comma-separated variable assignments: ", WORD(optional) = value" → new line
     // e.g. "C = 0.25mol/dm3, volume = ?" → "C = 0.25mol/dm3\nvolume = ?"
-    .replace(/,\s*([A-Za-z][A-Za-z ]{1,20}(?:\([^)]{1,10}\))?\s*=\s*[^,\n]{1,40})/g, '\n$1')
+    // Excludes phrases starting with an article/relative ("the frequency f =", "where v =") —
+    // those are prose ("Recall, the frequency f = v/λ where...") not a list of variable
+    // assignments, and splitting on the comma there rips the lead-in word off its sentence.
+    .replace(/,\s*(?!(?:the|a|an|is|was|were|where)\s)([A-Za-z][A-Za-z ]{1,20}(?:\([^)]{1,10}\))?\s*=\s*[^,\n]{1,40})/g, '\n$1')
     // After a numeric value/unit, a new word phrase leading to "=" = new fact
     // Require first part to contain a digit so "number of" doesn't match
     // e.g. "0.25mol/dm3 volume =" → "0.25mol/dm3\nvolume ="
