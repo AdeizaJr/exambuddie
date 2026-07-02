@@ -57,6 +57,7 @@ export interface Subscription {
   status: string;
   started_at: string;
   expires_at: string | null;
+  paystack_tx_ref: string | null;
   flutterwave_tx_ref: string | null;
   first_name: string;
   username: string | null;
