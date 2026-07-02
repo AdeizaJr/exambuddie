@@ -2,6 +2,7 @@
 import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
 import { getCachedUser, setCachedUser } from '../services/redis';
+import { getPricing } from '../services/pricing';
 
 // Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
 types.setTypeParser(1082, (val: string) => val);
@@ -576,7 +577,7 @@ export async function checkDailyLimit(
     user.daily_count = 0;
   }
 
-  const limit = parseInt(process.env.FREE_DAILY_LIMIT || '5', 10);
+  const limit = getPricing().free_daily_limit;
   const remaining = limit - user.daily_count;
   return { allowed: remaining > 0, remaining: Math.max(0, remaining), limit };
 }

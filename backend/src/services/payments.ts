@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
 import { User } from '../types';
 import * as crypto from 'crypto';
+import { getPricing } from './pricing';
 
 const PAYSTACK_BASE = 'https://api.paystack.co';
 
@@ -17,29 +18,32 @@ export interface PlanDetails {
   duration: number;
 }
 
-export const PLANS: Record<string, PlanDetails> = {
-  monthly: {
-    amount: parseInt(process.env.MONTHLY_PRICE_NGN || '1500', 10),
-    label: '₦1,500/month',
-    duration: 30,
-  },
-  term: {
-    amount: parseInt(process.env.TERM_PRICE_NGN || '3500', 10),
-    label: '₦3,500 / 3 months (save ₦1,000)',
-    duration: 90,
-  },
-  yearly: {
-    amount: parseInt(process.env.YEARLY_PRICE_NGN || '12000', 10),
-    label: '₦12,000/year (save ₦6,000)',
-    duration: 365,
-  },
-};
+export function getPlans(): Record<string, PlanDetails> {
+  const p = getPricing();
+  return {
+    monthly: {
+      amount: p.monthly_ngn,
+      label: `₦${p.monthly_ngn.toLocaleString()}/month`,
+      duration: 30,
+    },
+    term: {
+      amount: p.term_ngn,
+      label: `₦${p.term_ngn.toLocaleString()} / 3 months (save ₦${(p.monthly_ngn * 3 - p.term_ngn).toLocaleString()})`,
+      duration: 90,
+    },
+    yearly: {
+      amount: p.yearly_ngn,
+      label: `₦${p.yearly_ngn.toLocaleString()}/year (save ₦${(p.monthly_ngn * 12 - p.yearly_ngn).toLocaleString()})`,
+      duration: 365,
+    },
+  };
+}
 
 export async function createPaymentLink(
   user: User,
   planType: string
 ): Promise<{ link: string; txRef: string }> {
-  const plan = PLANS[planType];
+  const plan = getPlans()[planType];
   if (!plan) throw new Error(`Invalid plan: ${planType}`);
 
   const txRef = `exambuddie-${user.telegram_id}-${Date.now()}-${uuidv4().slice(0, 8)}`;
@@ -95,7 +99,7 @@ export async function activateSubscription(
 
   const telegramId = txData.metadata?.telegram_id;
   const planType = txData.metadata?.plan;
-  const plan = PLANS[planType];
+  const plan = getPlans()[planType];
   if (!plan) throw new Error('Invalid plan in payment metadata');
 
   const expiresAt = new Date();

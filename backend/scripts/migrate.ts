@@ -475,6 +475,30 @@ WHERE id = 116125`,
     attempted_at TIMESTAMPTZ DEFAULT NOW()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_theory_attempts_user ON theory_attempts(user_id, attempted_at DESC)`,
+
+  // ── Settings (admin-editable key-value config, e.g. pricing) ────────────────
+  `CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_by TEXT,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE TABLE IF NOT EXISTS settings_history (
+    id SERIAL PRIMARY KEY,
+    key TEXT NOT NULL,
+    old_value TEXT,
+    new_value TEXT NOT NULL,
+    updated_by TEXT,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_settings_history_key ON settings_history(key, updated_at DESC)`,
+  // Seed pricing defaults (was previously hardcoded via env vars) — no-op if already set
+  `INSERT INTO settings (key, value) VALUES
+    ('monthly_ngn', '1500'),
+    ('term_ngn', '3500'),
+    ('yearly_ngn', '12000'),
+    ('free_daily_limit', '5')
+   ON CONFLICT (key) DO NOTHING`,
 ];
 
 async function migrate(): Promise<void> {

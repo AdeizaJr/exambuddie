@@ -1,5 +1,6 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
+import { getPricing } from '../services/pricing';
 
 const RANKS = [
   { tier: 'Rookie',    level: 'I',   min: 0    },
@@ -880,6 +881,7 @@ ${subjectSection}${weakSection}${drillTip}`;
 
 export function freeLimitMessage(remaining: number, limit: number): string | null {
   if (remaining === 0) {
+    const p = getPricing();
     return `⏰ <b>Daily limit reached!</b>
 
 You've used all ${limit} free questions for today. Come back tomorrow, or upgrade to Premium for <b>unlimited access</b>.
@@ -888,7 +890,7 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 • Unlimited questions, every day
 • Quiz mode &amp; Topic drills
 • Progress tracking &amp; weak-topic detection
-• From ₦1,500/month · ₦3,500 for 3 months · ₦12,000/year
+• From ₦${p.monthly_ngn.toLocaleString()}/month · ₦${p.term_ngn.toLocaleString()} for 3 months · ₦${p.yearly_ngn.toLocaleString()}/year
 
 👇 Tap to upgrade:`;
   }
@@ -896,6 +898,9 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 }
 
 export function upgradeMessage(): string {
+  const p = getPricing();
+  const termSavings = p.monthly_ngn * 3 - p.term_ngn;
+  const yearlySavings = p.monthly_ngn * 12 - p.yearly_ngn;
   return `💎 <b>Upgrade to ExamBuddie Premium</b>
 
 Unlock everything you need to ace your exams:
@@ -908,19 +913,20 @@ Unlock everything you need to ace your exams:
 ✅ Priority support
 
 💰 <b>Pricing:</b>
-• Monthly: ₦1,500/month
-• Term (3 months): ₦3,500 <b>(save ₦1,000)</b>
-• Yearly: ₦12,000 <b>(save ₦6,000)</b>
+• Monthly: ₦${p.monthly_ngn.toLocaleString()}/month
+• Term (3 months): ₦${p.term_ngn.toLocaleString()} <b>(save ₦${termSavings.toLocaleString()})</b>
+• Yearly: ₦${p.yearly_ngn.toLocaleString()} <b>(save ₦${yearlySavings.toLocaleString()})</b>
 
 Choose your plan:`;
 }
 
 export function subscribeKeyboard() {
+  const p = getPricing();
   return {
     inline_keyboard: [
-      [{ text: '📅 Monthly — ₦1,500', callback_data: 'subscribe:monthly' }],
-      [{ text: '📆 Term (3 months) — ₦3,500', callback_data: 'subscribe:term' }],
-      [{ text: '🗓️ Yearly — ₦12,000 (Best Value)', callback_data: 'subscribe:yearly' }],
+      [{ text: `📅 Monthly — ₦${p.monthly_ngn.toLocaleString()}`, callback_data: 'subscribe:monthly' }],
+      [{ text: `📆 Term (3 months) — ₦${p.term_ngn.toLocaleString()}`, callback_data: 'subscribe:term' }],
+      [{ text: `🗓️ Yearly — ₦${p.yearly_ngn.toLocaleString()} (Best Value)`, callback_data: 'subscribe:yearly' }],
       [{ text: '❌ Maybe Later', callback_data: 'menu:main' }],
     ],
   };

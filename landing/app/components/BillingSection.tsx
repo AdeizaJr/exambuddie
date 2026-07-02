@@ -1,10 +1,20 @@
 "use client";
 import { useState } from "react";
+import type { PricingData } from "../lib/pricing";
 
 const BOT_URL = "https://t.me/ExamBuddieBot";
 
-export function BillingSection() {
+function naira(amount: number): string {
+  return `₦${amount.toLocaleString()}`;
+}
+
+export function BillingSection({ pricing }: { pricing: PricingData }) {
   const [billingYearly, setBillingYearly] = useState(false);
+
+  const { monthly_ngn, term_ngn, yearly_ngn } = pricing;
+  const termSavings = monthly_ngn * 3 - term_ngn;
+  const yearlySavings = monthly_ngn * 12 - yearly_ngn;
+  const yearlySavingsPct = Math.round((yearlySavings / (monthly_ngn * 12)) * 100);
 
   const plans = [
     {
@@ -26,25 +36,25 @@ export function BillingSection() {
     },
     {
       name: "Term",
-      price: "₦3,500",
+      price: naira(term_ngn),
       period: "3 months",
-      description: "Exam-season bundle. Save ₦1,000 vs monthly.",
+      description: `Exam-season bundle. Save ${naira(termSavings)} vs monthly.`,
       features: [
         "Everything in Premium",
         "Perfect for WAEC / JAMB prep window",
-        "Save ₦1,000 vs 3× monthly",
+        `Save ${naira(termSavings)} vs 3× monthly`,
       ],
       cta: "Get Term Plan",
       href: `${BOT_URL}?start=subscribe_term`,
       highlight: false,
-      badge: "Save ₦1,000",
+      badge: `Save ${naira(termSavings)}`,
     },
     {
       name: "Premium",
-      price: billingYearly ? "₦12,000" : "₦1,500",
+      price: billingYearly ? naira(yearly_ngn) : naira(monthly_ngn),
       period: billingYearly ? "year" : "month",
       description: billingYearly
-        ? "Save ₦6,000 vs monthly — best value."
+        ? `Save ${naira(yearlySavings)} vs monthly — best value.`
         : "Everything you need to top the exam.",
       features: [
         "Unlimited questions — no daily caps",
@@ -61,7 +71,7 @@ export function BillingSection() {
       cta: "Go Premium",
       href: billingYearly ? `${BOT_URL}?start=subscribe_yearly` : `${BOT_URL}?start=subscribe_monthly`,
       highlight: true,
-      badge: billingYearly ? "Save 33%" : null,
+      badge: billingYearly ? `Save ${yearlySavingsPct}%` : null,
     },
   ];
 
@@ -95,7 +105,7 @@ export function BillingSection() {
           >
             Yearly
             <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 dark:bg-green-900 dark:text-green-300">
-              Save 33%
+              Save {yearlySavingsPct}%
             </span>
           </button>
         </div>
@@ -132,7 +142,9 @@ export function BillingSection() {
               </div>
               {highlight && (
                 <p className="mb-2 text-[11px] font-medium text-blue-200">
-                  {billingYearly ? "₦1,000/month — save ₦6,000 vs monthly" : "That's less than ₦50 a day"}
+                  {billingYearly
+                    ? `${naira(Math.round(yearly_ngn / 12))}/month — save ${naira(yearlySavings)} vs monthly`
+                    : `That's less than ${naira(Math.round(monthly_ngn / 30))} a day`}
                 </p>
               )}
               <p className={`text-xs sm:text-sm ${highlight ? "text-blue-100" : "text-slate-600 dark:text-slate-400"}`}>

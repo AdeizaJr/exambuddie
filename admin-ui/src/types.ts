@@ -214,3 +214,18 @@ export interface BulkImportResult {
   skipped: number;
   errors: string[];
 }
+
+export interface PricingSettings {
+  monthly_ngn: number;
+  term_ngn: number;
+  yearly_ngn: number;
+  free_daily_limit: number;
+}
+
+export interface PricingHistoryEntry {
+  key: string;
+  old_value: string | null;
+  new_value: string;
+  updated_by: string | null;
+  updated_at: string;
+}

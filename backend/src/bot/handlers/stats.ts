@@ -47,13 +47,13 @@ export async function handleSubscribeDeepLink(ctx: any, plan: string): Promise<v
     await ctx.reply('✅ You already have an active Premium plan! Use /stats to track your progress.', { parse_mode: 'HTML' });
     return;
   }
-  if (!payments.PLANS[plan]) {
+  if (!payments.getPlans()[plan]) {
     await handleSubscribe(ctx);
     return;
   }
   try {
     const { link, txRef } = await payments.createPaymentLink(user, plan);
-    const planInfo = payments.PLANS[plan];
+    const planInfo = payments.getPlans()[plan];
     await ctx.reply(
       fmt.paymentLinkMessage(link, planInfo.label, txRef),
       { parse_mode: 'HTML', disable_web_page_preview: false }
@@ -80,7 +80,7 @@ export async function handleSubscribePlan(ctx: any): Promise<void> {
 
   try {
     const { link, txRef } = await payments.createPaymentLink(user, plan);
-    const planInfo = payments.PLANS[plan];
+    const planInfo = payments.getPlans()[plan];
 
     await ctx.reply(
       fmt.paymentLinkMessage(link, planInfo.label, txRef),

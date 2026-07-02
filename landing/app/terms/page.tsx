@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getPricing } from "../lib/pricing";
 
 export const metadata: Metadata = {
   title: "Terms of Use — ExamBuddie",
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const pricing = await getPricing();
   return (
     <div className="min-h-screen bg-white px-4 py-12 sm:px-6 dark:bg-slate-950">
       <div className="mx-auto max-w-2xl">
@@ -65,7 +67,7 @@ export default function TermsPage() {
           <section>
             <h2>5. Subscriptions &amp; Payment</h2>
             <ul>
-              <li>Premium plans are available as: monthly (₦1,500/month), a 3-month exam-season bundle (₦3,500), or yearly (₦12,000/year). Current pricing is always shown at the point of purchase inside the bot.</li>
+              <li>Premium plans are available as: monthly (₦{pricing.monthly_ngn.toLocaleString()}/month), a 3-month exam-season bundle (₦{pricing.term_ngn.toLocaleString()}), or yearly (₦{pricing.yearly_ngn.toLocaleString()}/year). Current pricing is always shown at the point of purchase inside the bot.</li>
               <li>Payments are processed by Paystack. By subscribing, you agree to Paystack&apos;s payment terms.</li>
               <li>Subscriptions do not auto-renew. You must manually renew when your plan expires.</li>
               <li>Access to premium features ends immediately upon plan expiry.</li>

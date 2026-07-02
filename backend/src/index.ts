@@ -26,6 +26,7 @@ import * as timetable from './bot/handlers/timetable';
 import createServer from './api/server';
 import startCrons from './services/cron';
 import { hashPassword } from './services/auth';
+import { initPricing } from './services/pricing';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '');
 
@@ -546,6 +547,7 @@ async function launch() {
   const APP_URL = process.env.APP_URL;
 
   await seedAdminUser();
+  await initPricing();
   const app = createServer(bot);
 
   if (APP_URL && process.env.NODE_ENV === 'production') {

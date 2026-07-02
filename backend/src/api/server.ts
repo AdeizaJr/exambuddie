@@ -9,6 +9,7 @@ import * as db from '../db';
 import * as redis from '../services/redis';
 import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
+import { getPricing, updatePricing, getPricingHistory, PricingSettings } from '../services/pricing';
 
 const diagramsDir = path.join(__dirname, '../../public/diagrams');
 if (!fs.existsSync(diagramsDir)) fs.mkdirSync(diagramsDir, { recursive: true });
@@ -80,6 +81,11 @@ export default function createServer(bot: any) {
       service: 'ExamBuddie Bot',
       ts: new Date().toISOString(),
     });
+  });
+
+  // ── Public pricing (consumed by the landing site) ────────────────────────────
+  app.get('/api/pricing', (_req: Request, res: Response) => {
+    res.json(getPricing());
   });
 
   // ── Paystack payment callback (redirect after payment) ──────────────────────
@@ -221,6 +227,43 @@ export default function createServer(bot: any) {
     await db.query('UPDATE admin_users SET password_hash = $1 WHERE id = $2', [newHash, adminId]);
 
     res.json({ ok: true });
+  });
+
+  // ── GET /api/admin/pricing ──────────────────────────────────────────────────
+  app.get('/api/admin/pricing', adminAuth, (_req: Request, res: Response) => {
+    res.json(getPricing());
+  });
+
+  // ── PUT /api/admin/pricing ──────────────────────────────────────────────────
+  const PRICING_KEYS: (keyof PricingSettings)[] = [
+    'monthly_ngn',
+    'term_ngn',
+    'yearly_ngn',
+    'free_daily_limit',
+  ];
+  app.put('/api/admin/pricing', adminAuth, async (req: Request, res: Response) => {
+    const changes: Partial<PricingSettings> = {};
+    for (const key of PRICING_KEYS) {
+      const value = req.body[key];
+      if (value === undefined) continue;
+      if (!Number.isInteger(value) || value <= 0) {
+        return res.status(400).json({ error: `${key} must be a positive integer` });
+      }
+      changes[key] = value;
+    }
+    if (Object.keys(changes).length === 0) {
+      return res.status(400).json({ error: 'No valid pricing fields provided' });
+    }
+
+    const adminUsername = (req as any).admin.username;
+    const updated = await updatePricing(changes, adminUsername);
+    res.json(updated);
+  });
+
+  // ── GET /api/admin/pricing/history ──────────────────────────────────────────
+  app.get('/api/admin/pricing/history', adminAuth, async (_req: Request, res: Response) => {
+    const history = await getPricingHistory();
+    res.json(history);
   });
 
   // ── GET /api/admin/stats ────────────────────────────────────────────────────
