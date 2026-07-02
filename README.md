@@ -59,9 +59,9 @@ npm run dev                  # development (long polling)
 | `ZOHO_SMTP_USER` | Zoho Mail address e.g. `hello@exambuddie.app` |
 | `ZOHO_SMTP_PASS` | Zoho app-specific password |
 | `ZOHO_SMTP_TO` | Inbox that receives support emails (defaults to `ZOHO_SMTP_USER`) |
-| `MONTHLY_PRICE_NGN` | Monthly plan price in kobo (default: `1500`) |
-| `TERM_PRICE_NGN` | 3-month plan price in kobo (default: `3500`) |
-| `YEARLY_PRICE_NGN` | Yearly plan price in kobo (default: `12000`) |
+
+> Pricing and the free daily question limit are **no longer env vars** — they live in the `settings`
+> DB table, seeded by `npm run migrate`, and are editable from the admin dashboard's Pricing page.
 
 ---
 
@@ -104,8 +104,11 @@ Point `VITE_API_URL` in `admin-ui/.env.local` to your backend URL.
 ```bash
 cd landing
 npm install
+cp .env.example .env   # set API_URL to your backend, so pricing on the site stays live
 npm run dev          # runs at localhost:3000
 ```
+
+If `API_URL` is unset, the pricing section and Terms page fall back to hardcoded defaults instead of erroring.
 
 ---
 
@@ -130,6 +133,7 @@ npm run dev          # runs at localhost:3000
 | `/progress` | Streak, subject coverage bars, referral status + shareable card |
 | `/badges` | Achievement badges — grouped by Questions, Streaks, Quiz & Exams, Accuracy (17 total) |
 | `/subscribe` | Upgrade to Premium |
+| `/billing` | View billing history, cancel or manage auto-renewal |
 | `/settings` | Exam type, subjects, phone number, daily reminder time |
 | `/support` | Report a bug, request data, or delete your account |
 | `/app` | Open the ExamBuddie Web App |
@@ -178,7 +182,7 @@ npm run dev          # runs at localhost:3000
 | Referral rewards (/invite) — 2 friends → 3 days free | ✅ | ✅ |
 | Referral leaderboard | ✅ | ✅ |
 
-**Pricing:** ₦1,500/month · ₦3,500/term (3 months) · ₦12,000/year
+**Pricing:** Set from the admin dashboard's Pricing page (see /subscribe in the bot for current prices). If the customer's card supports recurring charges, Premium auto-renews each cycle via Paystack subscriptions; otherwise it's a one-off payment that expires and must be manually renewed. Cancel or manage auto-renewal anytime with /billing.
 
 ---
 
@@ -205,6 +209,10 @@ All endpoints require a JWT Bearer token (obtained via `POST /api/admin/login`).
 | `GET /api/admin/analytics/hard-questions` | Questions with ≥10 attempts and ≥70% wrong rate |
 | `POST /api/admin/broadcast` | Send message to all/waec/jamb/neco/premium/free users |
 | `POST /api/admin/dm` | Send direct message to a single user by telegram_id |
+| `GET /api/admin/pricing` | Current pricing + free daily limit |
+| `PUT /api/admin/pricing` | Update pricing — pushes changes to live Paystack plans immediately |
+| `GET /api/admin/pricing/history` | Audit log of pricing changes (who, when, old → new) |
+| `GET /api/admin/subscriptions` | Subscription/payment history with recurring status |
 
 ---
 
@@ -216,7 +224,7 @@ All endpoints require a JWT Bearer token (obtained via `POST /api/admin/login`).
 4. Set **Build Command**: `npm run build:all`
 5. Set **Start Command**: `npm start`
 6. Set `APP_URL` to your Railway public URL
-7. Set Paystack webhook to: `https://your-app.railway.app/webhooks/paystack` (Settings → API Keys & Webhooks in Paystack dashboard)
+7. Set Paystack webhook to: `https://your-app.railway.app/webhooks/paystack` (Settings → API Keys & Webhooks in Paystack dashboard). Make sure `charge.success`, `subscription.create`, `subscription.disable`, `subscription.not_renew`, and `invoice.payment_failed` events are enabled — recurring billing depends on all of them.
 
 Landing page deploys separately on Railway (same process — connect repo, set build/start commands).
 

@@ -60,9 +60,12 @@ export default function RefundsPage() {
           <section>
             <h2>Cancellation</h2>
             <p>
-              ExamBuddie subscriptions do not auto-renew. Your premium access remains active
-              until the end of your paid period. You do not need to &ldquo;cancel&rdquo; — simply
-              do not renew when prompted. No partial refunds are given for unused days.
+              If your card supports it, Premium auto-renews each billing cycle. Send /billing in
+              the bot for a link to cancel auto-renewal or update your card at any time —
+              cancellation takes effect at the end of your current paid period, and your access
+              continues until then. If your card doesn&apos;t support auto-renewal, there is
+              nothing to cancel — it simply expires at the end of your paid period. No partial
+              refunds are given for unused days.
             </p>
           </section>
 
