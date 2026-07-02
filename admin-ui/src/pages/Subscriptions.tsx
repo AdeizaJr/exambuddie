@@ -21,6 +21,12 @@ function statusVariant(status: string): "green" | "amber" | "red" | "gray" {
   return "gray";
 }
 
+function billingLabel(s: Subscription): { text: string; variant: "green" | "amber" | "gray" } {
+  if (!s.is_recurring) return { text: "One-off", variant: "gray" };
+  if (s.cancelled_at) return { text: "Cancelled", variant: "amber" };
+  return { text: "Recurring", variant: "green" };
+}
+
 export default function Subscriptions() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -124,6 +130,9 @@ export default function Subscriptions() {
                     Status
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
+                    Billing
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
                     Started
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
@@ -151,6 +160,9 @@ export default function Subscriptions() {
                     </td>
                     <td className="px-4 py-3">
                       <Badge variant={statusVariant(s.status)}>{s.status}</Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <Badge variant={billingLabel(s).variant}>{billingLabel(s).text}</Badge>
                     </td>
                     <td className="px-4 py-3 text-xs text-muted">{formatDate(s.started_at)}</td>
                     <td className="px-4 py-3 text-xs text-muted">{formatDate(s.expires_at)}</td>

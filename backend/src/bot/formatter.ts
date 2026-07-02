@@ -917,6 +917,8 @@ Unlock everything you need to ace your exams:
 • Term (3 months): ₦${p.term_ngn.toLocaleString()} <b>(save ₦${termSavings.toLocaleString()})</b>
 • Yearly: ₦${p.yearly_ngn.toLocaleString()} <b>(save ₦${yearlySavings.toLocaleString()})</b>
 
+<i>If your card supports it, Premium auto-renews each cycle so you're never interrupted — cancel anytime with /billing.</i>
+
 Choose your plan:`;
 }
 
@@ -943,7 +945,39 @@ Plan: ${planLabel}
 
 Reference: <code>${txRef}</code>
 
-<i>By paying, you agree to our <a href="https://exambuddie.app/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
+<i>If your card supports it, this will auto-renew each cycle — manage or cancel anytime with /billing. By paying, you agree to our <a href="https://exambuddie.app/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
+}
+
+const PLAN_NAME: Record<string, string> = {
+  monthly: 'Monthly',
+  term: 'Term (3mo)',
+  yearly: 'Yearly',
+};
+
+const BILLING_STATUS_ICON: Record<string, string> = {
+  active: '✅',
+  failed: '❌',
+  expired: '⌛',
+};
+
+export function billingHistoryMessage(
+  history: { plan: string; amount_ngn: number; status: string; started_at: string | null; is_recurring: boolean; cancelled_at: string | null }[]
+): string {
+  if (history.length === 0) {
+    return '💳 <b>Billing History</b>\n\nNo billing history yet — use /subscribe to go Premium.';
+  }
+
+  const lines = history.map((h) => {
+    const date = h.started_at
+      ? new Date(h.started_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })
+      : '—';
+    const planName = PLAN_NAME[h.plan] || h.plan;
+    const icon = BILLING_STATUS_ICON[h.status] || 'ℹ️';
+    const tag = h.cancelled_at ? ' (cancelled)' : h.is_recurring ? ' (auto-renew)' : '';
+    return `${icon} ${date} — ${planName} — ₦${Number(h.amount_ngn).toLocaleString()}${tag}`;
+  });
+
+  return `💳 <b>Billing History</b>\n\n${lines.join('\n')}`;
 }
 
 const CONSECUTIVE_HYPE: Record<number, string> = {
@@ -989,6 +1023,7 @@ export function helpMessage(): string {
 /stats — Your accuracy, streak, and subject breakdown
 /settings — Change exam type, subjects, or target year
 /subscribe — Unlock unlimited questions with Premium
+/billing — Manage or cancel auto-renewing Premium
 
 <b>⏹ Other</b>
 /stop — End your current session

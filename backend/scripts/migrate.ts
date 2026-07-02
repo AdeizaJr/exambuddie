@@ -499,6 +499,15 @@ WHERE id = 116125`,
     ('yearly_ngn', '12000'),
     ('free_daily_limit', '5')
    ON CONFLICT (key) DO NOTHING`,
+
+  // ── Recurring billing (Paystack subscriptions) ───────────────────────────────
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS paystack_plan_code VARCHAR(100)`,
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS paystack_subscription_code VARCHAR(100)`,
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS paystack_customer_code VARCHAR(100)`,
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS email_token VARCHAR(255)`,
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS is_recurring BOOLEAN NOT NULL DEFAULT FALSE`,
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS cancelled_at TIMESTAMPTZ`,
+  `CREATE INDEX IF NOT EXISTS idx_subscriptions_customer_code ON subscriptions(paystack_customer_code)`,
 ];
 
 async function migrate(): Promise<void> {

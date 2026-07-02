@@ -83,6 +83,7 @@ bot.command('help', (ctx) => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }
 bot.command('settings', onboarding.handleSettings);
 bot.command('stats', stats.handleStats);
 bot.command('subscribe', stats.handleSubscribe);
+bot.command('billing', stats.handleBilling);
 bot.command('practice', practice.handlePractice);
 bot.command('quiz', quiz.handleQuiz);
 bot.command('drill', (ctx) => practice.handleDrill(ctx));

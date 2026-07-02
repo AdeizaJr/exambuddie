@@ -69,8 +69,8 @@ export default async function TermsPage() {
             <ul>
               <li>Premium plans are available as: monthly (₦{pricing.monthly_ngn.toLocaleString()}/month), a 3-month exam-season bundle (₦{pricing.term_ngn.toLocaleString()}), or yearly (₦{pricing.yearly_ngn.toLocaleString()}/year). Current pricing is always shown at the point of purchase inside the bot.</li>
               <li>Payments are processed by Paystack. By subscribing, you agree to Paystack&apos;s payment terms.</li>
-              <li>Subscriptions do not auto-renew. You must manually renew when your plan expires.</li>
-              <li>Access to premium features ends immediately upon plan expiry.</li>
+              <li>If your card supports recurring charges, your plan auto-renews at the end of each billing cycle using your saved card, at the then-current price for that plan. You can cancel auto-renewal at any time via the /billing command in the bot. If your card does not support recurring charges, your plan will not auto-renew and you must manually renew it via /subscribe when it expires.</li>
+              <li>Access to premium features ends immediately upon plan expiry (or upon cancellation taking effect at the end of the current billing cycle).</li>
               <li>See our <Link href="/refunds" className="text-blue-600 hover:underline">Refund Policy</Link> for eligibility details.</li>
             </ul>
           </section>
