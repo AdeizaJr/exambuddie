@@ -7,6 +7,13 @@ import * as redis from '../../services/redis';
 
 const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
 
+function isActivePremium(user: any): boolean {
+  return user.plan === 'premium' && !!user.plan_expires_at && new Date(user.plan_expires_at) > new Date();
+}
+
+const ALREADY_PREMIUM_MSG =
+  '✅ You already have an active Premium plan! Use /stats to track your progress.\n\nTo switch plans, first cancel your current one with /billing, then /subscribe again.';
+
 export async function handleStats(ctx: any): Promise<void> {
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Please use /start first.'); return; }
@@ -43,28 +50,33 @@ export async function handleStatsFilter(ctx: any): Promise<void> {
 // Called from bot.start() when user arrives via landing page deep link
 export async function handleSubscribeDeepLink(ctx: any, plan: string): Promise<void> {
   const user = await db.upsertUser(ctx);
-  if (user.plan === 'premium' && user.plan_expires_at && new Date(user.plan_expires_at) > new Date()) {
-    await ctx.reply('✅ You already have an active Premium plan! Use /stats to track your progress.', { parse_mode: 'HTML' });
+  if (isActivePremium(user)) {
+    await ctx.reply(ALREADY_PREMIUM_MSG, { parse_mode: 'HTML' });
     return;
   }
-  if (!payments.PLANS[plan]) {
+  if (!payments.getPlans()[plan]) {
     await handleSubscribe(ctx);
     return;
   }
   try {
     const { link, txRef } = await payments.createPaymentLink(user, plan);
-    const planInfo = payments.PLANS[plan];
+    const planInfo = payments.getPlans()[plan];
     await ctx.reply(
       fmt.paymentLinkMessage(link, planInfo.label, txRef),
       { parse_mode: 'HTML', disable_web_page_preview: false }
     );
   } catch (err: any) {
-    console.error('Payment link error:', err.message);
+    console.error('Payment link error:', err.response?.data?.message || err.message);
     await ctx.reply('Sorry, we could not generate a payment link right now. Please try again in a moment.');
   }
 }
 
 export async function handleSubscribe(ctx: any): Promise<void> {
+  const user = await db.getUser(ctx.from.id);
+  if (user && isActivePremium(user)) {
+    await ctx.reply(ALREADY_PREMIUM_MSG, { parse_mode: 'HTML' });
+    return;
+  }
   await ctx.reply(fmt.upgradeMessage(), {
     parse_mode: 'HTML',
     reply_markup: fmt.subscribeKeyboard(),
@@ -77,18 +89,52 @@ export async function handleSubscribePlan(ctx: any): Promise<void> {
   const plan = ctx.callbackQuery.data.split(':')[1]; // 'monthly' | 'yearly'
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+  if (isActivePremium(user)) {
+    await ctx.reply(ALREADY_PREMIUM_MSG, { parse_mode: 'HTML' });
+    return;
+  }
 
   try {
     const { link, txRef } = await payments.createPaymentLink(user, plan);
-    const planInfo = payments.PLANS[plan];
+    const planInfo = payments.getPlans()[plan];
 
     await ctx.reply(
       fmt.paymentLinkMessage(link, planInfo.label, txRef),
       { parse_mode: 'HTML', disable_web_page_preview: false }
     );
   } catch (err: any) {
-    console.error('Payment link error:', err.message);
+    console.error('Payment link error:', err.response?.data?.message || err.message);
     await ctx.reply('Sorry, we could not generate a payment link right now. Please try again in a moment.');
+  }
+}
+
+export async function handleBilling(ctx: any): Promise<void> {
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Please use /start first.'); return; }
+
+  const history = await db.getSubscriptionHistory(user.id);
+  await ctx.reply(fmt.billingHistoryMessage(history), { parse_mode: 'HTML' });
+
+  const sub = await payments.getActiveRecurringSubscription(user.id);
+  if (!sub) {
+    await ctx.reply(
+      user.plan === 'premium'
+        ? "You're on Premium, but not on auto-renewing billing — nothing to manage here. It'll expire on its own; use /subscribe to renew."
+        : "You don't have an active subscription to manage. Use /subscribe to go Premium.",
+      { parse_mode: 'HTML' }
+    );
+    return;
+  }
+
+  try {
+    const link = await payments.getManageLink(sub.subscriptionCode);
+    await ctx.reply(
+      `💳 <b>Manage your ${sub.plan} subscription</b>\n\nUpdate your card or cancel auto-renewal here:\n${link}`,
+      { parse_mode: 'HTML', disable_web_page_preview: true }
+    );
+  } catch (err: any) {
+    console.error('Manage link error:', err.message);
+    await ctx.reply('Sorry, could not generate your billing management link right now. Please try again shortly.');
   }
 }
 

@@ -1,5 +1,6 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
+import { getPricing } from '../services/pricing';
 
 const RANKS = [
   { tier: 'Rookie',    level: 'I',   min: 0    },
@@ -880,6 +881,7 @@ ${subjectSection}${weakSection}${drillTip}`;
 
 export function freeLimitMessage(remaining: number, limit: number): string | null {
   if (remaining === 0) {
+    const p = getPricing();
     return `⏰ <b>Daily limit reached!</b>
 
 You've used all ${limit} free questions for today. Come back tomorrow, or upgrade to Premium for <b>unlimited access</b>.
@@ -888,7 +890,7 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 • Unlimited questions, every day
 • Quiz mode &amp; Topic drills
 • Progress tracking &amp; weak-topic detection
-• From ₦1,500/month · ₦3,500 for 3 months · ₦12,000/year
+• From ₦${p.monthly_ngn.toLocaleString()}/month · ₦${p.term_ngn.toLocaleString()} for 3 months · ₦${p.yearly_ngn.toLocaleString()}/year
 
 👇 Tap to upgrade:`;
   }
@@ -896,6 +898,9 @@ You've used all ${limit} free questions for today. Come back tomorrow, or upgrad
 }
 
 export function upgradeMessage(): string {
+  const p = getPricing();
+  const termSavings = p.monthly_ngn * 3 - p.term_ngn;
+  const yearlySavings = p.monthly_ngn * 12 - p.yearly_ngn;
   return `💎 <b>Upgrade to ExamBuddie Premium</b>
 
 Unlock everything you need to ace your exams:
@@ -908,19 +913,22 @@ Unlock everything you need to ace your exams:
 ✅ Priority support
 
 💰 <b>Pricing:</b>
-• Monthly: ₦1,500/month
-• Term (3 months): ₦3,500 <b>(save ₦1,000)</b>
-• Yearly: ₦12,000 <b>(save ₦6,000)</b>
+• Monthly: ₦${p.monthly_ngn.toLocaleString()}/month
+• Term (3 months): ₦${p.term_ngn.toLocaleString()} <b>(save ₦${termSavings.toLocaleString()})</b>
+• Yearly: ₦${p.yearly_ngn.toLocaleString()} <b>(save ₦${yearlySavings.toLocaleString()})</b>
+
+<i>If your card supports it, Premium auto-renews each cycle so you're never interrupted — cancel anytime with /billing.</i>
 
 Choose your plan:`;
 }
 
 export function subscribeKeyboard() {
+  const p = getPricing();
   return {
     inline_keyboard: [
-      [{ text: '📅 Monthly — ₦1,500', callback_data: 'subscribe:monthly' }],
-      [{ text: '📆 Term (3 months) — ₦3,500', callback_data: 'subscribe:term' }],
-      [{ text: '🗓️ Yearly — ₦12,000 (Best Value)', callback_data: 'subscribe:yearly' }],
+      [{ text: `📅 Monthly — ₦${p.monthly_ngn.toLocaleString()}`, callback_data: 'subscribe:monthly' }],
+      [{ text: `📆 Term (3 months) — ₦${p.term_ngn.toLocaleString()}`, callback_data: 'subscribe:term' }],
+      [{ text: `🗓️ Yearly — ₦${p.yearly_ngn.toLocaleString()} (Best Value)`, callback_data: 'subscribe:yearly' }],
       [{ text: '❌ Maybe Later', callback_data: 'menu:main' }],
     ],
   };
@@ -937,7 +945,39 @@ Plan: ${planLabel}
 
 Reference: <code>${txRef}</code>
 
-<i>By paying, you agree to our <a href="https://exambuddie.app/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
+<i>If your card supports it, this will auto-renew each cycle — manage or cancel anytime with /billing. By paying, you agree to our <a href="https://exambuddie.app/refunds">Refund Policy</a>. Subscriptions are non-refundable once activated except in cases of prolonged service outage.</i>`;
+}
+
+const PLAN_NAME: Record<string, string> = {
+  monthly: 'Monthly',
+  term: 'Term (3mo)',
+  yearly: 'Yearly',
+};
+
+const BILLING_STATUS_ICON: Record<string, string> = {
+  active: '✅',
+  failed: '❌',
+  expired: '⌛',
+};
+
+export function billingHistoryMessage(
+  history: { plan: string; amount_ngn: number; status: string; started_at: string | null; is_recurring: boolean; cancelled_at: string | null }[]
+): string {
+  if (history.length === 0) {
+    return '💳 <b>Billing History</b>\n\nNo billing history yet — use /subscribe to go Premium.';
+  }
+
+  const lines = history.map((h) => {
+    const date = h.started_at
+      ? new Date(h.started_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })
+      : '—';
+    const planName = PLAN_NAME[h.plan] || h.plan;
+    const icon = BILLING_STATUS_ICON[h.status] || 'ℹ️';
+    const tag = h.cancelled_at ? ' (cancelled)' : h.is_recurring ? ' (auto-renew)' : '';
+    return `${icon} ${date} — ${planName} — ₦${Number(h.amount_ngn).toLocaleString()}${tag}`;
+  });
+
+  return `💳 <b>Billing History</b>\n\n${lines.join('\n')}`;
 }
 
 const CONSECUTIVE_HYPE: Record<number, string> = {
@@ -983,6 +1023,7 @@ export function helpMessage(): string {
 /stats — Your accuracy, streak, and subject breakdown
 /settings — Change exam type, subjects, or target year
 /subscribe — Unlock unlimited questions with Premium
+/billing — Manage or cancel auto-renewing Premium
 
 <b>⏹ Other</b>
 /stop — End your current session

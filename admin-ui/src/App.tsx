@@ -10,6 +10,7 @@ import AnalyticsPage from "./pages/Analytics";
 import Broadcast from "./pages/Broadcast";
 import LeaderboardPage from "./pages/Leaderboard";
 import QOTDPage from "./pages/QOTD";
+import Pricing from "./pages/Pricing";
 import { getFlags, loginAdmin } from "./api";
 
 // ── Login page ──────────────────────────────────────────────────────────────
@@ -157,6 +158,7 @@ export default function App() {
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/broadcast" element={<Broadcast />} />
         <Route path="/qotd" element={<QOTDPage />} />
+        <Route path="/pricing" element={<Pricing />} />
       </Route>
 
       {/* Fallback */}

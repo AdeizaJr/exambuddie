@@ -9,6 +9,7 @@ import * as db from '../db';
 import * as redis from '../services/redis';
 import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
+import { getPricing, updatePricing, getPricingHistory, PricingSettings } from '../services/pricing';
 
 const diagramsDir = path.join(__dirname, '../../public/diagrams');
 if (!fs.existsSync(diagramsDir)) fs.mkdirSync(diagramsDir, { recursive: true });
@@ -82,6 +83,11 @@ export default function createServer(bot: any) {
     });
   });
 
+  // ── Public pricing (consumed by the landing site) ────────────────────────────
+  app.get('/api/pricing', (_req: Request, res: Response) => {
+    res.json(getPricing());
+  });
+
   // ── Paystack payment callback (redirect after payment) ──────────────────────
   const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
   const TELEGRAM_RETURN_URL = `https://t.me/${BOT_USERNAME}`;
@@ -148,10 +154,66 @@ export default function createServer(bot: any) {
 
     if (event === 'charge.success' && data?.status === 'success') {
       try {
-        await payments.activateSubscription(data.reference);
-        console.log(`[Webhook] Activated subscription for tx: ${data.reference}`);
+        // A tx_ref row exists only for charges we initiated (createPaymentLink) — anything
+        // else is a charge Paystack triggered itself on a subscription's billing cycle.
+        const { rows } = await db.query('SELECT 1 FROM subscriptions WHERE paystack_tx_ref = $1', [
+          data.reference,
+        ]);
+        if (rows.length > 0) {
+          await payments.activateSubscription(data.reference);
+          console.log(`[Webhook] Activated subscription for tx: ${data.reference}`);
+        } else {
+          const result = await payments.handleRecurringCharge(data);
+          if (result) {
+            console.log(`[Webhook] Renewed subscription for tx: ${data.reference}`);
+            try {
+              const expiry = new Date(result.expiresAt).toLocaleDateString('en-NG');
+              await bot.telegram.sendMessage(
+                result.user.telegram_id,
+                `🔄 <b>Premium renewed!</b>\n\nYour ${result.planType} plan renewed automatically.\n📅 Next renewal: ${expiry}\n\nUse /billing to manage or cancel anytime.`,
+                { parse_mode: 'HTML' }
+              );
+            } catch {
+              /* user may have blocked the bot */
+            }
+          }
+        }
       } catch (err: any) {
-        console.error('[Webhook] Error activating subscription:', err.message);
+        console.error('[Webhook] Error handling charge.success:', err.message);
+      }
+    } else if (event === 'subscription.create') {
+      try {
+        await payments.handleSubscriptionCreate(data);
+      } catch (err: any) {
+        console.error('[Webhook] Error handling subscription.create:', err.message);
+      }
+    } else if (event === 'subscription.disable' || event === 'subscription.not_renew') {
+      try {
+        await payments.handleSubscriptionCancelled(data);
+      } catch (err: any) {
+        console.error(`[Webhook] Error handling ${event}:`, err.message);
+      }
+    } else if (event === 'invoice.payment_failed') {
+      try {
+        const customerCode = data.customer?.customer_code || data.subscription?.customer?.customer_code;
+        if (customerCode) {
+          const { rows: userRows } = await db.query(
+            `SELECT u.telegram_id FROM subscriptions s JOIN users u ON s.user_id = u.id
+             WHERE s.paystack_customer_code = $1 ORDER BY s.started_at DESC LIMIT 1`,
+            [customerCode]
+          );
+          if (userRows[0]) {
+            await bot.telegram
+              .sendMessage(
+                userRows[0].telegram_id,
+                `⚠️ <b>Renewal payment failed</b>\n\nWe couldn't charge your card for your Premium renewal. Use /billing to update your payment method before your current access ends.`,
+                { parse_mode: 'HTML' }
+              )
+              .catch(() => {});
+          }
+        }
+      } catch (err: any) {
+        console.error('[Webhook] Error handling invoice.payment_failed:', err.message);
       }
     }
 
@@ -221,6 +283,61 @@ export default function createServer(bot: any) {
     await db.query('UPDATE admin_users SET password_hash = $1 WHERE id = $2', [newHash, adminId]);
 
     res.json({ ok: true });
+  });
+
+  // ── GET /api/admin/pricing ──────────────────────────────────────────────────
+  app.get('/api/admin/pricing', adminAuth, (_req: Request, res: Response) => {
+    res.json(getPricing());
+  });
+
+  // ── PUT /api/admin/pricing ──────────────────────────────────────────────────
+  const PRICING_KEYS: (keyof PricingSettings)[] = [
+    'monthly_ngn',
+    'term_ngn',
+    'yearly_ngn',
+    'free_daily_limit',
+  ];
+  app.put('/api/admin/pricing', adminAuth, async (req: Request, res: Response) => {
+    const changes: Partial<PricingSettings> = {};
+    for (const key of PRICING_KEYS) {
+      const value = req.body[key];
+      if (value === undefined) continue;
+      if (!Number.isInteger(value) || value <= 0) {
+        return res.status(400).json({ error: `${key} must be a positive integer` });
+      }
+      changes[key] = value;
+    }
+    if (Object.keys(changes).length === 0) {
+      return res.status(400).json({ error: 'No valid pricing fields provided' });
+    }
+
+    const adminUsername = (req as any).admin.username;
+    const updated = await updatePricing(changes, adminUsername);
+
+    // Push price changes onto the live Paystack plans — applies to existing
+    // recurring subscribers on their next billing cycle, not just new ones.
+    const PLAN_TYPE_BY_KEY: Record<string, string> = {
+      monthly_ngn: 'monthly',
+      term_ngn: 'term',
+      yearly_ngn: 'yearly',
+    };
+    for (const key of Object.keys(changes)) {
+      const planType = PLAN_TYPE_BY_KEY[key];
+      if (!planType) continue;
+      try {
+        await payments.syncPaystackPlanPrice(planType, (changes as any)[key]);
+      } catch (err: any) {
+        console.error(`[Pricing] Failed to sync Paystack plan for ${planType}:`, err.message);
+      }
+    }
+
+    res.json(updated);
+  });
+
+  // ── GET /api/admin/pricing/history ──────────────────────────────────────────
+  app.get('/api/admin/pricing/history', adminAuth, async (_req: Request, res: Response) => {
+    const history = await getPricingHistory();
+    res.json(history);
   });
 
   // ── GET /api/admin/stats ────────────────────────────────────────────────────
@@ -684,9 +801,10 @@ export default function createServer(bot: any) {
     const { rows } = await db.query(`
       SELECT s.id, s.plan, s.amount_ngn, s.status,
              s.started_at, s.expires_at, s.paystack_tx_ref, s.flutterwave_tx_ref,
+             s.is_recurring, s.cancelled_at,
              u.first_name, u.username, u.telegram_id
       FROM subscriptions s
-      JOIN users u ON s.user_id = u.telegram_id
+      JOIN users u ON s.user_id = u.id
       ORDER BY s.started_at DESC
       LIMIT 200
     `);

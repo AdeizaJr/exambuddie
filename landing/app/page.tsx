@@ -4,6 +4,7 @@ import { BotMockup } from "./components/BotMockup";
 import { BillingSection } from "./components/BillingSection";
 import { FaqAccordion } from "./components/FaqAccordion";
 import { testimonials } from "./data/testimonials";
+import { getPricing } from "./lib/pricing";
 
 const BOT_URL = "https://t.me/ExamBuddieBot";
 const BOT_URL_LANDING = "https://t.me/ExamBuddieBot?start=from_landing";
@@ -85,7 +86,8 @@ const reviewJsonLd = {
   })),
 };
 
-export default function Home() {
+export default async function Home() {
+  const pricing = await getPricing();
   return (
     <div className="font-[var(--font-geist)]">
       <script
@@ -514,7 +516,7 @@ export default function Home() {
       {/* Pricing */}
       <section id="pricing" className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-5xl">
-          <BillingSection />
+          <BillingSection pricing={pricing} />
         </div>
       </section>
 

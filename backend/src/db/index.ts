@@ -2,6 +2,7 @@
 import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
 import { getCachedUser, setCachedUser } from '../services/redis';
+import { getPricing } from '../services/pricing';
 
 // Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
 types.setTypeParser(1082, (val: string) => val);
@@ -561,6 +562,27 @@ export async function getSnapshotWeeks(): Promise<string[]> {
   return rows.map(r => r.week_start);
 }
 
+export interface SubscriptionHistoryEntry {
+  plan: string;
+  amount_ngn: number;
+  status: string;
+  started_at: string | null;
+  is_recurring: boolean;
+  cancelled_at: string | null;
+}
+
+export async function getSubscriptionHistory(userId: number, limit = 10): Promise<SubscriptionHistoryEntry[]> {
+  const { rows } = await pool.query(
+    `SELECT plan, amount_ngn, status, started_at, is_recurring, cancelled_at
+     FROM subscriptions
+     WHERE user_id = $1 AND status != 'pending'
+     ORDER BY started_at DESC NULLS LAST, created_at DESC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return rows;
+}
+
 export async function checkDailyLimit(
   user: User
 ): Promise<{ allowed: boolean; remaining: number; limit: number }> {
@@ -576,7 +598,7 @@ export async function checkDailyLimit(
     user.daily_count = 0;
   }
 
-  const limit = parseInt(process.env.FREE_DAILY_LIMIT || '5', 10);
+  const limit = getPricing().free_daily_limit;
   const remaining = limit - user.daily_count;
   return { allowed: remaining > 0, remaining: Math.max(0, remaining), limit };
 }

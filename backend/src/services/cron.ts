@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
 import * as redis from './redis';
 import * as payments from './payments';
+import { refreshPricing } from './pricing';
 import * as fmt from '../bot/formatter';
 import { SUBJECT_MAP, SUBJECT_EMOJI, examCountdown } from '../bot/formatter';
 import { endExpiredRoom } from '../bot/handlers/challenge';
@@ -53,6 +54,12 @@ export default function startCrons(bot: any): void {
     },
     { timezone: 'UTC' } as any
   );
+
+  // ── Every hour — refresh pricing cache (backstop; updatePricing() already
+  // refreshes it immediately on admin edit — this just guards against drift) ──
+  cron.schedule('0 * * * *', async () => {
+    await refreshPricing().catch((e) => console.error('[CRON] pricing refresh error:', e.message));
+  });
 
   // ── Every hour — check expired subscriptions ──────────────────────────────
   cron.schedule('0 * * * *', async () => {

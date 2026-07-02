@@ -12,6 +12,8 @@ import type {
   FunnelData,
   BroadcastLog,
   BulkImportResult,
+  PricingSettings,
+  PricingHistoryEntry,
 } from "./types";
 
 const BASE = (import.meta.env.VITE_API_URL ?? "") + "/api/admin";
@@ -312,4 +314,20 @@ export async function exportUsersCSV(): Promise<void> {
 
 export async function bulkImportQuestions(questions: unknown[]): Promise<BulkImportResult> {
   return req<BulkImportResult>("POST", "/questions/bulk-import", { questions });
+}
+
+export async function getPricing(): Promise<PricingSettings> {
+  return req<PricingSettings>("GET", "/pricing");
+}
+
+export async function updatePricing(
+  changes: Partial<PricingSettings>
+): Promise<PricingSettings> {
+  const result = await req<PricingSettings>("PUT", "/pricing", changes);
+  invalidateCache("/pricing");
+  return result;
+}
+
+export async function getPricingHistory(): Promise<PricingHistoryEntry[]> {
+  return req<PricingHistoryEntry[]>("GET", "/pricing/history");
 }
