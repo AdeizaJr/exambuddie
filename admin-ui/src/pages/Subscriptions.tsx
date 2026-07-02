@@ -156,9 +156,9 @@ export default function Subscriptions() {
                     <td className="px-4 py-3 text-xs text-muted">{formatDate(s.expires_at)}</td>
                     <td
                       className="max-w-xs truncate px-4 py-3 font-mono text-xs text-muted"
-                      title={s.flutterwave_tx_ref || ""}
+                      title={s.paystack_tx_ref || s.flutterwave_tx_ref || ""}
                     >
-                      {s.flutterwave_tx_ref || "—"}
+                      {s.paystack_tx_ref || s.flutterwave_tx_ref || "—"}
                     </td>
                   </tr>
                 ))}
