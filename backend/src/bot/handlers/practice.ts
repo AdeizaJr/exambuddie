@@ -403,7 +403,7 @@ export async function handleAnswer(ctx: any): Promise<void> {
       sessionId: session.sessionId || '',
       timeTakenMs: Date.now() - (session.lastQuestionTime || session.startTime || Date.now()),
     }),
-    user.plan !== 'premium' ? db.incrementDailyCount(ctx.from.id) : Promise.resolve(),
+    db.incrementDailyCount(ctx.from.id),
     user.plan !== 'premium' ? redis.incrementSubjectUsage(ctx.from.id, session.subject || '') : Promise.resolve(),
     redis.updateSession(ctx.from.id, {
       questionDeadline: undefined,
@@ -631,7 +631,7 @@ export async function handleNext(ctx: any): Promise<void> {
     usedIds: [...(session.usedIds || []), q.id],
   });
 
-  if (user.plan !== 'premium') await db.incrementDailyCount(ctx.from.id);
+  await db.incrementDailyCount(ctx.from.id);
   await sendQuestion(ctx, q, { mode: 'practice', qNum: newQNum, questionTimerSecs: session.questionTimerSecs });
 }
 

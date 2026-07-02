@@ -1,7 +1,7 @@
 // src/db/index.ts
 import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
-import { getCachedUser, setCachedUser } from '../services/redis';
+import { getCachedUser, setCachedUser, clearCachedUser } from '../services/redis';
 import { getPricing } from '../services/pricing';
 
 // Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
@@ -607,6 +607,7 @@ export async function incrementDailyCount(telegramId: number | string): Promise<
   await pool.query(`UPDATE users SET daily_count = daily_count + 1 WHERE telegram_id = $1`, [
     telegramId,
   ]);
+  await clearCachedUser(telegramId).catch(() => {});
 }
 
 // WAT = UTC+1. All date logic uses WAT so Nigerian users practicing near midnight
