@@ -3023,6 +3023,4294 @@
       "fact": "Team sports often require players to balance individual skill with coordinated strategy to achieve a shared goal.",
       "difficulty": "easy",
       "source": "general knowledge"
+    },
+    {
+      "id": "sci_161",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "Resistance in a wire increases as its length increases and decreases as its cross-sectional area increases, since a longer, thinner wire offers more opposition to current flow.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_162",
+      "subject": "Physics",
+      "topic": "Optics",
+      "fact": "A convex lens converges light rays to a focal point, which is why it can be used to magnify objects or focus sunlight onto a single spot.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_163",
+      "subject": "Physics",
+      "topic": "Motion",
+      "fact": "An object in free fall near Earth's surface accelerates at approximately 9.8 metres per second squared, ignoring air resistance.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_164",
+      "subject": "Physics",
+      "topic": "Heat Transfer",
+      "fact": "Convection transfers heat through the movement of fluid particles, which is why warm air rises and cooler air sinks to take its place.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_165",
+      "subject": "Physics",
+      "topic": "Simple Machines",
+      "fact": "A lever's mechanical advantage increases the farther the effort is applied from the fulcrum, allowing a smaller force to lift a larger load.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_166",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Elements in the same group of the periodic table have similar chemical properties because they share the same number of electrons in their outer shell.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_167",
+      "subject": "Chemistry",
+      "topic": "Reactions",
+      "fact": "An exothermic reaction releases energy to the surroundings, often as heat, while an endothermic reaction absorbs energy from the surroundings.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_168",
+      "subject": "Chemistry",
+      "topic": "Solutions",
+      "fact": "A saturated solution contains the maximum amount of solute that can dissolve at a given temperature, beyond which any extra solute remains undissolved.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_169",
+      "subject": "Chemistry",
+      "topic": "Organic Chemistry",
+      "fact": "Hydrocarbons are compounds made only of hydrogen and carbon atoms, and they form the basis of fuels like petrol, diesel, and natural gas.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_170",
+      "subject": "Chemistry",
+      "topic": "Electrolysis",
+      "fact": "During electrolysis, positive ions move toward the cathode and negative ions move toward the anode, where they gain or lose electrons respectively.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_171",
+      "subject": "Biology",
+      "topic": "Cell Biology",
+      "fact": "Mitochondria are often called the powerhouse of the cell because they generate most of the energy needed for cellular activities through respiration.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_172",
+      "subject": "Biology",
+      "topic": "Nutrition",
+      "fact": "Vitamin C deficiency can lead to scurvy, a condition that weakens connective tissue and causes bleeding gums and slow wound healing.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_173",
+      "subject": "Biology",
+      "topic": "Nervous System",
+      "fact": "A reflex action bypasses the brain and is processed directly by the spinal cord, allowing the body to respond to danger more quickly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_174",
+      "subject": "Biology",
+      "topic": "Classification",
+      "fact": "Organisms are classified into a hierarchy of groups, from kingdom down to species, based on shared characteristics and evolutionary relationships.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_175",
+      "subject": "Biology",
+      "topic": "Plant Biology",
+      "fact": "Stomata on a leaf's surface open and close to regulate gas exchange and water loss, responding to factors like light and humidity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_176",
+      "subject": "Earth Science",
+      "topic": "Volcanoes",
+      "fact": "Volcanic eruptions occur when magma rises through the Earth's crust and escapes through a vent, often releasing gas, ash, and molten rock.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_177",
+      "subject": "Earth Science",
+      "topic": "Atmosphere",
+      "fact": "The ozone layer in the stratosphere absorbs most of the sun's harmful ultraviolet radiation, protecting living organisms on Earth's surface.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_178",
+      "subject": "Earth Science",
+      "topic": "Erosion",
+      "fact": "Wind erosion is most powerful in dry, exposed areas with loose soil, which is why deserts often show distinctive sculpted rock formations.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_179",
+      "subject": "Earth Science",
+      "topic": "Minerals",
+      "fact": "A mineral's hardness can be tested using the Mohs scale, which ranks minerals from softest, like talc, to hardest, like diamond.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_180",
+      "subject": "Earth Science",
+      "topic": "Climate",
+      "fact": "Ocean currents help redistribute heat around the planet, which is why coastal regions often have milder climates than inland areas at the same latitude.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_181",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "Satellites in geostationary orbit stay above the same point on Earth's surface because their orbital period matches Earth's rotation.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_182",
+      "subject": "Astronomy",
+      "topic": "Comets",
+      "fact": "A comet's tail forms when it nears the sun, as solar radiation and wind cause its icy surface to vaporize and stream away from its core.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_183",
+      "subject": "Astronomy",
+      "topic": "Black Holes",
+      "fact": "A black hole's gravity is so strong that not even light can escape once it crosses the boundary known as the event horizon.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_184",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Venus rotates in the opposite direction to most other planets, meaning the sun rises in the west and sets in the east there.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_185",
+      "subject": "Astronomy",
+      "topic": "Constellations",
+      "fact": "Constellations are patterns of stars that appear close together from Earth but are often vast distances apart in actual space.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_186",
+      "subject": "Mathematics",
+      "topic": "Probability",
+      "fact": "The probability of two independent events both occurring is found by multiplying their individual probabilities together.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_187",
+      "subject": "Mathematics",
+      "topic": "Sequences",
+      "fact": "In an arithmetic sequence, each term is found by adding a constant value, called the common difference, to the previous term.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_188",
+      "subject": "Mathematics",
+      "topic": "Mensuration",
+      "fact": "The volume of a cone is exactly one-third the volume of a cylinder with the same base radius and height.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_189",
+      "subject": "Mathematics",
+      "topic": "Indices",
+      "fact": "Any non-zero number raised to the power of zero equals one, which follows from the rules used to divide powers with the same base.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_190",
+      "subject": "Mathematics",
+      "topic": "Set Theory",
+      "fact": "The intersection of two sets contains only the elements common to both sets, while the union contains all elements found in either set.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_017",
+      "subject": "Agricultural Science",
+      "topic": "Plant Propagation",
+      "fact": "Vegetative propagation allows new plants to grow from parts like stems, roots, or leaves, producing offspring identical to the parent plant.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_018",
+      "subject": "Agricultural Science",
+      "topic": "Farm Management",
+      "fact": "Keeping accurate farm records helps a farmer track expenses, yields, and profits, which supports better planning for future seasons.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_019",
+      "subject": "Agricultural Science",
+      "topic": "Irrigation",
+      "fact": "Drip irrigation delivers water directly to plant roots through small tubes, reducing water waste compared to overhead sprinklers.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_020",
+      "subject": "Agricultural Science",
+      "topic": "Forestry",
+      "fact": "Afforestation involves planting trees in an area that previously had no forest, often to combat soil erosion or desertification.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_021",
+      "subject": "Agricultural Science",
+      "topic": "Fisheries",
+      "fact": "Fish farming, or aquaculture, involves raising fish in controlled ponds or tanks rather than catching them from natural water bodies.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_014",
+      "subject": "Civic Education",
+      "topic": "Corruption",
+      "fact": "Corruption weakens public trust in institutions and diverts resources meant for public services like healthcare, education, and infrastructure.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_015",
+      "subject": "Civic Education",
+      "topic": "Conflict Resolution",
+      "fact": "Mediation involves a neutral third party helping two disputing sides reach a mutually acceptable resolution without going to court.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_016",
+      "subject": "Civic Education",
+      "topic": "Community Service",
+      "fact": "Volunteering in community projects helps build social cohesion and often addresses needs that government services may not fully cover.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_017",
+      "subject": "Civic Education",
+      "topic": "Gender Equality",
+      "fact": "Gender equality aims to ensure that men and women have equal rights, opportunities, and treatment in social, economic, and political life.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_018",
+      "subject": "Civic Education",
+      "topic": "Drug Abuse",
+      "fact": "Drug abuse education programs aim to inform young people about the health and social risks associated with the misuse of substances.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_016",
+      "subject": "Computer Science",
+      "topic": "Algorithms",
+      "fact": "An algorithm is a step-by-step set of instructions designed to solve a problem or perform a task, regardless of the programming language used.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_017",
+      "subject": "Computer Science",
+      "topic": "Databases",
+      "fact": "A primary key uniquely identifies each record in a database table, ensuring no two rows can have the same identifying value.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_018",
+      "subject": "Computer Science",
+      "topic": "Cybersecurity",
+      "fact": "A firewall monitors and controls incoming and outgoing network traffic based on predetermined security rules to block unauthorized access.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_019",
+      "subject": "Computer Science",
+      "topic": "Software",
+      "fact": "An operating system manages a computer's hardware resources and provides a platform on which other application software can run.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_020",
+      "subject": "Computer Science",
+      "topic": "Binary System",
+      "fact": "Computers process information using the binary number system, representing all data as combinations of just two digits, zero and one.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_013",
+      "subject": "Creative Arts",
+      "topic": "Textiles",
+      "fact": "Tie-dye is a resist-dyeing technique where fabric is twisted, folded, or bound before dye is applied, creating unique patterns where the dye cannot reach.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_014",
+      "subject": "Creative Arts",
+      "topic": "Photography",
+      "fact": "The rule of thirds is a composition guideline that suggests placing key subjects along imaginary lines dividing an image into nine equal parts.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_015",
+      "subject": "Creative Arts",
+      "topic": "Dance",
+      "fact": "Traditional dances often tell stories or mark important community events, passing cultural knowledge from one generation to the next.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_016",
+      "subject": "Creative Arts",
+      "topic": "Pottery",
+      "fact": "Clay must be fired at high temperatures in a kiln to harden it permanently into ceramic, a process called vitrification.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_017",
+      "subject": "Creative Arts",
+      "topic": "Theatre",
+      "fact": "A stage director is responsible for guiding the overall artistic vision of a play, coordinating actors, set design, and lighting.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_014",
+      "subject": "Economics",
+      "topic": "GDP",
+      "fact": "Gross Domestic Product measures the total value of goods and services produced within a country over a specific period, often a year.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_015",
+      "subject": "Economics",
+      "topic": "Unemployment",
+      "fact": "Structural unemployment occurs when there's a mismatch between workers' skills and the skills demanded by available jobs in the economy.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_016",
+      "subject": "Economics",
+      "topic": "Taxation",
+      "fact": "A progressive tax system charges higher income earners a larger percentage of their income than lower earners, aiming to reduce income inequality.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_017",
+      "subject": "Economics",
+      "topic": "Production",
+      "fact": "The factors of production are typically grouped into land, labour, capital, and entrepreneurship, all needed to produce goods and services.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_018",
+      "subject": "Economics",
+      "topic": "Opportunity Cost",
+      "fact": "Opportunity cost refers to the value of the next best alternative given up when a choice is made between competing options.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_024",
+      "subject": "English Language",
+      "topic": "Tenses",
+      "fact": "The present perfect tense connects a past action to the present moment, often used when the exact time of the action isn't specified.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_025",
+      "subject": "English Language",
+      "topic": "Word Formation",
+      "fact": "A compound word is formed by joining two or more separate words together, such as combining 'sun' and 'flower' to make 'sunflower'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_026",
+      "subject": "English Language",
+      "topic": "Sentence Types",
+      "fact": "An imperative sentence gives a command or instruction, and unlike most sentences, it often omits the subject because it's understood to be the listener.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_027",
+      "subject": "English Language",
+      "topic": "Idioms",
+      "fact": "An idiom is a phrase whose meaning cannot be understood just from the individual words, since its meaning is figurative rather than literal.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_028",
+      "subject": "English Language",
+      "topic": "Spelling",
+      "fact": "English spelling often doesn't match pronunciation exactly because the language has borrowed words from many sources, including Latin, French, and Old English.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_013",
+      "subject": "Financial Literacy",
+      "topic": "Loans",
+      "fact": "The annual percentage rate, or APR, expresses the total yearly cost of borrowing as a percentage, including interest and certain fees.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_014",
+      "subject": "Financial Literacy",
+      "topic": "Taxes",
+      "fact": "Filing taxes accurately and on time can help individuals avoid penalties and may allow them to claim refunds they are entitled to.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_015",
+      "subject": "Financial Literacy",
+      "topic": "Retirement Planning",
+      "fact": "Starting retirement savings early allows more time for compound interest to grow the fund, even with smaller regular contributions.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_016",
+      "subject": "Financial Literacy",
+      "topic": "Entrepreneurship",
+      "fact": "A business plan outlines a company's goals, target market, and financial projections, often required when seeking investment or loans.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_017",
+      "subject": "Financial Literacy",
+      "topic": "Currency",
+      "fact": "Exchange rates fluctuate based on factors like inflation, interest rates, and economic stability, affecting the cost of foreign goods and travel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_027",
+      "subject": "Geography",
+      "topic": "Cartography",
+      "fact": "A map's legend explains the symbols used to represent features like roads, rivers, and settlements, allowing accurate interpretation of the map.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_028",
+      "subject": "Geography",
+      "topic": "Vegetation",
+      "fact": "Savanna vegetation consists mainly of grassland scattered with occasional trees, adapted to a climate with a pronounced wet and dry season.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_029",
+      "subject": "Geography",
+      "topic": "Settlement Patterns",
+      "fact": "A nucleated settlement has buildings clustered tightly together, often around a central feature like a market, church, or water source.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_030",
+      "subject": "Geography",
+      "topic": "Industry",
+      "fact": "Industries that process raw materials close to their source, like sawmills near forests, are described as resource-oriented industries.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_031",
+      "subject": "Geography",
+      "topic": "Migration",
+      "fact": "Push factors drive people to leave an area, such as conflict or drought, while pull factors attract them elsewhere, such as job opportunities.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_016",
+      "subject": "Government",
+      "topic": "Pressure Groups",
+      "fact": "Pressure groups seek to influence government policy on specific issues without aiming to win political power or form a government themselves.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_017",
+      "subject": "Government",
+      "topic": "Local Government",
+      "fact": "Local governments handle matters close to communities, such as waste collection, local roads, and primary healthcare, easing the burden on central government.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_018",
+      "subject": "Government",
+      "topic": "Citizenship Acquisition",
+      "fact": "Citizenship can typically be acquired by birth, descent, marriage, or naturalization, depending on a country's specific legal requirements.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_019",
+      "subject": "Government",
+      "topic": "International Relations",
+      "fact": "Diplomatic immunity protects foreign diplomats from being prosecuted under the host country's laws, allowing them to perform their duties without interference.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_020",
+      "subject": "Government",
+      "topic": "Public Administration",
+      "fact": "The civil service is responsible for implementing government policies and providing continuity in administration regardless of changes in political leadership.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_016",
+      "subject": "Health Education",
+      "topic": "Personal Hygiene",
+      "fact": "Regular handwashing with soap is one of the most effective ways to prevent the spread of infections like colds, flu, and diarrheal diseases.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_017",
+      "subject": "Health Education",
+      "topic": "Reproductive Health",
+      "fact": "Understanding puberty and reproductive health helps young people make informed decisions about their bodies and relationships as they grow.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_018",
+      "subject": "Health Education",
+      "topic": "Substance Abuse",
+      "fact": "Tobacco use significantly increases the risk of lung cancer, heart disease, and respiratory illnesses over a person's lifetime.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_019",
+      "subject": "Health Education",
+      "topic": "Environmental Health",
+      "fact": "Access to clean drinking water and proper sanitation greatly reduces the spread of waterborne diseases like cholera and typhoid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_020",
+      "subject": "Health Education",
+      "topic": "Safety Education",
+      "fact": "Wearing a seatbelt significantly reduces the risk of serious injury or death in the event of a vehicle collision.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_031",
+      "subject": "History",
+      "topic": "Slave Trade",
+      "fact": "The transatlantic slave trade forcibly transported millions of Africans to the Americas between the 16th and 19th centuries to work on plantations.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_032",
+      "subject": "History",
+      "topic": "World Wars",
+      "fact": "World War One began in 1914 after a complex web of alliances drew major European powers into conflict following the assassination of Archduke Franz Ferdinand.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_033",
+      "subject": "History",
+      "topic": "Empires",
+      "fact": "The Songhai Empire became one of the largest empires in African history, controlling key trade routes across West Africa in the 15th and 16th centuries.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_034",
+      "subject": "History",
+      "topic": "Cold War",
+      "fact": "The Cold War was a prolonged period of political tension between the United States and the Soviet Union that never escalated into direct large-scale warfare between them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_035",
+      "subject": "History",
+      "topic": "Civilizations",
+      "fact": "Ancient Egyptian civilization developed along the Nile River, relying on its predictable annual flooding to support agriculture in an otherwise arid region.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_018",
+      "subject": "Literature",
+      "topic": "Setting",
+      "fact": "The setting of a story includes both the time period and the physical location, often influencing the characters' actions and the story's mood.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_019",
+      "subject": "Literature",
+      "topic": "Characterization",
+      "fact": "A round character is portrayed with complex, multidimensional traits, while a flat character usually has only one or two defining qualities.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_020",
+      "subject": "Literature",
+      "topic": "Irony",
+      "fact": "Dramatic irony occurs when the audience knows something important that a character in the story does not, creating tension or anticipation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_021",
+      "subject": "Literature",
+      "topic": "Plot Structure",
+      "fact": "The climax of a story is the turning point of highest tension, after which the plot moves toward resolution in the falling action and denouement.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_022",
+      "subject": "Literature",
+      "topic": "Oral Literature",
+      "fact": "Oral literature, including folktales and proverbs, was traditionally passed down by word of mouth before being recorded in written form.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_012",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "In a relay race, the baton must be passed within a designated exchange zone, or the team risks disqualification.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_013",
+      "subject": "Physical Education",
+      "topic": "Nutrition for Sports",
+      "fact": "Athletes often consume carbohydrates before endurance events because they are quickly converted into glucose, providing readily available energy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_014",
+      "subject": "Physical Education",
+      "topic": "Injury Prevention",
+      "fact": "Cooling down after exercise helps the heart rate return gradually to normal and may reduce muscle soreness the following day.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_015",
+      "subject": "Physical Education",
+      "topic": "Sportsmanship",
+      "fact": "Good sportsmanship involves respecting opponents, officials, and the rules of the game, regardless of whether a team wins or loses.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_016",
+      "subject": "Physical Education",
+      "topic": "Game Rules",
+      "fact": "In basketball, a player commits a travel violation by taking too many steps without dribbling the ball.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_191",
+      "subject": "Physics",
+      "topic": "Optics",
+      "fact": "A rainbow forms when sunlight is refracted, dispersed, and reflected inside raindrops, splitting white light into its spectrum of colors.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_192",
+      "subject": "Physics",
+      "topic": "Mechanics",
+      "fact": "Friction always opposes relative motion between two surfaces, which is why objects sliding on rough surfaces slow down faster than on smooth ones.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_193",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "A short circuit occurs when current finds an unintended low-resistance path, causing a sudden surge that can generate heat or sparks.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_194",
+      "subject": "Physics",
+      "topic": "Waves",
+      "fact": "The pitch of a sound depends on its frequency; higher frequency waves produce higher-pitched sounds.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_195",
+      "subject": "Physics",
+      "topic": "Thermodynamics",
+      "fact": "Heat always flows from a hotter object to a colder one until thermal equilibrium is reached, a principle behind the second law of thermodynamics.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_196",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "Litmus paper turns red in acidic solutions and blue in basic (alkaline) solutions, making it a simple indicator of pH.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_197",
+      "subject": "Chemistry",
+      "topic": "Atomic Structure",
+      "fact": "Isotopes of an element have the same number of protons but different numbers of neutrons, giving them different atomic masses.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_198",
+      "subject": "Chemistry",
+      "topic": "Chemical Reactions",
+      "fact": "An exothermic reaction releases energy to its surroundings, often in the form of heat, while an endothermic reaction absorbs energy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_199",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Elements in the same group of the periodic table have similar chemical properties because they share the same number of valence electrons.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_200",
+      "subject": "Chemistry",
+      "topic": "States of Matter",
+      "fact": "Sublimation is the process where a solid changes directly into a gas without passing through the liquid state, as seen with dry ice.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_201",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The human liver can regenerate itself; even if up to 70 percent of it is removed, it can grow back to nearly its full size.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_202",
+      "subject": "Biology",
+      "topic": "Genetics",
+      "fact": "A person's blood type is determined by specific antigens on the surface of red blood cells, inherited from both parents.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_203",
+      "subject": "Biology",
+      "topic": "Plant Biology",
+      "fact": "Stomata are tiny pores on plant leaves that regulate gas exchange, allowing carbon dioxide in and oxygen and water vapor out.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_204",
+      "subject": "Biology",
+      "topic": "Ecology",
+      "fact": "A food chain shows the transfer of energy from one organism to another, starting with producers like plants and ending with top predators.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_205",
+      "subject": "Biology",
+      "topic": "Cell Biology",
+      "fact": "Mitochondria are often called the powerhouse of the cell because they generate most of the cell's supply of ATP energy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_206",
+      "subject": "Earth Science",
+      "topic": "Rocks and Minerals",
+      "fact": "Sedimentary rocks form from layers of compacted sediment over long periods, and often contain fossils of ancient organisms.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_207",
+      "subject": "Earth Science",
+      "topic": "Weather",
+      "fact": "Humidity measures the amount of water vapor in the air, and high humidity makes hot weather feel even warmer.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_208",
+      "subject": "Earth Science",
+      "topic": "Plate Tectonics",
+      "fact": "Earthquakes commonly occur along fault lines where tectonic plates meet, slide past, or collide with one another.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_209",
+      "subject": "Earth Science",
+      "topic": "Water Cycle",
+      "fact": "Condensation is the process by which water vapor in the atmosphere cools and changes back into liquid droplets, forming clouds.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_210",
+      "subject": "Earth Science",
+      "topic": "Natural Resources",
+      "fact": "Fossil fuels like coal, oil, and natural gas formed over millions of years from the remains of ancient plants and animals.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_211",
+      "subject": "Astronomy",
+      "topic": "Solar System",
+      "fact": "Saturn's rings are made mostly of ice particles, with smaller amounts of rocky debris and dust.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_212",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "A star's color indicates its surface temperature; blue stars are hotter than yellow stars, which are hotter than red stars.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_213",
+      "subject": "Astronomy",
+      "topic": "Earth and Moon",
+      "fact": "The Moon does not produce its own light; it shines because it reflects sunlight back toward Earth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_214",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "The International Space Station orbits Earth at an altitude of roughly 400 kilometers, completing an orbit about every 90 minutes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_215",
+      "subject": "Astronomy",
+      "topic": "Galaxies",
+      "fact": "The Milky Way is a barred spiral galaxy containing an estimated 100 to 400 billion stars.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_216",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The sum of the interior angles of any triangle always equals 180 degrees, regardless of the triangle's shape or size.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_217",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "A prime number has exactly two factors, 1 and itself; the number 2 is the only even prime number.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_218",
+      "subject": "Mathematics",
+      "topic": "Algebra",
+      "fact": "The quadratic formula can solve any equation in the form ax squared plus bx plus c equals zero, even when factoring is difficult.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_219",
+      "subject": "Mathematics",
+      "topic": "Statistics",
+      "fact": "The mean, median, and mode are all measures of central tendency, but each can give a different picture of a data set.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_220",
+      "subject": "Mathematics",
+      "topic": "Trigonometry",
+      "fact": "The Pythagorean theorem relates the sides of a right triangle, stating that the square of the hypotenuse equals the sum of the squares of the other two sides.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_36",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "The Mali Empire under Mansa Musa became one of the wealthiest empires in history, largely due to its control of gold and salt trade routes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_37",
+      "subject": "History",
+      "topic": "World History",
+      "fact": "The Berlin Wall divided East and West Berlin for 28 years before it fell in 1989, symbolizing the end of the Cold War in Europe.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_38",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The ancient Egyptians used a form of writing called hieroglyphics, which combined logographic and alphabetic elements.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_39",
+      "subject": "History",
+      "topic": "Colonialism",
+      "fact": "The Berlin Conference of 1884-85 set rules for European powers to divide and colonize Africa without consulting African leaders.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_40",
+      "subject": "History",
+      "topic": "Independence Movements",
+      "fact": "Ghana became the first sub-Saharan African country to gain independence from colonial rule, in 1957, under Kwame Nkrumah.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_32",
+      "subject": "Geography",
+      "topic": "Climate",
+      "fact": "The equator experiences relatively consistent day length and temperature year-round because it receives direct sunlight throughout the year.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_33",
+      "subject": "Geography",
+      "topic": "Landforms",
+      "fact": "A delta forms where a river deposits sediment as it slows down and meets a larger body of water, such as an ocean.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_34",
+      "subject": "Geography",
+      "topic": "Population",
+      "fact": "Urbanization refers to the increasing movement of people from rural areas to cities, often driven by job opportunities.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_35",
+      "subject": "Geography",
+      "topic": "Map Skills",
+      "fact": "Contour lines on a map connect points of equal elevation, and closely spaced lines indicate steep terrain.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_36",
+      "subject": "Geography",
+      "topic": "Natural Vegetation",
+      "fact": "Tropical rainforests, though covering a small percentage of Earth's land, are home to more than half of the world's plant and animal species.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_29",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "A preposition shows the relationship between a noun and other words in a sentence, often indicating place, time, or direction.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_30",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "A synonym is a word with a similar meaning to another, while an antonym has the opposite meaning.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_31",
+      "subject": "English Language",
+      "topic": "Comprehension",
+      "fact": "Skimming a passage means reading quickly to get the general idea, while scanning means searching for specific information.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_32",
+      "subject": "English Language",
+      "topic": "Literary Devices",
+      "fact": "Personification gives human qualities to non-human things, such as saying 'the wind whispered through the trees.'",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_33",
+      "subject": "English Language",
+      "topic": "Punctuation",
+      "fact": "A semicolon can join two independent clauses that are closely related in meaning without using a conjunction.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_19",
+      "subject": "Civic Education",
+      "topic": "Citizenship",
+      "fact": "Civic responsibilities include obeying laws, paying taxes, and voting, all of which help maintain order and development in a society.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_20",
+      "subject": "Civic Education",
+      "topic": "Human Rights",
+      "fact": "The Universal Declaration of Human Rights, adopted in 1948, outlines fundamental rights that all people are entitled to, regardless of nationality.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_21",
+      "subject": "Civic Education",
+      "topic": "Democracy",
+      "fact": "Separation of powers divides government authority among the executive, legislative, and judicial branches to prevent any one branch from gaining too much power.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_22",
+      "subject": "Civic Education",
+      "topic": "National Values",
+      "fact": "National symbols such as a flag, anthem, and coat of arms represent a country's identity and unity.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_23",
+      "subject": "Civic Education",
+      "topic": "Rule of Law",
+      "fact": "The rule of law means that everyone, including leaders, is subject to and accountable under the law.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_19",
+      "subject": "Economics",
+      "topic": "Basic Concepts",
+      "fact": "Scarcity is the basic economic problem of having limited resources to meet unlimited human wants and needs.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_20",
+      "subject": "Economics",
+      "topic": "Markets",
+      "fact": "In a free market, prices are largely determined by the interaction of supply and demand rather than government control.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_21",
+      "subject": "Economics",
+      "topic": "Trade",
+      "fact": "Comparative advantage explains why countries benefit from specializing in producing goods they can make most efficiently and trading for the rest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_22",
+      "subject": "Economics",
+      "topic": "Inflation",
+      "fact": "Inflation is a general rise in prices over time, which reduces the purchasing power of money.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_23",
+      "subject": "Economics",
+      "topic": "Money",
+      "fact": "Barter trade, the direct exchange of goods and services without money, was widely used before currency systems developed.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_23",
+      "subject": "Literature",
+      "topic": "Literary Terms",
+      "fact": "A protagonist is the main character of a story, while the antagonist is the character or force that opposes them.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_24",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "A sonnet is a 14-line poem, traditionally written in iambic pentameter, often associated with themes of love.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_25",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "Dramatic irony occurs when the audience knows something important that a character in the story does not.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_26",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Chinua Achebe's novel 'Things Fall Apart' explores the clash between traditional Igbo society and colonial influence in Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_27",
+      "subject": "Literature",
+      "topic": "Figures of Speech",
+      "fact": "A simile compares two different things using 'like' or 'as,' such as 'as brave as a lion.'",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_21",
+      "subject": "Government",
+      "topic": "Systems of Government",
+      "fact": "In a federal system of government, power is shared between a central government and smaller regional or state governments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_22",
+      "subject": "Government",
+      "topic": "Elections",
+      "fact": "A constituency is a geographic area whose residents elect a representative to a legislative body.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_23",
+      "subject": "Government",
+      "topic": "Political Parties",
+      "fact": "A multi-party system allows several political parties to have realistic chances of gaining power, encouraging diverse representation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_24",
+      "subject": "Government",
+      "topic": "Constitution",
+      "fact": "A constitution is the supreme law of a country, outlining the structure of government and the rights of citizens.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_25",
+      "subject": "Government",
+      "topic": "International Relations",
+      "fact": "The United Nations was founded in 1945 to promote international peace, security, and cooperation among member states.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_22",
+      "subject": "Agricultural Science",
+      "topic": "Crop Production",
+      "fact": "Crop rotation helps maintain soil fertility and reduce pest buildup by changing the type of crop grown in a field each season.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_23",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "Poultry farming is one of the fastest ways to produce animal protein because chickens have a short growth cycle compared to cattle.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_24",
+      "subject": "Agricultural Science",
+      "topic": "Soil Science",
+      "fact": "Loamy soil, a mix of sand, silt, and clay, is considered ideal for most crops because it retains moisture while still draining well.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_25",
+      "subject": "Agricultural Science",
+      "topic": "Farm Tools",
+      "fact": "A cutlass is a common hand tool used in many tropical farms for clearing weeds and harvesting crops.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_26",
+      "subject": "Agricultural Science",
+      "topic": "Pests and Diseases",
+      "fact": "Integrated pest management combines biological, mechanical, and chemical methods to control pests while minimizing environmental harm.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_21",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "RAM is a type of volatile memory, meaning it loses all stored data once a computer is powered off.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_22",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "An algorithm is a step-by-step set of instructions designed to perform a specific task or solve a problem.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_23",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "A URL is the address used to locate a specific resource, such as a webpage, on the internet.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_24",
+      "subject": "Computer Science",
+      "topic": "Data",
+      "fact": "Binary code represents all computer data using only two digits, 0 and 1, corresponding to electrical off and on states.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_25",
+      "subject": "Computer Science",
+      "topic": "Cybersecurity",
+      "fact": "A strong password typically combines uppercase and lowercase letters, numbers, and symbols to make it harder to guess or crack.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_21",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A balanced diet should include carbohydrates, proteins, fats, vitamins, minerals, and water in appropriate proportions.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_22",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Vaccines work by training the immune system to recognize and fight specific pathogens without causing the actual disease.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_23",
+      "subject": "Health Education",
+      "topic": "Mental Health",
+      "fact": "Regular physical activity has been shown to reduce stress and improve mood by triggering the release of endorphins.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_24",
+      "subject": "Health Education",
+      "topic": "Reproductive Health",
+      "fact": "Puberty is the stage of development during which the body becomes capable of sexual reproduction, marked by various physical changes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_25",
+      "subject": "Health Education",
+      "topic": "Sanitation",
+      "fact": "Proper waste disposal helps prevent the spread of diseases by reducing breeding grounds for pests like flies and mosquitoes.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_18",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Compound interest allows savings to grow faster over time because interest is earned on both the principal and previously earned interest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_19",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "A budget is a financial plan that tracks expected income and expenses over a specific period, helping control spending.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_20",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "A savings account typically earns interest over time, while a current account is designed for frequent transactions, usually without interest.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_21",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "A credit score reflects a person's creditworthiness, based on factors like repayment history and outstanding debt.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_22",
+      "subject": "Financial Literacy",
+      "topic": "Investment",
+      "fact": "Diversifying investments across different assets can help reduce overall risk compared to putting all funds into a single investment.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_18",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "Primary colors, red, blue, and yellow, cannot be created by mixing other colors, but can be combined to make secondary colors.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_19",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "A musical scale is a series of notes arranged in ascending or descending order of pitch, forming the basis of melodies.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_20",
+      "subject": "Creative Arts",
+      "topic": "Drama",
+      "fact": "Improvisation in drama involves performers creating dialogue and actions spontaneously, without a fixed script.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_21",
+      "subject": "Creative Arts",
+      "topic": "Crafts",
+      "fact": "Tie-dye is a fabric decoration technique that involves twisting or folding cloth and binding it before applying dye.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_22",
+      "subject": "Creative Arts",
+      "topic": "Design",
+      "fact": "The principle of balance in art refers to how visual weight is distributed within a composition, creating a sense of stability.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_17",
+      "subject": "Physical Education",
+      "topic": "Fitness",
+      "fact": "Cardiovascular endurance refers to the heart and lungs' ability to supply oxygen to muscles during sustained physical activity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_18",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In football, an offside violation occurs when an attacking player is in front of the ball and nearer the opponent's goal line than both the ball and the second-to-last defender.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_19",
+      "subject": "Physical Education",
+      "topic": "Health Benefits",
+      "fact": "Regular exercise strengthens bones and muscles while also improving cardiovascular health and reducing the risk of chronic disease.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_20",
+      "subject": "Physical Education",
+      "topic": "Warm-up",
+      "fact": "Warming up before exercise increases blood flow to muscles and reduces the risk of strains or injuries during activity.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_21",
+      "subject": "Physical Education",
+      "topic": "Team Sports",
+      "fact": "In basketball, a team has 24 seconds to attempt a shot once they gain possession of the ball, known as the shot clock.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_221",
+      "subject": "Physics",
+      "topic": "Mechanics",
+      "fact": "Friction always acts opposite to the direction of motion, which is why a moving object eventually slows down and stops on a rough surface without an applied force.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_222",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "In a series circuit, current is the same at every point, but in a parallel circuit, the current splits between the branches.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_223",
+      "subject": "Physics",
+      "topic": "Waves",
+      "fact": "The speed of sound in water is about four times faster than in air because liquid molecules are more closely packed than gas molecules.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_224",
+      "subject": "Physics",
+      "topic": "Heat",
+      "fact": "Metals feel colder than wood at the same temperature because metals are better conductors of heat and draw heat away from your skin faster.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_225",
+      "subject": "Physics",
+      "topic": "Optics",
+      "fact": "A rainbow forms when sunlight is refracted, reflected, and dispersed by water droplets, splitting white light into its seven component colors.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_226",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Elements in the same group of the periodic table have the same number of valence electrons, which gives them similar chemical properties.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_227",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "Pure water has a pH of 7, which is considered neutral, neither acidic nor basic.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_228",
+      "subject": "Chemistry",
+      "topic": "Reactions",
+      "fact": "In every chemical reaction, the total mass of the reactants equals the total mass of the products, a principle known as the law of conservation of mass.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_229",
+      "subject": "Chemistry",
+      "topic": "Bonding",
+      "fact": "Ionic bonds form when electrons are transferred between atoms, while covalent bonds form when electrons are shared.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_230",
+      "subject": "Chemistry",
+      "topic": "Gases",
+      "fact": "Gases expand to fill their container because their particles have weak intermolecular forces and move freely in all directions.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_231",
+      "subject": "Biology",
+      "topic": "Cells",
+      "fact": "Plant cells have a rigid cell wall made of cellulose, while animal cells only have a flexible cell membrane.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_232",
+      "subject": "Biology",
+      "topic": "Genetics",
+      "fact": "Humans have 23 pairs of chromosomes, with one chromosome in each pair inherited from each parent.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_233",
+      "subject": "Biology",
+      "topic": "Respiration",
+      "fact": "During aerobic respiration, glucose and oxygen react in cells to release energy, carbon dioxide, and water.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_234",
+      "subject": "Biology",
+      "topic": "Ecology",
+      "fact": "A food chain shows a single path of energy flow, while a food web shows the many interconnected feeding relationships in an ecosystem.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_235",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The human liver can regenerate lost tissue, and a healthy liver can regrow to nearly its full size even after a large portion is removed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_236",
+      "subject": "Earth Science",
+      "topic": "Rocks",
+      "fact": "Sedimentary rocks form from layers of compacted sediment over time, which is why they often contain fossils.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_237",
+      "subject": "Earth Science",
+      "topic": "Weather",
+      "fact": "Warm air can hold more water vapor than cold air, which is why humidity often drops sharply when temperatures fall.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_238",
+      "subject": "Earth Science",
+      "topic": "Plate Tectonics",
+      "fact": "Earthquakes mostly occur along plate boundaries where tectonic plates slide past, collide with, or move apart from each other.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_239",
+      "subject": "Earth Science",
+      "topic": "Water Cycle",
+      "fact": "Transpiration is the process by which plants release water vapor into the atmosphere through tiny pores in their leaves.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_240",
+      "subject": "Earth Science",
+      "topic": "Soil",
+      "fact": "Loamy soil, a mix of sand, silt, and clay, is considered the best soil type for most crops because it retains water while still draining well.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_241",
+      "subject": "Astronomy",
+      "topic": "Solar System",
+      "fact": "Jupiter is the largest planet in the solar system and has a mass greater than all the other planets combined.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_242",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "Stars shine because nuclear fusion in their cores converts hydrogen into helium, releasing enormous amounts of energy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_243",
+      "subject": "Astronomy",
+      "topic": "Moon",
+      "fact": "The Moon's gravity is the main cause of ocean tides on Earth, pulling water toward it as it orbits.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_244",
+      "subject": "Astronomy",
+      "topic": "Galaxies",
+      "fact": "The Milky Way is a barred spiral galaxy containing an estimated 100 to 400 billion stars.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_245",
+      "subject": "Mathematics",
+      "topic": "Algebra",
+      "fact": "Any number raised to the power of zero equals one, except zero itself, which is undefined at that power.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_246",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The sum of the interior angles of any triangle always equals 180 degrees, regardless of the triangle's shape or size.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_247",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "A prime number has exactly two factors, 1 and itself, and 2 is the only even prime number.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_248",
+      "subject": "Mathematics",
+      "topic": "Statistics",
+      "fact": "The mean can be heavily affected by extreme outliers, while the median stays more stable, which is why median is often used for skewed data like income.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_249",
+      "subject": "Mathematics",
+      "topic": "Trigonometry",
+      "fact": "The Pythagorean theorem, a squared plus b squared equals c squared, only applies to right-angled triangles.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_041",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "The Mali Empire under Mansa Musa in the 14th century was one of the wealthiest empires in history, built on gold and salt trade across the Sahara.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_042",
+      "subject": "History",
+      "topic": "World Wars",
+      "fact": "World War I began in 1914 after the assassination of Archduke Franz Ferdinand of Austria-Hungary, triggering a chain of alliances into war.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_043",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "Nigeria gained independence from British colonial rule on October 1, 1960.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_044",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "Ancient Egyptians developed one of the earliest writing systems, hieroglyphics, used for religious texts and royal records.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_045",
+      "subject": "History",
+      "topic": "Slave Trade",
+      "fact": "The transatlantic slave trade forcibly transported an estimated 12 million Africans across the Atlantic between the 16th and 19th centuries.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_037",
+      "subject": "Geography",
+      "topic": "Rivers",
+      "fact": "The Nile, widely regarded as the longest river in Africa, flows northward through eleven countries before reaching the Mediterranean Sea.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_038",
+      "subject": "Geography",
+      "topic": "Climate",
+      "fact": "The equator experiences fairly consistent temperatures year-round because it receives nearly direct sunlight throughout the year.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_039",
+      "subject": "Geography",
+      "topic": "Population",
+      "fact": "Lagos is one of the fastest-growing cities in the world and is widely considered the most populous city in Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_040",
+      "subject": "Geography",
+      "topic": "Landforms",
+      "fact": "A delta forms where a river deposits sediment as it slows down and spreads out before entering a sea or lake.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_041",
+      "subject": "Geography",
+      "topic": "Vegetation",
+      "fact": "Nigeria's vegetation changes from mangrove swamps in the south to savanna grassland and semi-desert in the far north.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_034",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "A clause must contain a subject and a verb, which is what distinguishes it from a phrase.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_035",
+      "subject": "English Language",
+      "topic": "Figures of Speech",
+      "fact": "A simile directly compares two things using 'like' or 'as', while a metaphor states one thing is another without using comparison words.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_036",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "A synonym is a word that means nearly the same as another word, while an antonym means the opposite.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_037",
+      "subject": "English Language",
+      "topic": "Comprehension",
+      "fact": "Skimming a passage quickly for the main idea before reading in detail can help answer comprehension questions faster.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_038",
+      "subject": "English Language",
+      "topic": "Tenses",
+      "fact": "The present perfect tense, formed with 'has' or 'have' plus a past participle, describes an action that started in the past and continues to affect the present.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_028",
+      "subject": "Literature",
+      "topic": "Literary Devices",
+      "fact": "Foreshadowing is a literary device where an author hints at events that will happen later in the story.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_029",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "A sonnet traditionally has 14 lines and follows a strict rhyme scheme, with the Shakespearean form ending in a rhymed couplet.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_030",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "Tragedy in drama typically follows a protagonist whose downfall results from a personal flaw, often called a tragic flaw.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_031",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "An unreliable narrator is one whose credibility is compromised, making readers question whether their account of events is fully truthful.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_032",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Chinua Achebe's novel 'Things Fall Apart' is widely studied for its portrayal of Igbo society before and during colonial influence in Nigeria.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_024",
+      "subject": "Civic Education",
+      "topic": "Rights",
+      "fact": "Human rights are considered universal, meaning they apply to every person regardless of nationality, gender, or background.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_025",
+      "subject": "Civic Education",
+      "topic": "Citizenship",
+      "fact": "A citizen can typically acquire citizenship by birth, descent, marriage, or naturalization, depending on a country's laws.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_026",
+      "subject": "Civic Education",
+      "topic": "Democracy",
+      "fact": "Free and fair elections, held at regular intervals, are considered a core feature of a functioning democracy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_027",
+      "subject": "Civic Education",
+      "topic": "Rule of Law",
+      "fact": "The rule of law means that no one, including government officials, is above the law and everyone is subject to it equally.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_028",
+      "subject": "Civic Education",
+      "topic": "National Values",
+      "fact": "National integration refers to the process of unifying diverse ethnic, religious, and cultural groups within a country into one cohesive nation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_026",
+      "subject": "Government",
+      "topic": "Separation of Powers",
+      "fact": "The separation of powers divides government into the executive, legislative, and judicial branches to prevent any one branch from gaining too much control.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_027",
+      "subject": "Government",
+      "topic": "Federalism",
+      "fact": "In a federal system, power is constitutionally shared between a central government and regional or state governments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_028",
+      "subject": "Government",
+      "topic": "Constitution",
+      "fact": "A written constitution sets out the fundamental laws and principles by which a country is governed, and is usually more difficult to amend than ordinary laws.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_029",
+      "subject": "Government",
+      "topic": "Political Parties",
+      "fact": "A political party is an organized group of people who share similar political goals and seek to win elections to implement their policies.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_030",
+      "subject": "Government",
+      "topic": "Pressure Groups",
+      "fact": "Pressure groups differ from political parties because they aim to influence government policy without seeking to win political office themselves.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_024",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "According to the law of demand, when the price of a good rises, the quantity demanded generally falls, all else being equal.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_025",
+      "subject": "Economics",
+      "topic": "Inflation",
+      "fact": "Inflation is a sustained increase in the general price level of goods and services, which reduces the purchasing power of money over time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_026",
+      "subject": "Economics",
+      "topic": "Trade",
+      "fact": "Comparative advantage is the ability of a country to produce a good at a lower opportunity cost than another country, forming the basis for international trade.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_027",
+      "subject": "Economics",
+      "topic": "Money",
+      "fact": "Money serves four main functions: a medium of exchange, a store of value, a unit of account, and a standard of deferred payment.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_028",
+      "subject": "Economics",
+      "topic": "Production",
+      "fact": "The factors of production are traditionally classified as land, labor, capital, and entrepreneurship.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_027",
+      "subject": "Agricultural Science",
+      "topic": "Soil Fertility",
+      "fact": "Crop rotation helps maintain soil fertility because different crops use and replenish soil nutrients differently, reducing nutrient depletion.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_028",
+      "subject": "Agricultural Science",
+      "topic": "Livestock",
+      "fact": "Ruminant animals like cattle and goats have a four-chambered stomach that allows them to digest fibrous plant material that other animals cannot break down.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_029",
+      "subject": "Agricultural Science",
+      "topic": "Pests",
+      "fact": "Integrated pest management combines biological, cultural, and chemical methods to control pests while minimizing harm to the environment.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_030",
+      "subject": "Agricultural Science",
+      "topic": "Farm Tools",
+      "fact": "A cutlass and a hoe remain among the most widely used hand tools for land clearing and planting on small farms.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_031",
+      "subject": "Agricultural Science",
+      "topic": "Plant Propagation",
+      "fact": "Vegetative propagation, such as using stem cuttings, allows farmers to grow new plants that are genetically identical to the parent plant.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_026",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "RAM is a volatile memory that loses all stored data once a computer is powered off, unlike a hard drive which retains data.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_027",
+      "subject": "Computer Science",
+      "topic": "Networking",
+      "fact": "An IP address uniquely identifies a device on a network, allowing data to be routed correctly between devices over the internet.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_028",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "An algorithm is a step-by-step set of instructions for solving a problem, and it can be written in plain language before being coded.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_029",
+      "subject": "Computer Science",
+      "topic": "Data Representation",
+      "fact": "Computers store and process all data, including text and images, as sequences of binary digits, 0s and 1s.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_030",
+      "subject": "Computer Science",
+      "topic": "Software",
+      "fact": "System software, like an operating system, manages hardware resources, while application software performs specific tasks for the user.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_026",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A balanced diet should include carbohydrates, proteins, fats, vitamins, minerals, and water in proportions appropriate to the body's needs.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_027",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Malaria is transmitted through the bite of an infected female Anopheles mosquito, not through casual contact with infected people.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_028",
+      "subject": "Health Education",
+      "topic": "Mental Health",
+      "fact": "Chronic stress can affect physical health by weakening the immune system and increasing the risk of conditions like high blood pressure.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_029",
+      "subject": "Health Education",
+      "topic": "Reproductive Health",
+      "fact": "Puberty is marked by hormonal changes that trigger physical development and the maturing of reproductive organs in both sexes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_030",
+      "subject": "Health Education",
+      "topic": "First Aid",
+      "fact": "For a minor burn, the recommended first response is to cool the area under running water for several minutes rather than applying ice directly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_022",
+      "subject": "Physical Education",
+      "topic": "Fitness Components",
+      "fact": "Cardiovascular endurance refers to the heart and lungs' ability to supply oxygen to muscles during sustained physical activity.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_023",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In football, a player is ruled offside if they are nearer to the opponent's goal line than both the ball and the second-last defender when the ball is played to them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_024",
+      "subject": "Physical Education",
+      "topic": "Health and Fitness",
+      "fact": "Warming up before exercise increases blood flow to muscles and reduces the risk of strains and injuries.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_025",
+      "subject": "Physical Education",
+      "topic": "Body Systems",
+      "fact": "Regular aerobic exercise can strengthen the heart muscle, allowing it to pump blood more efficiently over time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_026",
+      "subject": "Physical Education",
+      "topic": "Sports History",
+      "fact": "The modern Olympic Games were revived in 1896 in Athens, Greece, inspired by the ancient Olympic Games of antiquity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_023",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "Primary colors, red, blue, and yellow, cannot be created by mixing other colors but can be combined to form secondary colors.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_024",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Rhythm in music refers to the pattern of beats over time, while melody refers to a sequence of musical notes that form a recognizable tune.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_025",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "Traditional Benin bronze sculptures from Nigeria are renowned worldwide for their detailed craftsmanship and historical significance.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_026",
+      "subject": "Creative Arts",
+      "topic": "Drama",
+      "fact": "Mime is a form of performance that conveys a story or emotion entirely through movement and facial expression, without spoken words.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_027",
+      "subject": "Creative Arts",
+      "topic": "Crafts",
+      "fact": "Tie-dye and adire fabric-making both use resist techniques, where parts of the cloth are tied or treated to block dye from reaching certain areas.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_023",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Compound interest allows savings to grow faster over time because interest is earned not just on the original deposit but also on previously earned interest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_024",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "A budget is a financial plan that tracks expected income and expenses over a set period, helping to avoid overspending.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_025",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "A current account typically allows unlimited withdrawals and is used for everyday transactions, while a savings account usually earns interest but may limit withdrawals.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_026",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "A good credit history shows lenders that a borrower has reliably repaid debts in the past, making it easier to access loans in the future.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_027",
+      "subject": "Financial Literacy",
+      "topic": "Investment",
+      "fact": "Diversification means spreading investments across different assets to reduce the overall risk of losing money if one investment performs poorly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_250",
+      "subject": "Physics",
+      "topic": "Motion",
+      "fact": "Newton's first law of motion states that an object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted on by an unbalanced force.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_251",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "Ohm's law states that the current flowing through a conductor is directly proportional to the voltage across it, provided temperature remains constant.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_252",
+      "subject": "Physics",
+      "topic": "Sound",
+      "fact": "Sound travels faster through water than through air because water molecules are more closely packed, allowing vibrations to transfer more quickly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_253",
+      "subject": "Physics",
+      "topic": "Pressure",
+      "fact": "Atmospheric pressure decreases with altitude, which is why water boils at a lower temperature on a high mountain than at sea level.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_254",
+      "subject": "Physics",
+      "topic": "Magnetism",
+      "fact": "A magnetic compass points toward magnetic north because Earth itself behaves like a giant bar magnet with its own magnetic field.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_255",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "The pH scale runs from 0 to 14, with 7 being neutral; values below 7 indicate an acid and values above 7 indicate a base.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_256",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Elements in the same group of the periodic table share similar chemical properties because they have the same number of electrons in their outer shell.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_257",
+      "subject": "Chemistry",
+      "topic": "Chemical Reactions",
+      "fact": "In an exothermic reaction, energy is released to the surroundings, often as heat, while an endothermic reaction absorbs energy from its surroundings.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_258",
+      "subject": "Chemistry",
+      "topic": "Mixtures",
+      "fact": "Distillation separates mixtures based on differences in boiling point, allowing components like ethanol and water to be separated from one another.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_259",
+      "subject": "Chemistry",
+      "topic": "Atoms",
+      "fact": "An atom's mass is concentrated almost entirely in its nucleus, since electrons have a mass thousands of times smaller than protons or neutrons.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_260",
+      "subject": "Biology",
+      "topic": "Genetics",
+      "fact": "DNA is shaped like a double helix, with two strands twisted around each other and held together by pairs of bases.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_261",
+      "subject": "Biology",
+      "topic": "Circulation",
+      "fact": "The heart's left side pumps oxygen-rich blood to the body, while the right side pumps oxygen-poor blood to the lungs to be refreshed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_262",
+      "subject": "Biology",
+      "topic": "Photosynthesis",
+      "fact": "Plants release oxygen as a byproduct of photosynthesis, which is why forests play a major role in maintaining the oxygen level of the atmosphere.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_263",
+      "subject": "Biology",
+      "topic": "Classification",
+      "fact": "Living things are grouped into a hierarchy from kingdom down to species, with species being the most specific and narrowly defined level.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_264",
+      "subject": "Biology",
+      "topic": "Microbiology",
+      "fact": "Not all bacteria are harmful; many, like those in the human gut, help digest food and protect against harmful microorganisms.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_265",
+      "subject": "Earth Science",
+      "topic": "Plate Tectonics",
+      "fact": "Earthquakes most often occur along plate boundaries, where the slow movement of tectonic plates builds up stress that is suddenly released.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_266",
+      "subject": "Earth Science",
+      "topic": "Water Cycle",
+      "fact": "Evaporation, condensation, and precipitation form the main stages of the water cycle, continuously moving water between the oceans, atmosphere, and land.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_267",
+      "subject": "Earth Science",
+      "topic": "Rock Cycle",
+      "fact": "Sedimentary rock forms when layers of sediment are compacted and cemented together over long periods of time, often containing fossils.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_268",
+      "subject": "Earth Science",
+      "topic": "Atmosphere",
+      "fact": "The ozone layer, found in the stratosphere, absorbs most of the Sun's harmful ultraviolet radiation before it reaches Earth's surface.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_269",
+      "subject": "Earth Science",
+      "topic": "Natural Disasters",
+      "fact": "A tsunami is most commonly triggered by an underwater earthquake, which displaces a huge volume of water and sends powerful waves toward shore.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_270",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The sum of the interior angles of any triangle is always 180 degrees, regardless of the triangle's shape or size.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_271",
+      "subject": "Mathematics",
+      "topic": "Algebra",
+      "fact": "A quadratic equation can have zero, one, or two real solutions, depending on the value of its discriminant.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_272",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "A prime number has exactly two factors, one and itself; the number 1 is not considered prime because it only has one factor.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_273",
+      "subject": "Mathematics",
+      "topic": "Statistics",
+      "fact": "The mean, median, and mode are three different ways to describe the 'center' of a data set, and they can each give a different value.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_274",
+      "subject": "Mathematics",
+      "topic": "Trigonometry",
+      "fact": "In a right-angled triangle, the Pythagorean theorem states that the square of the hypotenuse equals the sum of the squares of the other two sides.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_275",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "A star's color reveals its surface temperature: blue stars are the hottest, while red stars are comparatively cooler.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_276",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Jupiter is the largest planet in the solar system and has a mass more than twice that of all the other planets combined.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_277",
+      "subject": "Astronomy",
+      "topic": "Eclipses",
+      "fact": "A solar eclipse can only happen during a new moon, when the Moon passes directly between the Sun and Earth.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_278",
+      "subject": "Astronomy",
+      "topic": "Galaxies",
+      "fact": "The Milky Way is a barred spiral galaxy, and our solar system sits in one of its outer spiral arms.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_279",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "The International Space Station orbits Earth roughly every 90 minutes, meaning astronauts aboard see about 16 sunrises and sunsets each day.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_046",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "Nigeria gained independence from British colonial rule on October 1, 1960, and became a republic in 1963.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_047",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "Ancient Egypt's pyramids were built as elaborate tombs for pharaohs, with the Great Pyramid of Giza remaining the only ancient wonder still largely intact.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_048",
+      "subject": "History",
+      "topic": "World Wars",
+      "fact": "World War I began in 1914 after the assassination of Archduke Franz Ferdinand of Austria-Hungary, drawing in alliances across Europe.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_049",
+      "subject": "History",
+      "topic": "Trade Routes",
+      "fact": "The trans-Saharan trade routes connected West Africa to North Africa for centuries, exchanging goods like gold, salt, and textiles.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_050",
+      "subject": "History",
+      "topic": "Independence Movements",
+      "fact": "Many African nations gained independence in the late 1950s and 1960s, a period sometimes called the 'Year of Africa' due to the wave of new states in 1960 alone.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_042",
+      "subject": "Geography",
+      "topic": "Rivers",
+      "fact": "The River Niger is the principal river of West Africa, flowing through Nigeria before emptying into the Atlantic Ocean through a large delta.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_043",
+      "subject": "Geography",
+      "topic": "Deserts",
+      "fact": "The Sahara is the largest hot desert in the world, covering much of North Africa and stretching across multiple countries.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_044",
+      "subject": "Geography",
+      "topic": "Map Skills",
+      "fact": "Contour lines on a topographic map connect points of equal elevation, and lines drawn close together indicate steep terrain.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_045",
+      "subject": "Geography",
+      "topic": "Population",
+      "fact": "A population pyramid is a graph showing the age and sex distribution of a population, and its shape can reveal whether a population is growing or shrinking.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_046",
+      "subject": "Geography",
+      "topic": "Mountains",
+      "fact": "Mount Cameroon, an active volcano, is the highest peak in West Africa, rising over 4,000 metres above sea level.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_039",
+      "subject": "English Language",
+      "topic": "Parts of Speech",
+      "fact": "A preposition shows the relationship between a noun or pronoun and other words in a sentence, often indicating location, direction, or time.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_040",
+      "subject": "English Language",
+      "topic": "Figures of Speech",
+      "fact": "A simile makes a comparison using 'like' or 'as,' while a metaphor states that one thing is another without using those words.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_041",
+      "subject": "English Language",
+      "topic": "Punctuation",
+      "fact": "An apostrophe is used to show possession or to mark the omission of letters in a contraction, such as 'don't' for 'do not'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_042",
+      "subject": "English Language",
+      "topic": "Tenses",
+      "fact": "The present perfect tense is formed with 'has' or 'have' plus a past participle, and it links a past action to the present moment.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_043",
+      "subject": "English Language",
+      "topic": "Word Formation",
+      "fact": "A compound word is formed by joining two or more existing words together, such as 'notebook' or 'sunflower,' to create a new meaning.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_029",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "A national flag, anthem, and coat of arms are common national symbols that represent a country's identity and help unite its citizens.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_030",
+      "subject": "Civic Education",
+      "topic": "Human Rights",
+      "fact": "Freedom of speech, the right to a fair trial, and freedom from torture are widely recognized as fundamental human rights.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_031",
+      "subject": "Civic Education",
+      "topic": "Democracy",
+      "fact": "In a democracy, citizens choose their leaders through free and fair elections, and government power is meant to be accountable to the people.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_032",
+      "subject": "Civic Education",
+      "topic": "Corruption",
+      "fact": "Corruption, such as bribery or embezzlement of public funds, weakens public trust in institutions and can slow down national development.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_033",
+      "subject": "Civic Education",
+      "topic": "Conflict Resolution",
+      "fact": "Mediation is a peaceful method of resolving disputes in which a neutral third party helps both sides reach a mutually acceptable agreement.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_029",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "When demand for a product rises while supply stays the same, the price typically increases, all other factors being equal.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_030",
+      "subject": "Economics",
+      "topic": "GDP",
+      "fact": "Gross Domestic Product, or GDP, measures the total value of all goods and services produced within a country over a given period.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_031",
+      "subject": "Economics",
+      "topic": "Money",
+      "fact": "Money serves three main functions in an economy: a medium of exchange, a unit of account, and a store of value.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_032",
+      "subject": "Economics",
+      "topic": "Scarcity",
+      "fact": "Scarcity is the basic economic problem that arises because human wants are unlimited but the resources available to satisfy them are limited.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_033",
+      "subject": "Economics",
+      "topic": "Trade",
+      "fact": "Countries trade with one another because no nation can efficiently produce every good it needs, so trade allows access to a wider variety of goods at lower cost.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_033",
+      "subject": "Literature",
+      "topic": "Plot Structure",
+      "fact": "Most stories follow a structure of exposition, rising action, climax, falling action, and resolution, often called Freytag's pyramid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_034",
+      "subject": "Literature",
+      "topic": "Irony",
+      "fact": "Dramatic irony occurs when the audience knows something important that the characters in the story do not yet know.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_035",
+      "subject": "Literature",
+      "topic": "Characterization",
+      "fact": "Writers reveal character either directly, by stating traits outright, or indirectly, through a character's actions, speech, and thoughts.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_036",
+      "subject": "Literature",
+      "topic": "Oral Literature",
+      "fact": "Oral literature, including folktales, proverbs, and praise poetry, was traditionally passed down by word of mouth across generations in many African societies.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_037",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "A stanza is a group of lines in a poem, functioning much like a paragraph does in prose.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_031",
+      "subject": "Government",
+      "topic": "Separation of Powers",
+      "fact": "Separation of powers divides government authority among the executive, legislative, and judicial branches so that no single branch can dominate the others.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_032",
+      "subject": "Government",
+      "topic": "Constitution",
+      "fact": "A constitution is the supreme law of a country, setting out the structure of government and the rights and duties of citizens.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_033",
+      "subject": "Government",
+      "topic": "Local Government",
+      "fact": "Local government is the tier of government closest to the people, typically responsible for services like waste collection, local roads, and primary healthcare.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_034",
+      "subject": "Government",
+      "topic": "Political Parties",
+      "fact": "A political party is an organized group of people who share similar political goals and work together to win elections and influence policy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_035",
+      "subject": "Government",
+      "topic": "Judiciary",
+      "fact": "An independent judiciary can make legal decisions free from pressure by the other branches of government, which helps protect the rule of law.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_032",
+      "subject": "Agricultural Science",
+      "topic": "Irrigation",
+      "fact": "Drip irrigation delivers water directly to a plant's roots through a network of tubes, reducing water waste compared to flooding a whole field.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_033",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "Proper vaccination schedules help prevent disease outbreaks in livestock, reducing losses and improving overall herd productivity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_034",
+      "subject": "Agricultural Science",
+      "topic": "Plant Propagation",
+      "fact": "Plants can be propagated either sexually, through seeds, or asexually, through methods like cuttings, grafting, and budding.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_035",
+      "subject": "Agricultural Science",
+      "topic": "Crop Production",
+      "fact": "Mixed cropping, growing two or more crops together on the same piece of land, can help farmers reduce risk and make better use of available space and nutrients.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_036",
+      "subject": "Agricultural Science",
+      "topic": "Fisheries",
+      "fact": "Aquaculture, or fish farming, involves raising fish in controlled environments like ponds or tanks rather than catching them from the wild.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_031",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "A variable in programming is a named storage location that holds a value, and that value can change as the program runs.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_032",
+      "subject": "Computer Science",
+      "topic": "Algorithms",
+      "fact": "An algorithm is a step-by-step set of instructions for solving a problem or completing a task, and it doesn't have to involve a computer at all.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_033",
+      "subject": "Computer Science",
+      "topic": "Data Structures",
+      "fact": "An array stores multiple values of the same type in a single variable, with each value accessible by its position, or index.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_034",
+      "subject": "Computer Science",
+      "topic": "Networking",
+      "fact": "An IP address is a unique numerical label assigned to every device connected to a network, allowing devices to find and communicate with one another.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_035",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "The central processing unit, or CPU, is often called the brain of the computer because it carries out most of the instructions of a running program.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_031",
+      "subject": "Health Education",
+      "topic": "First Aid",
+      "fact": "When treating a minor burn, cooling the area with cool running water for several minutes helps reduce pain and limit tissue damage.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_032",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A balanced diet includes carbohydrates, proteins, fats, vitamins, minerals, and water, each playing a distinct role in keeping the body healthy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_033",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Regular handwashing with soap is one of the simplest and most effective ways to prevent the spread of many infectious diseases.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_034",
+      "subject": "Health Education",
+      "topic": "Mental Health",
+      "fact": "Mental health is just as important as physical health, and conditions like anxiety and depression are medical conditions, not signs of personal weakness.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_035",
+      "subject": "Health Education",
+      "topic": "Sanitation",
+      "fact": "Proper disposal of waste and access to clean drinking water are two of the most important factors in preventing disease outbreaks in a community.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_028",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "A budget is a plan that tracks expected income against expected expenses over a set period, helping a person avoid spending more than they earn.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_029",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Compound interest allows savings to grow faster over time because interest is earned not just on the original amount but also on previously earned interest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_030",
+      "subject": "Financial Literacy",
+      "topic": "Insurance",
+      "fact": "Insurance works by spreading financial risk across many people who pay regular premiums, so that the few who suffer a covered loss are compensated.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_031",
+      "subject": "Financial Literacy",
+      "topic": "Entrepreneurship",
+      "fact": "A business plan typically outlines a company's goals, target market, and financial projections, and is often used to attract investors or secure loans.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_032",
+      "subject": "Financial Literacy",
+      "topic": "Currency",
+      "fact": "Exchange rates determine how much one country's currency is worth in terms of another, and they can fluctuate based on factors like trade and interest rates.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_028",
+      "subject": "Creative Arts",
+      "topic": "Color Theory",
+      "fact": "Primary colors, red, blue, and yellow, can be combined in different ways to create every other color on the traditional color wheel.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_029",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Rhythm refers to the pattern of beats in music over time, while melody refers to the sequence of musical notes that form a tune.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_030",
+      "subject": "Creative Arts",
+      "topic": "Sculpture",
+      "fact": "Sculptors generally work either by carving away material, called subtractive sculpture, or by building up material, called additive sculpture.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_031",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "Traditional African masks were often more than decorative; they played important roles in ceremonies, storytelling, and connecting communities to ancestral spirits.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_032",
+      "subject": "Creative Arts",
+      "topic": "Textiles",
+      "fact": "Adire is a traditional Yoruba method of resist-dyeing cloth, typically using indigo, to create intricate patterns on fabric.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_027",
+      "subject": "Physical Education",
+      "topic": "Fitness Components",
+      "fact": "Cardiovascular endurance, muscular strength, flexibility, and body composition are commonly listed among the key components of physical fitness.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_028",
+      "subject": "Physical Education",
+      "topic": "Warm-Up",
+      "fact": "Warming up before exercise gradually raises heart rate and loosens muscles, which helps reduce the risk of injury during physical activity.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_029",
+      "subject": "Physical Education",
+      "topic": "Sportsmanship",
+      "fact": "Good sportsmanship means treating opponents, teammates, and officials with respect, win or lose.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_030",
+      "subject": "Physical Education",
+      "topic": "Injury Prevention",
+      "fact": "Using proper technique and appropriate protective gear, like shin guards or helmets, can significantly lower the risk of injury in many sports.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_031",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "In track and field, a false start occurs when a runner leaves the blocks before the starting gun or signal is fired.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_280",
+      "subject": "Physics",
+      "topic": "Waves",
+      "fact": "Transverse waves, like light waves, vibrate perpendicular to the direction of travel, while longitudinal waves, like sound, vibrate parallel to it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_281",
+      "subject": "Physics",
+      "topic": "Energy",
+      "fact": "The law of conservation of energy states that energy cannot be created or destroyed, only converted from one form to another.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_282",
+      "subject": "Physics",
+      "topic": "Simple Machines",
+      "fact": "A lever multiplies force by increasing the distance from the fulcrum, making it easier to lift heavy objects with less effort.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_283",
+      "subject": "Chemistry",
+      "topic": "Electrolysis",
+      "fact": "During electrolysis, positive ions move toward the cathode (negative electrode) and negative ions move toward the anode (positive electrode).",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_284",
+      "subject": "Chemistry",
+      "topic": "Organic Chemistry",
+      "fact": "Hydrocarbons are compounds made entirely of hydrogen and carbon atoms, and they form the basis of fossil fuels like crude oil and natural gas.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_285",
+      "subject": "Chemistry",
+      "topic": "States of Matter",
+      "fact": "When a solid changes directly to a gas without passing through the liquid state, the process is called sublimation; dry ice is a common example.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_286",
+      "subject": "Biology",
+      "topic": "Excretion",
+      "fact": "The kidneys filter waste products from the blood and excrete them as urine, while also regulating the body's water and salt balance.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_287",
+      "subject": "Biology",
+      "topic": "Nervous System",
+      "fact": "The human nervous system is divided into the central nervous system, made up of the brain and spinal cord, and the peripheral nervous system that connects to the rest of the body.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_288",
+      "subject": "Biology",
+      "topic": "Reproduction",
+      "fact": "Sexual reproduction involves the fusion of two gametes to form a zygote, introducing genetic variation, while asexual reproduction produces offspring genetically identical to the parent.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_289",
+      "subject": "Earth Science",
+      "topic": "Soil Science",
+      "fact": "Soil is made up of mineral particles, organic matter, water, and air, and its texture and composition greatly affect how well it supports plant growth.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_290",
+      "subject": "Earth Science",
+      "topic": "Climate",
+      "fact": "A biome is a large region of Earth characterized by a specific climate, vegetation, and wildlife, such as tropical rainforest, savanna, or tundra.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_291",
+      "subject": "Earth Science",
+      "topic": "Minerals",
+      "fact": "Hardness is one property used to identify minerals; the Mohs scale ranks minerals from 1 (softest, like talc) to 10 (hardest, like diamond).",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_292",
+      "subject": "Mathematics",
+      "topic": "Set Theory",
+      "fact": "The union of two sets contains all elements found in either set, while the intersection contains only elements found in both sets.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_293",
+      "subject": "Mathematics",
+      "topic": "Probability",
+      "fact": "Probability is expressed as a value between 0 and 1, where 0 means an event is impossible and 1 means it is certain to happen.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_294",
+      "subject": "Mathematics",
+      "topic": "Mensuration",
+      "fact": "The area of a circle is calculated using the formula A = πr², where r is the radius, and π is approximately 3.14159.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_295",
+      "subject": "Astronomy",
+      "topic": "Moon",
+      "fact": "The Moon's gravitational pull is the main cause of ocean tides on Earth, as it attracts the water on the side of Earth closest to it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_296",
+      "subject": "Astronomy",
+      "topic": "Black Holes",
+      "fact": "A black hole is a region of space where gravity is so strong that nothing, not even light, can escape from it once it crosses the event horizon.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_297",
+      "subject": "Astronomy",
+      "topic": "Comets",
+      "fact": "Comets are icy bodies that orbit the Sun and develop a bright tail of gas and dust when they come close enough to be heated by solar radiation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_051",
+      "subject": "History",
+      "topic": "Slave Trade",
+      "fact": "The transatlantic slave trade forcibly transported millions of Africans to the Americas over several centuries, devastating many West African societies.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_052",
+      "subject": "History",
+      "topic": "Revolutions",
+      "fact": "The French Revolution of 1789 led to the abolition of the French monarchy and introduced the ideals of liberty, equality, and fraternity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_053",
+      "subject": "History",
+      "topic": "Empires",
+      "fact": "The Mali Empire, which flourished between the 13th and 16th centuries, was one of the wealthiest empires in history, largely due to its control of trans-Saharan gold and salt trade.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_047",
+      "subject": "Geography",
+      "topic": "Settlement",
+      "fact": "Urbanization refers to the increasing proportion of a population living in towns and cities rather than rural areas, a trend seen across much of Africa.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_048",
+      "subject": "Geography",
+      "topic": "Climate",
+      "fact": "The Inter-Tropical Convergence Zone, or ITCZ, is a belt of low pressure near the equator where trade winds meet, bringing heavy rainfall to tropical regions.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_049",
+      "subject": "Geography",
+      "topic": "Natural Resources",
+      "fact": "Nigeria is Africa's largest oil producer, and petroleum exports account for a significant share of the country's government revenue.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_044",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "Context clues are words or phrases surrounding an unfamiliar word that help the reader guess its meaning without consulting a dictionary.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_045",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "Subject-verb agreement requires that a singular subject takes a singular verb and a plural subject takes a plural verb.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_046",
+      "subject": "English Language",
+      "topic": "Writing",
+      "fact": "A topic sentence introduces the main idea of a paragraph, and every other sentence in that paragraph should support or develop that idea.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_034",
+      "subject": "Civic Education",
+      "topic": "Drug Abuse",
+      "fact": "Drug abuse negatively affects a person's physical health, mental well-being, relationships, and ability to contribute productively to society.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_035",
+      "subject": "Civic Education",
+      "topic": "Gender Equality",
+      "fact": "Gender equality means that people of all genders have equal rights, responsibilities, and opportunities in all areas of life, including education and work.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_036",
+      "subject": "Civic Education",
+      "topic": "National Values",
+      "fact": "Integrity, respect, and patriotism are among the core national values that citizens are encouraged to uphold to promote social harmony and national development.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_034",
+      "subject": "Economics",
+      "topic": "Banking",
+      "fact": "A central bank, like the Central Bank of Nigeria, manages a country's money supply, sets interest rates, and regulates the banking system.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_035",
+      "subject": "Economics",
+      "topic": "Markets",
+      "fact": "A monopoly exists when a single seller dominates an entire market, often leading to higher prices and less choice for consumers.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_036",
+      "subject": "Economics",
+      "topic": "Production",
+      "fact": "The factors of production are land, labour, capital, and entrepreneurship, and they are combined to create goods and services.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_038",
+      "subject": "Literature",
+      "topic": "Themes",
+      "fact": "A theme is the central message or underlying idea that a literary work explores, and a single text can have more than one theme.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_039",
+      "subject": "Literature",
+      "topic": "Novels",
+      "fact": "A novel is a long work of fiction that typically follows complex characters through an extended plot, often exploring multiple themes and settings.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_040",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "A soliloquy is a speech in a play in which a character speaks their thoughts aloud while alone on stage, revealing inner feelings to the audience.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_036",
+      "subject": "Government",
+      "topic": "Federalism",
+      "fact": "Nigeria operates a federal system of government in which power is shared between the federal government and the 36 state governments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_037",
+      "subject": "Government",
+      "topic": "International Relations",
+      "fact": "The United Nations was established in 1945 to promote international peace, security, and cooperation among member states after the devastation of World War II.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_038",
+      "subject": "Government",
+      "topic": "Citizenship Acquisition",
+      "fact": "Citizenship can be acquired by birth, descent, registration, or naturalization, depending on the laws of a given country.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_037",
+      "subject": "Agricultural Science",
+      "topic": "Farm Tools",
+      "fact": "A cutlass and a hoe are among the most commonly used basic farm tools in West African subsistence farming for clearing land and tilling soil.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_038",
+      "subject": "Agricultural Science",
+      "topic": "Soil Management",
+      "fact": "Mulching involves covering the soil with organic material to reduce moisture loss, suppress weeds, and gradually improve soil fertility as it decomposes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_039",
+      "subject": "Agricultural Science",
+      "topic": "Pest Control",
+      "fact": "Biological control uses natural predators, parasites, or pathogens to reduce pest populations, offering an environmentally friendlier alternative to chemical pesticides.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_036",
+      "subject": "Computer Science",
+      "topic": "Software",
+      "fact": "An operating system, such as Windows or Linux, manages a computer's hardware resources and provides a platform for other software applications to run.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_037",
+      "subject": "Computer Science",
+      "topic": "Databases",
+      "fact": "A database is an organized collection of structured data, and a database management system allows users to store, retrieve, and update that data efficiently.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_038",
+      "subject": "Computer Science",
+      "topic": "Binary System",
+      "fact": "The binary number system uses only two digits, 0 and 1, to represent all values, and it is the foundation of how all digital computers store and process data.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_036",
+      "subject": "Health Education",
+      "topic": "Reproductive Health",
+      "fact": "Abstinence and the consistent use of barrier methods such as condoms are effective strategies for preventing sexually transmitted infections.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_037",
+      "subject": "Health Education",
+      "topic": "Safety Education",
+      "fact": "Road safety rules, such as wearing seat belts and obeying traffic lights, exist to reduce the risk of injury and death in road accidents.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_038",
+      "subject": "Health Education",
+      "topic": "Hygiene",
+      "fact": "Dental hygiene, including brushing teeth at least twice a day and limiting sugary foods, helps prevent tooth decay and gum disease.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_033",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "The 50/30/20 budgeting rule suggests spending about 50% of income on needs, 30% on wants, and saving or investing the remaining 20%.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_034",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "Diversification means spreading investments across different assets so that a loss in one area does not wipe out an entire portfolio.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_035",
+      "subject": "Financial Literacy",
+      "topic": "Taxes",
+      "fact": "Value Added Tax, or VAT, is a consumption tax added to the price of goods and services at each stage of production and sale.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_033",
+      "subject": "Creative Arts",
+      "topic": "Drawing",
+      "fact": "Perspective drawing creates the illusion of depth on a flat surface by making distant objects appear smaller and converging lines toward a vanishing point.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_034",
+      "subject": "Creative Arts",
+      "topic": "Theatre",
+      "fact": "Stagecraft includes all the technical elements of theatre production such as lighting, sound, set design, and costume, which work together to create the performance environment.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_035",
+      "subject": "Creative Arts",
+      "topic": "Photography",
+      "fact": "The rule of thirds is a composition guideline suggesting that key subjects be placed along lines that divide the frame into a three-by-three grid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_032",
+      "subject": "Physical Education",
+      "topic": "Team Sports",
+      "fact": "In basketball, a team scores two points for a field goal made from inside the three-point line and three points for one made beyond it.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_033",
+      "subject": "Physical Education",
+      "topic": "Health and Fitness",
+      "fact": "Regular physical activity helps maintain a healthy weight, strengthens the heart and lungs, and reduces the risk of chronic diseases like diabetes and hypertension.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_034",
+      "subject": "Physical Education",
+      "topic": "Nutrition for Sports",
+      "fact": "Carbohydrates are the primary energy source for athletes during exercise, which is why many sports nutritionists recommend carbohydrate-rich meals before competition.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_298",
+      "subject": "Physics",
+      "topic": "Sound",
+      "fact": "Sound travels about four times faster in water than it does in air.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_299",
+      "subject": "Physics",
+      "topic": "Motion",
+      "fact": "The time a pendulum takes to swing depends on its length, not on the weight of the bob.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_300",
+      "subject": "Physics",
+      "topic": "Forces",
+      "fact": "Astronauts float in orbit not because there is no gravity, but because they and their spacecraft are falling around the Earth together.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_301",
+      "subject": "Physics",
+      "topic": "Energy",
+      "fact": "Rubbing your hands together warms them by turning the energy of motion into heat through friction.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_302",
+      "subject": "Physics",
+      "topic": "Optics",
+      "fact": "A convex lens can focus sunlight to a single point hot enough to scorch paper, because it bends parallel rays together.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_303",
+      "subject": "Physics",
+      "topic": "Energy",
+      "fact": "Nuclear power comes from converting a tiny amount of mass into a huge amount of energy, as described by Einstein's equation E = mc².",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_304",
+      "subject": "Chemistry",
+      "topic": "Reactions",
+      "fact": "Rusting is a slow reaction in which iron combines with oxygen and moisture to form reddish-brown iron oxide.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_305",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Noble gases such as helium and neon rarely react because their outer electron shells are already full.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_306",
+      "subject": "Chemistry",
+      "topic": "Reactions",
+      "fact": "Baking soda and vinegar fizz when mixed because they react to release carbon dioxide gas.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_307",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "The pH scale runs from 0 to 14: below 7 is acidic, 7 is neutral, and above 7 is alkaline.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_308",
+      "subject": "Chemistry",
+      "topic": "Metals",
+      "fact": "Stainless steel resists rust because the chromium in it forms a thin, protective oxide layer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_309",
+      "subject": "Chemistry",
+      "topic": "Water Chemistry",
+      "fact": "Small amounts of chlorine are added to drinking water to kill harmful microorganisms.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_310",
+      "subject": "Biology",
+      "topic": "Circulation",
+      "fact": "The human heart beats roughly 100,000 times a day.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_311",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "Red blood cells lose their nucleus as they mature, leaving more room to carry oxygen.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_312",
+      "subject": "Biology",
+      "topic": "Nutrition",
+      "fact": "Bananas are very slightly radioactive because they contain potassium-40, a naturally occurring radioactive isotope.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_313",
+      "subject": "Biology",
+      "topic": "Digestion",
+      "fact": "The small intestine is around six metres long, coiled up inside the abdomen.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_314",
+      "subject": "Biology",
+      "topic": "Photosynthesis",
+      "fact": "During photosynthesis, plants take in carbon dioxide and release oxygen, the reverse of what animals do when they breathe.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_315",
+      "subject": "Biology",
+      "topic": "Microbiology",
+      "fact": "Trillions of bacteria live in the human gut, where they help digest food and produce certain vitamins.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_316",
+      "subject": "Earth Science",
+      "topic": "Geology",
+      "fact": "The Earth's inner core is solid even though it is extremely hot, because the crushing pressure prevents it from melting.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_317",
+      "subject": "Earth Science",
+      "topic": "Plate Tectonics",
+      "fact": "Mount Everest grows a few millimetres taller each year as the Indian and Eurasian plates keep pushing together.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_318",
+      "subject": "Earth Science",
+      "topic": "Oceans",
+      "fact": "Most of the oxygen we breathe is produced by tiny ocean plankton, not by forests.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_319",
+      "subject": "Earth Science",
+      "topic": "Weather",
+      "fact": "Thunder is the sound of air expanding explosively after being heated in an instant by a lightning bolt.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_320",
+      "subject": "Earth Science",
+      "topic": "Soil Science",
+      "fact": "Soil forms very slowly, sometimes taking hundreds of years to build up just a few centimetres from broken-down rock and organic matter.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_321",
+      "subject": "Mathematics",
+      "topic": "Number Systems",
+      "fact": "Zero was one of the last numbers to be invented; many ancient societies had no symbol for 'nothing'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_322",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The three angles inside any triangle always add up to 180 degrees.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_323",
+      "subject": "Mathematics",
+      "topic": "Sequences",
+      "fact": "In the Fibonacci sequence each number is the sum of the two before it (1, 1, 2, 3, 5, 8...), and the pattern shows up in the spirals of sunflowers and pinecones.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_324",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The number pi has been calculated to trillions of digits, yet it never ends and never settles into a repeating pattern.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_325",
+      "subject": "Mathematics",
+      "topic": "Probability",
+      "fact": "In a group of just 23 people, there is about a 50 percent chance that two of them share a birthday.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_326",
+      "subject": "Astronomy",
+      "topic": "Solar System",
+      "fact": "The Sun contains about 99.8 percent of all the mass in the solar system.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_327",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "A teaspoon of material from a neutron star would weigh billions of tonnes on Earth.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_328",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Jupiter is so large that all the other planets in the solar system could fit inside it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_329",
+      "subject": "Astronomy",
+      "topic": "Moon",
+      "fact": "The footprints astronauts left on the Moon could survive for millions of years, since there is no wind or water to wear them away.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_330",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Saturn is less dense than water, so it would float if you could find an ocean large enough to hold it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_054",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "The ancient Kingdom of Benin, in present-day Nigeria, was famous for its finely detailed cast artworks known as the Benin Bronzes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_055",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The Great Wall of China was built and rebuilt over many centuries by different dynasties, not all at once.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_056",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "Mansa Musa of the Mali Empire is often described as one of the wealthiest people in history because of his enormous stores of gold.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_057",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "In medieval West Africa, the city of Timbuktu was a renowned centre of trade and Islamic learning.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_058",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "Nigeria gained its independence from British colonial rule on 1 October 1960.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_059",
+      "subject": "History",
+      "topic": "Trade Routes",
+      "fact": "For centuries, the trans-Saharan trade carried gold, salt, and other goods on camel caravans across the Sahara Desert.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_050",
+      "subject": "Geography",
+      "topic": "Rivers",
+      "fact": "The River Niger is the third-longest river in Africa, and it gives Nigeria its name.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_051",
+      "subject": "Geography",
+      "topic": "Deserts",
+      "fact": "The Sahara is the largest hot desert on Earth, covering an area roughly the size of the United States.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_052",
+      "subject": "Geography",
+      "topic": "Map Reading",
+      "fact": "The Equator crosses several African countries, but it does not pass through Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_053",
+      "subject": "Geography",
+      "topic": "Population",
+      "fact": "Lagos is one of the most populous cities in Africa and a major economic centre.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_054",
+      "subject": "Geography",
+      "topic": "Oceans",
+      "fact": "The Atlantic Ocean borders Nigeria along its southern coast.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_055",
+      "subject": "Geography",
+      "topic": "Climate",
+      "fact": "Lake Chad, once one of Africa's largest lakes, has shrunk dramatically over the past few decades.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_047",
+      "subject": "English Language",
+      "topic": "Word Formation",
+      "fact": "A palindrome is a word or phrase that reads the same forwards and backwards, such as 'level' or 'madam'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_048",
+      "subject": "English Language",
+      "topic": "Figures of Speech",
+      "fact": "Onomatopoeia is the use of words that imitate sounds, like 'buzz', 'hiss', and 'clang'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_049",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "The word 'alphabet' comes from 'alpha' and 'beta', the first two letters of the Greek alphabet.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_050",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "A synonym is a word with a similar meaning, while an antonym is a word with the opposite meaning.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_051",
+      "subject": "English Language",
+      "topic": "Parts of Speech",
+      "fact": "In English, adjectives usually come before the noun they describe, as in 'a red car'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_037",
+      "subject": "Civic Education",
+      "topic": "Democracy",
+      "fact": "Democracy is a system of government in which power ultimately belongs to the people, usually exercised through elected representatives.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_038",
+      "subject": "Civic Education",
+      "topic": "Rule of Law",
+      "fact": "The rule of law means that everyone, including leaders, is subject to and equal before the same laws.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_039",
+      "subject": "Civic Education",
+      "topic": "Civic Duties",
+      "fact": "Voting is both a right and a civic duty in a democracy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_040",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "Nigeria's flag has two green bands, standing for agriculture, and a white centre band, standing for peace and unity.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_041",
+      "subject": "Civic Education",
+      "topic": "Human Rights",
+      "fact": "Human rights are the basic freedoms and protections that belong to every person, regardless of background or nationality.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_037",
+      "subject": "Economics",
+      "topic": "Scarcity",
+      "fact": "Scarcity, the basic economic problem, arises because resources are limited while human wants are unlimited.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_038",
+      "subject": "Economics",
+      "topic": "Inflation",
+      "fact": "Inflation is a general rise in prices over time, which lowers the purchasing power of money.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_039",
+      "subject": "Economics",
+      "topic": "Trade",
+      "fact": "Barter is the direct exchange of goods and services without using money.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_040",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "As a rule, the quantity of a good demanded falls when its price rises and rises when its price falls.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_041",
+      "subject": "Economics",
+      "topic": "Opportunity Cost",
+      "fact": "Opportunity cost is the value of the next best option you give up whenever you make a choice.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_041",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Chinua Achebe's novel 'Things Fall Apart' is among the most widely read works of African literature.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_042",
+      "subject": "Literature",
+      "topic": "Figures of Speech",
+      "fact": "A metaphor compares two things directly, while a simile makes the comparison using 'like' or 'as'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_043",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "A soliloquy is a speech in which a character, alone on stage, reveals their private thoughts to the audience.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_044",
+      "subject": "Literature",
+      "topic": "Oral Literature",
+      "fact": "Oral literature, including folktales and proverbs, was traditionally passed down by word of mouth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_045",
+      "subject": "Literature",
+      "topic": "Literary Terms",
+      "fact": "The three main genres of literature are prose, poetry, and drama.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_039",
+      "subject": "Government",
+      "topic": "Separation of Powers",
+      "fact": "The separation of powers divides government into three arms: the legislature, the executive, and the judiciary.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_040",
+      "subject": "Government",
+      "topic": "Constitution",
+      "fact": "A constitution is the body of fundamental rules and principles by which a country is governed.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_041",
+      "subject": "Government",
+      "topic": "Federalism",
+      "fact": "In a federal system, power is shared between a central government and regional or state governments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_042",
+      "subject": "Government",
+      "topic": "Separation of Powers",
+      "fact": "The legislature is the arm of government responsible for making laws.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_043",
+      "subject": "Government",
+      "topic": "Pressure Groups",
+      "fact": "Pressure groups try to influence government decisions without seeking to form a government themselves.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_040",
+      "subject": "Agricultural Science",
+      "topic": "Soil Fertility",
+      "fact": "Crop rotation helps keep soil fertile by changing the type of crop grown on the same land each season.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_041",
+      "subject": "Agricultural Science",
+      "topic": "Soil Fertility",
+      "fact": "Legumes such as beans enrich the soil by fixing nitrogen from the air with the help of bacteria living in their roots.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_042",
+      "subject": "Agricultural Science",
+      "topic": "Irrigation",
+      "fact": "Irrigation is the artificial supply of water to crops, especially important in dry regions.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_043",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "Poultry farming is the rearing of birds such as chickens for their meat and eggs.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_044",
+      "subject": "Agricultural Science",
+      "topic": "Soil Management",
+      "fact": "Mulching covers the soil with materials like straw to reduce water loss and suppress weeds.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_039",
+      "subject": "Computer Science",
+      "topic": "Binary System",
+      "fact": "Computers store all data using just two digits, 0 and 1, a system called binary.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_040",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "The central processing unit, or CPU, is often called the 'brain' of the computer.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_041",
+      "subject": "Computer Science",
+      "topic": "Storage",
+      "fact": "RAM is temporary memory that loses whatever it holds once the computer is switched off.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_042",
+      "subject": "Computer Science",
+      "topic": "Algorithms",
+      "fact": "An algorithm is a step-by-step set of instructions for solving a problem.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_043",
+      "subject": "Computer Science",
+      "topic": "Cybersecurity",
+      "fact": "Using strong passwords and installing software updates are basic ways to guard against cyberattacks.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_039",
+      "subject": "Health Education",
+      "topic": "Personal Hygiene",
+      "fact": "Washing your hands with soap and water removes many of the germs that cause disease.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_040",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A balanced diet contains carbohydrates, proteins, fats, vitamins, minerals, and water.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_041",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Vaccines protect the body by training the immune system to recognise and fight specific germs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_042",
+      "subject": "Health Education",
+      "topic": "Fitness",
+      "fact": "Regular exercise strengthens the heart and helps a person maintain a healthy body weight.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_043",
+      "subject": "Health Education",
+      "topic": "Sanitation",
+      "fact": "Clean drinking water and good sanitation help prevent diseases such as cholera and typhoid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_036",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "A budget is a plan that sets your expected income against your expected spending.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_037",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Saving small amounts regularly can grow into a large sum over time through consistency and interest.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_038",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "Interest is the cost of borrowing money, and also the reward you earn for saving it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_039",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "An emergency fund is money set aside to cover unexpected costs, such as medical bills or urgent repairs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_040",
+      "subject": "Financial Literacy",
+      "topic": "Insurance",
+      "fact": "Insurance helps protect you financially against risks like accidents, illness, or loss of property.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_036",
+      "subject": "Creative Arts",
+      "topic": "Color Theory",
+      "fact": "In traditional art, the three primary colours are red, blue, and yellow, and mixing them produces other colours.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_037",
+      "subject": "Creative Arts",
+      "topic": "Sculpture",
+      "fact": "Sculpture is a three-dimensional art form created by carving, modelling, or casting materials.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_038",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Rhythm in music is the pattern of beats and timing that gives a piece its sense of flow.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_039",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "Traditional African art often served religious, social, or ceremonial purposes rather than mere decoration.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_040",
+      "subject": "Creative Arts",
+      "topic": "Pottery",
+      "fact": "Pottery is one of the oldest crafts, made by shaping clay and then hardening it with heat.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_035",
+      "subject": "Physical Education",
+      "topic": "Warm-Up",
+      "fact": "Warming up before exercise raises the heart rate gradually and helps prevent injury.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_036",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "A standard football (soccer) match is played in two halves of 45 minutes each.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_037",
+      "subject": "Physical Education",
+      "topic": "Fitness Components",
+      "fact": "Stamina, or endurance, is the ability to keep up physical activity over a long period.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_038",
+      "subject": "Physical Education",
+      "topic": "Sportsmanship",
+      "fact": "Good sportsmanship means respecting your opponents, the officials, and the rules of the game.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_039",
+      "subject": "Physical Education",
+      "topic": "Fitness Components",
+      "fact": "Stretching improves flexibility, which is the range of movement around your joints.",
+      "difficulty": "medium",
+      "source": "general knowledge"
     }
   ]
 }
