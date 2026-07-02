@@ -74,7 +74,7 @@ export default function RefundsPage() {
             </p>
             <ul>
               <li>Your Telegram username or user ID</li>
-              <li>Your Flutterwave payment reference (found in the bot after payment)</li>
+              <li>Your Paystack payment reference (found in the bot after payment)</li>
               <li>A brief description of the issue</li>
             </ul>
             <p className="mt-3">

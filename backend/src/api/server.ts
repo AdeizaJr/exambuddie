@@ -47,7 +47,14 @@ export default function createServer(bot: any) {
     next();
   });
 
-  app.use(express.json());
+  // Capture raw body for Paystack webhook signature verification
+  app.use(
+    express.json({
+      verify: (req: Request, _res: Response, buf: Buffer) => {
+        (req as any).rawBody = buf;
+      },
+    })
+  );
 
   // Rate limiting — 300 req/min per IP on API routes, 20 req/min on admin login
   app.use('/api/', rateLimit({ windowMs: 60_000, max: 300, standardHeaders: true, legacyHeaders: false }));
@@ -75,22 +82,25 @@ export default function createServer(bot: any) {
     });
   });
 
-  // ── Flutterwave payment callback (redirect after payment) ───────────────────
-  app.get('/payment/callback', async (req: Request, res: Response) => {
-    const { tx_ref, status } = req.query;
+  // ── Paystack payment callback (redirect after payment) ──────────────────────
+  const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
+  const TELEGRAM_RETURN_URL = `https://t.me/${BOT_USERNAME}`;
 
-    if (status !== 'successful' || !tx_ref) {
+  app.get('/payment/callback', async (req: Request, res: Response) => {
+    const reference = (req.query.reference || req.query.trxref) as string | undefined;
+
+    if (!reference) {
       return res.send(`
         <html><body style="font-family:sans-serif;text-align:center;padding:40px">
         <h2>❌ Payment not completed</h2>
         <p>Please try again or contact support.</p>
-        <p>Return to <a href="https://t.me/ExamBuddiBot">ExamBuddie on Telegram</a></p>
+        <p>Return to <a href="${TELEGRAM_RETURN_URL}">ExamBuddie on Telegram</a></p>
         </body></html>
       `);
     }
 
     try {
-      const { user, expiresAt, planType } = await payments.activateSubscription(tx_ref as string);
+      const { user, expiresAt, planType } = await payments.activateSubscription(reference);
 
       // Notify user on Telegram
       try {
@@ -109,10 +119,14 @@ export default function createServer(bot: any) {
       }
 
       res.send(`
-        <html><body style="font-family:sans-serif;text-align:center;padding:40px;background:#f0fff8">
+        <html><head>
+        <meta http-equiv="refresh" content="2;url=${TELEGRAM_RETURN_URL}">
+        </head><body style="font-family:sans-serif;text-align:center;padding:40px;background:#f0fff8">
         <h2 style="color:#1A7A4A">🎉 Payment Successful!</h2>
         <p>Your ExamBuddie Premium is now active.</p>
-        <p>Return to <a href="https://t.me/ExamBuddiBot">Telegram to start practising →</a></p>
+        <p>Redirecting you back to Telegram…</p>
+        <p>Return to <a href="${TELEGRAM_RETURN_URL}">Telegram to start practising →</a></p>
+        <script>setTimeout(function(){ window.location.href = ${JSON.stringify(TELEGRAM_RETURN_URL)}; }, 1500);</script>
         </body></html>
       `);
     } catch (err: any) {
@@ -121,20 +135,21 @@ export default function createServer(bot: any) {
     }
   });
 
-  // ── Flutterwave webhook (server-to-server) ──────────────────────────────────
-  app.post('/webhooks/flutterwave', async (req: Request, res: Response) => {
-    const signature = req.headers['verif-hash'];
+  // ── Paystack webhook (server-to-server) ──────────────────────────────────────
+  app.post('/webhooks/paystack', async (req: Request, res: Response) => {
+    const signature = req.headers['x-paystack-signature'];
+    const rawBody = (req as any).rawBody;
 
-    if (!payments.verifyWebhook(signature, req.body)) {
+    if (!payments.verifyWebhook(signature, rawBody)) {
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
     const { event, data } = req.body;
 
-    if (event === 'charge.completed' && data?.status === 'successful') {
+    if (event === 'charge.success' && data?.status === 'success') {
       try {
-        await payments.activateSubscription(data.tx_ref);
-        console.log(`[Webhook] Activated subscription for tx: ${data.tx_ref}`);
+        await payments.activateSubscription(data.reference);
+        console.log(`[Webhook] Activated subscription for tx: ${data.reference}`);
       } catch (err: any) {
         console.error('[Webhook] Error activating subscription:', err.message);
       }
@@ -668,7 +683,7 @@ export default function createServer(bot: any) {
   app.get('/api/admin/subscriptions', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT s.id, s.plan, s.amount_ngn, s.status,
-             s.started_at, s.expires_at, s.flutterwave_tx_ref,
+             s.started_at, s.expires_at, s.paystack_tx_ref, s.flutterwave_tx_ref,
              u.first_name, u.username, u.telegram_id
       FROM subscriptions s
       JOIN users u ON s.user_id = u.telegram_id

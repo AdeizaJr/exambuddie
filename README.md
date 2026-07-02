@@ -23,7 +23,7 @@ exambuddie/
 - Redis 7+
 - Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
 - Anthropic API key (for AI explanations)
-- Flutterwave account (for payments)
+- Paystack account (for payments)
 
 ---
 
@@ -49,8 +49,8 @@ npm run dev                  # development (long polling)
 | `REDIS_URL` | Redis connection string |
 | `APP_URL` | Public URL of your backend (enables webhook mode) |
 | `ANTHROPIC_API_KEY` | For AI explanation generation scripts |
-| `FLUTTERWAVE_SECRET_KEY` | Payment processing |
-| `FLUTTERWAVE_WEBHOOK_HASH` | Webhook verification |
+| `PAYSTACK_SECRET_KEY` | Payment processing + webhook signature verification |
+| `PAYSTACK_PUBLIC_KEY` | Client-side payment init (if ever needed) |
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Admin dashboard login |
 | `JWT_SECRET` | Admin session signing |
 | `ALLOWED_ORIGINS` | Comma-separated CORS origins (miniapp + admin-ui URLs) |
@@ -216,7 +216,7 @@ All endpoints require a JWT Bearer token (obtained via `POST /api/admin/login`).
 4. Set **Build Command**: `npm run build:all`
 5. Set **Start Command**: `npm start`
 6. Set `APP_URL` to your Railway public URL
-7. Set Flutterwave webhook to: `https://your-app.railway.app/webhooks/flutterwave`
+7. Set Paystack webhook to: `https://your-app.railway.app/webhooks/paystack` (Settings → API Keys & Webhooks in Paystack dashboard)
 
 Landing page deploys separately on Railway (same process — connect repo, set build/start commands).
 
@@ -234,7 +234,7 @@ Landing page deploys separately on Railway (same process — connect repo, set b
 | Admin UI | React + Vite |
 | Landing | Next.js |
 | AI Explanations | Anthropic Claude API |
-| Payments | Flutterwave |
+| Payments | Paystack |
 | Hosting | Railway (backend) |
 
 ---
