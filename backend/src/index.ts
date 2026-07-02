@@ -539,6 +539,8 @@ async function seedAdminUser() {
   console.log(`[Admin] Seeded admin user: ${username}`);
 }
 
+let httpServer: import('http').Server | undefined;
+
 async function launch() {
   const PORT = process.env.PORT || 3000;
   const APP_URL = process.env.APP_URL;
@@ -558,7 +560,7 @@ async function launch() {
     `);
   }
 
-  app.listen(Number(PORT), '0.0.0.0', 1024, () => console.log(`🌐 API server listening on port ${PORT}`));
+  httpServer = app.listen(Number(PORT), '0.0.0.0', 1024, () => console.log(`🌐 API server listening on port ${PORT}`));
 
   startCrons(bot);
 
@@ -567,9 +569,16 @@ async function launch() {
   }
 }
 
-// Graceful shutdown
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+// Graceful shutdown — must actually exit, otherwise the process lingers and
+// holds the port for the next `npm run dev` (cron intervals keep the event loop alive)
+function shutdown(signal: string) {
+  console.log(`\n${signal} received, shutting down...`);
+  bot.stop(signal);
+  httpServer?.close();
+  process.exit(0);
+}
+process.once('SIGINT', () => shutdown('SIGINT'));
+process.once('SIGTERM', () => shutdown('SIGTERM'));
 
 launch().catch((err) => {
   console.error('Fatal startup error:', err);

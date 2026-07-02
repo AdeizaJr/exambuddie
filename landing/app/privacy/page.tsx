@@ -90,7 +90,7 @@ export default function PrivacyPage() {
               <a href="https://railway.app" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Railway</a>{" "}
               (US region). We use industry-standard access controls and encrypted connections (TLS in transit, AES-256 at rest).
               Payment processing is handled by{" "}
-              <a href="https://flutterwave.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Flutterwave</a>{" "}
+              <a href="https://paystack.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Paystack</a>{" "}
               — we never store your card details.
             </p>
             <p className="mt-2">
@@ -132,7 +132,7 @@ export default function PrivacyPage() {
             <p>We share data with the following processors only to the extent necessary to deliver the service:</p>
             <ul>
               <li><strong>Telegram</strong> — powers the chat interface. Your Telegram profile data (user ID, name, username) is provided by Telegram when you use the bot. Subject to <a href="https://telegram.org/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Telegram&apos;s Privacy Policy</a>.</li>
-              <li><strong>Flutterwave</strong> — processes subscription payments. We share only a payment reference; we never store or transmit your card details.</li>
+              <li><strong>Paystack</strong> — processes subscription payments. We share only a payment reference; we never store or transmit your card details.</li>
               <li><strong>Railway</strong> — hosts our database and backend infrastructure in the US. Data is transferred from Nigeria to the US under contractual safeguards.</li>
               <li><strong>Anthropic</strong> — when an admin generates an AI explanation for a question, the question text and answer options (no personal data) are sent to Anthropic&apos;s API. No user identifiers are included in these requests. Subject to <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Anthropic&apos;s Privacy Policy</a>.</li>
               <li><strong>Zoho Mail</strong> — used to send support email responses. Only your name and Telegram ID are included when you submit a support request.</li>

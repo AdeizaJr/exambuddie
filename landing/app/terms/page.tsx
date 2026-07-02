@@ -66,7 +66,7 @@ export default function TermsPage() {
             <h2>5. Subscriptions &amp; Payment</h2>
             <ul>
               <li>Premium plans are available as: monthly (₦1,500/month), a 3-month exam-season bundle (₦3,500), or yearly (₦12,000/year). Current pricing is always shown at the point of purchase inside the bot.</li>
-              <li>Payments are processed by Flutterwave. By subscribing, you agree to Flutterwave&apos;s payment terms.</li>
+              <li>Payments are processed by Paystack. By subscribing, you agree to Paystack&apos;s payment terms.</li>
               <li>Subscriptions do not auto-renew. You must manually renew when your plan expires.</li>
               <li>Access to premium features ends immediately upon plan expiry.</li>
               <li>See our <Link href="/refunds" className="text-blue-600 hover:underline">Refund Policy</Link> for eligibility details.</li>

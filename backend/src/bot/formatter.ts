@@ -933,7 +933,7 @@ Plan: ${planLabel}
 
 👉 <a href="${link}">Click here to pay securely</a>
 
-<i>Payment powered by Flutterwave. Your access will be activated instantly after payment.</i>
+<i>Payment powered by Paystack. Your access will be activated instantly after payment.</i>
 
 Reference: <code>${txRef}</code>
 

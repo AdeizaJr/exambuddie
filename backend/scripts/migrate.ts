@@ -118,6 +118,10 @@ const migrations = [
     created_at TIMESTAMPTZ DEFAULT NOW()
   )`,
 
+  // ── Paystack columns (migration from Flutterwave) ───────────────────────────
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS paystack_tx_ref VARCHAR(100) UNIQUE`,
+  `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS paystack_tx_id VARCHAR(100)`,
+
   // ── Admin users ───────────────────────────────────────────────────────────────
   `CREATE TABLE IF NOT EXISTS admin_users (
     id            SERIAL PRIMARY KEY,
