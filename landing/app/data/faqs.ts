@@ -37,7 +37,7 @@ export const faqs = [
   },
   {
     q: "Can I cancel my Premium plan?",
-    a: "Premium is a one-time payment for a 30-day or 1-year pass — not a subscription. It does not auto-renew, so there is nothing to cancel.",
+    a: "Yes. If your card supports it, Premium auto-renews each cycle — send /billing in the bot for a link to cancel or update your card anytime. If your card doesn't support auto-renewal, there's nothing to cancel — it simply expires at the end of your paid period.",
   },
   {
     q: "Does ExamBuddie cover the full WAEC/JAMB syllabus?",

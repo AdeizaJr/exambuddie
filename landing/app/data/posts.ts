@@ -1002,7 +1002,7 @@ export const posts: Post[] = [
           "✅ Works on any phone with Telegram, even 2G/3G connections",
           "✅ Daily practice streaks and weekly leaderboard for motivation",
           "✅ Formula sheets for Physics, Chemistry, Mathematics, and more",
-          "✅ Free to start — 5 questions per day free, unlimited with Premium (₦1,500/month)",
+          "✅ Free to start — 5 questions per day free, unlimited with Premium",
         ],
       },
       { type: "h2", text: "2. Myschool.ng" },
