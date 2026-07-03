@@ -48,6 +48,7 @@ npm run dev                  # development (long polling)
 | `DATABASE_URL` | PostgreSQL connection string |
 | `REDIS_URL` | Redis connection string |
 | `APP_URL` | Public URL of your backend (enables webhook mode) |
+| `LANDING_URL` | Public URL of the landing site — pinged every 4 min to prevent Railway idle sleep (default: `https://exambuddie.app`) |
 | `ANTHROPIC_API_KEY` | For AI explanation generation scripts |
 | `PAYSTACK_SECRET_KEY` | Payment processing + webhook signature verification |
 | `PAYSTACK_PUBLIC_KEY` | Client-side payment init (if ever needed) |

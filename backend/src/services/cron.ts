@@ -1,5 +1,6 @@
 // src/services/cron.ts
 import cron from 'node-cron';
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
 import * as redis from './redis';
@@ -535,6 +536,17 @@ ${streakLine} → /practice`;
     }
     if (sent > 0) console.log(`[CRON] Timetable reminders sent to ${sent} users`);
   });
+
+  // ── Every 4 minutes — ping the landing site to prevent Railway idle sleep ──
+  // A cold start on the landing service can take 6-7s, long enough for Googlebot
+  // to log it as a server error (seen in Search Console for the homepage).
+  setInterval(async () => {
+    try {
+      await axios.get(process.env.LANDING_URL || 'https://exambuddie.app', { timeout: 10_000 });
+    } catch (e: any) {
+      console.error('[CRON] Landing keep-alive ping failed:', e.message);
+    }
+  }, 4 * 60 * 1000);
 
   console.log('⏰ Cron jobs started');
 }
