@@ -476,7 +476,7 @@ bot.catch(async (err: any, ctx: any) => {
           reply_markup: { inline_keyboard: [[{ text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
         }
       );
-    } else if ((mode === 'practice' || mode === 'quiz' || mode === 'drill') && hasQuestion) {
+    } else if ((mode === 'practice' || mode === 'quiz' || mode === 'drill' || mode === 'sr_review') && hasQuestion) {
       await ctx.reply(
         '⚠️ <b>We hit a snag!</b>\n\nYour session is still active. Tap below to resume where you left off.',
         {

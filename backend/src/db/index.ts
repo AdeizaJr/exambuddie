@@ -1358,7 +1358,7 @@ export async function updateSRCard(userId: number, questionId: number, wasCorrec
   await pool.query(
     `UPDATE sr_cards
      SET interval_days = $1, ease = $2, reps = $3,
-         next_review_at = NOW() + ($1 || ' days')::INTERVAL
+         next_review_at = NOW() + $1::integer * INTERVAL '1 day'
      WHERE user_id = $4 AND question_id = $5`,
     [newInterval, newEase, newReps, userId, questionId]
   );

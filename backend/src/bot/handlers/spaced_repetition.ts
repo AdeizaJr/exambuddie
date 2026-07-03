@@ -109,6 +109,7 @@ async function sendSRCard(ctx: any, q: any, num: number, total: number): Promise
 }
 
 export async function handleSRAnswer(ctx: any, selected: string): Promise<void> {
+  await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
   if (!session || session.mode !== 'sr_review') return;
 
