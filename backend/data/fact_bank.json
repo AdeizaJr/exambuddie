@@ -7311,6 +7311,406 @@
       "fact": "Stretching improves flexibility, which is the range of movement around your joints.",
       "difficulty": "medium",
       "source": "general knowledge"
+    },
+    {
+      "id": "sci_331",
+      "subject": "Physics",
+      "topic": "Light",
+      "fact": "Light from the Sun takes about eight minutes to travel the 150 million kilometres to Earth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_332",
+      "subject": "Physics",
+      "topic": "Forces",
+      "fact": "Friction is what allows us to walk; without it, our feet would slip as though we were on ice.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_333",
+      "subject": "Physics",
+      "topic": "Heat",
+      "fact": "A metal spoon feels colder than a wooden one at the same temperature because metal carries heat away from your hand much faster.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_334",
+      "subject": "Chemistry",
+      "topic": "Allotropes",
+      "fact": "Diamond and the graphite in a pencil are both made purely of carbon; only the arrangement of the atoms differs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_335",
+      "subject": "Chemistry",
+      "topic": "States of Matter",
+      "fact": "Water is unusual in that it expands as it freezes, which is why ice is less dense than water and floats.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_336",
+      "subject": "Chemistry",
+      "topic": "Gases",
+      "fact": "Helium balloons rise because helium is lighter than the surrounding air.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_337",
+      "subject": "Biology",
+      "topic": "Skeleton",
+      "fact": "Bone is remarkably strong for its weight; pound for pound it can withstand more compression than steel.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_338",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "The skin is the largest organ of the human body.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_339",
+      "subject": "Biology",
+      "topic": "Human Body",
+      "fact": "Fingernails grow noticeably faster than toenails.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_340",
+      "subject": "Earth Science",
+      "topic": "Water",
+      "fact": "About 97 percent of the water on Earth is salt water held in the oceans.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_341",
+      "subject": "Earth Science",
+      "topic": "Geology",
+      "fact": "Diamonds form deep underground under intense heat and pressure over millions of years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_342",
+      "subject": "Mathematics",
+      "topic": "Arithmetic",
+      "fact": "Any number multiplied by zero gives zero.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_343",
+      "subject": "Mathematics",
+      "topic": "Number Systems",
+      "fact": "A googol is the number 1 followed by one hundred zeros.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_344",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "A single day on Venus lasts longer than a whole Venusian year, because the planet spins so slowly.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_345",
+      "subject": "Astronomy",
+      "topic": "Meteors",
+      "fact": "Shooting stars are usually tiny grains of rock or dust burning up as they streak into Earth's atmosphere.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_060",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The ancient Egyptians built the great pyramids as elaborate tombs for their pharaohs.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_061",
+      "subject": "History",
+      "topic": "Inventions",
+      "fact": "Johannes Gutenberg's printing press, developed around 1440, made books far cheaper and helped spread knowledge across Europe.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_062",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "The Nok culture of central Nigeria produced some of the earliest known terracotta sculptures in sub-Saharan Africa.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_056",
+      "subject": "Geography",
+      "topic": "Continents",
+      "fact": "Africa is the second-largest continent in the world, after Asia.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_057",
+      "subject": "Geography",
+      "topic": "Mountains",
+      "fact": "Mount Kilimanjaro in Tanzania is the highest mountain in Africa.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_058",
+      "subject": "Geography",
+      "topic": "Landforms",
+      "fact": "A peninsula is a piece of land almost surrounded by water but still joined to the mainland.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_052",
+      "subject": "English Language",
+      "topic": "Parts of Speech",
+      "fact": "A noun is a word that names a person, place, thing, or idea.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_053",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "The small dot over a lowercase 'i' or 'j' has a name: it is called a tittle.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_054",
+      "subject": "English Language",
+      "topic": "Word Formation",
+      "fact": "A prefix is a group of letters added to the start of a word to change its meaning, such as 'un-' in 'unhappy'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_042",
+      "subject": "Economics",
+      "topic": "Basic Concepts",
+      "fact": "Goods are physical items you can touch, while services are useful tasks performed for you, such as a haircut.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_043",
+      "subject": "Economics",
+      "topic": "Market Structures",
+      "fact": "A monopoly exists when a single seller controls the entire supply of a good or service.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_044",
+      "subject": "Economics",
+      "topic": "International Trade",
+      "fact": "Exports are goods and services sold to other countries, while imports are those bought from them.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_044",
+      "subject": "Government",
+      "topic": "Democracy",
+      "fact": "In a referendum, citizens vote directly on a particular issue rather than choosing a representative to decide for them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_045",
+      "subject": "Government",
+      "topic": "Separation of Powers",
+      "fact": "The judiciary is the arm of government that interprets the laws and settles disputes.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_046",
+      "subject": "Government",
+      "topic": "Systems of Government",
+      "fact": "A republic is a state in which the head of state is elected rather than being a hereditary monarch.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_044",
+      "subject": "Computer Science",
+      "topic": "Data",
+      "fact": "A single byte is made up of eight bits.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_045",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "The 'www' at the start of many web addresses stands for World Wide Web.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_046",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "A 'bug' is an error in a computer program, and the process of finding and fixing it is called debugging.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_044",
+      "subject": "Health Education",
+      "topic": "Wellness",
+      "fact": "Adults are generally advised to aim for around seven to nine hours of sleep each night.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_045",
+      "subject": "Health Education",
+      "topic": "Hydration",
+      "fact": "The body loses water through sweat, so taking in fluids matters during exercise and hot weather.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_046",
+      "subject": "Health Education",
+      "topic": "First Aid",
+      "fact": "First aid is the immediate help given to an injured or ill person before professional care arrives.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_041",
+      "subject": "Financial Literacy",
+      "topic": "Money Management",
+      "fact": "Needs are things you must have to live, like food and shelter, while wants are things that are merely nice to have.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_042",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "A bank keeps your money safe and may pay you interest as a reward for saving with it.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_043",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "Debt is money you owe to someone else, usually to be repaid with interest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_045",
+      "subject": "Agricultural Science",
+      "topic": "Soil Science",
+      "fact": "Earthworms improve the soil by burrowing through it, which lets in air and water and mixes in nutrients.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_046",
+      "subject": "Agricultural Science",
+      "topic": "Crop Production",
+      "fact": "Crops make their own food through photosynthesis, using sunlight, water, and carbon dioxide.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_047",
+      "subject": "Agricultural Science",
+      "topic": "Land Management",
+      "fact": "Overgrazing by too many animals can strip land of its plants and lead to soil erosion.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_042",
+      "subject": "Civic Education",
+      "topic": "Citizenship",
+      "fact": "Citizenship is full membership of a state, carrying both rights and responsibilities.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_043",
+      "subject": "Civic Education",
+      "topic": "Values",
+      "fact": "Tolerance means respecting the beliefs, cultures, and opinions of others even when they differ from your own.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_046",
+      "subject": "Literature",
+      "topic": "Figures of Speech",
+      "fact": "Personification gives human qualities to animals, objects, or ideas, as in 'the wind whispered'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_047",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "An autobiography is the story of a person's life, written by that same person.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_041",
+      "subject": "Creative Arts",
+      "topic": "Color Theory",
+      "fact": "Warm colours such as red and orange suggest energy, while cool colours such as blue and green feel calm.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_042",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "A mural is a large artwork painted or applied directly onto a wall or ceiling.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_040",
+      "subject": "Physical Education",
+      "topic": "Sports",
+      "fact": "The modern Olympic Games are held once every four years.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_041",
+      "subject": "Physical Education",
+      "topic": "Fitness",
+      "fact": "Cooling down after exercise helps the heart rate return gradually to its normal resting level.",
+      "difficulty": "easy",
+      "source": "general knowledge"
     }
   ]
 }
