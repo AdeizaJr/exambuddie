@@ -224,6 +224,13 @@ function convertLatex(text: string): string {
     })
     // single-letter algebraic fractions: m/n → m⁄n (single chars only — prevents sin/cos → s⁄c etc.)
     .replace(/(?<![a-zA-Z0-9\/:.])([a-zA-Z])\/([a-zA-Z])(?![a-zA-Z\/:])/g, '$1⁄$2')
+    // fraction wrapped in parens by fracWrap() still leaves a bare ASCII "/" touching the
+    // parens (e.g. "(-2m - 5)/4"). The rules above only re-glyph a "/" with an alphanumeric
+    // right before it, so this one is missed and reaches Telegram as literal "/4" — which
+    // Telegram auto-links as a bot command (renders as a blue tappable "4"). Swap it for the
+    // Unicode fraction slash, which looks the same but isn't a command trigger.
+    .replace(/\)\/(?=\d)/g, ')⁄')
+    .replace(/(?<=\d)\/\(/g, '⁄(')
     .replace(/ {2,}/g, ' ')
     .trim();
 }
@@ -595,6 +602,15 @@ function formatExplanation(text: string): string {
     .trim();
   const converted = convertLatex(preFormatted);
   return converted
+    // "= 0" then the next equation step begins (chain of steps ending in = 0) — this must
+    // run BEFORE the equation-chain collapser below, and its lookahead must include digits
+    // and "-". AI-generated derivations often glue distinct equations with just a space and
+    // no punctuation (e.g. "...- 3 = 0 2x(x - 3) + 1(x - 3) = 0..."). Previously this rule
+    // only recognized a following letter/paren, so a digit-led next step (very common —
+    // "2x2 - 6x", "2x(x - 3)") never got split here, and the whole run-on blob fell through
+    // to the chain-collapser as if it were one giant "a = b = c" chain, shredding it into
+    // nonsense fragments instead of clean per-equation lines.
+    .replace(/=\s*0\s+(?=[a-zA-Zα-ωΑ-Ω0-9(\-])/g, '= 0\n\n')
     // equation step chains: "n = a = b = c" → one step per line
     // skip if any segment between = signs contains ≥2 English words (prose, not math)
     .replace(/^.+=.+=.+$/gm, (line) => {
@@ -621,12 +637,13 @@ function formatExplanation(text: string): string {
     .replace(/\s*:\s*([a-zA-Z])\s*=/g, '\n∴ $1 =')
     // arrow results on their own line: "... → expression"
     .replace(/\s+→\s+/g, '\n→ ')
-    // "= 0" then the next equation step begins (chain of steps ending in = 0)
-    .replace(/=\s*0\s+(?=[a-zA-Zα-ωΑ-Ω(])/g, '= 0\n\n')
     // factorization step chain: ") = NUMBER (" → break between steps
-    .replace(/\)\s*=\s*(\d+)\s*\(/g, ')\n= $1 (')
+    // [ \t]* (not \s*) so this can't reach across a paragraph break already inserted by an
+    // earlier rule (e.g. the "= 0" step-break above) and re-collapse two separated steps —
+    // \s* matches newlines too, which was silently undoing that earlier split.
+    .replace(/\)[ \t]*=[ \t]*(\d+)[ \t]*\(/g, ')\n= $1 (')
     // equation chain: ") = (" including ASCII/superscript exponents e.g. ")2 = (" or ")² = ("
-    .replace(/\)([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ0-9]?)\s*=\s*\(/g, ')$1\n= (')
+    .replace(/\)([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ0-9]?)[ \t]*=[ \t]*\(/g, ')$1\n= (')
     // arithmetic chain at end of line: "= EXPR = SINGLE_NUMBER"
     .replace(/= ([^=\n]+) = (\d+)\s*$/gm, '= $1\n= $2')
     // substitution step: ") -4 =" or ") 3 =" — numeric value starting new equation after closing paren
