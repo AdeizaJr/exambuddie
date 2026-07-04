@@ -64,6 +64,23 @@ npm run dev                  # development (long polling)
 > Pricing and the free daily question limit are **no longer env vars** — they live in the `settings`
 > DB table, seeded by `npm run migrate`, and are editable from the admin dashboard's Pricing page.
 
+### Testing Paystack webhooks locally (ngrok)
+
+Paystack needs a public URL to send webhook events to — your local `npm run dev` server isn't reachable from the internet. Use [ngrok](https://ngrok.com/download) to tunnel it:
+
+```bash
+ngrok config add-authtoken <your-token>   # one-time setup, from ngrok dashboard
+ngrok http 3000                            # or whatever port your backend runs on
+```
+
+Then:
+1. Copy the `https://xxxx.ngrok-free.app` URL ngrok gives you.
+2. Set `APP_URL` in `.env` to that URL and restart `npm run dev`.
+3. In Paystack dashboard (Settings → API Keys & Webhooks), point the webhook URL to `https://xxxx.ngrok-free.app/webhooks/paystack`.
+4. Trigger a test event from Paystack's dashboard, or make a real test payment, to confirm delivery.
+
+> The ngrok URL changes every time you restart the tunnel (free plan) — update both `APP_URL` and the Paystack dashboard webhook URL each time.
+
 ---
 
 ## Miniapp Setup
