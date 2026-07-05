@@ -160,7 +160,7 @@ export default async function Home() {
 
       {/* Stats bar */}
       <section className="bg-blue-700 py-8 sm:py-10 dark:bg-blue-900">
-        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-4 text-center text-white sm:gap-8 sm:px-6 md:grid-cols-4">
+        <div className="grid w-full grid-cols-2 gap-6 px-6 text-center text-white sm:gap-8 sm:px-10 md:grid-cols-4">
           {[
             { value: "41,000+", label: "Past Questions" },
             { value: "12+", label: "Subjects Covered" },
