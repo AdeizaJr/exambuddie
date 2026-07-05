@@ -387,31 +387,44 @@ ${streakLine} → /practice`;
     console.log('[CRON] Sending Question of the Day...');
     const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
 
-    // Pick one question per exam type and cache it for the day
-    const examTypes = ['WAEC', 'JAMB', 'NECO'];
+    // Pick one question per exam type and cache it for the day. 'ALL' covers users
+    // whose exam_type is 'ALL' or 'BOTH' (practice-any-board) — examTypeFilter of
+    // null means no exam_type restriction.
+    const examTypes: { key: string; examTypeFilter: string | null }[] = [
+      { key: 'WAEC', examTypeFilter: 'WAEC' },
+      { key: 'JAMB', examTypeFilter: 'JAMB' },
+      { key: 'NECO', examTypeFilter: 'NECO' },
+      { key: 'ALL', examTypeFilter: null },
+    ];
     const qotdMap: Record<string, any> = {};
-    for (const et of examTypes) {
-      let qId: number | null = await redis.getQOTDQuestion(date, et);
+    for (const { key, examTypeFilter } of examTypes) {
+      let qId: number | null = await redis.getQOTDQuestion(date, key);
       if (!qId) {
-        // Pick a well-attempted question (has explanation) at random
-        const { rows } = await db.query(
-          `SELECT q.id FROM questions q
-           JOIN attempts a ON a.question_id = q.id
-           WHERE q.exam_type = $1
-             AND q.is_active = TRUE
-             AND q.explanation IS NOT NULL
-             AND length(q.explanation) > 20
-           GROUP BY q.id
-           HAVING COUNT(a.id) >= 5
-           ORDER BY RANDOM() LIMIT 1`,
-          [et]
-        );
-        if (!rows[0]) continue;
-        qId = rows[0].id as number;
-        await redis.setQOTDQuestion(date, et, qId);
+        // Prefer a well-attempted question, but with only a small user base most
+        // questions never reach a high attempt count — cascade the threshold down
+        // rather than going silent for whole exam types on any given day.
+        const examClause = examTypeFilter ? 'AND q.exam_type = $2' : '';
+        const params: any[] = examTypeFilter ? [examTypeFilter] : [];
+        for (const minAttempts of [5, 3, 1, 0]) {
+          const { rows } = await db.query(
+            `SELECT q.id FROM questions q
+             LEFT JOIN attempts a ON a.question_id = q.id
+             WHERE q.is_active = TRUE
+               AND q.explanation IS NOT NULL
+               AND length(q.explanation) > 20
+               ${examClause}
+             GROUP BY q.id
+             HAVING COUNT(a.id) >= $1
+             ORDER BY RANDOM() LIMIT 1`,
+            [minAttempts, ...params]
+          );
+          if (rows[0]) { qId = rows[0].id as number; break; }
+        }
+        if (!qId) continue;
+        await redis.setQOTDQuestion(date, key, qId);
       }
       const q = await db.getQuestionById(qId as number);
-      if (q) qotdMap[et] = q;
+      if (q) qotdMap[key] = q;
     }
 
     const { rows: users } = await db.query(
@@ -425,7 +438,8 @@ ${streakLine} → /practice`;
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
-        const q = qotdMap[user.exam_type];
+        const qotdKey = ['ALL', 'BOTH'].includes(user.exam_type) ? 'ALL' : user.exam_type;
+        const q = qotdMap[qotdKey];
         if (!q) return;
 
         // Skip if user already answered today's QOTD
