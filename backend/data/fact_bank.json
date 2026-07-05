@@ -7711,6 +7711,294 @@
       "fact": "Cooling down after exercise helps the heart rate return gradually to its normal resting level.",
       "difficulty": "easy",
       "source": "general knowledge"
+    },
+    {
+      "id": "phe_042",
+      "subject": "Physical Education",
+      "topic": "Human Body",
+      "fact": "The three main types of muscle in the human body are skeletal, cardiac, and smooth muscle, but only skeletal muscle is under voluntary (conscious) control.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_043",
+      "subject": "Physical Education",
+      "topic": "Training",
+      "fact": "Warming up before exercise increases blood flow to the muscles and reduces the risk of strains and injuries.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_044",
+      "subject": "Physical Education",
+      "topic": "Sports",
+      "fact": "In a standard game of football (soccer), each team fields eleven players, including the goalkeeper.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_045",
+      "subject": "Physical Education",
+      "topic": "Fitness",
+      "fact": "Regular aerobic exercise strengthens the heart so it pumps more blood with each beat, which lowers the resting heart rate over time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_043",
+      "subject": "Creative Arts",
+      "topic": "Colour Theory",
+      "fact": "The three primary colours in painting are red, blue, and yellow; mixing them in pairs produces the secondary colours orange, green, and purple.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_044",
+      "subject": "Creative Arts",
+      "topic": "Colour Theory",
+      "fact": "Complementary colours sit opposite each other on the colour wheel and create strong contrast when placed side by side.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_045",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Rhythm is the pattern of sound and silence over time, while melody is the sequence of notes that forms a recognisable tune.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_046",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "Sculpture is a three-dimensional art form with height, width, and depth, unlike a flat painting or drawing.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_346",
+      "subject": "Astronomy",
+      "topic": "Solar System",
+      "fact": "Jupiter is the largest planet in the solar system, so big that all the other planets could fit inside it combined.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_347",
+      "subject": "Astronomy",
+      "topic": "Distance",
+      "fact": "A light-year measures distance, not time. It is how far light travels in one year, about 9.46 trillion kilometres.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_348",
+      "subject": "Astronomy",
+      "topic": "The Moon",
+      "fact": "The Moon produces no light of its own; it appears bright because it reflects sunlight from its surface.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_044",
+      "subject": "Civic Education",
+      "topic": "Constitution",
+      "fact": "A constitution is the supreme law of a country, and any other law that conflicts with it is considered void.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_045",
+      "subject": "Civic Education",
+      "topic": "Rule of Law",
+      "fact": "The rule of law means everyone, including those in government, is subject to the law and no one is above it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_046",
+      "subject": "Civic Education",
+      "topic": "Government",
+      "fact": "Separation of powers divides government into three arms, the legislature, the executive, and the judiciary, to prevent the abuse of power.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_044",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Compound interest is interest earned on both the original amount saved and on the interest already added to it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_045",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "A budget is a plan that compares expected income with expected expenses over a set period of time.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_046",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "Diversifying investments, spreading money across different assets, reduces the risk of losing everything if one investment fails.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_045",
+      "subject": "Economics",
+      "topic": "Scarcity",
+      "fact": "Opportunity cost is the value of the next best alternative that is given up when a choice is made.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_046",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "When demand for a good rises while supply stays the same, the price of that good tends to increase.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_047",
+      "subject": "Government",
+      "topic": "Systems",
+      "fact": "In a federal system, power is shared between a central (national) government and regional (state) governments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_048",
+      "subject": "Government",
+      "topic": "Systems",
+      "fact": "Democracy is a system of government in which power belongs to the people, usually exercised through elected representatives.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_047",
+      "subject": "Computer Science",
+      "topic": "Data",
+      "fact": "A byte is made up of 8 bits, and a bit is the smallest unit of data, holding either a 0 or a 1.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_048",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "An algorithm is a step-by-step set of instructions for solving a problem or completing a task.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_047",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A balanced diet draws from six classes of food: carbohydrates, proteins, fats and oils, vitamins, minerals, and water.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_048",
+      "subject": "Health Education",
+      "topic": "Immunity",
+      "fact": "Vaccines work by training the body's immune system to recognise and fight a specific germ before a real infection occurs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_048",
+      "subject": "Literature",
+      "topic": "Figures of Speech",
+      "fact": "A simile compares two things using the words 'like' or 'as', while a metaphor states directly that one thing is another.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_049",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "A soliloquy is a speech in which a character, alone on stage, reveals their inner thoughts to the audience.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_048",
+      "subject": "Agricultural Science",
+      "topic": "Soil Management",
+      "fact": "Crop rotation, growing different crops on the same land in successive seasons, helps maintain soil fertility and control pests.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_049",
+      "subject": "Agricultural Science",
+      "topic": "Soil Fertility",
+      "fact": "Legumes such as beans and groundnuts improve soil fertility because bacteria in their root nodules fix nitrogen from the air.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_349",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The interior angles of any triangle always add up to 180 degrees, regardless of the triangle's shape or size.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_350",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "A prime number is a whole number greater than 1 that has exactly two factors: 1 and itself.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_351",
+      "subject": "Earth Science",
+      "topic": "Geology",
+      "fact": "The Earth's crust is broken into large tectonic plates whose slow movement causes earthquakes and builds mountains.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_352",
+      "subject": "Chemistry",
+      "topic": "Compounds",
+      "fact": "Water is a compound of two hydrogen atoms and one oxygen atom, giving it the chemical formula H2O.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_055",
+      "subject": "English Language",
+      "topic": "Parts of Speech",
+      "fact": "A noun names a person, place, thing, or idea, and can be common, proper, abstract, or collective.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_059",
+      "subject": "Geography",
+      "topic": "The Earth",
+      "fact": "The Equator is an imaginary line around the middle of the Earth that divides it into the Northern and Southern Hemispheres.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_063",
+      "subject": "History",
+      "topic": "Nigeria",
+      "fact": "Nigeria gained independence from British colonial rule on 1 October 1960 and became a republic in 1963.",
+      "difficulty": "easy",
+      "source": "general knowledge"
     }
   ]
 }
