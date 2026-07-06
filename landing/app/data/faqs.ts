@@ -13,7 +13,7 @@ export const faqs = [
   },
   {
     q: "Can I use ExamBuddie on mobile?",
-    a: "Yes — Telegram works on Android, iOS, and desktop. ExamBuddie works on all of them.",
+    a: "Yes, Telegram works on Android, iOS, and desktop. ExamBuddie works on all of them.",
   },
   {
     q: "What happens when I hit the free limit?",
@@ -33,11 +33,11 @@ export const faqs = [
   },
   {
     q: "Does ExamBuddie work without internet?",
-    a: "No — you need an internet connection since ExamBuddie runs inside Telegram. However, it works on any network including mobile data.",
+    a: "No, you need an internet connection since ExamBuddie runs inside Telegram. However, it works on any network including mobile data.",
   },
   {
     q: "Can I cancel my Premium plan?",
-    a: "Yes. If your card supports it, Premium auto-renews each cycle — send /billing in the bot for a link to cancel or update your card anytime. If your card doesn't support auto-renewal, there's nothing to cancel — it simply expires at the end of your paid period.",
+    a: "Yes. If your card supports it, Premium auto-renews each cycle: send /billing in the bot for a link to cancel or update your card anytime. If your card doesn't support auto-renewal, there's nothing to cancel: it simply expires at the end of your paid period.",
   },
   {
     q: "Does ExamBuddie cover the full WAEC/JAMB syllabus?",
@@ -45,6 +45,6 @@ export const faqs = [
   },
   {
     q: "Can parents or teachers use ExamBuddie?",
-    a: "Yes. Many parents use ExamBuddie to practise alongside their children, and teachers use it to generate topic-specific question sets for class. The bot works the same way for everyone — just open Telegram and tap Start.",
+    a: "Yes. Many parents use ExamBuddie to practise alongside their children, and teachers use it to generate topic-specific question sets for class. The bot works the same way for everyone: just open Telegram and tap Start.",
   },
 ];

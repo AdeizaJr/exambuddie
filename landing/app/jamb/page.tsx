@@ -4,9 +4,9 @@ import { Nav } from "../components/Nav";
 const BOT_URL_JAMB = "https://t.me/ExamBuddieBot?start=from_jamb";
 
 export const metadata: Metadata = {
-  title: "JAMB UTME Past Questions 2010–2025 — Practice on Telegram | ExamBuddie",
+  title: "JAMB UTME Past Questions 2010–2025: Practice on Telegram | ExamBuddie",
   description:
-    "Practice 10,000+ real JAMB UTME past questions across all subjects. CBT-style timed mock exams, instant AI explanations, and weak-topic drilling — free to start on Telegram.",
+    "Practice 10,000+ real JAMB UTME past questions across all subjects. CBT-style timed mock exams, instant AI explanations, and weak-topic drilling. Free to start on Telegram.",
   keywords: [
     "JAMB past questions",
     "JAMB UTME practice questions",
@@ -24,17 +24,17 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/jamb" },
   openGraph: {
-    title: "JAMB UTME Past Questions — Practice Free on Telegram | ExamBuddie",
+    title: "JAMB UTME Past Questions: Practice Free on Telegram | ExamBuddie",
     description:
-      "10,000+ real JAMB UTME past questions with instant AI explanations. CBT-style timed exams, weak-topic drill mode — all inside Telegram.",
+      "10,000+ real JAMB UTME past questions with instant AI explanations. CBT-style timed exams, weak-topic drill mode. All inside Telegram.",
     type: "website",
     url: "https://exambuddie.app/jamb",
     siteName: "ExamBuddie",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "ExamBuddie — JAMB UTME Practice on Telegram" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "ExamBuddie: JAMB UTME Practice on Telegram" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "JAMB UTME Past Questions — Practice Free on Telegram | ExamBuddie",
+    title: "JAMB UTME Past Questions: Practice Free on Telegram | ExamBuddie",
     description: "10,000+ real JAMB UTME past questions with instant AI explanations. Free to start.",
     images: ["/opengraph-image"],
   },
@@ -58,7 +58,7 @@ const jambSubjects = [
 const jambJsonLd = {
   "@context": "https://schema.org",
   "@type": "Course",
-  name: "JAMB UTME Past Questions Practice — ExamBuddie",
+  name: "JAMB UTME Past Questions Practice: ExamBuddie",
   description: "Practice real JAMB UTME past questions from 2010 to 2025 with instant AI explanations, CBT-style timed exams, and weak-topic drill mode.",
   provider: {
     "@type": "Organization",
@@ -67,7 +67,7 @@ const jambJsonLd = {
   },
   url: "https://exambuddie.app/jamb",
   educationalLevel: "Secondary School",
-  teaches: "JAMB UTME exam preparation — Mathematics, English, Sciences, Humanities",
+  teaches: "JAMB UTME exam preparation: Mathematics, English, Sciences, Humanities",
   datePublished: "2024-01-01",
   dateModified: "2026-06-01",
   inLanguage: "en-NG",
@@ -94,7 +94,7 @@ export default function JambPage() {
       <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
-            🎓 JAMB UTME Preparation — Nigeria
+            🎓 JAMB UTME Preparation · Nigeria
           </div>
           <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
             JAMB UTME Past Questions
@@ -102,7 +102,7 @@ export default function JambPage() {
             <span className="text-blue-700 dark:text-blue-400">2010–2025, Free on Telegram.</span>
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl dark:text-slate-400">
-            Practice real JAMB past questions in a CBT-style environment directly in Telegram. Timed mock exams, instant AI explanations, and personalised weak-topic drilling — exactly what UTME candidates need.
+            Practice real JAMB past questions in a CBT-style environment directly in Telegram. Timed mock exams, instant AI explanations, and personalised weak-topic drilling: exactly what UTME candidates need.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             <a
@@ -151,7 +151,7 @@ export default function JambPage() {
               {
                 icon: "⏱️",
                 title: "CBT-style timed mock exams",
-                desc: "50 questions, 60 minutes — the same pressure as the real UTME. Score breakdown by subject and topic when you finish.",
+                desc: "50 questions, 60 minutes: the same pressure as the real UTME. Score breakdown by subject and topic when you finish.",
               },
               {
                 icon: "📚",
@@ -166,7 +166,7 @@ export default function JambPage() {
               {
                 icon: "🔁",
                 title: "Spaced repetition on wrong answers",
-                desc: "Questions you get wrong resurface at the right intervals until you answer correctly — proven to lock in long-term recall.",
+                desc: "Questions you get wrong resurface at the right intervals until you answer correctly: proven to lock in long-term recall.",
               },
               {
                 icon: "📅",

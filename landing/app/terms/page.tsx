@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 import { getPricing } from "../lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Terms of Use — ExamBuddie",
+  title: "Terms of Use: ExamBuddie",
   description: "Terms and conditions for using ExamBuddie.",
   alternates: { canonical: "/terms" },
   openGraph: {
-    title: "Terms of Use — ExamBuddie",
+    title: "Terms of Use: ExamBuddie",
     description: "Terms and conditions for using ExamBuddie.",
     type: "website",
     url: "https://exambuddie.app/terms",
@@ -92,7 +92,7 @@ export default async function TermsPage() {
               Past questions and answers are sourced from publicly available past examination
               materials. While we strive for accuracy, ExamBuddie does not guarantee that all
               questions or explanations are error-free. If you find an issue, please flag it
-              inside the bot so we can review it. ExamBuddie is a study aid — it does not
+              inside the bot so we can review it. ExamBuddie is a study aid: it does not
               guarantee any specific exam result.
             </p>
           </section>

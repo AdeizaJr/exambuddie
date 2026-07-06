@@ -2,11 +2,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — ExamBuddie",
+  title: "Privacy Policy: ExamBuddie",
   description: "How ExamBuddie collects, uses, and protects your data.",
   alternates: { canonical: "/privacy" },
   openGraph: {
-    title: "Privacy Policy — ExamBuddie",
+    title: "Privacy Policy: ExamBuddie",
     description: "How ExamBuddie collects, uses, and protects your data.",
     type: "website",
     url: "https://exambuddie.app/privacy",
@@ -33,7 +33,7 @@ export default function PrivacyPage() {
               preparing for WAEC, JAMB, and NECO. We are operated by ExamBuddie (Nigeria).
             </p>
             <p className="mt-2">
-              <strong>Data Controller &amp; Responsible Person:</strong> Hassan Adeiza, ExamBuddie — Oyo, Nigeria.<br />
+              <strong>Data Controller &amp; Responsible Person:</strong> Hassan Adeiza, ExamBuddie · Oyo, Nigeria.<br />
               <strong>Contact:</strong> <a href="mailto:hello@exambuddie.app" className="text-blue-600 hover:underline">hello@exambuddie.app</a>
             </p>
           </section>
@@ -43,12 +43,12 @@ export default function PrivacyPage() {
             <p>When you use the ExamBuddie Telegram bot, we collect:</p>
             <ul>
               <li>Your Telegram user ID, first name, last name, and username (provided by Telegram)</li>
-              <li>Your exam preferences — exam type (WAEC/JAMB/NECO), target year, and selected subjects</li>
-              <li>Your quiz and practice history — questions answered, scores, time taken</li>
+              <li>Your exam preferences: exam type (WAEC/JAMB/NECO), target year, and selected subjects</li>
+              <li>Your quiz and practice history: questions answered, scores, time taken</li>
               <li>Your subscription status and payment reference numbers</li>
               <li>Your daily streak and progress statistics</li>
               <li>
-                Your phone number — <strong>optional</strong>, only if you choose to share it via
+                Your phone number (<strong>optional</strong>), only if you choose to share it via
                 the bot. We use this to contact you about your subscription, account changes, or
                 important service updates. You can skip this at any time and add or remove it
                 later via Settings.
@@ -75,7 +75,7 @@ export default function PrivacyPage() {
             <p className="mt-3">We do not use your data for advertising or sell it to third parties.</p>
             <p className="mt-3">
               <strong>Legal basis (Nigeria Data Protection Act 2023):</strong> We process your
-              data on the basis of <em>contractual necessity</em> — to deliver the exam prep
+              data on the basis of <em>contractual necessity</em>, to deliver the exam prep
               service you signed up for. Where we send optional reminders or use your phone
               number to contact you, we rely on your <em>consent</em>, which you can withdraw
               at any time via Settings. Aggregate analytics are processed under <em>legitimate
@@ -90,8 +90,8 @@ export default function PrivacyPage() {
               <a href="https://railway.app" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Railway</a>{" "}
               (US region). We use industry-standard access controls and encrypted connections (TLS in transit, AES-256 at rest).
               Payment processing is handled by{" "}
-              <a href="https://paystack.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Paystack</a>{" "}
-              — we never store your card details.
+              <a href="https://paystack.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Paystack</a>.{" "}
+              We never store your card details.
             </p>
             <p className="mt-2">
               <strong>Cross-border transfers:</strong> Your data is transferred from Nigeria to the United States (Railway infrastructure).
@@ -107,7 +107,7 @@ export default function PrivacyPage() {
               <li>Inactive accounts: if you don&apos;t use the bot for 24 consecutive months, we delete your personal identifiers (Telegram ID, name, username) automatically.</li>
               <li>Deletion requests: we remove your personal information within 14 days of your request.</li>
               <li>Payment records: subscription/payment references are kept for 7 years to meet Nigerian financial record-keeping requirements.</li>
-              <li>Quiz and practice history may be retained in anonymised, aggregated form indefinitely for analytics — this data cannot be linked back to you once anonymised.</li>
+              <li>Quiz and practice history may be retained in anonymised, aggregated form indefinitely for analytics: this data cannot be linked back to you once anonymised.</li>
             </ul>
           </section>
 
@@ -131,11 +131,11 @@ export default function PrivacyPage() {
             <h2>7. Third-Party Services &amp; Data Processors</h2>
             <p>We share data with the following processors only to the extent necessary to deliver the service:</p>
             <ul>
-              <li><strong>Telegram</strong> — powers the chat interface. Your Telegram profile data (user ID, name, username) is provided by Telegram when you use the bot. Subject to <a href="https://telegram.org/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Telegram&apos;s Privacy Policy</a>.</li>
-              <li><strong>Paystack</strong> — processes subscription payments. We share only a payment reference; we never store or transmit your card details.</li>
-              <li><strong>Railway</strong> — hosts our database and backend infrastructure in the US. Data is transferred from Nigeria to the US under contractual safeguards.</li>
-              <li><strong>Anthropic</strong> — when an admin generates an AI explanation for a question, the question text and answer options (no personal data) are sent to Anthropic&apos;s API. No user identifiers are included in these requests. Subject to <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Anthropic&apos;s Privacy Policy</a>.</li>
-              <li><strong>Zoho Mail</strong> — used to send support email responses. Only your name and Telegram ID are included when you submit a support request.</li>
+              <li><strong>Telegram</strong>: powers the chat interface. Your Telegram profile data (user ID, name, username) is provided by Telegram when you use the bot. Subject to <a href="https://telegram.org/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Telegram&apos;s Privacy Policy</a>.</li>
+              <li><strong>Paystack</strong>: processes subscription payments. We share only a payment reference; we never store or transmit your card details.</li>
+              <li><strong>Railway</strong>: hosts our database and backend infrastructure in the US. Data is transferred from Nigeria to the US under contractual safeguards.</li>
+              <li><strong>Anthropic</strong>: when an admin generates an AI explanation for a question, the question text and answer options (no personal data) are sent to Anthropic&apos;s API. No user identifiers are included in these requests. Subject to <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Anthropic&apos;s Privacy Policy</a>.</li>
+              <li><strong>Zoho Mail</strong>: used to send support email responses. Only your name and Telegram ID are included when you submit a support request.</li>
             </ul>
             <p className="mt-3">We do not sell your data to any third party and do not use your data for advertising.</p>
           </section>
@@ -144,12 +144,12 @@ export default function PrivacyPage() {
             <h2>8. Your Rights</h2>
             <p>Under the Nigeria Data Protection Act 2023, you have the right to:</p>
             <ul>
-              <li><strong>Access</strong> — request a copy of the personal data we hold about you</li>
-              <li><strong>Correction</strong> — ask us to fix inaccurate or incomplete data</li>
-              <li><strong>Deletion</strong> — request erasure of your account and personal data</li>
-              <li><strong>Portability</strong> — receive your data in a structured, machine-readable format</li>
-              <li><strong>Object</strong> — object to processing based on legitimate interest</li>
-              <li><strong>Withdraw consent</strong> — turn off notifications or remove your phone number at any time via Settings in the bot, without affecting your ability to use the service</li>
+              <li><strong>Access</strong>: request a copy of the personal data we hold about you</li>
+              <li><strong>Correction</strong>: ask us to fix inaccurate or incomplete data</li>
+              <li><strong>Deletion</strong>: request erasure of your account and personal data</li>
+              <li><strong>Portability</strong>: receive your data in a structured, machine-readable format</li>
+              <li><strong>Object</strong>: object to processing based on legitimate interest</li>
+              <li><strong>Withdraw consent</strong>: turn off notifications or remove your phone number at any time via Settings in the bot, without affecting your ability to use the service</li>
             </ul>
             <p className="mt-3">
               To exercise any of these rights, email us at{" "}

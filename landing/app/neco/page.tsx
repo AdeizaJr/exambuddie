@@ -4,9 +4,9 @@ import { Nav } from "../components/Nav";
 const BOT_URL_NECO = "https://t.me/ExamBuddieBot?start=from_neco";
 
 export const metadata: Metadata = {
-  title: "NECO Past Questions 2010–2025 — Practice on Telegram | ExamBuddie",
+  title: "NECO Past Questions 2010–2025: Practice on Telegram | ExamBuddie",
   description:
-    "Practice 5,000+ real NECO past questions across all major subjects. Instant AI explanations, timed mock exams, and progress tracking — free to start on Telegram.",
+    "Practice 5,000+ real NECO past questions across all major subjects. Instant AI explanations, timed mock exams, and progress tracking. Free to start on Telegram.",
   keywords: [
     "NECO past questions",
     "NECO practice questions",
@@ -24,17 +24,17 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/neco" },
   openGraph: {
-    title: "NECO Past Questions — Practice Free on Telegram | ExamBuddie",
+    title: "NECO Past Questions: Practice Free on Telegram | ExamBuddie",
     description:
-      "5,000+ real NECO past questions with instant AI explanations. Timed mock exams, weak-topic drill mode — all inside Telegram.",
+      "5,000+ real NECO past questions with instant AI explanations. Timed mock exams, weak-topic drill mode. All inside Telegram.",
     type: "website",
     url: "https://exambuddie.app/neco",
     siteName: "ExamBuddie",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "ExamBuddie — NECO Past Questions on Telegram" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "ExamBuddie: NECO Past Questions on Telegram" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "NECO Past Questions — Practice Free on Telegram | ExamBuddie",
+    title: "NECO Past Questions: Practice Free on Telegram | ExamBuddie",
     description: "5,000+ real NECO past questions with instant AI explanations. Free to start.",
     images: ["/opengraph-image"],
   },
@@ -58,7 +58,7 @@ const necoSubjects = [
 const necoJsonLd = {
   "@context": "https://schema.org",
   "@type": "Course",
-  name: "NECO Past Questions Practice — ExamBuddie",
+  name: "NECO Past Questions Practice: ExamBuddie",
   description: "Practice real NECO past questions from 2010 to 2025 across all major subjects with instant AI explanations and progress tracking.",
   provider: {
     "@type": "Organization",
@@ -67,7 +67,7 @@ const necoJsonLd = {
   },
   url: "https://exambuddie.app/neco",
   educationalLevel: "Secondary School",
-  teaches: "NECO SSCE exam preparation — Mathematics, English, Sciences, Humanities",
+  teaches: "NECO SSCE exam preparation: Mathematics, English, Sciences, Humanities",
   datePublished: "2024-01-01",
   dateModified: "2026-06-01",
   inLanguage: "en-NG",
@@ -94,7 +94,7 @@ export default function NecoPage() {
       <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
-            📝 NECO Past Questions — Nigeria
+            📝 NECO Past Questions · Nigeria
           </div>
           <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
             NECO Past Questions
@@ -144,14 +144,14 @@ export default function NecoPage() {
             The smartest way to prepare for NECO
           </h2>
           <p className="mb-12 text-center text-base text-slate-600 sm:text-lg dark:text-slate-400">
-            NECO rewards students who understand patterns. ExamBuddie makes sure you&apos;ve seen — and understood — every question type that comes up.
+            NECO rewards students who understand patterns. ExamBuddie makes sure you&apos;ve seen, and understood, every question type that comes up.
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 icon: "💡",
                 title: "AI explanations after every question",
-                desc: "Understand why each answer is correct — not just what. NECO rewards understanding, and ExamBuddie builds it.",
+                desc: "Understand why each answer is correct: not just what. NECO rewards understanding, and ExamBuddie builds it.",
               },
               {
                 icon: "🎯",
@@ -161,7 +161,7 @@ export default function NecoPage() {
               {
                 icon: "📋",
                 title: "Timed mock exams",
-                desc: "Simulate real NECO exam conditions — 50 questions, 60 minutes. See your performance breakdown the moment you finish.",
+                desc: "Simulate real NECO exam conditions: 50 questions, 60 minutes. See your performance breakdown the moment you finish.",
               },
               {
                 icon: "📅",
@@ -171,7 +171,7 @@ export default function NecoPage() {
               {
                 icon: "🔁",
                 title: "Spaced repetition",
-                desc: "Wrong answers resurface at increasing intervals until you consistently get them right — the most effective revision method.",
+                desc: "Wrong answers resurface at increasing intervals until you consistently get them right: the most effective revision method.",
               },
               {
                 icon: "🔥",
