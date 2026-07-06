@@ -1,9 +1,10 @@
 // src/bot/handlers/stats.ts
 import * as db from '../../db';
 import * as fmt from '../formatter';
-import { SUBJECT_MAP, SUBJECT_EMOJI } from '../formatter';
+import { SUBJECT_MAP, SUBJECT_EMOJI, getRank } from '../formatter';
 import * as payments from '../../services/payments';
 import * as redis from '../../services/redis';
+import { renderProgressCard } from '../../services/shareCard';
 
 const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
 
@@ -44,7 +45,12 @@ export async function handleStatsFilter(ctx: any): Promise<void> {
     .sort((a: any, b: any) => a.accuracy - b.accuracy)
     .slice(0, 3);
 
-  await ctx.reply(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats), { parse_mode: 'HTML' });
+  await ctx.reply(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats), {
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [[{ text: '📤 Share Progress', callback_data: 'stats:share' }]],
+    },
+  });
 }
 
 // Called from bot.start() when user arrives via landing page deep link
@@ -398,10 +404,34 @@ export async function handleShareProgress(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Please use /start first.'); return; }
   const progress = await db.getProgressStats(user.id);
   const card = fmt.shareableProgressCard(user, progress.totalAttempts, progress.accuracy, BOT_USERNAME, progress.subjectCoverage);
-  await ctx.reply(
-    `${card}\n\n<i>Copy the text above and share it on WhatsApp or anywhere you like!</i>`,
-    { parse_mode: 'HTML' }
-  );
+  const caption = `🎉 <b>Flex your progress!</b>\n\nSave the image above and post it on Instagram/TikTok, or forward it straight to a friend.`;
+
+  try {
+    const best = (progress.subjectCoverage || [])
+      .filter(c => user.subjects?.includes(c.subject) && c.total > 0)
+      .sort((a, b) => b.seen / b.total - a.seen / a.total)[0];
+
+    const image = await renderProgressCard({
+      firstName: user.first_name,
+      streak: user.streak || 0,
+      totalAttempts: progress.totalAttempts,
+      accuracy: progress.accuracy,
+      rankLabel: getRank(progress.totalAttempts).label,
+      examType: user.exam_type,
+      targetYear: user.target_year,
+      bestSubject: best ? { name: SUBJECT_MAP[best.subject] || best.subject, pct: Math.round((best.seen / best.total) * 100) } : null,
+      joinHandle: `@${BOT_USERNAME}`,
+    });
+
+    await ctx.replyWithPhoto({ source: image }, { caption, parse_mode: 'HTML' });
+  } catch (err) {
+    // Render failure (e.g. bad host font setup) — fall back to the text card so sharing still works
+    console.error('[stats] progress card render failed:', (err as Error).message);
+    await ctx.reply(
+      `${card}\n\n<i>Copy the text above and share it on WhatsApp or anywhere you like!</i>`,
+      { parse_mode: 'HTML' }
+    );
+  }
 }
 
 export async function handleWeeklyReport(ctx: any): Promise<void> {
