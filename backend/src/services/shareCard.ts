@@ -3,32 +3,60 @@
 // gives users something worth reposting. SVG -> PNG via sharp (bundled libvips/librsvg,
 // no external deps or headless browser needed).
 //
-// Flame/medal/target are drawn as vector paths rather than emoji glyphs, and the
-// font is embedded straight into the SVG rather than referenced by family name.
-// sharp bundles its own libvips/librsvg/fontconfig, but NOT any actual font files —
-// those still have to exist on the host filesystem for fontconfig to find, and a
-// stripped prod container may have none at all. When that happens every <text>
-// element (not just emoji) renders as blank tofu boxes. Embedding the font as a
-// base64 @font-face data URI makes this render identically regardless of what,
-// if anything, is installed on the host.
+// All text is converted to vector path outlines via opentype.js rather than left as
+// <text> elements. sharp bundles its own libvips/librsvg, but text rendering inside
+// librsvg goes through Pango + fontconfig, which needs a font *registered on the
+// host* to shape glyphs — bundling the font as a base64 @font-face data URI still
+// isn't enough, because Pango's font matching doesn't consult inline @font-face
+// declarations the way a browser does. On a prod container with zero installed
+// fonts, every <text> element renders as blank tofu boxes regardless. Converting
+// each string to its own glyph outlines (the same category as the hand-drawn
+// flame/medal/target icons below, which always rendered fine) sidesteps font
+// resolution entirely — there's nothing left for Pango/fontconfig to get wrong.
 import sharp from 'sharp';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as opentype from 'opentype.js';
 import { streakBadge } from '../bot/formatter';
 
-const FONT_FAMILY = 'EBCardSans';
-let fontFaceCss: string | null = null;
+let regularFont: opentype.Font | null = null;
+let boldFont: opentype.Font | null = null;
 
-function getFontFaceCss(): string {
-  if (fontFaceCss) return fontFaceCss;
+// opentype.loadSync() silently returns undefined (deprecated) — read the file
+// ourselves and parse the buffer instead.
+function loadFont(file: string): opentype.Font {
   const dir = path.join(process.cwd(), 'assets/fonts');
-  const regular = fs.readFileSync(path.join(dir, 'DejaVuSans.ttf')).toString('base64');
-  const bold = fs.readFileSync(path.join(dir, 'DejaVuSans-Bold.ttf')).toString('base64');
-  fontFaceCss = `<style>
-    @font-face { font-family: '${FONT_FAMILY}'; src: url(data:font/ttf;base64,${regular}) format('truetype'); }
-    @font-face { font-family: '${FONT_FAMILY}'; font-weight: bold; src: url(data:font/ttf;base64,${bold}) format('truetype'); }
-  </style>`;
-  return fontFaceCss;
+  const buf = fs.readFileSync(path.join(dir, file));
+  return opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
+}
+
+function getFonts(): { regular: opentype.Font; bold: opentype.Font } {
+  if (!regularFont || !boldFont) {
+    regularFont = loadFont('LiberationSans-Regular.ttf');
+    boldFont = loadFont('LiberationSans-Bold.ttf');
+  }
+  return { regular: regularFont, bold: boldFont };
+}
+
+type Anchor = 'start' | 'middle' | 'end';
+
+// Renders text as an SVG <path> of glyph outlines instead of a <text> element —
+// no font lookup happens at rasterization time, so it can't fail on a fontless host.
+function textPath(
+  text: string,
+  x: number,
+  y: number,
+  fontSize: number,
+  fill: string,
+  opts: { bold?: boolean; anchor?: Anchor } = {}
+): string {
+  const { regular, bold } = getFonts();
+  const font = opts.bold ? bold : regular;
+  const anchor = opts.anchor || 'start';
+  const width = font.getAdvanceWidth(text, fontSize);
+  const startX = anchor === 'middle' ? x - width / 2 : anchor === 'end' ? x - width : x;
+  const p = font.getPath(text, startX, y, fontSize);
+  return `<path d="${p.toPathData(2)}" fill="${fill}"/>`;
 }
 
 export interface ShareCardData {
@@ -41,15 +69,6 @@ export interface ShareCardData {
   targetYear: number | null;
   bestSubject: { name: string; pct: number } | null;
   joinHandle: string;
-}
-
-function esc(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
 }
 
 // <50% red, 50-70% amber, >70% green — same thresholds as the landing page demo.
@@ -95,8 +114,8 @@ function statTile(x: number, w: number, value: string, label: string, valueColor
   const cx = x + w / 2;
   return `
   <rect x="${x}" y="668" width="${w}" height="150" rx="20" fill="#0b1220" stroke="#1e293b" stroke-width="2"/>
-  <text x="${cx}" y="740" font-family="EBCardSans" font-size="56" font-weight="700" fill="${valueColor}" text-anchor="middle">${value}</text>
-  <text x="${cx}" y="782" font-family="EBCardSans" font-size="26" fill="#94a3b8" text-anchor="middle">${label}</text>`;
+  ${value ? textPath(value, cx, 740, 56, valueColor, { bold: true, anchor: 'middle' }) : ''}
+  ${label ? textPath(label, cx, 782, 26, '#94a3b8', { anchor: 'middle' }) : ''}`;
 }
 
 export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
@@ -108,17 +127,17 @@ export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
   const badge = streakBadge(data.streak).replace(/^\S+\s*/, '');
   const accColor = accuracyColor(data.accuracy);
   const examLine = data.examType && data.targetYear ? `${data.examType} ${data.targetYear}` : '';
-  const subjectLine = data.bestSubject ? `${esc(data.bestSubject.name)}: ${data.bestSubject.pct}% covered` : '';
+  const subjectLine = data.bestSubject ? `${data.bestSubject.name}: ${data.bestSubject.pct}% covered` : '';
 
   const colW = 300;
   const gap = 30;
   const totalW = colW * 3 + gap * 2;
   const startX = (W - totalW) / 2;
+  const col3Cx = startX + (colW + gap) * 2 + colW / 2;
 
   const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
   <defs>
-    ${getFontFaceCss()}
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#111a2e"/>
       <stop offset="100%" stop-color="#020617"/>
@@ -144,28 +163,28 @@ export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
   <rect width="${W}" height="${H}" fill="url(#bg)"/>
   <rect width="${W}" height="10" fill="url(#topBar)"/>
 
-  <text x="60" y="110" font-family="EBCardSans" font-size="34" font-weight="600" fill="#94a3b8">${esc(data.firstName)} · ExamBuddie</text>
+  ${textPath(`${data.firstName} · ExamBuddie`, 60, 110, 34, '#94a3b8', { bold: true })}
 
   ${flameIcon(400, 320, 200)}
-  <text x="620" y="360" font-family="EBCardSans" font-size="170" font-weight="700" fill="#f8fafc" text-anchor="middle">${data.streak}</text>
-  <text x="${W / 2}" y="440" font-family="EBCardSans" font-size="38" fill="#94a3b8" text-anchor="middle">day streak</text>
+  ${textPath(String(data.streak), 620, 360, 170, '#f8fafc', { bold: true, anchor: 'middle' })}
+  ${textPath('day streak', W / 2, 440, 38, '#94a3b8', { anchor: 'middle' })}
 
-  <text x="${W / 2}" y="520" font-family="EBCardSans" font-size="46" font-weight="700" fill="#22c55e" text-anchor="middle">${esc(badge)}</text>
+  ${textPath(badge, W / 2, 520, 46, '#22c55e', { bold: true, anchor: 'middle' })}
 
   ${statTile(startX, colW, data.totalAttempts.toLocaleString(), 'Questions', '#f8fafc')}
   ${statTile(startX + colW + gap, colW, `${data.accuracy}%`, 'Accuracy', accColor)}
   ${statTile(startX + (colW + gap) * 2, colW, '', '', '#f8fafc')}
-  ${medalIcon(startX + (colW + gap) * 2 + colW / 2, 700, 90)}
-  <text x="${startX + (colW + gap) * 2 + colW / 2}" y="782" font-family="EBCardSans" font-size="24" fill="#94a3b8" text-anchor="middle">${esc(data.rankLabel)}</text>
+  ${medalIcon(col3Cx, 700, 90)}
+  ${textPath(data.rankLabel, col3Cx, 782, 24, '#94a3b8', { anchor: 'middle' })}
 
   <line x1="80" y1="870" x2="${W - 80}" y2="870" stroke="#1e293b" stroke-width="2"/>
 
-  ${examLine ? `${targetIcon(390, 942, 44)}<text x="425" y="954" font-family="EBCardSans" font-size="42" fill="#f8fafc">${esc(examLine)}</text>` : ''}
-  ${subjectLine ? `<text x="${W / 2}" y="1020" font-family="EBCardSans" font-size="34" fill="#94a3b8" text-anchor="middle">${subjectLine}</text>` : ''}
+  ${examLine ? `${targetIcon(390, 942, 44)}${textPath(examLine, 425, 954, 42, '#f8fafc')}` : ''}
+  ${subjectLine ? textPath(subjectLine, W / 2, 1020, 34, '#94a3b8', { anchor: 'middle' }) : ''}
 
   <rect x="0" y="1180" width="${W}" height="170" fill="#16a34a"/>
-  <text x="${W / 2}" y="1250" font-family="EBCardSans" font-size="38" font-weight="700" fill="#052e16" text-anchor="middle">Studying smarter for WAEC / JAMB / NECO</text>
-  <text x="${W / 2}" y="1310" font-family="EBCardSans" font-size="34" fill="#052e16" text-anchor="middle">Join me → ${esc(data.joinHandle)}</text>
+  ${textPath('Studying smarter for WAEC / JAMB / NECO', W / 2, 1250, 38, '#052e16', { bold: true, anchor: 'middle' })}
+  ${textPath(`Join me → ${data.joinHandle}`, W / 2, 1310, 34, '#052e16', { anchor: 'middle' })}
 </svg>`;
 
   return sharp(Buffer.from(svg)).png().toBuffer();
