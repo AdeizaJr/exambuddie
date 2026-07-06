@@ -421,6 +421,18 @@ export default function createServer(bot: any) {
     res.json({ ok: true });
   });
 
+  // ── GET /api/admin/alerts ────────────────────────────────────────────────────
+  app.get('/api/admin/alerts', adminAuth, async (_req: Request, res: Response) => {
+    const rows = await db.getUnresolvedAlerts();
+    res.json(rows);
+  });
+
+  // ── POST /api/admin/alerts/:id/resolve ──────────────────────────────────────
+  app.post('/api/admin/alerts/:id/resolve', adminAuth, async (req: Request, res: Response) => {
+    await db.resolveAlert(Number(req.params.id));
+    res.json({ ok: true });
+  });
+
   // ── GET /api/admin/questions ────────────────────────────────────────────────
   app.get('/api/admin/questions', adminAuth, async (req: Request, res: Response) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);

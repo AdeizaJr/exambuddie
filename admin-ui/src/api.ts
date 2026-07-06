@@ -1,6 +1,7 @@
 import type {
   Stats,
   Flag,
+  SystemAlert,
   Question,
   User,
   UserActivity,
@@ -126,6 +127,14 @@ export async function resolveFlag(
   question_text?: string
 ): Promise<{ ok: boolean }> {
   return req<{ ok: boolean }>("POST", `/flags/${id}/resolve`, { explanation, question_text });
+}
+
+export async function getAlerts(): Promise<SystemAlert[]> {
+  return cachedReq<SystemAlert[]>("/alerts", undefined, 30_000);
+}
+
+export async function resolveAlert(id: number): Promise<{ ok: boolean }> {
+  return req<{ ok: boolean }>("POST", `/alerts/${id}/resolve`);
 }
 
 export interface QuestionsFilter {
