@@ -143,7 +143,7 @@ If `API_URL` is unset, the pricing section and Terms page fall back to hardcoded
 | `/revision` | Practise only questions you previously got wrong |
 | `/bookmarks` | View and practise your saved questions |
 | `/formula` | Quick-access formula sheets (Physics, Chemistry, Maths, Further Maths, Biology, Economics, Government) |
-| `/timetable` | 2026 exam timetable with countdown per subject (WAEC/NECO/JAMB) |
+| `/timetable` | Exam timetable with countdown per subject (WAEC/NECO/JAMB) — each subject auto-rolls to next year once its sitting has passed |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
 | `/invite` | Referral link — invite 2 friends → 3 days Premium free |
 | `/leaderboard` | Weekly accuracy leaderboard (top 10) with rank badges + last week's results |

@@ -41,11 +41,27 @@ export const NECO_2026: Record<string, string> = {
 // JAMB UTME: single unified exam date (all subjects same day)
 export const JAMB_2026 = '2026-04-14';
 
+// Re-stamps a 'YYYY-MM-DD' date onto a different year, keeping month/day.
+export function withYear(iso: string, year: number): string {
+  return `${year}${iso.slice(4)}`;
+}
+
+// This year's sitting if it hasn't happened yet, otherwise next year's — each subject
+// rolls forward independently, since a season spans ~2 months and some subjects will
+// already be written while later ones aren't (e.g. checking in mid-June: English/Math
+// are done, but Government/Agric are still ahead).
+export function nextOccurrence(iso: string): string {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const thisYear = withYear(iso, now.getFullYear());
+  return new Date(thisYear) < now ? withYear(iso, now.getFullYear() + 1) : thisYear;
+}
+
 export function getExamDate(examType: string, subject: string): Date | null {
-  if (examType === 'JAMB') return new Date(JAMB_2026);
+  if (examType === 'JAMB') return new Date(nextOccurrence(JAMB_2026));
   const map = examType === 'NECO' ? NECO_2026 : WAEC_2026;
   const iso = map[subject];
-  return iso ? new Date(iso) : null;
+  return iso ? new Date(nextOccurrence(iso)) : null;
 }
 
 function daysUntil(date: Date): number {
@@ -65,7 +81,7 @@ function urgencyLabel(days: number): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-NG', { weekday: 'short', day: 'numeric', month: 'short' });
+  return new Date(iso).toLocaleDateString('en-NG', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export async function handleTimetable(ctx: any): Promise<void> {
@@ -81,17 +97,19 @@ export async function handleTimetable(ctx: any): Promise<void> {
     return;
   }
 
-  const year = 2026;
-  let text = `📅 <b>${examType} ${year} Timetable</b>\n`;
+  let text = `📅 <b>${examType} Timetable</b>\n`;
   text += `<i>(Approximate dates — verify with official WAEC/JAMB/NECO site)</i>\n\n`;
 
   if (examType === 'JAMB') {
-    const date = new Date(JAMB_2026);
-    const days = daysUntil(date);
-    text += `🎯 <b>JAMB UTME:</b> ${formatDate(JAMB_2026)} — <b>${urgencyLabel(days)}</b>\n`;
+    const jambIso = nextOccurrence(JAMB_2026);
+    const days = daysUntil(new Date(jambIso));
+    text += `🎯 <b>JAMB UTME:</b> ${formatDate(jambIso)} — <b>${urgencyLabel(days)}</b>\n`;
     text += `\n<i>JAMB CBT tests all your subjects on the same day.</i>`;
   } else {
-    const timetable = examType === 'NECO' ? NECO_2026 : WAEC_2026;
+    const baseTimetable = examType === 'NECO' ? NECO_2026 : WAEC_2026;
+    const timetable = Object.fromEntries(
+      Object.entries(baseTimetable).map(([s, iso]) => [s, nextOccurrence(iso)])
+    );
 
     // User's subjects first, sorted by date
     const userSubjectEntries = subjects
@@ -118,7 +136,6 @@ export async function handleTimetable(ctx: any): Promise<void> {
       text += `\n<b>Other Subjects:</b>\n`;
       for (const [s, iso] of otherEntries) {
         const days = daysUntil(new Date(iso));
-        if (days < 0) continue; // skip past dates in "other" section
         const emoji = SUBJECT_EMOJI[s] || '📖';
         const name = SUBJECT_MAP[s] || s;
         text += `${emoji} ${name}: ${formatDate(iso)} — ${urgencyLabel(days)}\n`;

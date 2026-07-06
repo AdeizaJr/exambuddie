@@ -130,6 +130,40 @@ export default function startCrons(bot: any): void {
     }
   });
 
+  // ── Daily 9am UTC (10am WAT) — nudge new users stuck at zero attempts ──────
+  // One-shot: activation_nudge_sent_at gates re-sends, so the >20h window doesn't
+  // need to be exact — a user only ever gets this once regardless of when the
+  // daily run catches them.
+  cron.schedule('0 9 * * *', async () => {
+    const { rows } = await db.query(
+      `SELECT telegram_id, first_name FROM users u
+       WHERE joined_at < NOW() - INTERVAL '20 hours'
+         AND activation_nudge_sent_at IS NULL
+         AND notifications_enabled = TRUE
+         AND NOT EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)`
+    );
+
+    for (const user of rows) {
+      try {
+        await bot.telegram.sendMessage(
+          user.telegram_id,
+          `👋 <b>Hey ${user.first_name}!</b>\n\nYou joined ExamBuddie but haven't answered your first question yet. It only takes 30 seconds — tap below and give one a shot 👇`,
+          {
+            parse_mode: 'HTML',
+            reply_markup: { inline_keyboard: [[{ text: '📚 Try a Question', callback_data: 'practice:pick' }]] },
+          }
+        );
+      } catch { /* user blocked or unavailable */ }
+    }
+    if (rows.length > 0) {
+      await db.query(
+        `UPDATE users SET activation_nudge_sent_at = NOW() WHERE telegram_id = ANY($1)`,
+        [rows.map((u: any) => u.telegram_id)]
+      );
+      console.log(`[CRON] Sent activation nudge to ${rows.length} stalled new users`);
+    }
+  });
+
   // ── Sunday 22:55 UTC (23:55 WAT) — snapshot leaderboard before weekly reset ──
   cron.schedule('55 22 * * 0', async () => {
     console.log('[CRON] Snapshotting weekly leaderboard...');
@@ -537,8 +571,10 @@ ${streakLine} → /practice`;
   });
 
   // ── Daily 7am WAT (6am UTC) — Exam timetable reminders (1, 3, 7 days out) ──
+  // Each subject rolls to next year on its own once this year's sitting has passed
+  // (nextOccurrence) — no dependency on the user's stored target_year.
   cron.schedule('5 6 * * *', async () => {
-    const { WAEC_2026, NECO_2026, JAMB_2026 } = await import('../bot/handlers/timetable');
+    const { WAEC_2026, NECO_2026, JAMB_2026, nextOccurrence } = await import('../bot/handlers/timetable');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -550,23 +586,6 @@ ${streakLine} → /practice`;
 
     const MILESTONES = [1, 3, 7];
 
-    // Subjects with exam exactly on a milestone day for each exam type
-    const waecDue: { subject: string; days: number }[] = [];
-    const necoDue: { subject: string; days: number }[] = [];
-
-    for (const [subject, iso] of Object.entries(WAEC_2026)) {
-      const d = daysUntil(iso);
-      if (MILESTONES.includes(d)) waecDue.push({ subject, days: d });
-    }
-    for (const [subject, iso] of Object.entries(NECO_2026)) {
-      const d = daysUntil(iso);
-      if (MILESTONES.includes(d)) necoDue.push({ subject, days: d });
-    }
-    const jambDays = daysUntil(JAMB_2026);
-    const jambDue = MILESTONES.includes(jambDays);
-
-    if (waecDue.length === 0 && necoDue.length === 0 && !jambDue) return;
-
     const { rows: users } = await db.query(
       `SELECT telegram_id, first_name, exam_type, subjects FROM users
        WHERE notifications_enabled = TRUE AND exam_type IS NOT NULL`
@@ -576,20 +595,20 @@ ${streakLine} → /practice`;
     for (const user of users) {
       try {
         const userSubjects: string[] = user.subjects || [];
-        let reminders: string[] = [];
+        const reminders: string[] = [];
 
-        if (user.exam_type === 'JAMB' && jambDue) {
-          reminders.push(`🎯 <b>JAMB UTME</b> is in <b>${jambDays} day${jambDays !== 1 ? 's' : ''}!</b>`);
-        } else if (user.exam_type === 'WAEC') {
-          for (const { subject, days } of waecDue) {
-            if (userSubjects.includes(subject)) {
-              const name = SUBJECT_MAP[subject] || subject;
-              reminders.push(`${SUBJECT_EMOJI[subject] || '📖'} <b>${name}</b> in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
-            }
+        if (user.exam_type === 'JAMB') {
+          const days = daysUntil(nextOccurrence(JAMB_2026));
+          if (MILESTONES.includes(days)) {
+            reminders.push(`🎯 <b>JAMB UTME</b> is in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
           }
-        } else if (user.exam_type === 'NECO') {
-          for (const { subject, days } of necoDue) {
-            if (userSubjects.includes(subject)) {
+        } else {
+          const table = user.exam_type === 'NECO' ? NECO_2026 : WAEC_2026;
+          for (const subject of userSubjects) {
+            const iso = table[subject];
+            if (!iso) continue;
+            const days = daysUntil(nextOccurrence(iso));
+            if (MILESTONES.includes(days)) {
               const name = SUBJECT_MAP[subject] || subject;
               reminders.push(`${SUBJECT_EMOJI[subject] || '📖'} <b>${name}</b> in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
             }

@@ -1050,17 +1050,33 @@ export function helpMessage(): string {
 
 <b>📋 CBT Mode</b>
 /quiz — 50-question timed CBT exam (60 mins), scored at the end
+/mock — Full timed mock exam across your subjects (Premium)
 <i>Best for simulating real exam conditions</i>
 
 <b>🎯 Drill Mode</b>
 /drill — Focus on a specific weak topic
+/review — Spaced-repetition review deck (Premium)
 <i>Best for fixing gaps after you see your stats</i>
 
 <b>📊 Account</b>
 /stats — Your accuracy, streak, and subject breakdown
+/progress — Full progress report, sharable as an image
+/timetable — Countdown to your exam dates
 /settings — Change exam type, subjects, or target year
 /subscribe — Unlock unlimited questions with Premium
 /billing — Manage or cancel auto-renewing Premium
+
+<b>🏆 Social</b>
+/leaderboard — See how you rank against other users
+/challenge — Race friends in a live quiz room
+/invite — Get 3 days Premium free for 2 confirmed referrals
+/badges — Your achievements
+
+<b>🛠 Extras</b>
+/revision — Quick-fire revision of past questions
+/bookmarks — Questions you've saved for later
+/formula — Look up a subject's key formulas
+/app — Open the ExamBuddie web app
 
 <b>⏹ Other</b>
 /stop — End your current session
@@ -1323,7 +1339,7 @@ export function progressMessage(
 💳 Plan: ${plan}`;
 }
 
-function streakBadge(streak: number): string {
+export function streakBadge(streak: number): string {
   if (streak >= 90) return '🏆 LEGEND';
   if (streak >= 60) return '🥇 EXAM READY';
   if (streak >= 30) return '🥈 MONTHLY GRINDER';

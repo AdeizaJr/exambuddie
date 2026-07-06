@@ -519,6 +519,9 @@ WHERE id = 116125`,
     created_at TIMESTAMPTZ DEFAULT NOW()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_system_alerts_unresolved ON system_alerts(resolved, created_at DESC)`,
+
+  // ── Activation nudge (one-time DM if a new user never answers a question) ──
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS activation_nudge_sent_at TIMESTAMPTZ DEFAULT NULL`,
 ];
 
 async function migrate(): Promise<void> {
