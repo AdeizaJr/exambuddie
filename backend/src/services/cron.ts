@@ -10,6 +10,33 @@ import * as fmt from '../bot/formatter';
 import { SUBJECT_MAP, SUBJECT_EMOJI, examCountdown } from '../bot/formatter';
 import { endExpiredRoom } from '../bot/handlers/challenge';
 
+// Picks a question from one of the user's own weak topics (accuracy < 100% over
+// the last 7 days, >=2 attempts — same bar as db.getWeakTopicsAllSubjects). Returns
+// null if the user has no qualifying weak topic yet, or no matching question exists.
+async function pickWeakTopicQuestion(
+  userId: number,
+  subjects: string[],
+  examType: string | null
+): Promise<number | null> {
+  if (!subjects.length) return null;
+  const weakTopics = await db.getWeakTopicsAllSubjects(userId, subjects);
+  if (!weakTopics.length) return null;
+
+  const { subject, topic } = weakTopics[Math.floor(Math.random() * weakTopics.length)];
+  const examClause = examType ? 'AND q.exam_type = $3' : '';
+  const params: any[] = examType ? [subject, topic, examType] : [subject, topic];
+  const { rows } = await db.query(
+    `SELECT q.id FROM questions q
+     WHERE q.is_active = TRUE
+       AND q.subject = $1 AND q.topic = $2
+       AND q.explanation IS NOT NULL AND length(q.explanation) > 20
+       ${examClause}
+     ORDER BY RANDOM() LIMIT 1`,
+    params
+  );
+  return rows[0]?.id ?? null;
+}
+
 export default function startCrons(bot: any): void {
   // ── Every 15s — manage challenge rooms ────────────────────────────────────
   setInterval(async () => {
@@ -428,25 +455,37 @@ ${streakLine} → /practice`;
     }
 
     const { rows: users } = await db.query(
-      `SELECT telegram_id, first_name, exam_type FROM users
+      `SELECT id, telegram_id, first_name, exam_type, subjects FROM users
        WHERE notifications_enabled = TRUE
          AND exam_type IS NOT NULL`
     );
 
     let sent = 0;
+    let personalized = 0;
     const BATCH_SIZE = 25;
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
-        const qotdKey = ['ALL', 'BOTH'].includes(user.exam_type) ? 'ALL' : user.exam_type;
-        const q = qotdMap[qotdKey];
+        const bucketKey = ['ALL', 'BOTH'].includes(user.exam_type) ? 'ALL' : user.exam_type;
+        const examTypeFilter = bucketKey === 'ALL' ? null : user.exam_type;
+
+        // Try a question from one of the user's own weak topics (last 7 days of
+        // attempts) before falling back to the shared per-exam-type pick — new
+        // users or ones without enough attempt history won't have any yet.
+        let personalizedQId: number | null = await redis.getQOTDQuestion(date, `user:${user.telegram_id}`);
+        if (!personalizedQId) {
+          personalizedQId = await pickWeakTopicQuestion(user.id, user.subjects || [], examTypeFilter);
+          if (personalizedQId) await redis.setQOTDQuestion(date, `user:${user.telegram_id}`, personalizedQId);
+        }
+
+        const q = personalizedQId ? await db.getQuestionById(personalizedQId) : qotdMap[bucketKey];
         if (!q) return;
 
         // Skip if user already answered today's QOTD
         if (await redis.getQOTDAnswered(user.telegram_id, date)) return;
 
         const subjectLabel = fmt.SUBJECT_MAP[q.subject] || q.subject;
-        const msgText = `📅 <b>Question of the Day</b> — ${subjectLabel}\n\n`
+        const msgText = `📅 <b>Question of the Day</b>${personalizedQId ? ' — Your Weak Spot' : ''} — ${subjectLabel}\n\n`
           + fmt.formatQuestion(q, 1, 1, 'qotd')
           + fmt.answerOptions(q);
 
@@ -474,11 +513,12 @@ ${streakLine} → /practice`;
             });
           }
           sent++;
+          if (personalizedQId) personalized++;
         } catch { /* blocked or unavailable */ }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
-    console.log(`[CRON] QOTD sent to ${sent}/${users.length} users`);
+    console.log(`[CRON] QOTD sent to ${sent}/${users.length} users (${personalized} personalized)`);
   });
 
   // ── Daily 7am WAT (6am UTC) — Exam timetable reminders (1, 3, 7 days out) ──
