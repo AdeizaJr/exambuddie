@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Users, Star, PenLine, Flag, RefreshCw, TrendingUp } from "lucide-react";
-import { getStats, getUsers, getGrowthAnalytics } from "../api";
+import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp } from "lucide-react";
+import { getStats, getUsers, getGrowthAnalytics, getAlerts } from "../api";
 import type { Stats, User, GrowthAnalytics } from "../types";
 import StatCard from "../components/StatCard";
 import Badge from "../components/Badge";
@@ -54,6 +54,7 @@ export default function Overview() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentUsers, setRecentUsers] = useState<User[]>([]);
   const [growth, setGrowth] = useState<GrowthAnalytics | null>(null);
+  const [activeAlerts, setActiveAlerts] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,14 +63,16 @@ export default function Overview() {
   const load = useCallback(async (manual = false) => {
     if (manual) setRefreshing(true);
     try {
-      const [s, u, g] = await Promise.all([
+      const [s, u, g, a] = await Promise.all([
         getStats(),
         getUsers({ page: 1, limit: 8 }),
         getGrowthAnalytics(),
+        getAlerts(),
       ]);
       setStats(s);
       setRecentUsers(u.data);
       setGrowth(g);
+      setActiveAlerts(a.length);
       setLastRefresh(new Date());
       setError(null);
     } catch (e: unknown) {
@@ -133,6 +136,7 @@ export default function Overview() {
           <StatCard label="Premium Users" value={stats.premium_users} sub={`${premiumPct}% of total`} icon={<Star size={18} />} accent trend="up" />
           <StatCard label="Attempts Today" value={stats.attempts_today} sub={`${stats.total_attempts.toLocaleString()} total`} icon={<PenLine size={18} />} />
           <StatCard label="Pending Flags" value={stats.pending_flags} sub={`${stats.total_questions.toLocaleString()} questions`} icon={<Flag size={18} />} />
+          <StatCard label="Active Alerts" value={activeAlerts} sub={activeAlerts > 0 ? "needs attention" : "all clear"} icon={<Bell size={18} />} trend={activeAlerts > 0 ? "down" : "neutral"} />
         </div>
       )}
 

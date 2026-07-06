@@ -462,6 +462,7 @@ ${streakLine} → /practice`;
 
     let sent = 0;
     let personalized = 0;
+    let noQuestion = 0;
     const BATCH_SIZE = 25;
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
@@ -479,7 +480,7 @@ ${streakLine} → /practice`;
         }
 
         const q = personalizedQId ? await db.getQuestionById(personalizedQId) : qotdMap[bucketKey];
-        if (!q) return;
+        if (!q) { noQuestion++; return; }
 
         // Skip if user already answered today's QOTD
         if (await redis.getQOTDAnswered(user.telegram_id, date)) return;
@@ -519,6 +520,20 @@ ${streakLine} → /practice`;
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
     console.log(`[CRON] QOTD sent to ${sent}/${users.length} users (${personalized} personalized)`);
+
+    if (users.length > 0 && sent === 0) {
+      await db.createAlert(
+        'qotd_cron',
+        `QOTD sent to 0/${users.length} eligible users — check bot connectivity or candidate-question availability.`,
+        'critical'
+      );
+    } else if (noQuestion > 0) {
+      await db.createAlert(
+        'qotd_cron',
+        `QOTD: ${noQuestion}/${users.length} eligible user(s) had no matching question (no personalized pick and no shared fallback for their exam type).`,
+        'warning'
+      );
+    }
   });
 
   // ── Daily 7am WAT (6am UTC) — Exam timetable reminders (1, 3, 7 days out) ──

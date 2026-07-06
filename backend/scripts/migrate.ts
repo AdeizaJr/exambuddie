@@ -508,6 +508,17 @@ WHERE id = 116125`,
   `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS is_recurring BOOLEAN NOT NULL DEFAULT FALSE`,
   `ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS cancelled_at TIMESTAMPTZ`,
   `CREATE INDEX IF NOT EXISTS idx_subscriptions_customer_code ON subscriptions(paystack_customer_code)`,
+
+  // ── System alerts (surfaced in admin UI — crons/jobs report failures here) ──
+  `CREATE TABLE IF NOT EXISTS system_alerts (
+    id SERIAL PRIMARY KEY,
+    severity TEXT NOT NULL DEFAULT 'warning',
+    source TEXT NOT NULL,
+    message TEXT NOT NULL,
+    resolved BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_system_alerts_unresolved ON system_alerts(resolved, created_at DESC)`,
 ];
 
 async function migrate(): Promise<void> {

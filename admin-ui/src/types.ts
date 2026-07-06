@@ -50,6 +50,15 @@ export interface Flag {
   user_telegram_id: number | null;
 }
 
+export interface SystemAlert {
+  id: number;
+  severity: "info" | "warning" | "critical";
+  source: string;
+  message: string;
+  resolved: boolean;
+  created_at: string;
+}
+
 export interface Subscription {
   id: number;
   plan: string;

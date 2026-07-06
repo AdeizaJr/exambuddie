@@ -1455,3 +1455,38 @@ export async function getUserByUsername(username: string): Promise<User | null> 
   );
   return rows[0] || null;
 }
+
+// ── System alerts (surfaced in admin UI — crons/jobs report failures here) ───
+
+export interface SystemAlert {
+  id: number;
+  severity: 'info' | 'warning' | 'critical';
+  source: string;
+  message: string;
+  resolved: boolean;
+  created_at: string;
+}
+
+export async function createAlert(
+  source: string,
+  message: string,
+  severity: 'info' | 'warning' | 'critical' = 'warning'
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO system_alerts (source, message, severity) VALUES ($1, $2, $3)`,
+    [source, message, severity]
+  );
+}
+
+export async function getUnresolvedAlerts(): Promise<SystemAlert[]> {
+  const { rows } = await pool.query<SystemAlert>(
+    `SELECT id, severity, source, message, resolved, created_at
+     FROM system_alerts WHERE resolved = false
+     ORDER BY created_at DESC LIMIT 100`
+  );
+  return rows;
+}
+
+export async function resolveAlert(id: number): Promise<void> {
+  await pool.query(`UPDATE system_alerts SET resolved = true WHERE id = $1`, [id]);
+}
