@@ -703,8 +703,6 @@ export async function handleDrill(ctx: any, topicOverride?: string): Promise<voi
   const args = ctx.message?.text?.split(' ').slice(1).join(' ');
   const topic = topicOverride || args;
 
-  const subject = user.subjects[0]; // default to first subject
-
   if (!topic) {
     await ctx.reply(
       `🎯 <b>Topic Drill</b>\n\nUsage: <code>/drill [topic]</code>\nExample: <code>/drill Algebra</code> or <code>/drill Cell Biology</code>\n\nOr tap below for your weakest topics:`,
@@ -712,7 +710,7 @@ export async function handleDrill(ctx: any, topicOverride?: string): Promise<voi
         parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: [
-            [{ text: '🔍 Auto-detect weak topics', callback_data: 'drill:auto:' + subject }],
+            [{ text: '🔍 Auto-detect weak topics', callback_data: 'drill:auto:' + user.subjects[0] }],
             [{ text: '❌ Cancel', callback_data: 'menu:main' }],
           ],
         },
@@ -721,7 +719,15 @@ export async function handleDrill(ctx: any, topicOverride?: string): Promise<voi
     return;
   }
 
-  const questions = await db.getQuestionsByTopic(user.exam_type || '', subject, topic, 10);
+  // Topic names aren't unique across subjects (e.g. "Reproduction" is Biology, not
+  // whatever the user's first subject happens to be) — try each of the user's
+  // subjects until one actually has matching questions.
+  let subject = user.subjects[0];
+  let questions: Question[] = [];
+  for (const s of user.subjects) {
+    questions = await db.getQuestionsByTopic(user.exam_type || '', s, topic, 10);
+    if (questions.length > 0) { subject = s; break; }
+  }
   if (questions.length === 0) {
     await ctx.reply(`Sorry, no questions found for this topic. Please select another topic to continue.`, {
       reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Topic', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
