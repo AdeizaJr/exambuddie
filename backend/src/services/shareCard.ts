@@ -3,12 +3,33 @@
 // gives users something worth reposting. SVG -> PNG via sharp (bundled libvips/librsvg,
 // no external deps or headless browser needed).
 //
-// Flame/medal/target are drawn as vector paths rather than emoji glyphs — emoji
-// rendering depends on the host having a color-emoji font installed, and falls back
-// to ugly flat mono glyphs when it doesn't. Hand-drawn icons render identically
-// everywhere and let us control the color deliberately.
+// Flame/medal/target are drawn as vector paths rather than emoji glyphs, and the
+// font is embedded straight into the SVG rather than referenced by family name.
+// sharp bundles its own libvips/librsvg/fontconfig, but NOT any actual font files —
+// those still have to exist on the host filesystem for fontconfig to find, and a
+// stripped prod container may have none at all. When that happens every <text>
+// element (not just emoji) renders as blank tofu boxes. Embedding the font as a
+// base64 @font-face data URI makes this render identically regardless of what,
+// if anything, is installed on the host.
 import sharp from 'sharp';
+import * as fs from 'fs';
+import * as path from 'path';
 import { streakBadge } from '../bot/formatter';
+
+const FONT_FAMILY = 'EBCardSans';
+let fontFaceCss: string | null = null;
+
+function getFontFaceCss(): string {
+  if (fontFaceCss) return fontFaceCss;
+  const dir = path.join(process.cwd(), 'assets/fonts');
+  const regular = fs.readFileSync(path.join(dir, 'DejaVuSans.ttf')).toString('base64');
+  const bold = fs.readFileSync(path.join(dir, 'DejaVuSans-Bold.ttf')).toString('base64');
+  fontFaceCss = `<style>
+    @font-face { font-family: '${FONT_FAMILY}'; src: url(data:font/ttf;base64,${regular}) format('truetype'); }
+    @font-face { font-family: '${FONT_FAMILY}'; font-weight: bold; src: url(data:font/ttf;base64,${bold}) format('truetype'); }
+  </style>`;
+  return fontFaceCss;
+}
 
 export interface ShareCardData {
   firstName: string;
@@ -74,14 +95,17 @@ function statTile(x: number, w: number, value: string, label: string, valueColor
   const cx = x + w / 2;
   return `
   <rect x="${x}" y="668" width="${w}" height="150" rx="20" fill="#0b1220" stroke="#1e293b" stroke-width="2"/>
-  <text x="${cx}" y="740" font-family="sans-serif" font-size="56" font-weight="700" fill="${valueColor}" text-anchor="middle">${value}</text>
-  <text x="${cx}" y="782" font-family="sans-serif" font-size="26" fill="#94a3b8" text-anchor="middle">${label}</text>`;
+  <text x="${cx}" y="740" font-family="EBCardSans" font-size="56" font-weight="700" fill="${valueColor}" text-anchor="middle">${value}</text>
+  <text x="${cx}" y="782" font-family="EBCardSans" font-size="26" fill="#94a3b8" text-anchor="middle">${label}</text>`;
 }
 
 export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
   const W = 1080;
   const H = 1350;
-  const badge = streakBadge(data.streak);
+  // Strip streakBadge()'s leading emoji — it's outside DejaVu Sans's coverage (emoji
+  // live in Unicode's supplementary planes, past what a plain text font includes), and
+  // the flame icon already carries that visual weight.
+  const badge = streakBadge(data.streak).replace(/^\S+\s*/, '');
   const accColor = accuracyColor(data.accuracy);
   const examLine = data.examType && data.targetYear ? `${data.examType} ${data.targetYear}` : '';
   const subjectLine = data.bestSubject ? `${esc(data.bestSubject.name)}: ${data.bestSubject.pct}% covered` : '';
@@ -94,6 +118,7 @@ export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
   const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
   <defs>
+    ${getFontFaceCss()}
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#111a2e"/>
       <stop offset="100%" stop-color="#020617"/>
@@ -119,28 +144,28 @@ export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
   <rect width="${W}" height="${H}" fill="url(#bg)"/>
   <rect width="${W}" height="10" fill="url(#topBar)"/>
 
-  <text x="60" y="110" font-family="sans-serif" font-size="34" font-weight="600" fill="#94a3b8">${esc(data.firstName)} · ExamBuddie</text>
+  <text x="60" y="110" font-family="EBCardSans" font-size="34" font-weight="600" fill="#94a3b8">${esc(data.firstName)} · ExamBuddie</text>
 
   ${flameIcon(400, 320, 200)}
-  <text x="620" y="360" font-family="sans-serif" font-size="170" font-weight="700" fill="#f8fafc" text-anchor="middle">${data.streak}</text>
-  <text x="${W / 2}" y="440" font-family="sans-serif" font-size="38" fill="#94a3b8" text-anchor="middle">day streak</text>
+  <text x="620" y="360" font-family="EBCardSans" font-size="170" font-weight="700" fill="#f8fafc" text-anchor="middle">${data.streak}</text>
+  <text x="${W / 2}" y="440" font-family="EBCardSans" font-size="38" fill="#94a3b8" text-anchor="middle">day streak</text>
 
-  <text x="${W / 2}" y="520" font-family="sans-serif" font-size="46" font-weight="700" fill="#22c55e" text-anchor="middle">${esc(badge)}</text>
+  <text x="${W / 2}" y="520" font-family="EBCardSans" font-size="46" font-weight="700" fill="#22c55e" text-anchor="middle">${esc(badge)}</text>
 
   ${statTile(startX, colW, data.totalAttempts.toLocaleString(), 'Questions', '#f8fafc')}
   ${statTile(startX + colW + gap, colW, `${data.accuracy}%`, 'Accuracy', accColor)}
   ${statTile(startX + (colW + gap) * 2, colW, '', '', '#f8fafc')}
   ${medalIcon(startX + (colW + gap) * 2 + colW / 2, 700, 90)}
-  <text x="${startX + (colW + gap) * 2 + colW / 2}" y="782" font-family="sans-serif" font-size="24" fill="#94a3b8" text-anchor="middle">${esc(data.rankLabel)}</text>
+  <text x="${startX + (colW + gap) * 2 + colW / 2}" y="782" font-family="EBCardSans" font-size="24" fill="#94a3b8" text-anchor="middle">${esc(data.rankLabel)}</text>
 
   <line x1="80" y1="870" x2="${W - 80}" y2="870" stroke="#1e293b" stroke-width="2"/>
 
-  ${examLine ? `${targetIcon(390, 942, 44)}<text x="425" y="954" font-family="sans-serif" font-size="42" fill="#f8fafc">${esc(examLine)}</text>` : ''}
-  ${subjectLine ? `<text x="${W / 2}" y="1020" font-family="sans-serif" font-size="34" fill="#94a3b8" text-anchor="middle">📈 ${subjectLine}</text>` : ''}
+  ${examLine ? `${targetIcon(390, 942, 44)}<text x="425" y="954" font-family="EBCardSans" font-size="42" fill="#f8fafc">${esc(examLine)}</text>` : ''}
+  ${subjectLine ? `<text x="${W / 2}" y="1020" font-family="EBCardSans" font-size="34" fill="#94a3b8" text-anchor="middle">${subjectLine}</text>` : ''}
 
   <rect x="0" y="1180" width="${W}" height="170" fill="#16a34a"/>
-  <text x="${W / 2}" y="1250" font-family="sans-serif" font-size="38" font-weight="700" fill="#052e16" text-anchor="middle">Studying smarter for WAEC / JAMB / NECO</text>
-  <text x="${W / 2}" y="1310" font-family="sans-serif" font-size="34" fill="#052e16" text-anchor="middle">Join me → ${esc(data.joinHandle)}</text>
+  <text x="${W / 2}" y="1250" font-family="EBCardSans" font-size="38" font-weight="700" fill="#052e16" text-anchor="middle">Studying smarter for WAEC / JAMB / NECO</text>
+  <text x="${W / 2}" y="1310" font-family="EBCardSans" font-size="34" fill="#052e16" text-anchor="middle">Join me → ${esc(data.joinHandle)}</text>
 </svg>`;
 
   return sharp(Buffer.from(svg)).png().toBuffer();
