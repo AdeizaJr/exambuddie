@@ -1,4 +1,4 @@
-// Server-side pricing fetch — reads the admin-configured prices from the backend.
+// Server-side pricing fetch: reads the admin-configured prices from the backend.
 // Falls back to defaults if the backend is unreachable so the landing page never breaks.
 export interface PricingData {
   monthly_ngn: number;

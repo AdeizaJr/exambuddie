@@ -7,10 +7,10 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://exambuddie.app"),
-  title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
+  title: "ExamBuddie: Ace WAEC, JAMB & NECO on Telegram",
   verification: { google: "googleb86b6e207e3f7ae9" },
   description:
-    "WAEC, JAMB and NECO past questions practice on Telegram. Timed quizzes, instant explanations, and progress tracking — free to start.",
+    "WAEC, JAMB and NECO past questions practice on Telegram, with timed quizzes, instant explanations, and progress tracking. Free to start.",
   keywords: [
     "WAEC past questions",
     "JAMB practice questions",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
+    title: "ExamBuddie: Ace WAEC, JAMB & NECO on Telegram",
     description:
       "Practice 41,000+ past WAEC, JAMB and NECO questions directly in Telegram. Timed quizzes, instant explanations, and progress tracking.",
     type: "website",
@@ -38,13 +38,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
+        alt: "ExamBuddie: Ace WAEC, JAMB & NECO on Telegram",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ExamBuddie — Ace WAEC, JAMB & NECO on Telegram",
+    title: "ExamBuddie: Ace WAEC, JAMB & NECO on Telegram",
     description:
       "Practice 41,000+ past WAEC, JAMB and NECO questions directly in Telegram. Free to start.",
     images: ["/opengraph-image"],
@@ -59,7 +59,7 @@ const softwareAppJsonLd = {
   operatingSystem: "Telegram",
   url: "https://exambuddie.app",
   description:
-    "Past question practice for WAEC, JAMB and NECO — timed quizzes, instant explanations, and progress tracking on Telegram.",
+    "Past question practice for WAEC, JAMB and NECO, with timed quizzes, instant explanations, and progress tracking on Telegram.",
   datePublished: "2024-01-01",
   dateModified: "2026-06-01",
   offers: [
@@ -77,7 +77,7 @@ const organizationJsonLd = {
   url: "https://exambuddie.app",
   logo: "https://exambuddie.app/opengraph-image",
   description:
-    "Past question practice platform for WAEC, JAMB and NECO exams — timed drills, instant explanations, and streak tracking, accessible directly inside Telegram.",
+    "Past question practice platform for WAEC, JAMB and NECO exams, with timed drills, instant explanations, and streak tracking, accessible directly inside Telegram.",
   foundingDate: "2024",
   contactPoint: {
     "@type": "ContactPoint",

@@ -2,11 +2,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Refund Policy — ExamBuddie",
+  title: "Refund Policy: ExamBuddie",
   description: "ExamBuddie's subscription refund and cancellation policy.",
   alternates: { canonical: "/refunds" },
   openGraph: {
-    title: "Refund Policy — ExamBuddie",
+    title: "Refund Policy: ExamBuddie",
     description: "ExamBuddie's subscription refund and cancellation policy.",
     type: "website",
     url: "https://exambuddie.app/refunds",
@@ -61,10 +61,10 @@ export default function RefundsPage() {
             <h2>Cancellation</h2>
             <p>
               If your card supports it, Premium auto-renews each billing cycle. Send /billing in
-              the bot for a link to cancel auto-renewal or update your card at any time —
+              the bot for a link to cancel auto-renewal or update your card at any time:
               cancellation takes effect at the end of your current paid period, and your access
               continues until then. If your card doesn&apos;t support auto-renewal, there is
-              nothing to cancel — it simply expires at the end of your paid period. No partial
+              nothing to cancel: it simply expires at the end of your paid period. No partial
               refunds are given for unused days.
             </p>
           </section>

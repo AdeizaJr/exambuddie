@@ -20,7 +20,7 @@ export async function generateMetadata({
 
   return {
     title: `JAMB ${s.displayName} Past Questions 2010–2025 | ExamBuddie`,
-    description: `Practice ${s.jamb.count}+ real JAMB UTME ${s.displayName} past questions with answers and explanations. CBT-style timed mock exams, topic drills, and progress tracking — free on Telegram.`,
+    description: `Practice ${s.jamb.count}+ real JAMB UTME ${s.displayName} past questions with answers and explanations. CBT-style timed mock exams, topic drills, and progress tracking. Free on Telegram.`,
     keywords: [
       `JAMB ${s.displayName} past questions`,
       `JAMB ${s.displayName} past questions with answers`,
@@ -36,7 +36,7 @@ export async function generateMetadata({
       type: "website",
       url: `https://exambuddie.app/jamb/${s.slug}`,
       siteName: "ExamBuddie",
-      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `ExamBuddie — JAMB ${s.displayName} Past Questions` }],
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `ExamBuddie: JAMB ${s.displayName} Past Questions` }],
     },
     twitter: {
       card: "summary_large_image",
@@ -65,7 +65,7 @@ export default async function JambSubjectPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",
-    name: `JAMB UTME ${s.displayName} Past Questions Practice — ExamBuddie`,
+    name: `JAMB UTME ${s.displayName} Past Questions Practice: ExamBuddie`,
     description: `Practice ${s.jamb.count}+ real JAMB UTME ${s.displayName} past questions from 2010 to 2025 with instant AI explanations and CBT-style timed mock exams.`,
     provider: {
       "@type": "Organization",
@@ -74,7 +74,7 @@ export default async function JambSubjectPage({
     },
     url: `https://exambuddie.app/jamb/${s.slug}`,
     educationalLevel: "Secondary School",
-    teaches: `JAMB UTME ${s.displayName} — ${s.topics.slice(0, 4).join(", ")}`,
+    teaches: `JAMB UTME ${s.displayName}: ${s.topics.slice(0, 4).join(", ")}`,
     datePublished: "2024-01-01",
     dateModified: "2026-06-25",
     inLanguage: "en-NG",
@@ -104,7 +104,7 @@ export default async function JambSubjectPage({
     },
     {
       q: `Is ExamBuddie free for JAMB ${s.displayName} practice?`,
-      a: "Yes. ExamBuddie is free to start with 14 days of Premium access included. No credit card or app download required — practice CBT-style directly inside Telegram.",
+      a: "Yes. ExamBuddie is free to start with 14 days of Premium access included. No credit card or app download required: practice CBT-style directly inside Telegram.",
     },
     {
       q: `Which topics does JAMB ${s.displayName} cover?`,
@@ -150,7 +150,7 @@ export default async function JambSubjectPage({
       <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
-            🎓 JAMB UTME Past Questions — {s.displayName}
+            🎓 JAMB UTME Past Questions · {s.displayName}
           </div>
           <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
             JAMB {s.displayName} Past Questions
@@ -241,7 +241,7 @@ export default async function JambSubjectPage({
               {
                 icon: "🔁",
                 title: "Spaced repetition on wrong answers",
-                desc: "Questions you get wrong resurface at the right intervals until you answer correctly — proven to lock in long-term recall.",
+                desc: "Questions you get wrong resurface at the right intervals until you answer correctly: proven to lock in long-term recall.",
               },
               {
                 icon: "📅",

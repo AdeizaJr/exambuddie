@@ -21,7 +21,7 @@ const mockQuestions = [
     question: "What is the chemical formula for water?",
     options: ["A. CO₂", "B. NaCl", "C. H₂O", "D. O₂"],
     correct: 2,
-    explanation: "Water is made of 2 hydrogen atoms and 1 oxygen atom — H₂O. Answer is C.",
+    explanation: "Water is made of 2 hydrogen atoms and 1 oxygen atom: H₂O. Answer is C.",
   },
   {
     subject: "Physics · NECO 2023",

@@ -25,7 +25,7 @@ export const subjects: Subject[] = [
       "Commercial Arithmetic",
     ],
     blurb:
-      "Mathematics is the highest-scoring subject in WAEC and JAMB for students who practise — most questions repeat identical patterns from previous years.",
+      "Mathematics is the highest-scoring subject in WAEC and JAMB for students who practise: most questions repeat identical patterns from previous years.",
     waec: { count: 781 },
     jamb: { count: 843 },
     neco: { count: 179 },
@@ -44,7 +44,7 @@ export const subjects: Subject[] = [
       "Sentence Interpretation",
     ],
     blurb:
-      "English Language questions test comprehension, grammar, and oral interpretation — skills best built by working through real past paper questions with explanations.",
+      "English Language questions test comprehension, grammar, and oral interpretation: skills best built by working through real past paper questions with explanations.",
     waec: { count: 1910 },
     jamb: { count: 1765 },
     neco: { count: 271 },
@@ -84,7 +84,7 @@ export const subjects: Subject[] = [
       "Thermochemistry",
     ],
     blurb:
-      "Chemistry questions in WAEC and JAMB consistently focus on Organic Chemistry and Stoichiometry — past questions reveal the exact difficulty level examiners target.",
+      "Chemistry questions in WAEC and JAMB consistently focus on Organic Chemistry and Stoichiometry: past questions reveal the exact difficulty level examiners target.",
     waec: { count: 770 },
     jamb: { count: 1009 },
     neco: { count: 168 },
@@ -104,7 +104,7 @@ export const subjects: Subject[] = [
       "Measurement",
     ],
     blurb:
-      "Physics requires both concept recall and calculation — past questions show you the exact types of problems that appear year after year.",
+      "Physics requires both concept recall and calculation: past questions show you the exact types of problems that appear year after year.",
     waec: { count: 787 },
     jamb: { count: 988 },
     neco: { count: 322 },
@@ -124,7 +124,7 @@ export const subjects: Subject[] = [
       "Inflation",
     ],
     blurb:
-      "Economics is a scoring subject when you understand the theory and can apply it quickly — past question practice builds that pattern recognition.",
+      "Economics is a scoring subject when you understand the theory and can apply it quickly: past question practice builds that pattern recognition.",
     waec: { count: 781 },
     jamb: { count: 987 },
     neco: { count: 272 },
@@ -143,7 +143,7 @@ export const subjects: Subject[] = [
       "Federalism",
     ],
     blurb:
-      "Government in WAEC and JAMB tests both Nigerian and comparative politics — knowing the repeated question patterns significantly reduces study time.",
+      "Government in WAEC and JAMB tests both Nigerian and comparative politics: knowing the repeated question patterns significantly reduces study time.",
     waec: { count: 795 },
     jamb: { count: 890 },
     neco: { count: 297 },
@@ -163,7 +163,7 @@ export const subjects: Subject[] = [
       "Transportation",
     ],
     blurb:
-      "Geography questions range from map reading to human geography — regular past question practice builds the breadth of knowledge required.",
+      "Geography questions range from map reading to human geography: regular past question practice builds the breadth of knowledge required.",
     waec: { count: 703 },
     jamb: { count: 2477 },
     neco: null,
@@ -182,7 +182,7 @@ export const subjects: Subject[] = [
       "Oral Literature",
     ],
     blurb:
-      "Literature questions require textual analysis and knowledge of set texts — past questions reveal which themes, characters, and devices examiners focus on.",
+      "Literature questions require textual analysis and knowledge of set texts: past questions reveal which themes, characters, and devices examiners focus on.",
     waec: { count: 801 },
     jamb: { count: 2388 },
     neco: null,
@@ -202,7 +202,7 @@ export const subjects: Subject[] = [
       "Partnership Accounts",
     ],
     blurb:
-      "Financial Accounting in WAEC and JAMB tests ledger entries and final accounts — questions follow predictable templates that become easy after practice.",
+      "Financial Accounting in WAEC and JAMB tests ledger entries and final accounts: questions follow predictable templates that become easy after practice.",
     waec: { count: 1757 },
     jamb: { count: 1617 },
     neco: null,
@@ -221,7 +221,7 @@ export const subjects: Subject[] = [
       "Agricultural Economics",
     ],
     blurb:
-      "Agricultural Science covers Crop, Soil, and Animal production — a broad syllabus where past questions show which areas carry the most marks.",
+      "Agricultural Science covers Crop, Soil, and Animal production: a broad syllabus where past questions show which areas carry the most marks.",
     waec: { count: 826 },
     jamb: { count: 630 },
     neco: null,
@@ -241,7 +241,7 @@ export const subjects: Subject[] = [
       "Complex Numbers",
     ],
     blurb:
-      "Further Mathematics covers advanced Calculus, Matrices, and Statistics — past questions are the most reliable guide to what WAEC examiners test.",
+      "Further Mathematics covers advanced Calculus, Matrices, and Statistics: past questions are the most reliable guide to what WAEC examiners test.",
     waec: { count: 637 },
     jamb: null,
     neco: null,
@@ -261,7 +261,7 @@ export const subjects: Subject[] = [
       "Home Trade",
     ],
     blurb:
-      "Commerce questions test business principles and trade concepts — past questions from 2010–2025 reveal which topics repeat most frequently.",
+      "Commerce questions test business principles and trade concepts: past questions from 2010–2025 reveal which topics repeat most frequently.",
     waec: { count: 789 },
     jamb: { count: 963 },
     neco: { count: 383 },
@@ -280,7 +280,7 @@ export const subjects: Subject[] = [
       "Spreadsheets",
     ],
     blurb:
-      "Computer Studies past questions cover Hardware, Software, and Programming fundamentals — a high-scoring subject when topics are systematically practised.",
+      "Computer Studies past questions cover Hardware, Software, and Programming fundamentals: a high-scoring subject when topics are systematically practised.",
     waec: { count: 597 },
     jamb: { count: 293 },
     neco: { count: 60 },
@@ -318,7 +318,7 @@ export const subjects: Subject[] = [
       "Family Life in Islam",
     ],
     blurb:
-      "IRK rewards systematic study of Quranic verses, Islamic history, and ethics — past questions show exactly which topics carry the most marks.",
+      "IRK rewards systematic study of Quranic verses, Islamic history, and ethics: past questions show exactly which topics carry the most marks.",
     waec: { count: 485 },
     jamb: { count: 850 },
     neco: null,

@@ -25,20 +25,20 @@ const subjects = [
 ];
 
 const secondaryFeatures = [
-  { icon: "🔄", title: "Revision Mode", desc: "Practice only the questions you previously got wrong — /revision" },
+  { icon: "🔄", title: "Revision Mode", desc: "Practice only the questions you previously got wrong (/revision)" },
   { icon: "⭐", title: "Bookmark Questions", desc: "Save any question mid-practice and drill your bookmarks later" },
-  { icon: "📊", title: "Progress Stats", desc: "Daily target, accuracy by topic, and exam countdown — all in /stats" },
-  { icon: "📐", title: "Formula Sheets", desc: "Instant formula reference for Physics, Chemistry, Maths, Economics, Government — /formula" },
-  { icon: "📅", title: "Exam Timetable", desc: "2026 WAEC/NECO/JAMB subject dates with countdown — /timetable" },
+  { icon: "📊", title: "Progress Stats", desc: "Daily target, accuracy by topic, and exam countdown (/stats)" },
+  { icon: "📐", title: "Formula Sheets", desc: "Instant formula reference for Physics, Chemistry, Maths, Economics, Government (/formula)" },
+  { icon: "📅", title: "Exam Timetable", desc: "2026 WAEC/NECO/JAMB subject dates with countdown (/timetable)" },
   { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one practice session (Premium)" },
-  { icon: "🔥", title: "Study Streaks", desc: "Build a daily habit — freeze your streak once a week (Premium)" },
-  { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you master them — /review" },
+  { icon: "🔥", title: "Study Streaks", desc: "Build a daily habit, freeze your streak once a week (Premium)" },
+  { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you master them (/review)" },
   { icon: "📅", title: "Daily Question", desc: "Question of the Day broadcast every morning with your exam type" },
-  { icon: "🏅", title: "Achievements & Ranks", desc: "Earn badges for streaks, accuracy, and milestones. Rise through 30 ranks — Rookie to Legend — based on questions answered." },
+  { icon: "🏅", title: "Achievements & Ranks", desc: "Earn badges for streaks, accuracy, and milestones. Rise through 30 ranks, Rookie to Legend, based on questions answered." },
   { icon: "📤", title: "Shareable Results", desc: "Share your quiz score card on WhatsApp after every CBT mock" },
   { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
   { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
-  { icon: "⚡", title: "Works in Telegram", desc: "No app download — ever" },
+  { icon: "⚡", title: "Works in Telegram", desc: "No app download, ever" },
 ];
 
 const whyTelegram = [
@@ -50,7 +50,7 @@ const whyTelegram = [
   {
     icon: "📱",
     title: "Works on any device",
-    desc: "Android, iPhone, or desktop — ExamBuddie works everywhere Telegram does.",
+    desc: "Android, iPhone, or desktop, ExamBuddie works everywhere Telegram does.",
   },
   {
     icon: "⚡",
@@ -68,7 +68,7 @@ const reviewJsonLd = {
   "@context": "https://schema.org",
   "@type": "Product",
   name: "ExamBuddie",
-  description: "Past question practice for WAEC, JAMB and NECO on Telegram — timed quizzes, instant AI explanations, and progress tracking.",
+  description: "Past question practice for WAEC, JAMB and NECO on Telegram, with timed quizzes, instant AI explanations, and progress tracking.",
   url: "https://exambuddie.app",
   aggregateRating: {
     "@type": "AggregateRating",
@@ -105,7 +105,7 @@ export default async function Home() {
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
             <div className="flex-1 text-center lg:text-left">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
-                🎓 WAEC, JAMB &amp; NECO Prep — Nigeria
+                🎓 WAEC, JAMB &amp; NECO Prep · Nigeria
               </div>
               <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
                 Stop guessing. Start acing
@@ -114,7 +114,7 @@ export default async function Home() {
               </h1>
               <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0 dark:text-slate-400">
                 Practice real past questions, get instant AI explanations, and improve faster
-                with personalised learning — all inside Telegram. ExamBuddie doesn&apos;t just test
+                with personalised learning, all inside Telegram. ExamBuddie doesn&apos;t just test
                 you. It trains you until you improve.
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
@@ -124,7 +124,7 @@ export default async function Home() {
                   rel="noopener noreferrer"
                   className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
-                  Start Free — 14 Days Premium →
+                  Start Free · 14 Days Premium →
                 </a>
                 <a
                   href="#features"
@@ -184,7 +184,7 @@ export default async function Home() {
             Studying hard but scores aren&apos;t improving?
           </h2>
           <p className="mb-10 text-base text-slate-600 sm:text-lg dark:text-slate-400">
-            Most students fail not because they don&apos;t study — but because they study the wrong way.
+            Most students fail not because they don&apos;t study, but because they study the wrong way.
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -227,10 +227,10 @@ export default async function Home() {
                   41,000 past questions.<br />Every answer explained.
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
-                  Real WAEC, JAMB and NECO questions at your own pace. Instant explanations after every answer — not just which option is correct, but <em>why</em>.
+                  Real WAEC, JAMB and NECO questions at your own pace. Instant explanations after every answer, not just which option is correct, but <em>why</em>.
                 </p>
                 <ul className="mt-6 space-y-2.5">
-                  {["Questions from 2010–2025", "Explanations for every option", "No time pressure — learn at your pace"].map(item => (
+                  {["Questions from 2010–2025", "Explanations for every option", "No time pressure, learn at your pace"].map(item => (
                     <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
                       <span className="text-green-500 font-bold">✓</span> {item}
                     </li>
@@ -388,7 +388,7 @@ export default async function Home() {
                     "Share invite link via WhatsApp or Telegram",
                     "Auto-starts when all players mark ready",
                     "Real-time leaderboard at the end",
-                    "Anyone can join — free users included",
+                    "Anyone can join, free users included",
                   ].map(item => (
                     <li key={item} className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
                       <span className="text-green-500 font-bold">✓</span> {item}
@@ -461,7 +461,7 @@ export default async function Home() {
             {[
               { step: "1", title: "Open Telegram", desc: "Search for @ExamBuddieBot or tap the button below." },
               { step: "2", title: "Pick your subjects", desc: "Choose WAEC, JAMB or NECO and the subjects you're studying." },
-              { step: "3", title: "Start practising", desc: "Practice, quiz, or drill — your progress saves automatically." },
+              { step: "3", title: "Start practising", desc: "Practice, quiz, or drill, your progress saves automatically." },
             ].map(({ step, title, desc }) => (
               <div key={step} className="flex flex-col items-center">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-700 text-xl font-extrabold text-white shadow-lg shadow-blue-200 sm:h-14 sm:w-14 sm:text-2xl dark:shadow-none">
@@ -532,7 +532,7 @@ export default async function Home() {
               Why ExamBuddie beats the alternatives
             </h2>
             <p className="text-base text-slate-600 sm:text-lg dark:text-slate-400">
-              Compare how students prepare — and why the bot wins.
+              Compare how students prepare, and why the bot wins.
             </p>
           </div>
           <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
@@ -635,7 +635,7 @@ export default async function Home() {
             Ready to improve your exam score?
           </h2>
           <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">
-            Start free today — 14 days Premium included, no card needed.
+            Start free today, 14 days Premium included, no card needed.
           </p>
           <a
             href={BOT_URL_LANDING}

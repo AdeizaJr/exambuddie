@@ -21,7 +21,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
       name: "Free",
       price: "Free",
       period: "",
-      description: "Start practising today — 14 days Premium free, no card needed.",
+      description: "Start practising today: 14 days Premium free, no card needed.",
       features: [
         "14-day Premium trial on signup",
         "5 questions per subject every 6 hours",
@@ -54,15 +54,15 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
       price: billingYearly ? naira(yearly_ngn) : naira(monthly_ngn),
       period: billingYearly ? "year" : "month",
       description: billingYearly
-        ? `Save ${naira(yearlySavings)} vs monthly — best value.`
+        ? `Save ${naira(yearlySavings)} vs monthly: best value.`
         : "Everything you need to top the exam.",
       features: [
-        "Unlimited questions — no daily caps",
+        "Unlimited questions: no daily caps",
         "Multi-subject quiz & practice",
         "Full drill mode on weak topics",
-        "Spaced repetition — wrong answers come back",
-        "Streak freeze — protect your streak once/week",
-        "Challenge Mode — create rooms & compete",
+        "Spaced repetition: wrong answers come back",
+        "Streak freeze: protect your streak once/week",
+        "Challenge Mode: create rooms & compete",
         "Detailed progress analytics & exam countdown",
         "Weekly performance reports",
         "Referral rewards (/invite)",
@@ -143,7 +143,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
               {highlight && (
                 <p className="mb-2 text-[11px] font-medium text-blue-200">
                   {billingYearly
-                    ? `${naira(Math.round(yearly_ngn / 12))}/month — save ${naira(yearlySavings)} vs monthly`
+                    ? `${naira(Math.round(yearly_ngn / 12))}/month: save ${naira(yearlySavings)} vs monthly`
                     : `That's less than ${naira(Math.round(monthly_ngn / 30))} a day`}
                 </p>
               )}
@@ -175,7 +175,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
         ))}
       </div>
       <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-500">
-        Premium auto-renews each cycle if your card supports it — cancel anytime from the bot.
+        Premium auto-renews each cycle if your card supports it: cancel anytime from the bot.
       </p>
     </>
   );

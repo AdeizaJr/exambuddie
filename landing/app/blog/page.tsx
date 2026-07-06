@@ -3,7 +3,7 @@ import { Nav } from "../components/Nav";
 import { posts } from "../data/posts";
 
 export const metadata: Metadata = {
-  title: "Exam Prep Blog — WAEC, JAMB & NECO Study Tips | ExamBuddie",
+  title: "Exam Prep Blog: WAEC, JAMB & NECO Study Tips | ExamBuddie",
   description:
     "Study guides, past question strategies, and exam tips for Nigerian students preparing for WAEC, JAMB, and NECO.",
   keywords: [
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/blog" },
   openGraph: {
-    title: "Exam Prep Blog — WAEC, JAMB & NECO Study Tips | ExamBuddie",
+    title: "Exam Prep Blog: WAEC, JAMB & NECO Study Tips | ExamBuddie",
     description: "Study guides, past question strategies, and exam tips for Nigerian students.",
     type: "website",
     url: "https://exambuddie.app/blog",

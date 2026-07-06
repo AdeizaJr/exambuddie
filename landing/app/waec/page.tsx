@@ -4,9 +4,9 @@ import { Nav } from "../components/Nav";
 const BOT_URL_WAEC = "https://t.me/ExamBuddieBot?start=from_waec";
 
 export const metadata: Metadata = {
-  title: "WAEC Past Questions 2010–2025 — Practice on Telegram | ExamBuddie",
+  title: "WAEC Past Questions 2010–2025: Practice on Telegram | ExamBuddie",
   description:
-    "Practice 30,000+ real WAEC past questions across all major subjects. Instant AI explanations, timed mock exams, and progress tracking — free to start on Telegram.",
+    "Practice 30,000+ real WAEC past questions across all major subjects. Instant AI explanations, timed mock exams, and progress tracking. Free to start on Telegram.",
   keywords: [
     "WAEC past questions",
     "WAEC practice questions",
@@ -23,17 +23,17 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/waec" },
   openGraph: {
-    title: "WAEC Past Questions — Practice Free on Telegram | ExamBuddie",
+    title: "WAEC Past Questions: Practice Free on Telegram | ExamBuddie",
     description:
-      "30,000+ real WAEC past questions with instant AI explanations. Timed mock exams, weak-topic drill mode, and daily streaks — all inside Telegram.",
+      "30,000+ real WAEC past questions with instant AI explanations. Timed mock exams, weak-topic drill mode, and daily streaks. All inside Telegram.",
     type: "website",
     url: "https://exambuddie.app/waec",
     siteName: "ExamBuddie",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "ExamBuddie — WAEC Past Questions on Telegram" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "ExamBuddie: WAEC Past Questions on Telegram" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "WAEC Past Questions — Practice Free on Telegram | ExamBuddie",
+    title: "WAEC Past Questions: Practice Free on Telegram | ExamBuddie",
     description: "30,000+ real WAEC past questions with instant AI explanations. Free to start.",
     images: ["/opengraph-image"],
   },
@@ -57,7 +57,7 @@ const waecSubjects = [
 const waecJsonLd = {
   "@context": "https://schema.org",
   "@type": "Course",
-  name: "WAEC Past Questions Practice — ExamBuddie",
+  name: "WAEC Past Questions Practice: ExamBuddie",
   description: "Practice real WAEC past questions from 2010 to 2025 across all major subjects with instant AI explanations and progress tracking.",
   provider: {
     "@type": "Organization",
@@ -66,7 +66,7 @@ const waecJsonLd = {
   },
   url: "https://exambuddie.app/waec",
   educationalLevel: "Secondary School",
-  teaches: "WAEC exam preparation — Mathematics, English, Sciences, Humanities",
+  teaches: "WAEC exam preparation: Mathematics, English, Sciences, Humanities",
   datePublished: "2024-01-01",
   dateModified: "2026-06-01",
   inLanguage: "en-NG",
@@ -93,7 +93,7 @@ export default function WaecPage() {
       <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
-            📝 WAEC Past Questions — Nigeria
+            📝 WAEC Past Questions · Nigeria
           </div>
           <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
             WAEC Past Questions
@@ -101,7 +101,7 @@ export default function WaecPage() {
             <span className="text-blue-700 dark:text-blue-400">2010–2025, All Subjects.</span>
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl dark:text-slate-400">
-            Practice real WAEC past questions directly in Telegram. Every question has an instant AI explanation — not just the answer, but <strong>why</strong>. Track your progress, spot weak topics, and drill them until you improve.
+            Practice real WAEC past questions directly in Telegram. Every question has an instant AI explanation: not just the answer, but <strong>why</strong>. Track your progress, spot weak topics, and drill them until you improve.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             <a
@@ -143,7 +143,7 @@ export default function WaecPage() {
             The smartest way to prepare for WAEC
           </h2>
           <p className="mb-12 text-center text-base text-slate-600 sm:text-lg dark:text-slate-400">
-            Not just a question bank — an intelligent system that adapts to where you&apos;re losing marks.
+            Not just a question bank: an intelligent system that adapts to where you&apos;re losing marks.
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -160,7 +160,7 @@ export default function WaecPage() {
               {
                 icon: "📋",
                 title: "Full 60-minute mock exams",
-                desc: "Simulate real WAEC conditions — 50 questions, 60 minutes. See your score breakdown by topic the moment you finish.",
+                desc: "Simulate real WAEC conditions: 50 questions, 60 minutes. See your score breakdown by topic the moment you finish.",
               },
               {
                 icon: "📅",
@@ -170,7 +170,7 @@ export default function WaecPage() {
               {
                 icon: "🔁",
                 title: "Spaced repetition",
-                desc: "Questions you got wrong resurface at the right interval — the scientifically proven method to move knowledge into long-term memory.",
+                desc: "Questions you got wrong resurface at the right interval: the scientifically proven method to move knowledge into long-term memory.",
               },
               {
                 icon: "🏆",

@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'ExamBuddie — Ace WAEC, JAMB & NECO on Telegram';
+export const alt = 'ExamBuddie: Ace WAEC, JAMB & NECO on Telegram';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

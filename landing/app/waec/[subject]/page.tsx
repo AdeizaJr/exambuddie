@@ -20,7 +20,7 @@ export async function generateMetadata({
 
   return {
     title: `WAEC ${s.displayName} Past Questions 2010–2025 | ExamBuddie`,
-    description: `Practice ${s.waec.count}+ real WAEC ${s.displayName} past questions with answers and explanations. Timed mock exams, topic drills, and progress tracking — free on Telegram.`,
+    description: `Practice ${s.waec.count}+ real WAEC ${s.displayName} past questions with answers and explanations. Timed mock exams, topic drills, and progress tracking. Free on Telegram.`,
     keywords: [
       `WAEC ${s.displayName} past questions`,
       `WAEC ${s.displayName} past questions with answers`,
@@ -36,7 +36,7 @@ export async function generateMetadata({
       type: "website",
       url: `https://exambuddie.app/waec/${s.slug}`,
       siteName: "ExamBuddie",
-      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `ExamBuddie — WAEC ${s.displayName} Past Questions` }],
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `ExamBuddie: WAEC ${s.displayName} Past Questions` }],
     },
     twitter: {
       card: "summary_large_image",
@@ -65,7 +65,7 @@ export default async function WaecSubjectPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",
-    name: `WAEC ${s.displayName} Past Questions Practice — ExamBuddie`,
+    name: `WAEC ${s.displayName} Past Questions Practice: ExamBuddie`,
     description: `Practice ${s.waec.count}+ real WAEC ${s.displayName} past questions from 2010 to 2025 with instant AI explanations and progress tracking.`,
     provider: {
       "@type": "Organization",
@@ -74,7 +74,7 @@ export default async function WaecSubjectPage({
     },
     url: `https://exambuddie.app/waec/${s.slug}`,
     educationalLevel: "Secondary School",
-    teaches: `WAEC ${s.displayName} — ${s.topics.slice(0, 4).join(", ")}`,
+    teaches: `WAEC ${s.displayName}: ${s.topics.slice(0, 4).join(", ")}`,
     datePublished: "2024-01-01",
     dateModified: "2026-06-25",
     inLanguage: "en-NG",
@@ -104,7 +104,7 @@ export default async function WaecSubjectPage({
     },
     {
       q: `Is ExamBuddie free for WAEC ${s.displayName} practice?`,
-      a: "Yes. ExamBuddie is free to start with 14 days of Premium access included. No credit card or app download required — practice directly inside Telegram.",
+      a: "Yes. ExamBuddie is free to start with 14 days of Premium access included. No credit card or app download required: practice directly inside Telegram.",
     },
     {
       q: `Which topics does WAEC ${s.displayName} cover?`,
@@ -112,7 +112,7 @@ export default async function WaecSubjectPage({
     },
     {
       q: `Can I practice WAEC ${s.displayName} on my phone?`,
-      a: "Yes. ExamBuddie works inside Telegram, which runs on any smartphone. No download needed — just open Telegram and start practising.",
+      a: "Yes. ExamBuddie works inside Telegram, which runs on any smartphone. No download needed: just open Telegram and start practising.",
     },
     {
       q: `Does ExamBuddie explain WAEC ${s.displayName} answers?`,
@@ -150,7 +150,7 @@ export default async function WaecSubjectPage({
       <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
-            📝 WAEC Past Questions — {s.displayName}
+            📝 WAEC Past Questions · {s.displayName}
           </div>
           <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
             WAEC {s.displayName} Past Questions
@@ -219,7 +219,7 @@ export default async function WaecSubjectPage({
             The smartest way to prepare for WAEC {s.displayName}
           </h2>
           <p className="mb-12 text-center text-base text-slate-600 sm:text-lg dark:text-slate-400">
-            Not just a question bank — an intelligent system that targets your weak spots.
+            Not just a question bank: an intelligent system that targets your weak spots.
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -236,12 +236,12 @@ export default async function WaecSubjectPage({
               {
                 icon: "📋",
                 title: "Full 60-minute mock exams",
-                desc: `Simulate real WAEC ${s.displayName} conditions — timed questions with a full score breakdown by topic the moment you finish.`,
+                desc: `Simulate real WAEC ${s.displayName} conditions: timed questions with a full score breakdown by topic the moment you finish.`,
               },
               {
                 icon: "🔁",
                 title: "Spaced repetition",
-                desc: "Questions you got wrong resurface at the right interval — the scientifically proven method to move knowledge into long-term memory.",
+                desc: "Questions you got wrong resurface at the right interval: the scientifically proven method to move knowledge into long-term memory.",
               },
               {
                 icon: "📅",

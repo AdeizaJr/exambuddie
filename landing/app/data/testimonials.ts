@@ -5,12 +5,12 @@ export const testimonials = [
     role: "WAEC 2026",
   },
   {
-    quote: "The timed quiz mode is no joke. 50 questions, 60 minutes — exactly like the real thing. I stopped panicking in the exam hall.",
+    quote: "The timed quiz mode is no joke. 50 questions, 60 minutes: exactly like the real thing. I stopped panicking in the exam hall.",
     name: "Tobiloba A.",
     role: "Lagos · WAEC 2026",
   },
   {
-    quote: "What got me was the AI explanations after every question. Not just the answer — it breaks down WHY. That's what changed how I study.",
+    quote: "What got me was the AI explanations after every question. Not just the answer: it breaks down WHY. That's what changed how I study.",
     name: "Roqeeb",
     role: "JAMB 2026",
   },
