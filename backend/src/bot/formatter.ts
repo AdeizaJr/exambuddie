@@ -560,7 +560,7 @@ export function answerOptions(q: Question): string {
   return text;
 }
 
-function formatExplanation(text: string): string {
+export function formatExplanation(text: string): string {
   // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain
   // Still sanitize any bare < that are not valid Telegram tags
   if (/<(?:b|i|code)>/.test(text)) {

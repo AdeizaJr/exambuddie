@@ -75,7 +75,7 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
           total: (sess.total || 0) + 1,
         });
 
-        const explanation = q?.explanation ? `\n\n💡 ${q.explanation}` : '';
+        const explanation = q?.explanation ? `\n\n💡 ${fmt.formatExplanation(q.explanation)}` : '';
         await ctx.telegram.sendMessage(telegramId,
           `⏱️ <b>Time's up!</b>\n\nThe correct answer was <b>${q?.correct_option}</b>.${explanation}`,
           { parse_mode: 'HTML', reply_markup: fmt.afterAnswerKeyboard(sess.mode, q?.question_text?.includes('*') ?? false) },
