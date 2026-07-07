@@ -1,6 +1,7 @@
 // src/bot/handlers/qotd.ts — Question of the Day answer handler
 import * as db from '../../db';
 import * as redis from '../../services/redis';
+import { formatExplanation } from '../formatter';
 
 // QOTD answer is handled outside a session — look up the question directly
 export async function handleQOTDAnswer(ctx: any, questionId: string, option: string): Promise<void> {
@@ -40,7 +41,7 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
     : `❌ <b>Wrong.</b> The answer is <b>${q.correct_option}</b>.`;
 
   const explanation = q.explanation
-    ? `\n\n💡 ${q.explanation}`
+    ? `\n\n💡 ${formatExplanation(q.explanation)}`
     : '';
 
   const correctOptKey = `option_${q.correct_option.toLowerCase()}` as keyof typeof q;
