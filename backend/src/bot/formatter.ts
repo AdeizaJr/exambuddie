@@ -503,7 +503,7 @@ function tryFormatColumnTable(rawText: string): string | null {
   return `<code>${tableHtml}</code>${rest ? '\n\n' + md(rest) : ''}`;
 }
 
-export function formatQuestion(q: Question, number: number, total: number | string, mode?: string): string {
+export function formatQuestion(q: Question, number: number, total: number | string, mode?: string, personalized?: boolean): string {
   const modeTag = mode === 'quiz'
     ? `📋 <b>Question ${number}/${total}</b>`
     : mode === 'drill'
@@ -515,7 +515,7 @@ export function formatQuestion(q: Question, number: number, total: number | stri
     : mode === 'quiz_review'
     ? `📖 <b>Wrong Answer ${number}/${total}</b>`
     : mode === 'qotd'
-    ? `📅 <b>Question of the Day</b>`
+    ? `📅 <b>Question of the Day</b>${personalized ? ': Your Weak Spot' : ''}`
     : `📚 <b>Practice Mode</b>`;
 
   let questionText = q.question_text || '';

@@ -47,7 +47,7 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
   const correctText = q[correctOptKey] as string || '';
 
   await ctx.reply(
-    `📅 <b>Question of the Day — Result</b>\n\n${resultLine}\n<b>${q.correct_option}.</b> ${correctText}${explanation}`,
+    `📅 <b>Question of the Day: Result</b>\n\n${resultLine}\n<b>${q.correct_option}.</b> ${correctText}${explanation}`,
     {
       parse_mode: 'HTML',
       reply_markup: {
