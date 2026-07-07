@@ -519,10 +519,7 @@ ${streakLine} → /practice`;
         // Skip if user already answered today's QOTD
         if (await redis.getQOTDAnswered(user.telegram_id, date)) return;
 
-        const subjectLabel = fmt.SUBJECT_MAP[q.subject] || q.subject;
-        const msgText = `📅 <b>Question of the Day</b>${personalizedQId ? ' — Your Weak Spot' : ''} — ${subjectLabel}\n\n`
-          + fmt.formatQuestion(q, 1, 1, 'qotd')
-          + fmt.answerOptions(q);
+        const msgText = fmt.formatQuestion(q, 1, 1, 'qotd', !!personalizedQId) + fmt.answerOptions(q);
 
         const keyboard = {
           inline_keyboard: [
