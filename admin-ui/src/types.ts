@@ -210,6 +210,14 @@ export interface FunnelData {
   mrr: number;
 }
 
+export interface PageViewAnalytics {
+  totalViews: number;
+  uniqueVisitors: number;
+  topPages: { path: string; views: number }[];
+  topSources: { source: string; views: number }[];
+  daily: { date: string; views: number; uniques: number }[];
+}
+
 export interface BroadcastLog {
   id: number;
   message: string;

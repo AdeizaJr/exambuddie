@@ -88,6 +88,44 @@ export default function createServer(bot: any) {
     res.json(getPricing());
   });
 
+  // ── Public pageview tracking beacon (consumed by the landing site) ──────────
+  // Open CORS regardless of ALLOWED_ORIGINS — this is an unauthenticated, no-cookie
+  // beacon meant to receive from arbitrary public site visitors, not just the admin/miniapp
+  // origins the rest of the API is locked to.
+  const TRACK_BOT_UA = /bot|crawl|spider|slurp|facebookexternalhit|whatsapp|telegrambot|ahrefsbot|semrushbot|mj12bot|dotbot|petalbot|bingpreview|headlesschrome|curl\/|wget\/|python-requests/i;
+
+  app.options('/api/track', (req: Request, res: Response) => {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.sendStatus(204);
+  });
+
+  app.post('/api/track', async (req: Request, res: Response) => {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+    try {
+      const ua = String(req.headers['user-agent'] || '');
+      if (TRACK_BOT_UA.test(ua)) return res.sendStatus(204);
+
+      const { path: p, referrer, utmSource, utmMedium, utmCampaign, visitorId } = req.body || {};
+      if (!p || !visitorId) return res.sendStatus(400);
+
+      await db.logPageView({
+        path: String(p).slice(0, 500),
+        referrer: referrer ? String(referrer).slice(0, 500) : null,
+        utmSource: utmSource ? String(utmSource).slice(0, 100) : null,
+        utmMedium: utmMedium ? String(utmMedium).slice(0, 100) : null,
+        utmCampaign: utmCampaign ? String(utmCampaign).slice(0, 100) : null,
+        visitorId: String(visitorId).slice(0, 100),
+      });
+      res.sendStatus(204);
+    } catch (err) {
+      // A broken tracking beacon should never surface an error to a real site visitor.
+      console.error('[track] error:', (err as Error).message);
+      res.sendStatus(204);
+    }
+  });
+
   // ── Paystack payment callback (redirect after payment) ──────────────────────
   const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
   const TELEGRAM_RETURN_URL = `https://t.me/${BOT_USERNAME}`;
@@ -885,6 +923,13 @@ export default function createServer(bot: any) {
       weakTopics: weakTopicsResult.rows,
       engagement: dauResult.rows[0],
     });
+  });
+
+  // ── GET /api/admin/analytics/pageviews — in-house landing analytics ────────
+  app.get('/api/admin/analytics/pageviews', adminAuth, async (req: Request, res: Response) => {
+    const days = parseInt(String(req.query.days || '30'), 10) || 30;
+    const data = await db.getPageViewAnalytics(days);
+    res.json(data);
   });
 
   // ── GET /api/admin/analytics/hard-questions ────────────────────────────────

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getAnalytics, getRetention, getFunnel } from "../api";
-import type { Analytics, DailyData, SubjectData, WeakTopicData, RetentionData, FunnelData } from "../types";
+import { getAnalytics, getRetention, getFunnel, getPageViewAnalytics } from "../api";
+import type { Analytics, DailyData, SubjectData, WeakTopicData, RetentionData, FunnelData, PageViewAnalytics } from "../types";
 import Spinner from "../components/Spinner";
 
 function accuracyColor(acc: number): string {
@@ -46,20 +46,48 @@ function BarChart({ data }: BarChartProps) {
   );
 }
 
+function ViewsBarChart({ data }: { data: PageViewAnalytics["daily"] }) {
+  const max = Math.max(...data.map((d) => d.views), 1);
+
+  return (
+    <div className="flex h-32 items-end gap-1.5">
+      {data.map((d) => {
+        const height = Math.max(4, Math.round((d.views / max) * 100));
+        const label = new Date(d.date).toLocaleDateString("en-NG", { month: "short", day: "numeric" });
+        return (
+          <div key={d.date} className="group relative flex flex-1 flex-col items-center gap-1">
+            <div className="absolute bottom-full z-10 mb-1 hidden group-hover:block">
+              <div className="whitespace-nowrap rounded border border-border bg-surface2 px-2 py-1 text-xs text-white shadow-lg">
+                {label}: {d.views} views, {d.uniques} unique
+              </div>
+            </div>
+            <div
+              className="w-full cursor-default rounded-t-sm bg-accent/60 transition-colors hover:bg-accent"
+              style={{ height: `${height}%` }}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [retention, setRetention] = useState<RetentionData | null>(null);
   const [funnel, setFunnel] = useState<FunnelData | null>(null);
+  const [pageViews, setPageViews] = useState<PageViewAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [data, ret, fun] = await Promise.all([getAnalytics(), getRetention(), getFunnel()]);
+      const [data, ret, fun, pv] = await Promise.all([getAnalytics(), getRetention(), getFunnel(), getPageViewAnalytics(30)]);
       setAnalytics(data);
       setRetention(ret);
       setFunnel(fun);
+      setPageViews(pv);
       setError(null);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to load analytics");
@@ -190,6 +218,74 @@ export default function AnalyticsPage() {
               <span><span className="inline-block h-2 w-2 rounded-sm bg-accent mr-1" />Premium {conversionRate}%</span>
               <span><span className="inline-block h-2 w-2 rounded-sm bg-amber-400/60 mr-1" />Active free</span>
               <span><span className="inline-block h-2 w-2 rounded-sm bg-surface2 mr-1" />Inactive</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Web Traffic (landing page) */}
+      {pageViews && (
+        <div className="rounded-xl border border-border bg-surface p-5">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-white">Web Traffic — Last 30 Days</h2>
+            <p className="mt-0.5 text-xs text-muted">Landing page views, in-house tracking (no third-party pixel)</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
+            <div>
+              <p className="text-xs text-muted mb-1">Page Views</p>
+              <p className="font-display text-2xl font-bold text-white">{pageViews.totalViews.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted mb-1">Unique Visitors</p>
+              <p className="font-display text-2xl font-bold text-accent">{pageViews.uniqueVisitors.toLocaleString()}</p>
+            </div>
+          </div>
+
+          {pageViews.daily.length > 0 && (
+            <div className="mt-5">
+              <ViewsBarChart data={pageViews.daily} />
+            </div>
+          )}
+
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Top Pages</p>
+              {pageViews.topPages.length === 0 ? (
+                <p className="text-xs text-muted">No data yet</p>
+              ) : (
+                <div className="space-y-1.5">
+                  {pageViews.topPages.map((p) => (
+                    <div key={p.path} className="flex items-center justify-between text-sm">
+                      <span className="truncate text-slate-300">{p.path}</span>
+                      <span className="ml-2 shrink-0 font-medium text-white">{p.views}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Top Sources</p>
+              {pageViews.topSources.length === 0 ? (
+                <p className="text-xs text-muted">No data yet</p>
+              ) : (
+                <div className="space-y-1.5">
+                  {pageViews.topSources.map((s) => {
+                    const pct = Math.round((s.views / Math.max(pageViews.totalViews, 1)) * 100);
+                    return (
+                      <div key={s.source}>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-300">{s.source}</span>
+                          <span className="font-medium text-white">{s.views} ({pct}%)</span>
+                        </div>
+                        <div className="mt-1 h-1.5 w-full rounded-full bg-surface2">
+                          <div className="h-1.5 rounded-full bg-accent" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>

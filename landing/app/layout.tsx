@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { faqs } from "./data/faqs";
+import TrackPageView from "./components/TrackPageView";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
@@ -150,6 +151,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-white text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100" suppressHydrationWarning>
+        <TrackPageView />
         {children}
       </body>
     </html>

@@ -15,6 +15,7 @@ import type {
   BulkImportResult,
   PricingSettings,
   PricingHistoryEntry,
+  PageViewAnalytics,
 } from "./types";
 
 const BASE = (import.meta.env.VITE_API_URL ?? "") + "/api/admin";
@@ -301,6 +302,10 @@ export async function getRetention(): Promise<RetentionData> {
 
 export async function getFunnel(): Promise<FunnelData> {
   return cachedReq<FunnelData>("/analytics/funnel");
+}
+
+export async function getPageViewAnalytics(days = 30): Promise<PageViewAnalytics> {
+  return cachedReq<PageViewAnalytics>("/analytics/pageviews", { days });
 }
 
 export async function getBroadcastHistory(): Promise<BroadcastLog[]> {

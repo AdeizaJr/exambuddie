@@ -522,6 +522,20 @@ WHERE id = 116125`,
 
   // ── Activation nudge (one-time DM if a new user never answers a question) ──
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS activation_nudge_sent_at TIMESTAMPTZ DEFAULT NULL`,
+
+  // ── In-house landing-page analytics (no third-party pixel/SDK) ────────────
+  `CREATE TABLE IF NOT EXISTS page_views (
+    id SERIAL PRIMARY KEY,
+    path TEXT NOT NULL,
+    referrer TEXT,
+    utm_source TEXT,
+    utm_medium TEXT,
+    utm_campaign TEXT,
+    visitor_id TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_page_views_created_at ON page_views(created_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_page_views_path ON page_views(path)`,
 ];
 
 async function migrate(): Promise<void> {
