@@ -561,13 +561,22 @@ export function answerOptions(q: Question): string {
 }
 
 export function formatExplanation(text: string): string {
-  // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain
-  // Still sanitize any bare < that are not valid Telegram tags
+  // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain.
+  // Still sanitize any bare < or & that aren't part of a valid Telegram tag/entity — otherwise
+  // Telegram's HTML parser rejects the whole message and the send throws.
   if (/<(?:b|i|code)>/.test(text)) {
-    return text.replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
+    return text
+      .replace(/&(?!(?:amp|lt|gt|quot|#39);)/g, '&amp;')
+      .replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
   }
-  // General pre-formatting — works across all subjects
-  const preFormatted = text
+  // General pre-formatting — works across all subjects. Escape raw HTML metacharacters up
+  // front: math/economics explanations routinely contain literal "<"/">" as inequality
+  // operators (e.g. "-1/2 < x < 3"), and sending that unescaped with parse_mode HTML makes
+  // Telegram reject the entire message ("can't parse entities") — which surfaced as QOTD
+  // and practice results silently falling through to the generic bot-error handler. None of
+  // the regexes below key off literal <, >, or & in the source text, so escaping first is safe.
+  const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const preFormatted = escaped
     // Back-to-back LaTeX groups "\(...\) \(...\)" with nothing but whitespace between them
     // are separate derivation steps (common in AI-generated math/physics explanations).
     // Must run before convertLatex strips the \( \) delimiters, or the step boundary is lost
