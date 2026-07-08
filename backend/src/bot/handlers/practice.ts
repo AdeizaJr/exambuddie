@@ -598,7 +598,8 @@ export async function handleNext(ctx: any): Promise<void> {
   } else {
     if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
     // Adaptive: when no explicit topic chosen, 60% probability drill a weak topic
-    let adaptiveTopic = session.topic;
+    const requestedTopic = session.topic;
+    let adaptiveTopic = requestedTopic;
     if (!adaptiveTopic) {
       const weak = await db.getWeakTopics(user.id, session.subject || '', session.examType || user.exam_type || '');
       if (weak.length > 0 && Math.random() < 0.6) {
@@ -606,6 +607,14 @@ export async function handleNext(ctx: any): Promise<void> {
       }
     }
     q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, adaptiveTopic, user.id);
+    // The adaptive topic pick isn't scoped to the current year/topic filters (it comes from
+    // the user's overall weak-topic history), so it can legitimately match zero rows within
+    // this specific year even when plenty of other unseen questions remain there. Retry
+    // without it before concluding the pool is exhausted — but only when it was an internal
+    // adaptive guess, not a topic the user explicitly asked to drill.
+    if (!q && adaptiveTopic && adaptiveTopic !== requestedTopic) {
+      q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, requestedTopic, user.id);
+    }
   }
 
   if (!q) {

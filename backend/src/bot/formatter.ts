@@ -560,7 +560,12 @@ export function answerOptions(q: Question): string {
   return text;
 }
 
-export function formatExplanation(text: string): string {
+export function formatExplanation(rawText: string): string {
+  // Scraped/OCR'd explanations routinely use "º" (U+00BA, masculine ordinal indicator) where
+  // they mean the degree sign "°" (U+00B0) — visually near-identical, but every degree-based
+  // splitting rule below matches literal U+00B0, so content using the wrong codepoint sailed
+  // through none of them and rendered as one unbroken wall of text.
+  const text = rawText.replace(/º/g, '°');
   // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain.
   // Still sanitize any bare < or & that aren't part of a valid Telegram tag/entity — otherwise
   // Telegram's HTML parser rejects the whole message and the send throws.
