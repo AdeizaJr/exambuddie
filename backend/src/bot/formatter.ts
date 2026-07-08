@@ -867,7 +867,7 @@ export function statsFilterKeyboard() {
   };
 }
 
-export function statsMessage(user: User, stats: any, weakTopics?: any[], examType?: string, subjectStats?: any[]): string {
+export function statsMessage(user: User, stats: any, weakTopics?: any[], examType?: string, subjectStats?: any[], mistakePattern?: string | null): string {
   const plan = user.plan === 'premium'
     ? `⭐ Premium (expires ${user.plan_expires_at ? new Date(user.plan_expires_at).toLocaleDateString('en-NG') : 'N/A'})`
     : '🆓 Free (5 questions/day)';
@@ -881,6 +881,8 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
   const drillTip = worstTopic
     ? `\n\n💡 <b>Score Tip:</b> Drilling <i>${worstTopic.topic}</i> (${worstTopic.accuracy}%) could meaningfully boost your score. Use /drill to target it now.`
     : '';
+
+  const mistakeTip = mistakePattern ? `\n\n🔍 <b>Mistake Pattern:</b> ${mistakePattern}` : '';
 
   const examLabel = examType && examType !== 'all' ? examType : 'Overall';
 
@@ -922,7 +924,7 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 • ${dailyProgress}
 
 💳 <b>Plan:</b> ${plan}
-${subjectSection}${weakSection}${drillTip}`;
+${subjectSection}${weakSection}${drillTip}${mistakeTip}`;
 }
 
 export function freeLimitMessage(remaining: number, limit: number): string | null {

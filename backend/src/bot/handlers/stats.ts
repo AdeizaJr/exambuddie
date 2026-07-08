@@ -35,9 +35,10 @@ export async function handleStatsFilter(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   const subjects = user.subjects && user.subjects.length > 0 ? user.subjects : [];
-  const [stats, subjectStats, ...perSubjectWeakTopics] = await Promise.all([
+  const [stats, subjectStats, mistakePattern, ...perSubjectWeakTopics] = await Promise.all([
     db.getUserStats(user.id, examType),
     db.getSubjectStats(user.id, examType),
+    db.getMistakePattern(user.id),
     ...subjects.map(s => db.getWeakTopics(user.id, s, examType)),
   ]);
   const weakTopics = (perSubjectWeakTopics as any[][])
@@ -45,7 +46,7 @@ export async function handleStatsFilter(ctx: any): Promise<void> {
     .sort((a: any, b: any) => a.accuracy - b.accuracy)
     .slice(0, 3);
 
-  await ctx.reply(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats), {
+  await ctx.reply(fmt.statsMessage(user, stats, weakTopics, examType, subjectStats, mistakePattern as string | null), {
     parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [[{ text: '📤 Share Progress', callback_data: 'stats:share' }]],

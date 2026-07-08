@@ -443,9 +443,50 @@ ${streakLine} → /practice`;
     console.log(`[CRON] NDPA retention: purged ${purged}/${rows.length} inactive accounts`);
   });
 
+  // ── Daily 5:30am UTC (6:30am WAT) — Exam Day Companion ────────────────────
+  // On the morning a user's own exam is actually sitting, replace the usual QOTD noise
+  // with one calm, subject-specific message instead — checked here, ahead of QOTD below,
+  // so the QOTD cron can skip anyone who already got this.
+  cron.schedule('30 5 * * *', async () => {
+    const { todaysExamSubjects } = await import('../bot/handlers/timetable');
+    // subject slugs that don't map 1:1 onto a /formula sheet key
+    const FORMULA_ALIAS: Record<string, string> = { math: 'maths' };
+    const FORMULA_SHEETS = new Set([
+      'physics', 'chemistry', 'maths', 'further-math', 'biology', 'economics', 'government',
+      'english', 'geography', 'literature', 'accounts', 'agric', 'commerce', 'computer', 'crk', 'irk',
+    ]);
+
+    const { rows: users } = await db.query(
+      `SELECT telegram_id, first_name, exam_type, subjects FROM users
+       WHERE notifications_enabled = TRUE AND exam_type IS NOT NULL`
+    );
+
+    let sent = 0;
+    for (const user of users) {
+      try {
+        const subjectsToday: string[] = todaysExamSubjects(user.exam_type, user.subjects || []);
+        if (subjectsToday.length === 0) continue;
+
+        const isJamb = subjectsToday[0] === 'ALL';
+        const subjectLine = isJamb ? 'JAMB UTME' : `${user.exam_type} ${subjectsToday.map(s => SUBJECT_MAP[s] || s).join(' & ')}`;
+        const msg = `🍀 <b>Today's the day, ${user.first_name}!</b>\n\nYour ${subjectLine} exam is today. Stay calm, trust your practice, and take it one question at a time. You've got this.`;
+
+        const formulaSlug = !isJamb ? (FORMULA_ALIAS[subjectsToday[0]] || subjectsToday[0]) : null;
+        const keyboard = formulaSlug && FORMULA_SHEETS.has(formulaSlug)
+          ? { inline_keyboard: [[{ text: `📐 Quick ${SUBJECT_MAP[subjectsToday[0]] || subjectsToday[0]} Formula Check`, callback_data: `formula:${formulaSlug}` }]] }
+          : { inline_keyboard: [[{ text: '📚 One Last Practice Round', callback_data: 'practice:pick' }]] };
+
+        await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML', reply_markup: keyboard });
+        sent++;
+      } catch { /* blocked or unavailable */ }
+    }
+    if (sent > 0) console.log(`[CRON] Exam-day companion sent to ${sent} users`);
+  });
+
   // ── Daily 6am UTC (7am WAT) — Question of the Day broadcast ──────────────
   cron.schedule('0 6 * * *', async () => {
     console.log('[CRON] Sending Question of the Day...');
+    const { todaysExamSubjects } = await import('../bot/handlers/timetable');
     const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
 
     // Pick one question per exam type and cache it for the day. 'ALL' covers users
@@ -501,6 +542,10 @@ ${streakLine} → /practice`;
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
+        // Anyone sitting their own exam today already got the calm, subject-specific Exam
+        // Day Companion message above — don't also land an unrelated QOTD on top of it.
+        if (todaysExamSubjects(user.exam_type, user.subjects || []).length > 0) return;
+
         const bucketKey = ['ALL', 'BOTH'].includes(user.exam_type) ? 'ALL' : user.exam_type;
         const examTypeFilter = bucketKey === 'ALL' ? null : user.exam_type;
 
