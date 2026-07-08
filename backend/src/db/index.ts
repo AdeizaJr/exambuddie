@@ -417,6 +417,73 @@ export async function getWeakTopics(
   return rows;
 }
 
+// Surfaces a behavioral mistake pattern (not just "weak in topic X") from a user's most
+// recent wrong attempts — a guessing habit, adjacent-option confusion, or rushing. This is
+// a different, complementary signal to per-topic accuracy: two students can have identical
+// topic weaknesses for completely different underlying reasons.
+export async function getMistakePattern(userId: number): Promise<string | null> {
+  const { rows } = await pool.query<{
+    selected_option: string | null;
+    correct_option: string;
+    is_correct: boolean;
+    time_taken_ms: number | null;
+  }>(
+    `SELECT a.selected_option, q.correct_option, a.is_correct, a.time_taken_ms
+     FROM attempts a
+     JOIN questions q ON a.question_id = q.id
+     WHERE a.user_id = $1
+     ORDER BY a.attempted_at DESC
+     LIMIT 80`,
+    [userId]
+  );
+
+  // selected_option is a single space (not NULL) when a question timed out with no
+  // answer — truthy in JS, but not a real "picked the wrong option" data point. A timeout
+  // is a different signal (ran out of time) than a guessing/confusion pattern, so exclude it.
+  const wrong = rows
+    .filter(r => !r.is_correct && r.selected_option && /^[A-E]$/.test(r.selected_option.trim()))
+    .map(r => ({ ...r, selected_option: r.selected_option!.trim() }));
+  if (wrong.length < 15) return null; // not enough signal yet
+
+  // 1. Single-letter guessing bias — one option dominates their wrong answers regardless
+  // of what the correct answer actually was.
+  const letterCounts: Record<string, number> = {};
+  for (const r of wrong) letterCounts[r.selected_option] = (letterCounts[r.selected_option] || 0) + 1;
+  const [topLetter, topCount] = Object.entries(letterCounts).sort((a, b) => b[1] - a[1])[0];
+  if (topCount / wrong.length >= 0.45) {
+    const pct = Math.round((topCount / wrong.length) * 100);
+    return `You tend to pick <b>${topLetter}</b> when you're unsure — ${pct}% of your wrong answers were ${topLetter}. That's a guessing habit, not a knowledge gap. Try eliminating options you're sure are wrong before picking.`;
+  }
+
+  // 2. Adjacent-option confusion — picks the option right next to the correct one more
+  // often than chance would predict.
+  const letterIndex: Record<string, number> = { A: 0, B: 1, C: 2, D: 3, E: 4 };
+  const adjacent = wrong.filter(r => {
+    const a = letterIndex[r.selected_option];
+    const b = letterIndex[r.correct_option];
+    return a !== undefined && b !== undefined && Math.abs(a - b) === 1;
+  });
+  if (adjacent.length / wrong.length >= 0.4) {
+    const pct = Math.round((adjacent.length / wrong.length) * 100);
+    return `You often pick the option right next to the correct one — ${pct}% of your wrong answers were adjacent to the right one. Slow down and compare similar-looking options before choosing.`;
+  }
+
+  // 3. Rushing — answers wrong questions noticeably faster than correct ones.
+  const wrongTimed = wrong.filter(r => r.time_taken_ms != null);
+  const correctTimed = rows.filter(r => r.is_correct && r.time_taken_ms != null);
+  if (wrongTimed.length >= 10 && correctTimed.length >= 10) {
+    const avg = (arr: { time_taken_ms: number | null }[]) => arr.reduce((s, r) => s + r.time_taken_ms!, 0) / arr.length;
+    const wrongAvg = avg(wrongTimed);
+    const correctAvg = avg(correctTimed);
+    if (wrongAvg < correctAvg * 0.6) {
+      const pct = Math.round((1 - wrongAvg / correctAvg) * 100);
+      return `You answer wrong questions ${pct}% faster than the ones you get right — you're rushing. Re-read the question once before picking an answer.`;
+    }
+  }
+
+  return null;
+}
+
 export async function getSubjectStats(userId: number, examType?: string): Promise<SubjectStat[]> {
   const filtered = examType && examType !== 'all';
   const params: any[] = filtered ? [userId, examType] : [userId];

@@ -64,6 +64,21 @@ export function getExamDate(examType: string, subject: string): Date | null {
   return iso ? new Date(nextOccurrence(iso)) : null;
 }
 
+function todayIso(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// Which of a user's subjects (if any) have their exam sitting today. JAMB is a single
+// unified date across all subjects, so a match returns the sentinel ['ALL'] rather than
+// enumerating every subject the user picked.
+export function todaysExamSubjects(examType: string, userSubjects: string[]): string[] {
+  const today = todayIso();
+  if (examType === 'JAMB') return nextOccurrence(JAMB_2026) === today ? ['ALL'] : [];
+  const table = examType === 'NECO' ? NECO_2026 : WAEC_2026;
+  return userSubjects.filter(s => table[s] && nextOccurrence(table[s]) === today);
+}
+
 function daysUntil(date: Date): number {
   const now = new Date();
   const diff = date.setHours(0, 0, 0, 0) - new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
