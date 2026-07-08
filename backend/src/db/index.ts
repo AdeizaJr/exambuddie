@@ -1557,3 +1557,94 @@ export async function getUnresolvedAlerts(): Promise<SystemAlert[]> {
 export async function resolveAlert(id: number): Promise<void> {
   await pool.query(`UPDATE system_alerts SET resolved = true WHERE id = $1`, [id]);
 }
+
+// ── Landing-page analytics (in-house — no third-party pixel/SDK) ────────────
+
+export interface PageViewInput {
+  path: string;
+  referrer: string | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  visitorId: string;
+}
+
+export async function logPageView(v: PageViewInput): Promise<void> {
+  await pool.query(
+    `INSERT INTO page_views (path, referrer, utm_source, utm_medium, utm_campaign, visitor_id)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [v.path, v.referrer, v.utmSource, v.utmMedium, v.utmCampaign, v.visitorId]
+  );
+}
+
+export interface PageViewAnalytics {
+  totalViews: number;
+  uniqueVisitors: number;
+  topPages: { path: string; views: number }[];
+  topSources: { source: string; views: number }[];
+  daily: { date: string; views: number; uniques: number }[];
+}
+
+// Buckets a raw referrer/utm_source pair into a human-readable channel name. Done in JS
+// rather than a giant SQL CASE — the traffic volume here doesn't need the DB to do this.
+function bucketSource(referrer: string | null, utmSource: string | null): string {
+  const s = (utmSource || '').toLowerCase();
+  const r = (referrer || '').toLowerCase();
+  if (s.includes('tiktok') || r.includes('tiktok')) return 'TikTok';
+  if (s.includes('instagram') || r.includes('instagram') || s === 'ig') return 'Instagram';
+  if (s.includes('telegram') || r.includes('t.me') || r.includes('telegram')) return 'Telegram';
+  if (r.includes('google.') || s.includes('google')) return 'Google';
+  if (r.includes('bing.') || r.includes('duckduckgo')) return 'Other Search';
+  if (r.includes('facebook.') || s.includes('facebook') || s === 'fb') return 'Facebook';
+  if (r.includes('x.com') || r.includes('twitter.com') || s.includes('twitter')) return 'X / Twitter';
+  if (!referrer && !utmSource) return 'Direct';
+  return 'Other';
+}
+
+export async function getPageViewAnalytics(days = 30): Promise<PageViewAnalytics> {
+  const [totals, pages, sources, daily] = await Promise.all([
+    pool.query<{ total: string; uniques: string }>(
+      `SELECT COUNT(*) as total, COUNT(DISTINCT visitor_id) as uniques
+       FROM page_views WHERE created_at > NOW() - INTERVAL '1 day' * $1`,
+      [days]
+    ),
+    pool.query<{ path: string; views: string }>(
+      `SELECT path, COUNT(*) as views FROM page_views
+       WHERE created_at > NOW() - INTERVAL '1 day' * $1
+       GROUP BY path ORDER BY views DESC LIMIT 10`,
+      [days]
+    ),
+    pool.query<{ referrer: string | null; utm_source: string | null; views: string }>(
+      `SELECT referrer, utm_source, COUNT(*) as views FROM page_views
+       WHERE created_at > NOW() - INTERVAL '1 day' * $1
+       GROUP BY referrer, utm_source`,
+      [days]
+    ),
+    pool.query<{ day: string; views: string; uniques: string }>(
+      `SELECT to_char(date_trunc('day', created_at), 'YYYY-MM-DD') as day,
+              COUNT(*) as views, COUNT(DISTINCT visitor_id) as uniques
+       FROM page_views
+       WHERE created_at > NOW() - INTERVAL '1 day' * $1
+       GROUP BY day ORDER BY day ASC`,
+      [days]
+    ),
+  ]);
+
+  const sourceTotals: Record<string, number> = {};
+  for (const row of sources.rows) {
+    const bucket = bucketSource(row.referrer, row.utm_source);
+    sourceTotals[bucket] = (sourceTotals[bucket] || 0) + parseInt(row.views, 10);
+  }
+  const topSources = Object.entries(sourceTotals)
+    .map(([source, views]) => ({ source, views }))
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 10);
+
+  return {
+    totalViews: parseInt(totals.rows[0]?.total || '0', 10),
+    uniqueVisitors: parseInt(totals.rows[0]?.uniques || '0', 10),
+    topPages: pages.rows.map(r => ({ path: r.path, views: parseInt(r.views, 10) })),
+    topSources,
+    daily: daily.rows.map(r => ({ date: r.day, views: parseInt(r.views, 10), uniques: parseInt(r.uniques, 10) })),
+  };
+}
