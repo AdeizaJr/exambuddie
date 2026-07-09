@@ -220,7 +220,8 @@ export default function startCrons(bot: any): void {
 
     if (!users.length) return;
 
-    // Pre-select one fact per subject_code for today (least-recently-used)
+    // Pre-select one fact per (subject_code, difficulty) for today (least-recently-used).
+    // Everyone at the same level in a subject shares a fact — only the tier varies per user.
     const allSubjectCodes = [...new Set(users.flatMap((u: any) => u.subjects as string[]))];
     const factMap = await db.getDailyFactsForSubjects(allSubjectCodes);
     const fallbackFact = await db.getRandomFact();
@@ -230,6 +231,15 @@ export default function startCrons(bot: any): void {
     let sent = 0;
     const usedFactIds = new Set<number>();
 
+    // New to the subject (no attempts) defaults to 'easy' — build confidence before
+    // stretching them. Thresholds match the accuracy-color convention used elsewhere
+    // (landing page demo, share card): <50 struggling, 50-70 solid, >70 strong.
+    function tierForAccuracy(accuracy: number | null): string {
+      if (accuracy === null || accuracy < 50) return 'easy';
+      if (accuracy < 70) return 'medium';
+      return 'hard';
+    }
+
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user: any) => {
@@ -237,14 +247,27 @@ export default function startCrons(bot: any): void {
           const subjects: string[] = user.subjects || [];
           // Rotate which subject the user sees today
           const todaySubject = subjects[dayIndex % subjects.length];
-          const fact = factMap[todaySubject] || fallbackFact;
+          const bySubject = factMap[todaySubject];
+
+          let fact = fallbackFact;
+          if (bySubject) {
+            const accuracy = await db.getUserSubjectAccuracy(user.id, todaySubject);
+            const tier = tierForAccuracy(accuracy);
+            fact = bySubject[tier] || bySubject.medium || Object.values(bySubject)[0] || fallbackFact;
+          }
           if (!fact) return;
 
           const subjectLabel = fact.subject;
           const topicLabel = fact.topic ? ` · ${fact.topic}` : '';
 
           const msg = `💡 <b>Did You Know?</b>\n\n${fact.fact_text}\n\n<i>📚 ${subjectLabel}${topicLabel}</i>`;
-          await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
+          const ctaButton = fact.topic
+            ? { text: '🎯 Drill this topic', callback_data: `drill:topic:${fact.subject_code}:${fact.topic}` }
+            : { text: `📚 Practice ${SUBJECT_MAP[fact.subject_code] || fact.subject}`, callback_data: `practice:subject:${fact.subject_code}` };
+          await bot.telegram.sendMessage(user.telegram_id, msg, {
+            parse_mode: 'HTML',
+            reply_markup: { inline_keyboard: [[ctaButton]] },
+          });
           usedFactIds.add(fact.id);
           sent++;
         } catch { /* blocked or unavailable */ }

@@ -7999,6 +7999,2406 @@
       "fact": "Nigeria gained independence from British colonial rule on 1 October 1960 and became a republic in 1963.",
       "difficulty": "easy",
       "source": "general knowledge"
+    },
+    {
+      "id": "acc_001",
+      "subject": "Accounting",
+      "topic": "Double Entry",
+      "fact": "In double-entry bookkeeping, every transaction affects at least two accounts, one debited and one credited, keeping the books in balance.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_002",
+      "subject": "Accounting",
+      "topic": "Accounting Equation",
+      "fact": "The basic accounting equation states that Assets = Capital + Liabilities.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_003",
+      "subject": "Accounting",
+      "topic": "History",
+      "fact": "Luca Pacioli, an Italian friar and mathematician, is called the 'Father of Accounting' for publishing the first printed description of double-entry bookkeeping in 1494.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_004",
+      "subject": "Accounting",
+      "topic": "Double Entry",
+      "fact": "The words debit and credit come from the Latin 'debere' (to owe) and 'credere' (to trust); debit is the left side of an account and credit the right.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_005",
+      "subject": "Accounting",
+      "topic": "Trial Balance",
+      "fact": "A trial balance lists all ledger balances to check that total debits equal total credits, but it does not prove the books are free of every error.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_006",
+      "subject": "Accounting",
+      "topic": "Errors",
+      "fact": "Some errors do not affect trial balance agreement, including errors of omission, commission, principle, original entry, complete reversal, and compensating errors.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_007",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "The going concern concept assumes a business will continue operating for the foreseeable future.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_008",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "The prudence, or conservatism, concept says to anticipate no profit but to provide for all possible losses.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_009",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "The matching concept requires expenses to be recorded in the same period as the revenues they help to earn.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_010",
+      "subject": "Accounting",
+      "topic": "Depreciation",
+      "fact": "Depreciation is the systematic spreading of a fixed asset's cost over its useful life; it is not a way of setting cash aside.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_011",
+      "subject": "Accounting",
+      "topic": "Depreciation",
+      "fact": "Two common depreciation methods are the straight-line method, which charges an equal amount each year, and the reducing-balance method, which charges a fixed percentage of the falling book value.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_012",
+      "subject": "Accounting",
+      "topic": "Control Accounts",
+      "fact": "Because a trial balance can still hide errors, accountants also rely on control accounts and reconciliations for accuracy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_013",
+      "subject": "Accounting",
+      "topic": "Petty Cash",
+      "fact": "The imprest system tops petty cash back up to a fixed float by reimbursing exactly what was spent.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_014",
+      "subject": "Accounting",
+      "topic": "Books of Original Entry",
+      "fact": "Books of original entry include the sales journal, purchases journal, returns journals, cash book, and the general journal.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_015",
+      "subject": "Accounting",
+      "topic": "Cash Book",
+      "fact": "The cash book is unusual because it acts as both a book of original entry and a ledger account at the same time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_016",
+      "subject": "Accounting",
+      "topic": "Cash Book",
+      "fact": "A three-column cash book records cash, bank, and discount columns side by side.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_017",
+      "subject": "Accounting",
+      "topic": "Discounts",
+      "fact": "Discount allowed is an expense to the seller, while discount received is income to the buyer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_018",
+      "subject": "Accounting",
+      "topic": "Bank Reconciliation",
+      "fact": "A bank reconciliation statement explains the difference between the cash book balance and the bank statement balance.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_019",
+      "subject": "Accounting",
+      "topic": "Bank Reconciliation",
+      "fact": "Unpresented cheques and uncredited lodgements are common reasons a cash book and bank statement disagree.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_020",
+      "subject": "Accounting",
+      "topic": "Capital and Revenue",
+      "fact": "Capital expenditure buys or improves fixed assets, while revenue expenditure covers day-to-day running costs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_021",
+      "subject": "Accounting",
+      "topic": "Final Accounts",
+      "fact": "The trading account works out gross profit by subtracting the cost of goods sold from sales.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_022",
+      "subject": "Accounting",
+      "topic": "Final Accounts",
+      "fact": "The profit and loss account finds net profit by deducting expenses from gross profit and adding other income.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_023",
+      "subject": "Accounting",
+      "topic": "Final Accounts",
+      "fact": "The balance sheet is a statement of financial position at a particular date, not for a whole period.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_024",
+      "subject": "Accounting",
+      "topic": "Assets",
+      "fact": "Current assets are expected to become cash within a year, while fixed assets are held for long-term use.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_025",
+      "subject": "Accounting",
+      "topic": "Working Capital",
+      "fact": "Working capital is calculated as current assets minus current liabilities.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_026",
+      "subject": "Accounting",
+      "topic": "Capital",
+      "fact": "Drawings are cash or goods the owner takes for personal use, and they reduce capital.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_027",
+      "subject": "Accounting",
+      "topic": "Ledger",
+      "fact": "A debit balance on a personal account usually means that person owes the business and is therefore a debtor.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_028",
+      "subject": "Accounting",
+      "topic": "Source Documents",
+      "fact": "Source documents such as invoices, receipts, and credit notes provide the evidence for recording transactions.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_029",
+      "subject": "Accounting",
+      "topic": "Source Documents",
+      "fact": "An invoice is issued by the seller to demand payment, while a receipt acknowledges that payment has been made.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_030",
+      "subject": "Accounting",
+      "topic": "Source Documents",
+      "fact": "A credit note is sent when goods are returned or an overcharge is corrected, reducing the amount owed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_031",
+      "subject": "Accounting",
+      "topic": "Source Documents",
+      "fact": "A statement of account summarises a customer's transactions and shows the balance due over a period.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_032",
+      "subject": "Accounting",
+      "topic": "Partnership",
+      "fact": "When partners have no agreement, the Partnership Act shares profits and losses equally.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_033",
+      "subject": "Accounting",
+      "topic": "Partnership",
+      "fact": "Partners' salaries, interest on capital, and interest on drawings are all shown in the appropriation account.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_034",
+      "subject": "Accounting",
+      "topic": "Intangibles",
+      "fact": "Goodwill is an intangible asset that represents a business's reputation and loyal customer base.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_035",
+      "subject": "Accounting",
+      "topic": "Non-Profit",
+      "fact": "Non-profit bodies prepare a Receipts and Payments account and an Income and Expenditure account instead of trading and profit-and-loss accounts.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_036",
+      "subject": "Accounting",
+      "topic": "Non-Profit",
+      "fact": "The accumulated fund of a club plays the same role as capital in a trading business.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_037",
+      "subject": "Accounting",
+      "topic": "Manufacturing",
+      "fact": "A manufacturing account calculates the cost of goods produced, including prime cost and factory overheads.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_038",
+      "subject": "Accounting",
+      "topic": "Manufacturing",
+      "fact": "Prime cost is made up of direct materials, direct labour, and direct expenses.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_039",
+      "subject": "Accounting",
+      "topic": "Control Accounts",
+      "fact": "Control accounts, such as the sales ledger control account, act as an independent check on the individual ledgers.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_040",
+      "subject": "Accounting",
+      "topic": "Errors",
+      "fact": "A suspense account temporarily holds the difference when a trial balance fails to agree, until the errors are traced.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_041",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "The dual aspect concept underpins double entry: every debit must have an equal and opposite credit.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_042",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "The business entity concept treats the business as separate from its owner for accounting purposes.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_043",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "The money measurement concept records only items that can be expressed in money, so things like staff morale are left out.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_044",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "The historical cost concept records assets at their original purchase price rather than current market value.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_045",
+      "subject": "Accounting",
+      "topic": "Adjustments",
+      "fact": "Accruals are expenses that have been incurred but not yet paid, while prepayments are expenses paid in advance.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_046",
+      "subject": "Accounting",
+      "topic": "Bad Debts",
+      "fact": "Bad debts are amounts owed by customers that are written off because they cannot be recovered.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_047",
+      "subject": "Accounting",
+      "topic": "Bad Debts",
+      "fact": "A provision for doubtful debts is an estimate set aside for debts that might not be paid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_048",
+      "subject": "Accounting",
+      "topic": "Inventory",
+      "fact": "Stock is normally valued at the lower of cost and net realisable value, in line with prudence.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_049",
+      "subject": "Accounting",
+      "topic": "Inventory",
+      "fact": "Under FIFO (First In, First Out), the oldest stock is assumed to be sold first.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_050",
+      "subject": "Accounting",
+      "topic": "Ratios",
+      "fact": "Return on capital employed measures how efficiently a business uses its capital to generate profit.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_051",
+      "subject": "Accounting",
+      "topic": "Ratios",
+      "fact": "The current ratio compares current assets with current liabilities to judge short-term liquidity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_052",
+      "subject": "Accounting",
+      "topic": "Ledger",
+      "fact": "The ledger is the main book of accounts, where transactions are classified and summarised.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_053",
+      "subject": "Accounting",
+      "topic": "Ledger",
+      "fact": "Posting is the process of transferring entries from the journals into the ledger.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_054",
+      "subject": "Accounting",
+      "topic": "Cash Book",
+      "fact": "Contra entries in the cash book occur when money simply moves between cash and bank within the same business.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_055",
+      "subject": "Accounting",
+      "topic": "Carriage",
+      "fact": "Carriage inwards is added to the cost of purchases, while carriage outwards is treated as a selling expense.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_056",
+      "subject": "Accounting",
+      "topic": "Depreciation",
+      "fact": "Once an asset is fully depreciated, no further depreciation is charged even if the asset is still in use.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_057",
+      "subject": "Accounting",
+      "topic": "Source Documents",
+      "fact": "A debit note may be sent by a buyer to request a reduction, or by a seller to correct an undercharge.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_058",
+      "subject": "Accounting",
+      "topic": "Double Entry",
+      "fact": "The books must always balance because of the self-checking nature of double-entry bookkeeping.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_059",
+      "subject": "Accounting",
+      "topic": "Capital",
+      "fact": "Net profit increases capital, while net loss and drawings reduce it.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_060",
+      "subject": "Accounting",
+      "topic": "Introduction",
+      "fact": "Accounting is often called the 'language of business' because it communicates financial information to decision-makers.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_001",
+      "subject": "Further Mathematics",
+      "topic": "Sets",
+      "fact": "In set theory, the empty set has no elements, yet it is a subset of every set.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_002",
+      "subject": "Further Mathematics",
+      "topic": "Sets",
+      "fact": "A set with n elements has exactly 2 to the power n subsets.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_003",
+      "subject": "Further Mathematics",
+      "topic": "Sets",
+      "fact": "De Morgan's laws state that the complement of a union equals the intersection of the complements, and vice versa.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_004",
+      "subject": "Further Mathematics",
+      "topic": "Surds",
+      "fact": "A surd such as the square root of 2 is irrational: its decimal never ends and never repeats.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_005",
+      "subject": "Further Mathematics",
+      "topic": "Surds",
+      "fact": "Rationalising a denominator removes surds from the bottom of a fraction by multiplying by a suitable form of one.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_006",
+      "subject": "Further Mathematics",
+      "topic": "Indices",
+      "fact": "The laws of indices include a^m times a^n equals a^(m+n), and (a^m)^n equals a^(mn).",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_007",
+      "subject": "Further Mathematics",
+      "topic": "Indices",
+      "fact": "Any non-zero number raised to the power zero equals one.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_008",
+      "subject": "Further Mathematics",
+      "topic": "Logarithms",
+      "fact": "Logarithms turn multiplication into addition, since log(xy) equals log x plus log y.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_009",
+      "subject": "Further Mathematics",
+      "topic": "Logarithms",
+      "fact": "A logarithm is the inverse of an exponent: because 10 squared is 100, the log of 100 to base 10 is 2.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_010",
+      "subject": "Further Mathematics",
+      "topic": "Binomial Theorem",
+      "fact": "The binomial theorem expands expressions like (a + b) to the power n using coefficients from Pascal's triangle.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_011",
+      "subject": "Further Mathematics",
+      "topic": "Binomial Theorem",
+      "fact": "Each number in Pascal's triangle is the sum of the two numbers directly above it.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_012",
+      "subject": "Further Mathematics",
+      "topic": "Sequences",
+      "fact": "In an arithmetic progression, consecutive terms differ by a constant called the common difference.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_013",
+      "subject": "Further Mathematics",
+      "topic": "Sequences",
+      "fact": "In a geometric progression, each term is found by multiplying the previous term by a constant common ratio.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_014",
+      "subject": "Further Mathematics",
+      "topic": "Series",
+      "fact": "The sum to infinity of a geometric series exists only when the common ratio lies strictly between minus one and one.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_015",
+      "subject": "Further Mathematics",
+      "topic": "Permutations",
+      "fact": "The number of ways to arrange n different objects in a row is n factorial.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_016",
+      "subject": "Further Mathematics",
+      "topic": "Combinations",
+      "fact": "Combinations count selections where order does not matter, while permutations count arrangements where order does matter.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_017",
+      "subject": "Further Mathematics",
+      "topic": "Probability",
+      "fact": "Every probability lies between 0, meaning impossible, and 1, meaning certain.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_018",
+      "subject": "Further Mathematics",
+      "topic": "Probability",
+      "fact": "For mutually exclusive events, the probability of A or B equals the probability of A plus the probability of B.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_019",
+      "subject": "Further Mathematics",
+      "topic": "Probability",
+      "fact": "For independent events, the probability of A and B equals the probability of A times the probability of B.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_020",
+      "subject": "Further Mathematics",
+      "topic": "Matrices",
+      "fact": "A matrix is a rectangular array of numbers arranged in rows and columns.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_021",
+      "subject": "Further Mathematics",
+      "topic": "Matrices",
+      "fact": "Matrix multiplication is not commutative, so in general AB does not equal BA.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_022",
+      "subject": "Further Mathematics",
+      "topic": "Matrices",
+      "fact": "The determinant of a two-by-two matrix with entries a, b, c, d is ad minus bc.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_023",
+      "subject": "Further Mathematics",
+      "topic": "Matrices",
+      "fact": "A matrix with a determinant of zero has no inverse and is described as singular.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_024",
+      "subject": "Further Mathematics",
+      "topic": "Vectors",
+      "fact": "Vectors have both magnitude and direction, unlike scalars, which have magnitude only.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_025",
+      "subject": "Further Mathematics",
+      "topic": "Vectors",
+      "fact": "The scalar (dot) product of two perpendicular vectors is zero.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_026",
+      "subject": "Further Mathematics",
+      "topic": "Vectors",
+      "fact": "The magnitude of a vector with components x and y is the square root of x squared plus y squared.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_027",
+      "subject": "Further Mathematics",
+      "topic": "Trigonometry",
+      "fact": "One of the fundamental trigonometric identities is that sine squared plus cosine squared of an angle equals one.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_028",
+      "subject": "Further Mathematics",
+      "topic": "Trigonometry",
+      "fact": "The graph of y equals sine x repeats every 360 degrees, so its period is 360 degrees.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_029",
+      "subject": "Further Mathematics",
+      "topic": "Calculus",
+      "fact": "Differentiation finds the gradient of a curve at any point and represents a rate of change.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_030",
+      "subject": "Further Mathematics",
+      "topic": "Calculus",
+      "fact": "The derivative of x to the power n is n times x to the power (n minus one).",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_031",
+      "subject": "Further Mathematics",
+      "topic": "Calculus",
+      "fact": "At a maximum or minimum point on a curve, the first derivative, the gradient, is zero.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_032",
+      "subject": "Further Mathematics",
+      "topic": "Calculus",
+      "fact": "Integration is the reverse of differentiation and can be used to find the area under a curve.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_033",
+      "subject": "Further Mathematics",
+      "topic": "Calculus",
+      "fact": "The constant of integration is added because differentiation removes any constant term.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_034",
+      "subject": "Further Mathematics",
+      "topic": "Complex Numbers",
+      "fact": "A complex number has the form a plus b i, where i is the square root of minus one.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_035",
+      "subject": "Further Mathematics",
+      "topic": "Complex Numbers",
+      "fact": "The imaginary unit i satisfies i squared equals minus one, something no real number can do.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_036",
+      "subject": "Further Mathematics",
+      "topic": "Complex Numbers",
+      "fact": "On an Argand diagram, a complex number is plotted with its real part on the horizontal axis and its imaginary part on the vertical axis.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_037",
+      "subject": "Further Mathematics",
+      "topic": "Quadratics",
+      "fact": "For a quadratic, the sum of the roots is minus b over a and the product of the roots is c over a.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_038",
+      "subject": "Further Mathematics",
+      "topic": "Quadratics",
+      "fact": "The discriminant, b squared minus 4ac, reveals how many real roots a quadratic equation has.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_039",
+      "subject": "Further Mathematics",
+      "topic": "Quadratics",
+      "fact": "If the discriminant is negative, a quadratic has no real roots but two complex ones.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_040",
+      "subject": "Further Mathematics",
+      "topic": "Partial Fractions",
+      "fact": "Partial fractions break a complicated algebraic fraction into simpler ones that are easier to integrate.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_041",
+      "subject": "Further Mathematics",
+      "topic": "Proof",
+      "fact": "Mathematical induction proves a statement for all natural numbers using a base case and an inductive step.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_042",
+      "subject": "Further Mathematics",
+      "topic": "Coordinate Geometry",
+      "fact": "The gradient of a straight line is the rise divided by the run, the change in y over the change in x.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_043",
+      "subject": "Further Mathematics",
+      "topic": "Coordinate Geometry",
+      "fact": "Two lines are perpendicular when the product of their gradients equals minus one.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_044",
+      "subject": "Further Mathematics",
+      "topic": "Coordinate Geometry",
+      "fact": "The distance between two points can be found using the distance formula, an application of Pythagoras' theorem.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_045",
+      "subject": "Further Mathematics",
+      "topic": "Coordinate Geometry",
+      "fact": "The midpoint of a line segment is simply the average of its endpoints' coordinates.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_046",
+      "subject": "Further Mathematics",
+      "topic": "Mechanics",
+      "fact": "In mechanics, velocity is speed in a stated direction, which makes it a vector quantity.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_047",
+      "subject": "Further Mathematics",
+      "topic": "Mechanics",
+      "fact": "Acceleration is the rate of change of velocity with respect to time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_048",
+      "subject": "Further Mathematics",
+      "topic": "Mechanics",
+      "fact": "Newton's second law of motion states that force equals mass times acceleration.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_049",
+      "subject": "Further Mathematics",
+      "topic": "Mechanics",
+      "fact": "For a projectile, the horizontal and vertical components of motion are treated independently.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_050",
+      "subject": "Further Mathematics",
+      "topic": "Mechanics",
+      "fact": "At the highest point of its flight, a projectile's vertical velocity is momentarily zero.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_051",
+      "subject": "Further Mathematics",
+      "topic": "Statistics",
+      "fact": "The mean, median, and mode are three different measures of central tendency.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_052",
+      "subject": "Further Mathematics",
+      "topic": "Statistics",
+      "fact": "The median is the middle value once the data has been arranged in order.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_053",
+      "subject": "Further Mathematics",
+      "topic": "Statistics",
+      "fact": "Standard deviation measures how spread out data values are from their mean.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_054",
+      "subject": "Further Mathematics",
+      "topic": "Factorials",
+      "fact": "Zero factorial is defined to equal one, which keeps combination formulas working correctly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_055",
+      "subject": "Further Mathematics",
+      "topic": "Functions",
+      "fact": "A function is a rule that assigns exactly one output to each input.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_056",
+      "subject": "Further Mathematics",
+      "topic": "Functions",
+      "fact": "The inverse of a function undoes it by swapping its inputs and outputs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_057",
+      "subject": "Further Mathematics",
+      "topic": "Functions",
+      "fact": "A composite function applies one function to the result of another, written as f of g of x.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_058",
+      "subject": "Further Mathematics",
+      "topic": "Polynomials",
+      "fact": "The remainder theorem states that dividing a polynomial f(x) by (x minus a) leaves a remainder equal to f(a).",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_059",
+      "subject": "Further Mathematics",
+      "topic": "Polynomials",
+      "fact": "The factor theorem says that (x minus a) is a factor of f(x) exactly when f(a) equals zero.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_060",
+      "subject": "Further Mathematics",
+      "topic": "Number",
+      "fact": "Zero is neither positive nor negative, and dividing any number by zero is undefined.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_001",
+      "subject": "Commerce",
+      "topic": "Introduction",
+      "fact": "Commerce deals with the buying, selling, and distribution of goods and services, together with the aids that make trade possible.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_002",
+      "subject": "Commerce",
+      "topic": "Trade",
+      "fact": "Trade is broadly divided into home (internal) trade and foreign (external) trade.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_003",
+      "subject": "Commerce",
+      "topic": "Trade",
+      "fact": "Home trade is further split into wholesale trade and retail trade.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_004",
+      "subject": "Commerce",
+      "topic": "Wholesale",
+      "fact": "A wholesaler buys in bulk from producers and sells in smaller quantities to retailers, a service known as 'breaking bulk'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_005",
+      "subject": "Commerce",
+      "topic": "Retail",
+      "fact": "A retailer is the final link in the chain of distribution, selling directly to the consumer.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_006",
+      "subject": "Commerce",
+      "topic": "Aids to Trade",
+      "fact": "The aids to trade include banking, insurance, transport, communication, warehousing, and advertising.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_007",
+      "subject": "Commerce",
+      "topic": "History of Trade",
+      "fact": "Barter, the direct exchange of goods for goods, was the earliest form of trade before money existed.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_008",
+      "subject": "Commerce",
+      "topic": "History of Trade",
+      "fact": "A key weakness of barter was the double coincidence of wants, since each trader had to want exactly what the other offered.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_009",
+      "subject": "Commerce",
+      "topic": "Money",
+      "fact": "Money serves four main functions: a medium of exchange, a measure of value, a store of value, and a standard for deferred payments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_010",
+      "subject": "Commerce",
+      "topic": "Money",
+      "fact": "Legal tender is money that must, by law, be accepted in settlement of a debt.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_011",
+      "subject": "Commerce",
+      "topic": "Banking",
+      "fact": "A central bank, such as the Central Bank of Nigeria, issues currency and acts as banker to the government.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_012",
+      "subject": "Commerce",
+      "topic": "Banking",
+      "fact": "Commercial banks accept deposits, grant loans, and offer services like current accounts and overdrafts.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_013",
+      "subject": "Commerce",
+      "topic": "Banking",
+      "fact": "An overdraft allows a customer to withdraw more than their account balance, up to an agreed limit.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_014",
+      "subject": "Commerce",
+      "topic": "Insurance",
+      "fact": "Insurance works by pooling risks: many people pay premiums so that the unlucky few can be compensated.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_015",
+      "subject": "Commerce",
+      "topic": "Insurance",
+      "fact": "The principle of utmost good faith requires the insured to disclose all material facts honestly.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_016",
+      "subject": "Commerce",
+      "topic": "Insurance",
+      "fact": "The principle of indemnity means insurance restores the insured to their former position but does not let them profit from a loss.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_017",
+      "subject": "Commerce",
+      "topic": "Insurance",
+      "fact": "Insurable interest means a person can only insure something whose loss would cause them financial harm.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_018",
+      "subject": "Commerce",
+      "topic": "Insurance",
+      "fact": "Life assurance differs from other insurance because the insured event, death, is certain to occur eventually.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_019",
+      "subject": "Commerce",
+      "topic": "Warehousing",
+      "fact": "Warehousing creates time utility by storing goods until they are actually needed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_020",
+      "subject": "Commerce",
+      "topic": "Transport",
+      "fact": "Transport creates place utility by moving goods from where they are produced to where they are wanted.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_021",
+      "subject": "Commerce",
+      "topic": "Advertising",
+      "fact": "Advertising may be informative, giving facts, or persuasive, encouraging people to buy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_022",
+      "subject": "Commerce",
+      "topic": "Distribution",
+      "fact": "The usual chain of distribution runs from producer to wholesaler to retailer to consumer.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_023",
+      "subject": "Commerce",
+      "topic": "Distribution",
+      "fact": "Some producers sell directly to consumers, cutting out the middleman to reduce costs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_024",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A cooperative society is owned and run by its members, who share in its profits.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_025",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A sole proprietorship is the simplest form of business, owned by one person who has unlimited liability.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_026",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "Unlimited liability means the owner's personal assets can be used to settle the debts of the business.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_027",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A partnership is owned by between 2 and 20 people who share capital, profits, and responsibility.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_028",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A limited liability company has a legal identity that is separate from its owners, the shareholders.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_029",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "Shareholders in a limited company can lose only the money they invested, not their personal assets.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_030",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A private limited company may not sell its shares to the general public, unlike a public limited company.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_031",
+      "subject": "Commerce",
+      "topic": "Documents of Trade",
+      "fact": "The main documents of trade include the enquiry, quotation, order, invoice, and receipt.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_032",
+      "subject": "Commerce",
+      "topic": "Documents of Trade",
+      "fact": "An invoice sets out the details and price of goods sold on credit and demands payment.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_033",
+      "subject": "Commerce",
+      "topic": "Documents of Trade",
+      "fact": "A pro-forma invoice is a preliminary bill sent to a buyer before the goods are actually supplied.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_034",
+      "subject": "Commerce",
+      "topic": "Documents of Trade",
+      "fact": "C.O.D. stands for 'cash on delivery', where payment is made when the goods arrive.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_035",
+      "subject": "Commerce",
+      "topic": "Discounts",
+      "fact": "A cash discount rewards prompt payment, while a trade discount is a reduction given to fellow traders.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_036",
+      "subject": "Commerce",
+      "topic": "Stock Exchange",
+      "fact": "The stock exchange is a market where existing shares and bonds are bought and sold.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_037",
+      "subject": "Commerce",
+      "topic": "Stock Exchange",
+      "fact": "A stockbroker buys and sells shares on behalf of investors in return for a commission.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_038",
+      "subject": "Commerce",
+      "topic": "Stock Exchange",
+      "fact": "Shares represent part-ownership of a company, whereas debentures are loans made to the company.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_039",
+      "subject": "Commerce",
+      "topic": "Stock Exchange",
+      "fact": "A 'bull' market is optimistic and rising, while a 'bear' market is pessimistic and falling.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_040",
+      "subject": "Commerce",
+      "topic": "E-commerce",
+      "fact": "E-commerce is the buying and selling of goods and services over the internet.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_041",
+      "subject": "Commerce",
+      "topic": "Consumer Protection",
+      "fact": "Consumer protection laws guard buyers against unfair practices, faulty goods, and false advertising.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_042",
+      "subject": "Commerce",
+      "topic": "Credit",
+      "fact": "Trade credit allows a buyer to receive goods now and pay for them later.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_043",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "The balance of trade is the difference between a country's visible exports and visible imports.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_044",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "Visible trade involves physical goods, while invisible trade involves services such as tourism and banking.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_045",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "A tariff is a tax placed on imported goods, often used to protect local industries.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_046",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "An embargo is a complete ban on trade with a particular country or in a particular good.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_047",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "A bill of lading gives details of goods shipped and also serves as a receipt for them.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_048",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "Free trade means goods move between countries without tariffs or other restrictions.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_049",
+      "subject": "Commerce",
+      "topic": "Distribution",
+      "fact": "A middleman links producers and consumers and adds value through distribution.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_050",
+      "subject": "Commerce",
+      "topic": "Trade Associations",
+      "fact": "Chambers of commerce are associations formed to promote and protect the interests of businesses.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_051",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "Franchising lets one business trade under the established brand of another in return for a fee.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_052",
+      "subject": "Commerce",
+      "topic": "Capital",
+      "fact": "Working capital is the money a business needs to meet its day-to-day running costs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_053",
+      "subject": "Commerce",
+      "topic": "Capital",
+      "fact": "Fixed capital is money spent on long-term assets such as buildings and machinery.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_054",
+      "subject": "Commerce",
+      "topic": "Communication",
+      "fact": "Communication in commerce has moved from letters and telegrams to email and instant messaging.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_055",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A nationalised industry is one that is owned and controlled by the government.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_056",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "Privatisation is the transfer of a business from government ownership into private hands.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_057",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A multinational company is one that operates in more than one country.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_058",
+      "subject": "Commerce",
+      "topic": "Wholesale",
+      "fact": "Bulk-buying usually lowers the cost per unit, an advantage enjoyed by wholesalers and large retailers.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_059",
+      "subject": "Commerce",
+      "topic": "Retail",
+      "fact": "Self-service supermarkets cut costs by letting customers select goods for themselves.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_060",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "Tourism is regarded as an invisible export because it earns foreign exchange for a country.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_001",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Bible",
+      "fact": "The Bible is divided into two main parts: the Old Testament and the New Testament.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_002",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Creation",
+      "fact": "In the Bible, the book of Genesis opens with the account of God creating the heavens and the earth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_003",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Creation",
+      "fact": "According to the Genesis account, God created the world in six days and rested on the seventh.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_004",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Creation",
+      "fact": "In the Genesis account, Adam and Eve were the first humans, placed by God in the Garden of Eden.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_005",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Genesis",
+      "fact": "The story of Cain and Abel in Genesis is the Bible's first account of a murder, driven by jealousy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_006",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Noah",
+      "fact": "In the Bible, Noah built an ark to survive a great flood, taking pairs of animals on board.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_007",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Noah",
+      "fact": "After the flood, God's covenant with Noah was marked by the sign of a rainbow.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_008",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Abraham",
+      "fact": "Abraham is described in the Bible as a father of faith and an ancestor of the people of Israel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_009",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Abraham",
+      "fact": "In Genesis, God promised Abraham that his descendants would be as numerous as the stars.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_010",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Abraham",
+      "fact": "Abraham's willingness to sacrifice his son Isaac is one of the Bible's best-known tests of faith.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_011",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Patriarchs",
+      "fact": "Jacob, later renamed Israel, had twelve sons who became the ancestors of the twelve tribes of Israel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_012",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joseph",
+      "fact": "Joseph, sold into slavery by his own brothers, rose to become a powerful governor in Egypt.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_013",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joseph",
+      "fact": "In the Bible, Joseph interpreted Pharaoh's dreams and helped Egypt survive a severe famine.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_014",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Moses",
+      "fact": "Moses led the Israelites out of slavery in Egypt in the event known as the Exodus.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_015",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Exodus",
+      "fact": "The Bible describes ten plagues that struck Egypt before Pharaoh finally released the Israelites.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_016",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Exodus",
+      "fact": "According to Exodus, the Red Sea parted to let the Israelites cross over on dry ground.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_017",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Law",
+      "fact": "Moses received the Ten Commandments from God on Mount Sinai.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_018",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Law",
+      "fact": "The Ten Commandments include instructions such as honouring one's parents and not stealing.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_019",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Wilderness",
+      "fact": "The Israelites wandered in the wilderness for forty years before reaching the Promised Land.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_020",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joshua",
+      "fact": "Joshua succeeded Moses and led the Israelites into the land of Canaan.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_021",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joshua",
+      "fact": "In the Bible, the walls of Jericho are said to have fallen after the Israelites marched around the city.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_022",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Judges",
+      "fact": "The book of Judges tells of leaders like Gideon, Deborah, and Samson who delivered Israel from its enemies.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_023",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Judges",
+      "fact": "Samson was famous for his great strength, which the Bible links to his uncut hair.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_024",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Ruth",
+      "fact": "Ruth, a Moabite woman, showed great loyalty and became an ancestor of King David.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_025",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Samuel",
+      "fact": "The prophet Samuel anointed Saul as the first king of Israel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_026",
+      "subject": "Christian Religious Knowledge",
+      "topic": "David",
+      "fact": "David, a young shepherd, became famous for defeating the giant Goliath with a sling and a stone.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_027",
+      "subject": "Christian Religious Knowledge",
+      "topic": "David",
+      "fact": "David became the second king of Israel and is credited with composing many of the Psalms.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_028",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Solomon",
+      "fact": "Solomon, the son of David, was known for his great wisdom and built the first temple in Jerusalem.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_029",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Solomon",
+      "fact": "The Queen of Sheba travelled to visit Solomon in order to test his legendary wisdom.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_030",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Divided Kingdom",
+      "fact": "After Solomon's reign, the kingdom split into Israel in the north and Judah in the south.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_031",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Elijah was a prophet who challenged the prophets of Baal in a contest on Mount Carmel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_032",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The prophet Amos spoke out strongly against injustice and the oppression of the poor.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_033",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Jeremiah is sometimes called the 'weeping prophet' because of his sorrow over the fate of Judah.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_034",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Daniel",
+      "fact": "In the Bible, Daniel is remembered for being kept safe in a den of lions.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_035",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Psalms",
+      "fact": "The Psalms are a collection of songs and prayers, many of them attributed to King David.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_036",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Proverbs",
+      "fact": "The book of Proverbs is filled with short sayings about wisdom and right living.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_037",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Gospels",
+      "fact": "The New Testament opens with four Gospels: Matthew, Mark, Luke, and John.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_038",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Gospels",
+      "fact": "The Gospels record the birth, life, teachings, death, and resurrection of Jesus Christ.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_039",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Birth of Jesus",
+      "fact": "According to the Gospels, Jesus was born in Bethlehem and grew up in Nazareth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_040",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Birth of Jesus",
+      "fact": "The Bible tells of wise men from the East who followed a star to visit the infant Jesus.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_041",
+      "subject": "Christian Religious Knowledge",
+      "topic": "John the Baptist",
+      "fact": "John the Baptist prepared the way for Jesus and baptised him in the River Jordan.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_042",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Disciples",
+      "fact": "Jesus chose twelve disciples, also called apostles, to follow him and learn from him.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_043",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "The Sermon on the Mount contains the Beatitudes, each beginning with the word 'Blessed'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_044",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "The Lord's Prayer, taught by Jesus to his followers, begins 'Our Father, who art in heaven'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_045",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "Jesus often taught using parables, which are simple stories that carry a deeper meaning.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_046",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "The parable of the Good Samaritan teaches the importance of loving one's neighbour.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_047",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "The parable of the Prodigal Son illustrates forgiveness and the love of a father.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_048",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "The Gospels record miracles of Jesus, such as feeding five thousand people from a few loaves and fish.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_049",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "The Bible describes Jesus turning water into wine at a wedding in Cana.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_050",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Last Supper",
+      "fact": "The Last Supper was the final meal Jesus shared with his disciples before his crucifixion.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_051",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "According to the Gospels, Jesus was betrayed by Judas Iscariot for thirty pieces of silver.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_052",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "The crucifixion of Jesus took place at a site called Golgotha.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_053",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Resurrection",
+      "fact": "Christians believe that Jesus rose from the dead on the third day, an event celebrated as Easter.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_054",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Great Commission",
+      "fact": "The Great Commission is Jesus' instruction to his followers to spread his teaching to all nations.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_055",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "The book of Acts records the coming of the Holy Spirit upon the disciples at Pentecost.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_056",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Paul",
+      "fact": "Saul of Tarsus, once a persecutor of Christians, became the apostle Paul after an encounter on the road to Damascus.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_057",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Paul",
+      "fact": "Paul undertook missionary journeys and wrote many letters, or epistles, that form part of the New Testament.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_058",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "Paul's first letter to the Corinthians contains a famous passage describing love as patient and kind.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_059",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Revelation",
+      "fact": "The book of Revelation is the final book of the Bible and is full of visions and symbolism.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_060",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Gospels",
+      "fact": "The word 'gospel' means 'good news'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_001",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Pillars of Islam",
+      "fact": "Islam rests on five pillars: the declaration of faith, prayer, almsgiving, fasting, and pilgrimage.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_002",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Shahada",
+      "fact": "The Shahada is the declaration that there is no god but Allah and that Muhammad is His messenger.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_003",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Tawhid",
+      "fact": "Tawhid, the belief in the absolute oneness of God, is the most central teaching of Islam.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_004",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Articles of Faith",
+      "fact": "Muslims hold six articles of faith: belief in God, His angels, His books, His messengers, the Last Day, and divine decree.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_005",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The Quran is the holy book of Islam, believed by Muslims to be the word of God revealed to Prophet Muhammad.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_006",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The Quran is made up of 114 chapters, which are called surahs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_007",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The first chapter of the Quran is Al-Fatihah, 'The Opening', which is recited in every prayer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_008",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Muslims believe the Quran was revealed to Prophet Muhammad gradually over about 23 years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_009",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Revelation",
+      "fact": "Muslims believe the angel Jibril, known as Gabriel, brought the revelations to Prophet Muhammad.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_010",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Revelation",
+      "fact": "The first word of the Quran to be revealed is often translated as 'Read' or 'Recite'.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_011",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Prophet Muhammad was born in the city of Mecca around the year 570 CE.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_012",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "The year of Prophet Muhammad's birth is remembered as being linked to the 'Year of the Elephant'.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_013",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Prophet Muhammad received his first revelation while in a cave called Hira.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_014",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hijra",
+      "fact": "The Hijra, the migration of Muhammad and his followers from Mecca to Medina, marks the start of the Islamic calendar.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_015",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islamic Calendar",
+      "fact": "The Islamic, or Hijri, calendar is lunar, so its months move through the seasons over the years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_016",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "Salat, the ritual prayer, is performed five times each day by Muslims.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_017",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "The five daily prayers are named Fajr, Zuhr, Asr, Maghrib, and Isha.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_018",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "Before praying, Muslims perform Wudu, a ritual washing to reach a state of purity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_019",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "When praying, Muslims face the Kaaba in Mecca, a direction known as the Qibla.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_020",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "The Islamic call to prayer is known as the Adhan.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_021",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Zakat",
+      "fact": "Zakat is the giving of a fixed portion of one's wealth to those in need.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_022",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Zakat",
+      "fact": "Zakat is usually calculated as 2.5 percent of a Muslim's qualifying savings each year.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_023",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "Sawm is the fasting that Muslims observe during the month of Ramadan.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_024",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "During Ramadan, Muslims fast from dawn until sunset, abstaining from food and drink.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_025",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "In Ramadan, the meal before dawn is called Suhur and the meal that breaks the fast is called Iftar.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_026",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "Laylat al-Qadr, the 'Night of Power', is regarded as the holiest night of Ramadan.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_027",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Festivals",
+      "fact": "Eid al-Fitr is the festival that marks the end of the month of Ramadan.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_028",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "Hajj is the pilgrimage to Mecca that every able Muslim should make at least once in a lifetime.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_029",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "During Hajj, pilgrims walk seven times around the Kaaba in a rite called Tawaf.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_030",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Festivals",
+      "fact": "Eid al-Adha, the festival of sacrifice, recalls Prophet Ibrahim's willingness to obey God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_031",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Kaaba",
+      "fact": "The Kaaba, within the Grand Mosque of Mecca, is regarded by Muslims as the House of God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_032",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Muslims believe in many prophets, among them Adam, Nuh, Ibrahim, Musa, and Isa.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_033",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "In Islam, Prophet Muhammad is regarded as the last of the prophets, the 'Seal of the Prophets'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_034",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "The Hadith are the recorded sayings and actions of Prophet Muhammad, second in authority to the Quran.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_035",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sunnah",
+      "fact": "The Sunnah is the example and practice of Prophet Muhammad that Muslims seek to follow.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_036",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sharia",
+      "fact": "Sharia is the moral and legal framework of Islam, drawn mainly from the Quran and the Sunnah.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_037",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Angels",
+      "fact": "Muslims believe in angels, including Jibril, who carry out the commands of God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_038",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Last Day",
+      "fact": "Islam teaches that there will be a Day of Judgement, when people are held accountable for their deeds.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_039",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Branches",
+      "fact": "The two main branches of Islam are Sunni and Shia.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_040",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Mosque",
+      "fact": "A mosque is the Muslim place of worship, called 'masjid' in Arabic.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_041",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Worship",
+      "fact": "The Friday congregational prayer, known as Jumu'ah, holds special importance for Muslims.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_042",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Halal and Haram",
+      "fact": "Halal refers to what is permissible in Islam, while haram refers to what is forbidden.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_043",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Halal and Haram",
+      "fact": "Muslims are forbidden to consume pork and intoxicants such as alcohol.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_044",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Etiquette",
+      "fact": "The Muslim greeting 'As-salamu alaykum' means 'peace be upon you'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_045",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "After Prophet Muhammad's death, the community was led by the four Rightly Guided Caliphs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_046",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Abu Bakr was the first caliph to lead the Muslim community after the Prophet.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_047",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Umar ibn al-Khattab, the second caliph, oversaw a great expansion of the Muslim state.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_048",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Medina",
+      "fact": "The city of Medina became the first centre of the Muslim community after the Hijra.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_049",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Akhlaq",
+      "fact": "Akhlaq refers to good character and moral conduct, which Islam values highly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_050",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Akhlaq",
+      "fact": "Islam places strong emphasis on honesty, kindness to parents, and care for the poor.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_051",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Most chapters of the Quran open with the Bismillah, 'In the name of God, the Most Gracious, the Most Merciful'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_052",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Muslims believe that Prophet Isa, Jesus, was born of the Virgin Maryam, Mary.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_053",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The Quran contains a chapter named after Maryam, the mother of Isa.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_054",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Recitation",
+      "fact": "Tajwid is the set of rules governing the correct and beautiful recitation of the Quran.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_055",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Recitation",
+      "fact": "A person who has memorised the entire Quran is honoured with the title Hafiz.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_056",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Charity",
+      "fact": "Charity given voluntarily, beyond the obligatory Zakat, is known as Sadaqah.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_057",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Knowledge",
+      "fact": "Islam teaches that the seeking of knowledge is a duty upon every Muslim.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_058",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Meaning",
+      "fact": "The word 'Islam' comes from an Arabic root that carries the ideas of peace and submission to God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_059",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Meaning",
+      "fact": "The word 'Muslim' means 'one who submits' to God.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_060",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Names of God",
+      "fact": "Muslims believe that God has 99 names describing His attributes, such as the Most Merciful.",
+      "difficulty": "medium",
+      "source": "general knowledge"
     }
   ]
 }

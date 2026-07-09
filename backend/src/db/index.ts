@@ -1196,24 +1196,46 @@ export interface DidYouKnowFact {
   difficulty: string | null;
 }
 
+// Least-recently-used fact per (subject_code, difficulty) pair, not just per subject —
+// lets each user get a fact matched to their own level in that subject (see
+// getUserSubjectAccuracy) while still sharing one fact per subject+tier across all users
+// that day, same as before, rather than a distinct pick per user.
 export async function getDailyFactsForSubjects(
   subjectCodes: string[]
-): Promise<Record<string, DidYouKnowFact>> {
+): Promise<Record<string, Record<string, DidYouKnowFact>>> {
   if (!subjectCodes.length) return {};
 
-  // For each subject_code, pick the least-recently-used fact
   const { rows } = await pool.query(
-    `SELECT DISTINCT ON (subject_code)
+    `SELECT DISTINCT ON (subject_code, difficulty)
        id, external_id, subject, subject_code, topic, fact_text, difficulty
      FROM did_you_know
      WHERE subject_code = ANY($1)
-     ORDER BY subject_code, last_used_at NULLS FIRST, sent_count ASC, RANDOM()`,
+     ORDER BY subject_code, difficulty, last_used_at NULLS FIRST, sent_count ASC, RANDOM()`,
     [subjectCodes]
   );
 
-  const map: Record<string, DidYouKnowFact> = {};
-  for (const row of rows) map[row.subject_code] = row;
+  const map: Record<string, Record<string, DidYouKnowFact>> = {};
+  for (const row of rows) {
+    const tier = row.difficulty || 'medium';
+    if (!map[row.subject_code]) map[row.subject_code] = {};
+    map[row.subject_code][tier] = row;
+  }
   return map;
+}
+
+// A user's accuracy in one subject, across all attempts — used to pick a Did You Know
+// fact difficulty that matches where they actually are, instead of a level-blind pick.
+// Null means they haven't attempted anything in this subject yet.
+export async function getUserSubjectAccuracy(userId: number, subject: string): Promise<number | null> {
+  const { rows } = await pool.query(
+    `SELECT ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*), 1) as accuracy
+     FROM attempts a
+     JOIN questions q ON a.question_id = q.id
+     WHERE a.user_id = $1 AND q.subject = $2`,
+    [userId, subject]
+  );
+  const accuracy = rows[0]?.accuracy;
+  return accuracy === null || accuracy === undefined ? null : Number(accuracy);
 }
 
 export async function getRandomFact(): Promise<DidYouKnowFact | null> {

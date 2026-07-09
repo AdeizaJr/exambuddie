@@ -32,6 +32,11 @@ const SUBJECT_CODE_MAP: Record<string, string> = {
   'Computer Science':     'computer',
   'Civic Education':      'civic-education',
   'Physical Education':   'pe',
+  'Accounting':                       'accounts',
+  'Further Mathematics':              'further-math',
+  'Commerce':                         'commerce',
+  'Christian Religious Knowledge':    'crk',
+  'Islamic Religious Knowledge':      'irk',
   // Closest-match mappings for subjects with no direct app code
   'Astronomy':            'physics',
   'Earth Science':        'geography',
