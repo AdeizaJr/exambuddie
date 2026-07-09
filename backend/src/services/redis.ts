@@ -74,6 +74,18 @@ export const updateSession = async (telegramId: number | string, updates: any): 
   return updated;
 };
 
+// Short-lived per-user lock — guards against a double-tap on a button (e.g. "Next
+// Question") firing the handler twice before the first invocation's session write lands.
+// Returns true if the lock was acquired (caller should proceed), false if another
+// invocation already holds it (caller should back off). BURST_MAX_ACTIONS (8 actions /
+// 3s) is tuned for spam, not a same-button double-tap a few hundred ms apart, so it
+// doesn't catch this case.
+export const acquireActionLock = async (telegramId: number | string, action: string, ttlSecs = 2): Promise<boolean> => {
+  const key = `lock:${action}:${telegramId}`;
+  const result = await client.set(key, '1', { NX: true, EX: ttlSecs });
+  return result === 'OK';
+};
+
 // Returns true when the user has exceeded BURST_MAX_ACTIONS within BURST_WINDOW_SECS
 export const checkBurst = async (telegramId: number | string): Promise<boolean> => {
   const key = `burst:${telegramId}`;

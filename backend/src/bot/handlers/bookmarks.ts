@@ -29,7 +29,6 @@ async function sendBookmarkQuestion(
 }
 
 export async function handleBookmarkToggle(ctx: any): Promise<void> {
-  await ctx.answerCbQuery();
   const parts = ctx.callbackQuery.data.split(':');
   const questionId = parseInt(parts[2], 10);
 

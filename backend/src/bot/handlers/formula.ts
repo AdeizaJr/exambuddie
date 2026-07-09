@@ -717,12 +717,12 @@ export async function handleFormula(ctx: any): Promise<void> {
 }
 
 export async function handleFormulaSubject(ctx: any, subject: string): Promise<void> {
-  await ctx.answerCbQuery();
   const sheet = SHEETS[subject];
   if (!sheet) {
     await ctx.answerCbQuery('Subject not found.', { show_alert: true });
     return;
   }
+  await ctx.answerCbQuery();
   await ctx.reply(sheet.content, {
     parse_mode: 'HTML',
     reply_markup: {

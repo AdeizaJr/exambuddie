@@ -130,11 +130,11 @@ export async function handleMultiSubjectToggle(ctx: any): Promise<void> {
 }
 
 export async function handleMultiSubjectStart(ctx: any): Promise<void> {
-  await ctx.answerCbQuery();
   const user = await db.getUser(ctx.from.id);
-  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+  if (!user) { await ctx.answerCbQuery(); await ctx.reply('Something went wrong. Please try /start.'); return; }
 
   if (user.plan !== 'premium') {
+    await ctx.answerCbQuery();
     await ctx.reply(
       `📚 <b>Multi-Subject Practice — Premium Feature</b>\n\nUpgrade to Premium to practise multiple subjects in one session!`,
       { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() }
@@ -149,6 +149,7 @@ export async function handleMultiSubjectStart(ctx: any): Promise<void> {
     await ctx.answerCbQuery('Select at least one subject first!', { show_alert: true });
     return;
   }
+  await ctx.answerCbQuery();
 
   if (selected.length === 1) {
     await startPractice(ctx, user, selected[0]);
@@ -502,6 +503,14 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
 // Next question in practice
 export async function handleNext(ctx: any): Promise<void> {
+  // Guards against a double-tap on "Next Question" firing this twice before the first
+  // call's session write lands — both reads would see the same stale session, fetch two
+  // different next questions, and send both, but only the one matching whichever write
+  // landed last is actually answerable.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'practice:next'))) {
+    await ctx.answerCbQuery();
+    return;
+  }
   await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
   if (!session) {
