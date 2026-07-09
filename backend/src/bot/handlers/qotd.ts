@@ -5,12 +5,11 @@ import { formatExplanation } from '../formatter';
 
 // QOTD answer is handled outside a session — look up the question directly
 export async function handleQOTDAnswer(ctx: any, questionId: string, option: string): Promise<void> {
-  await ctx.answerCbQuery();
   const qId = parseInt(questionId, 10);
-  if (!qId) return;
+  if (!qId) { await ctx.answerCbQuery(); return; }
 
   const user = await db.getUser(ctx.from.id);
-  if (!user) return;
+  if (!user) { await ctx.answerCbQuery(); return; }
 
   // Prevent double-answering
   const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
@@ -19,6 +18,7 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
     await ctx.answerCbQuery('You already answered today\'s question!', { show_alert: true });
     return;
   }
+  await ctx.answerCbQuery();
 
   const q = await db.getQuestionById(qId);
   if (!q) return;

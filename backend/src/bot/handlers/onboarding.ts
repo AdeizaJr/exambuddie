@@ -117,8 +117,6 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
     return;
   }
 
-  await ctx.answerCbQuery();
-
   const session = (await redis.getSession(ctx.from.id)) || { selectedSubjects: ['english'] };
   let selected: string[] = session.selectedSubjects || ['english'];
 
@@ -138,19 +136,20 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
     selected = [...selected, subject];
   }
 
+  await ctx.answerCbQuery();
   await redis.updateSession(ctx.from.id, { selectedSubjects: selected });
   await ctx.editMessageReplyMarkup(fmt.subjectKeyboard(selected));
 }
 
 // Step 3 — Subjects done → save everything, show main menu
 export async function handleSubjectsDone(ctx: any): Promise<void> {
-  await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
 
   if (!session || !session.selectedSubjects || session.selectedSubjects.length === 0) {
     await ctx.answerCbQuery('Please select at least one subject!', { show_alert: true });
     return;
   }
+  await ctx.answerCbQuery();
 
   const { examType, selectedSubjects, targetYear } = session;
 

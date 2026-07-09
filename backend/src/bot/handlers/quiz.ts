@@ -680,12 +680,12 @@ export async function handleQuizReviewDone(ctx: any): Promise<void> {
 }
 
 export async function handleQuizAddToSR(ctx: any): Promise<void> {
-  await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
   if (!session || session.mode !== 'quiz_review') {
     await ctx.answerCbQuery('Session expired.', { show_alert: true });
     return;
   }
+  await ctx.answerCbQuery();
 
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
