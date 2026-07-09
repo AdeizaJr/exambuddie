@@ -503,22 +503,31 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
 // Next question in practice
 export async function handleNext(ctx: any): Promise<void> {
-  // Guards against a double-tap on "Next Question" firing this twice before the first
-  // call's session write lands — both reads would see the same stale session, fetch two
-  // different next questions, and send both, but only the one matching whichever write
-  // landed last is actually answerable.
-  if (!(await redis.acquireActionLock(ctx.from.id, 'practice:next'))) {
-    await ctx.answerCbQuery();
-    return;
-  }
-  await ctx.answerCbQuery();
   const session = await redis.getSession(ctx.from.id);
   if (!session) {
+    await ctx.answerCbQuery();
     await ctx.reply('Session expired.', {
       reply_markup: { inline_keyboard: [[{ text: '📚 Pick a Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
     });
     return;
   }
+
+  // Tapping a stale "Next Question" button (from an earlier message, or a double-tap)
+  // while the current question is still unanswered — awaitingNext only flips true once
+  // handleAnswer actually processes an answer. Reject with an alert instead of silently
+  // sending a second question that would orphan the first one's answer buttons.
+  if (session.currentQuestion && !session.awaitingNext) {
+    await ctx.answerCbQuery('⚠️ You have an unanswered question — answer it first!', { show_alert: true });
+    return;
+  }
+
+  // Belt-and-suspenders against the sub-second race: two taps landing close enough that
+  // both read awaitingNext=true before either write completes.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'practice:next'))) {
+    await ctx.answerCbQuery();
+    return;
+  }
+  await ctx.answerCbQuery();
 
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
