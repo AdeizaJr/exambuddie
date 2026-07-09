@@ -5,6 +5,7 @@ import { BillingSection } from "./components/BillingSection";
 import { FaqAccordion } from "./components/FaqAccordion";
 import { testimonials } from "./data/testimonials";
 import { getPricing } from "./lib/pricing";
+import { GraduationCapIcon, BrainIcon, TargetIcon, RepeatIcon, TrendDownIcon } from "./components/icons";
 
 const BOT_URL = "https://t.me/ExamBuddieBot";
 const BOT_URL_LANDING = "https://t.me/ExamBuddieBot?start=from_landing";
@@ -100,17 +101,18 @@ export default async function Home() {
       <Nav />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
+      <section className="bg-gradient-to-b from-brand-light/10 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
             <div className="flex-1 text-center lg:text-left">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
-                🎓 WAEC, JAMB &amp; NECO Prep · Nigeria
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1.5 text-xs font-medium text-brand-dark sm:px-4 sm:text-sm dark:bg-brand/15 dark:text-brand-light">
+                <GraduationCapIcon className="h-4 w-4 shrink-0" />
+                WAEC, JAMB &amp; NECO Prep · Nigeria
               </div>
-              <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
+              <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 text-balance sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
                 Stop guessing. Start acing
                 <br />
-                <span className="text-blue-700 dark:text-blue-400">WAEC, JAMB &amp; NECO.</span>
+                <span className="text-brand-dark dark:text-brand-light">WAEC, JAMB &amp; NECO.</span>
               </h1>
               <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0 dark:text-slate-400">
                 Practice real past questions, get instant AI explanations, and improve faster
@@ -122,13 +124,13 @@ export default async function Home() {
                   href={BOT_URL_LANDING}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
+                  className="rounded-lg bg-brand px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-brand/20 transition-colors hover:bg-brand-dark sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
                   Start Free · 14 Days Premium →
                 </a>
                 <a
                   href="#features"
-                  className="rounded-full border border-slate-200 px-6 py-3.5 text-base font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:px-8 sm:py-4 sm:text-lg dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+                  className="rounded-lg border border-slate-200 px-6 py-3.5 text-base font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:px-8 sm:py-4 sm:text-lg dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
                 >
                   See how it works
                 </a>
@@ -149,7 +151,7 @@ export default async function Home() {
       <div className="flex justify-center bg-gradient-to-b from-white to-transparent -mt-8 pb-4 dark:from-slate-950">
         <a
           href="#features"
-          className="flex animate-bounce flex-col items-center gap-1 text-slate-400 hover:text-blue-600 dark:text-slate-500 dark:hover:text-blue-400 transition-colors"
+          className="flex animate-bounce flex-col items-center gap-1 text-slate-400 hover:text-brand dark:text-slate-500 dark:hover:text-brand-light transition-colors"
           aria-label="Scroll to features"
         >
           <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -159,11 +161,11 @@ export default async function Home() {
       </div>
 
       {/* Stats bar */}
-      <section className="bg-blue-700 py-8 sm:py-10 dark:bg-blue-900">
+      <section className="bg-brand-dark py-8 sm:py-10">
         <div className="grid w-full grid-cols-2 gap-6 px-6 text-center text-white sm:gap-8 sm:px-10 md:grid-cols-4">
           {[
             { value: "41,000+", label: "Past Questions" },
-            { value: "12+", label: "Subjects Covered" },
+            { value: "16", label: "Subjects Covered" },
             { value: "WAEC · JAMB · NECO", label: "Exams Covered" },
             { value: "Free", label: "To Start" },
           ].map(({ value, label }) => (
@@ -171,7 +173,7 @@ export default async function Home() {
               <div className="whitespace-nowrap text-lg leading-tight font-extrabold sm:text-xl md:text-2xl">
                 {value}
               </div>
-              <div className="mt-1 text-xs text-blue-200 sm:text-sm">{label}</div>
+              <div className="mt-1 text-xs text-brand-light/80 sm:text-sm">{label}</div>
             </div>
           ))}
         </div>
@@ -180,7 +182,7 @@ export default async function Home() {
       {/* Problem section */}
       <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20 dark:bg-slate-900">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-4 text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+          <h2 className="mb-4 text-2xl font-extrabold text-slate-900 text-balance sm:text-3xl md:text-4xl dark:text-white">
             Studying hard but scores aren&apos;t improving?
           </h2>
           <p className="mb-10 text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -188,20 +190,22 @@ export default async function Home() {
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: "📖", problem: "Memorise answers without understanding why" },
-              { icon: "🎯", problem: "Don't know which topics are costing them marks" },
-              { icon: "🔁", problem: "Repeat the same mistakes in every exam" },
-              { icon: "📉", problem: "Practice without feedback or tracking" },
-            ].map(({ icon, problem }) => (
+              { Icon: BrainIcon, problem: "Memorise answers without understanding why" },
+              { Icon: TargetIcon, problem: "Don't know which topics are costing them marks" },
+              { Icon: RepeatIcon, problem: "Repeat the same mistakes in every exam" },
+              { Icon: TrendDownIcon, problem: "Practice without feedback or tracking" },
+            ].map(({ Icon, problem }) => (
               <div key={problem} className="rounded-xl border border-red-100 bg-white p-5 text-left dark:border-red-900/30 dark:bg-slate-950">
-                <div className="mb-3 text-2xl">{icon}</div>
+                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400">
+                  <Icon className="h-5 w-5" />
+                </div>
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{problem}</p>
               </div>
             ))}
           </div>
-          <div className="mt-10 rounded-2xl bg-blue-700 px-6 py-6 text-white sm:px-10">
+          <div className="mt-10 rounded-2xl bg-brand-dark px-6 py-6 text-white sm:px-10">
             <p className="text-base font-bold sm:text-lg">ExamBuddie fixes this.</p>
-            <p className="mt-2 text-sm text-blue-100 sm:text-base">
+            <p className="mt-2 text-sm text-brand-light/90 sm:text-base">
               Every question you answer becomes a learning step. ExamBuddie tracks your mistakes, explains them, and keeps drilling you on them until you get them right.
             </p>
           </div>

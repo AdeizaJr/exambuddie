@@ -2,6 +2,16 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Brand tokens — matches the product's own established identity (admin dashboard
+   accent green, Telegram share-card colors) rather than an unrelated generic blue. */
+@theme {
+  --color-brand: #25a865;
+  --color-brand-dark: #1a7a4a;
+  --color-brand-light: #3dd68c;
+  --color-gold: #b9862a;
+  --color-gold-light: #dcae57;
+}
+
 html {
   scroll-behavior: smooth;
 }
