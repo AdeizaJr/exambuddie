@@ -127,7 +127,7 @@ export default function Quiz() {
     return (
       <div className="page px-4 pt-10 flex flex-col items-center text-center">
         <span className="text-6xl mb-4">📋</span>
-        <h2 className="text-xl font-bold mb-2">Quiz Mode</h2>
+        <h1 className="text-xl font-bold mb-2">Quiz Mode</h1>
         <p className="text-[var(--tg-hint)] mb-6 max-w-xs">
           Get the full exam experience with 40 questions, a 45-minute countdown, and a complete score breakdown.
         </p>
@@ -152,7 +152,7 @@ export default function Quiz() {
   if (stage === 'subject') {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">📋 Quiz Mode</h2>
+        <h1 className="text-lg font-bold mb-1">📋 Quiz Mode</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">Choose a subject</p>
         <SubjectPicker subjects={user.subjects} onSelect={s => { haptic('light'); setSubject(s); setStage('examtype'); }} />
       </div>
@@ -163,7 +163,7 @@ export default function Quiz() {
   if (stage === 'examtype') {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">🎓 Exam Type</h2>
+        <h1 className="text-lg font-bold mb-1">🎓 Exam Type</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">Which exam are you preparing for?</p>
         <div className="flex flex-col gap-3">
           {EXAM_TYPES.map(et => (
@@ -182,7 +182,7 @@ export default function Quiz() {
   if (stage === 'timer') {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">⏱️ Per-Question Timer</h2>
+        <h1 className="text-lg font-bold mb-1">⏱️ Per-Question Timer</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">Set a time limit per question</p>
         <div className="grid grid-cols-2 gap-3">
           {TIMER_OPTIONS.map(opt => (
@@ -204,7 +204,7 @@ export default function Quiz() {
     const grade = acc >= 80 ? '🏆 Outstanding!' : acc >= 65 ? '🌟 Excellent!' : acc >= 50 ? '👍 Good effort!' : '💪 Keep practising!';
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-2xl font-bold text-center mb-1">Quiz Complete! 🎉</h2>
+        <h1 className="text-2xl font-bold text-center mb-1">Quiz Complete! 🎉</h1>
         <p className="text-center text-[var(--tg-hint)] mb-6">{grade}</p>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <StatCard label="Score" value={`${correct}/${answers.length}`} />

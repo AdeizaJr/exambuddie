@@ -53,10 +53,11 @@ function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
+            <label htmlFor="login-username" className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
               Username
             </label>
             <input
+              id="login-username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -67,10 +68,11 @@ function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
             />
           </div>
           <div>
-            <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
+            <label htmlFor="login-password" className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
               Password
             </label>
             <input
+              id="login-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

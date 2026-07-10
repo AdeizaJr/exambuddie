@@ -548,10 +548,11 @@ export default function Questions() {
         <Modal title={`Edit Question #${editTarget.id}`} onClose={() => setEditTarget(null)} wide>
           <div className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
+              <label htmlFor="edit-question-text" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
                 Question Text
               </label>
               <textarea
+                id="edit-question-text"
                 rows={4}
                 value={editState.question_text}
                 onChange={(e) => setEditState({ ...editState, question_text: e.target.value })}
@@ -562,10 +563,11 @@ export default function Questions() {
             <div className="grid grid-cols-2 gap-3">
               {(["option_a", "option_b", "option_c", "option_d"] as const).map((opt) => (
                 <div key={opt}>
-                  <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
+                  <label htmlFor={`edit-${opt}`} className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
                     Option {opt.split("_")[1].toUpperCase()}
                   </label>
                   <input
+                    id={`edit-${opt}`}
                     type="text"
                     value={editState[opt]}
                     onChange={(e) => setEditState({ ...editState, [opt]: e.target.value })}
@@ -574,10 +576,11 @@ export default function Questions() {
                 </div>
               ))}
               <div>
-                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
+                <label htmlFor="edit-option-e" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
                   Option E (optional)
                 </label>
                 <input
+                  id="edit-option-e"
                   type="text"
                   value={editState.option_e}
                   onChange={(e) => setEditState({ ...editState, option_e: e.target.value })}
@@ -585,10 +588,11 @@ export default function Questions() {
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
+                <label htmlFor="edit-correct-option" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
                   Correct Option
                 </label>
                 <select
+                  id="edit-correct-option"
                   value={editState.correct_option}
                   onChange={(e) =>
                     setEditState({
@@ -609,7 +613,7 @@ export default function Questions() {
 
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-xs font-medium uppercase tracking-wider text-muted">
+                <label htmlFor="edit-explanation" className="text-xs font-medium uppercase tracking-wider text-muted">
                   Explanation
                 </label>
                 <button
@@ -621,6 +625,7 @@ export default function Questions() {
                 </button>
               </div>
               <textarea
+                id="edit-explanation"
                 rows={4}
                 value={editState.explanation}
                 onChange={(e) => setEditState({ ...editState, explanation: e.target.value })}
@@ -631,7 +636,7 @@ export default function Questions() {
 
             {/* Diagram Image */}
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
+              <label htmlFor="edit-diagram-image" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">
                 Diagram Image
               </label>
               {editTarget?.image_url && (
@@ -651,6 +656,7 @@ export default function Questions() {
               )}
               <div className="flex items-center gap-2">
                 <input
+                  id="edit-diagram-image"
                   type="file"
                   accept="image/*"
                   onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}

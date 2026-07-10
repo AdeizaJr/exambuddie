@@ -5,7 +5,7 @@
 :root {
   --tg-bg: #ffffff;
   --tg-text: #000000;
-  --tg-hint: #999999;
+  --tg-hint: #6b7280; /* 4.83:1 on white — #999999 (Telegram's own fallback) was 2.85:1, failing WCAG 1.4.3 */
   --tg-link: #2678b6;
   --tg-button: #2678b6;
   --tg-button-text: #ffffff;
@@ -58,4 +58,12 @@ button:active {
 /* Question text LaTeX-like formatting */
 .question-text {
   line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

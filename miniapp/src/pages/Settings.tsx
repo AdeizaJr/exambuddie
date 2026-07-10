@@ -52,7 +52,7 @@ export default function Settings() {
 
   return (
     <div className="page px-4 pt-6">
-      <h2 className="text-lg font-bold mb-5">⚙️ Settings</h2>
+      <h1 className="text-lg font-bold mb-5">⚙️ Settings</h1>
 
       {/* Profile card */}
       <div className="bg-white/70 rounded-2xl p-4 border border-gray-100 shadow-sm mb-5 flex items-center gap-3">
@@ -91,6 +91,7 @@ export default function Settings() {
             <button key={et}
               onClick={() => saveProfile({ exam_type: et })}
               disabled={saving}
+              aria-pressed={user.exam_type === et}
               className={`px-5 py-2.5 rounded-full font-medium text-sm transition-colors ${
                 user.exam_type === et
                   ? 'text-[var(--tg-button-text)]'
@@ -111,6 +112,7 @@ export default function Settings() {
             return (
               <button key={s}
                 onClick={() => toggleSubject(s)}
+                aria-pressed={active}
                 className={`px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors text-left ${
                   active
                     ? 'border-[var(--tg-button)] bg-blue-50 text-[var(--tg-button)]'
@@ -124,7 +126,7 @@ export default function Settings() {
       </Section>
 
       {saved && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-lg animate-fade-in">
+        <div role="status" aria-live="polite" className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-lg animate-fade-in">
           ✓ Saved
         </div>
       )}

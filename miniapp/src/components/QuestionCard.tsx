@@ -130,11 +130,14 @@ function QuestionCard({ question, qNum, total, selected, revealed, onSelect, dis
     if (selected === opt) {
       return { background: '#FEF2F2', border: '2px solid #EF4444', color: '#991B1B' };
     }
+    // No opacity multiplier here — --tg-hint alone already reads as de-emphasized next
+    // to the correct/selected colors above; stacking 60% opacity on top of it drops
+    // effective contrast to ~2.3:1 against the card background, failing WCAG 1.4.3 on
+    // exactly the screen where the user reviews what they got wrong.
     return {
       background: 'var(--tg-bg)',
       border: '1.5px solid rgba(0,0,0,0.07)',
       color: 'var(--tg-hint)',
-      opacity: 0.6,
     };
   }
 
@@ -180,7 +183,10 @@ function QuestionCard({ question, qNum, total, selected, revealed, onSelect, dis
         {question.image_url && (
           <img
             src={question.image_url}
-            alt="diagram"
+            // Per-image descriptive alt text isn't generated anywhere in this pipeline —
+            // this at least tells a screen-reader user there's a diagram referenced by
+            // the question above, instead of the content-free "diagram".
+            alt="Diagram referenced in the question above"
             className="mt-3 max-h-52 w-full rounded-xl object-contain bg-white"
           />
         )}
