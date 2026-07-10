@@ -995,14 +995,19 @@ export async function createRoom(data: {
   timeLimitSecs: number;
   expectedPlayers?: number;
 }): Promise<PracticeRoom> {
-  const yearClause = data.year ? `AND year = ${data.year}` : '';
+  // Every current caller guarantees an integer/null year before it reaches here, so this
+  // was never reachable with attacker-controlled input — but parameterize it anyway,
+  // matching every other filter in this file, so it stays that way for any future caller.
+  const yearClause = data.year ? `AND year = $4` : '';
+  const params: any[] = [data.subject, data.examType, data.numQuestions];
+  if (data.year) params.push(data.year);
   const qRes = await pool.query(
     `SELECT id FROM questions
      WHERE subject = $1 AND exam_type = $2
        AND is_active = TRUE
      ${yearClause}
      ORDER BY RANDOM() LIMIT $3`,
-    [data.subject, data.examType, data.numQuestions]
+    params
   );
   const questionIds = qRes.rows.map((r: any) => r.id);
   if (questionIds.length < data.numQuestions) {
@@ -1174,8 +1179,11 @@ export async function checkAndGrantReferralReward(
   const referrer = referrerRows[0];
   if (!referrer || referrer.referral_reward_granted) return { granted: false, referrer: null };
 
-  // Extend or start a 3-day Premium window
-  await pool.query(
+  // Extend or start a 3-day Premium window. The WHERE guard (not just the read-check
+  // above) makes this atomic — two concurrent calls for the same referrer can both pass
+  // the read-check before either write lands, but only the first UPDATE actually matches
+  // a row; the second is a no-op instead of stacking another +3 days on top.
+  const { rowCount } = await pool.query(
     `UPDATE users SET
        plan = 'premium',
        plan_expires_at = CASE
@@ -1184,9 +1192,10 @@ export async function checkAndGrantReferralReward(
          ELSE NOW() + INTERVAL '3 days'
        END,
        referral_reward_granted = TRUE
-     WHERE id = $1`,
+     WHERE id = $1 AND referral_reward_granted = FALSE`,
     [referrerId]
   );
+  if (!rowCount) return { granted: false, referrer: null };
 
   const { rows: updatedRows } = await pool.query<User>(
     'SELECT * FROM users WHERE id = $1',

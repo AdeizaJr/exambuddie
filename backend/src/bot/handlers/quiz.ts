@@ -287,6 +287,12 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
   // Timer already fired and auto-advanced — ignore late tap
   if (!quizState.questionDeadline && quizState.questionTimerSecs) return;
 
+  // Two taps landing close enough that both read quizState above before either write
+  // below completes — without this, both would log an attempt and advance qIndex,
+  // silently skipping the user a question ahead. ctx.answerCbQuery() already fired
+  // above, so the rejected duplicate doesn't need to call it again.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'quiz:answer'))) return;
+
   // Cancel per-question timer since user answered in time
   timerService.clearQuestionTimer(ctx.from.id);
   quizState.questionDeadline = undefined;

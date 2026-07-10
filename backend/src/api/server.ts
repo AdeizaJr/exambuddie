@@ -14,11 +14,28 @@ import { getPricing, updatePricing, getPricingHistory, PricingSettings } from '.
 const diagramsDir = path.join(__dirname, '../../public/diagrams');
 if (!fs.existsSync(diagramsDir)) fs.mkdirSync(diagramsDir, { recursive: true });
 
+// Rejects a non-numeric :id before multer ever touches the filesystem. Without this,
+// req.params.id flows unsanitized into the saved filename below — Express decodes a
+// URL-encoded "%2f" in a route param back into a literal "/", and multer's disk-storage
+// resolves the resulting ".." segments via path.join, escaping the diagrams directory
+// entirely (verified locally).
+const requireNumericId = (req: Request, res: Response, next: NextFunction) => {
+  if (!/^\d+$/.test(String(req.params.id))) return res.status(400).json({ error: 'Invalid question id' });
+  next();
+};
+
+const ALLOWED_IMAGE_EXT: Record<string, string> = {
+  'image/jpeg': '.jpg', 'image/png': '.png', 'image/gif': '.gif', 'image/webp': '.webp',
+};
+
 const diagramUpload = multer({
   storage: multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, diagramsDir),
     filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
+      // Extension is derived from the verified mimetype, not the client-supplied
+      // originalname, so a mismatched filename/Content-Type pair can't smuggle an
+      // attacker-chosen extension (e.g. ".html") past the mimetype check below.
+      const ext = ALLOWED_IMAGE_EXT[file.mimetype] || '.jpg';
       cb(null, `q${req.params.id}${ext}`);
     },
   }),
@@ -650,9 +667,9 @@ export default function createServer(bot: any) {
   });
 
   // ── POST /api/admin/questions/:id/image ────────────────────────────────────
-  app.post('/api/admin/questions/:id/image', adminAuth, diagramUpload.single('image'), async (req: Request, res: Response) => {
+  app.post('/api/admin/questions/:id/image', adminAuth, requireNumericId, diagramUpload.single('image'), async (req: Request, res: Response) => {
     if (!req.file) return res.status(400).json({ error: 'No image file provided' });
-    const ext = path.extname(req.file.originalname).toLowerCase() || '.jpg';
+    const ext = ALLOWED_IMAGE_EXT[req.file.mimetype] || '.jpg';
     const imageUrl = `/images/diagrams/q${req.params.id}${ext}`;
     const { rows } = await db.query(
       `UPDATE questions SET image_url = $1, has_diagram = true WHERE id = $2 RETURNING *`,

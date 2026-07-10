@@ -1,5 +1,6 @@
 // src/index.ts — ExamBuddie Bot Entry Point
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 dotenv.config();
 
 import { Telegraf } from 'telegraf';
@@ -552,7 +553,15 @@ async function launch() {
   const app = createServer(bot);
 
   if (APP_URL && process.env.NODE_ENV === 'production') {
-    const webhookHandler = await bot.createWebhook({ domain: APP_URL, path: '/bot' });
+    // Without a secret token, anyone who knows the webhook URL can POST a hand-crafted
+    // Telegram Update — every handler trusts ctx.from.id as identity, so that's full
+    // impersonation of any existing user. Telegraf verifies the
+    // X-Telegram-Bot-Api-Secret-Token header against this value on every request.
+    // Generated fresh at boot rather than requiring an env var: setWebhook is called
+    // on every launch anyway, so registration and validation always agree within a
+    // process's lifetime — no cross-restart persistence needed for a single instance.
+    const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET || crypto.randomBytes(32).toString('hex');
+    const webhookHandler = await bot.createWebhook({ domain: APP_URL, path: '/bot', secret_token: webhookSecret });
     app.use(webhookHandler);
     console.log(`🤖 ExamBuddie Bot launched via webhook at ${APP_URL}/bot`);
     console.log(`
