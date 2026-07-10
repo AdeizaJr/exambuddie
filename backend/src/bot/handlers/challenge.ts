@@ -559,7 +559,7 @@ export async function handleChallengeLeave(ctx: any): Promise<void> {
   await ctx.reply('Use the menu below to get started 👇', { reply_markup: fmt.persistentMenuKeyboard() });
 
   if (ctx.from.id === room.creator_telegram_id) {
-    await db.endRoom(room.id);
+    if (!(await db.endRoom(room.id))) return; // already ended by a concurrent process
     const remaining = await db.getRoomParticipants(room.id);
     for (const p of remaining) {
       await ctx.telegram.sendMessage(p.telegram_id, '❌ The room creator left. Challenge cancelled.').catch(() => {});
@@ -584,7 +584,10 @@ export async function handleChallengeLeave(ctx: any): Promise<void> {
 // ── Start challenge ───────────────────────────────────────────────────────────
 
 async function startChallenge(telegram: any, room: db.PracticeRoom, participants: db.RoomParticipant[]): Promise<void> {
-  await db.startRoom(room.id);
+  // If two overlapping cron ticks (or the cron and a manual "all ready" trigger) both
+  // pick up the same lobby-expired room, only the one whose UPDATE actually matched
+  // 'waiting' should send "Challenge starting!" to every participant.
+  if (!(await db.startRoom(room.id))) return;
   const endTime = Date.now() + room.time_limit_secs * 1000;
   const mins = Math.floor(room.time_limit_secs / 60);
 
@@ -715,8 +718,9 @@ async function finishParticipant(ctx: any, session: any): Promise<void> {
 
   if (allDone) {
     const room = await db.getRoomById(session.roomId);
-    if (room && room.status !== 'ended') {
-      await db.endRoom(session.roomId);
+    // endRoom's own status guard is the authoritative check — a stale `room.status`
+    // read here could race against the cron tick ending the same room concurrently.
+    if (room && (await db.endRoom(session.roomId))) {
       await broadcastResults(ctx.telegram, room, participants);
     }
   } else {
@@ -767,7 +771,7 @@ export async function startChallengeCron(telegram: any, room: db.PracticeRoom, p
 }
 
 export async function endExpiredRoom(telegram: any, room: db.PracticeRoom): Promise<void> {
-  await db.endRoom(room.id);
+  if (!(await db.endRoom(room.id))) return; // already ended by an overlapping tick or a finishing participant
   const participants = await db.getRoomParticipants(room.id);
   await broadcastResults(telegram, room, participants);
 }
