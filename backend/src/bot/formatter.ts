@@ -139,12 +139,18 @@ function convertLatex(text: string): string {
     .replace(/\blog([0-9]+)(?![0-9])/g, (_, d) => 'log' + toSub(d))
     // chemistry two-letter elements: Na2 → Na₂, SO4 → SO₄ (two-letter symbols are unambiguous)
     .replace(/\b([A-Z][a-z])([0-9]+)/g, (_, sym, n) => sym + toSub(n))
-    // chemistry: single-letter element before another element in formula: H in H2O, C in CH4
-    .replace(/\b([HCNOFPSBI])([0-9]+)(?=[A-Z])/g, (_, sym, n) => sym + toSub(n))
+    // chemistry: single-letter element before another element in formula: H in H2O, C in CH4.
+    // (?<![a-zA-Z]) not \b: a leading coefficient with no space ("2H2O") is a digit-letter
+    // transition with no \b, same gap fixed on the standalone-diatomic rule below.
+    .replace(/(?<![a-zA-Z])([HCNOFPSBI])([0-9]+)(?=[A-Z])/g, (_, sym, n) => sym + toSub(n))
     // chemistry: element digit at end of formula, preceded by another element: O in CO2
     .replace(/(?<=[A-Za-z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z])/g, (_, sym, n) => sym + toSub(n))
-    // chemistry standalone diatomic/molecules: O2 → O₂, N2 → N₂
-    .replace(/\b([HCNOFPSBI])([0-9]+)\b/g, (_, sym, n) => sym + toSub(n))
+    // chemistry standalone diatomic/molecules: O2 → O₂, N2 → N₂. A coefficient sits
+    // directly against the formula with no space ("2H2 + O2 → 2H2O") — digit-then-letter
+    // has no \b, so this used to fall through to the physics superscript rule below and
+    // render H2 as H² instead of H₂. (?<![a-zA-Z]) allows a leading digit through, same
+    // permissive style already used by the algebra/physics rules just below this one.
+    .replace(/(?<![a-zA-Z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z0-9])/g, (_, sym, n) => sym + toSub(n))
     // algebra bare power: 4x2 → 4x², x2 → x² (not preceded by letter, not followed by alphanum)
     .replace(/(?<![a-zA-Z])([a-z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
     // physics/math uppercase variables: D2 R → D² R (D not in chemistry list; D2K stays — letter follows)
@@ -565,7 +571,10 @@ export function formatExplanation(rawText: string): string {
   // they mean the degree sign "°" (U+00B0) — visually near-identical, but every degree-based
   // splitting rule below matches literal U+00B0, so content using the wrong codepoint sailed
   // through none of them and rendered as one unbroken wall of text.
-  const text = rawText.replace(/º/g, '°');
+  // Strip a stray leading quote mark — a scraping artifact on some explanations (the
+  // source data occasionally wraps just the opening of the text in a curly or straight
+  // quote with no matching close), not real formatting.
+  const text = rawText.replace(/º/g, '°').replace(/^[“”‘’"']\s*/, '');
   // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain.
   // Still sanitize any bare < or & that aren't part of a valid Telegram tag/entity — otherwise
   // Telegram's HTML parser rejects the whole message and the send throws.
@@ -582,6 +591,17 @@ export function formatExplanation(rawText: string): string {
   // the regexes below key off literal <, >, or & in the source text, so escaping first is safe.
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const preFormatted = escaped
+    // Bare-digit exponents with no markup at all — "πr2h", "(5)2", "cm2" meaning πr²h,
+    // (5)², cm². Deliberately narrow rather than a general letter-digit-letter rule: that
+    // would also match H2O/CO2-style chemistry subscripts, which look identical but mean
+    // the opposite thing (atom count, not a power). π never appears in a chemical formula,
+    // and a bare digit stuck right after a closing paren or a cm/m/km/mm unit is a safe,
+    // unambiguous exponent signal in this domain.
+    .replace(/(π\s*[a-zA-Z])([23])(?=[a-zA-Z]|\b)/g, (_, base, exp) => base + (exp === '2' ? '²' : '³'))
+    .replace(/\)([23])(?=[\s).,]|$)/g, (_, exp) => ')' + (exp === '2' ? '²' : '³'))
+    // (?<![a-zA-Z]) not \b on the left: the number right before the unit ("314cm2") is a
+    // digit-letter transition with no \b, same gap as the chemistry rule above.
+    .replace(/(?<![a-zA-Z])(cm|km|mm|m)([23])(?![a-zA-Z0-9])/g, (_, unit, exp) => unit + (exp === '2' ? '²' : '³'))
     // Back-to-back LaTeX groups "\(...\) \(...\)" with nothing but whitespace between them
     // are separate derivation steps (common in AI-generated math/physics explanations).
     // Must run before convertLatex strips the \( \) delimiters, or the step boundary is lost
