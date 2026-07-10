@@ -10,7 +10,11 @@ export default function LoadingScreen({ message }: { message?: string }) {
           ExamBuddie
         </span>
       </div>
-      <div className="w-8 h-8 border-[3px] border-gray-200 border-t-blue-600 rounded-full animate-spin" />
+      <div
+        className="w-8 h-8 border-[3px] border-gray-200 border-t-blue-600 rounded-full animate-spin"
+        role="status"
+        aria-label={message || 'Loading'}
+      />
       {message && <p className="text-xs text-[var(--tg-hint)]">{message}</p>}
     </div>
   );

@@ -29,13 +29,14 @@ export default function Stats() {
 
   return (
     <div className="page px-4 pt-6">
-      <h2 className="text-lg font-bold mb-4">📊 My Stats</h2>
+      <h1 className="text-lg font-bold mb-4">📊 My Stats</h1>
 
       {/* Exam filter */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
         {FILTERS.map(f => (
           <button key={f.value}
             onClick={() => { haptic('selection'); setFilter(f.value); }}
+            aria-pressed={filter === f.value}
             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
               filter === f.value
                 ? 'text-[var(--tg-button-text)]'

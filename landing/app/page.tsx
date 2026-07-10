@@ -135,7 +135,7 @@ export default async function Home() {
                   See how it works
                 </a>
               </div>
-              <p className="mt-5 text-xs text-slate-400 sm:mt-6 sm:text-sm dark:text-slate-500">
+              <p className="mt-5 text-xs text-slate-500 sm:mt-6 sm:text-sm dark:text-slate-400">
                 14 days Premium free · No credit card · No download required
               </p>
             </div>

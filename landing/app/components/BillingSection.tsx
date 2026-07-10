@@ -87,6 +87,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
         <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 p-1 dark:border-slate-700 dark:bg-slate-800">
           <button
             onClick={() => setBillingYearly(false)}
+            aria-pressed={!billingYearly}
             className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
               !billingYearly
                 ? "bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white"
@@ -97,6 +98,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
           </button>
           <button
             onClick={() => setBillingYearly(true)}
+            aria-pressed={billingYearly}
             className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
               billingYearly
                 ? "bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white"

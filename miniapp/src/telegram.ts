@@ -65,7 +65,10 @@ export function applyTelegramTheme() {
   const root = document.documentElement;
   root.style.setProperty('--tg-bg', p.bg_color || '#ffffff');
   root.style.setProperty('--tg-text', p.text_color || '#000000');
-  root.style.setProperty('--tg-hint', p.hint_color || '#999999');
+  // #999999 (Telegram's own light-theme default) is 2.85:1 on white, failing WCAG 1.4.3.
+  // Only affects the fallback used when Telegram doesn't supply its own hint_color —
+  // a real client-supplied theme color is used as-is, matching the user's actual theme.
+  root.style.setProperty('--tg-hint', p.hint_color || '#6b7280');
   root.style.setProperty('--tg-link', p.link_color || '#2678b6');
   root.style.setProperty('--tg-button', p.button_color || '#2678b6');
   root.style.setProperty('--tg-button-text', p.button_text_color || '#ffffff');

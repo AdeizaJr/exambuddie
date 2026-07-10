@@ -1066,11 +1066,15 @@ export async function setParticipantReady(roomId: number, telegramId: number): P
   );
 }
 
-export async function startRoom(roomId: number): Promise<void> {
-  await pool.query(
-    `UPDATE practice_rooms SET status = 'active', started_at = NOW() WHERE id = $1`,
+// Returns false if the room wasn't in 'waiting' status — i.e. it was already started by
+// an overlapping cron tick or a concurrent "all ready" trigger. Callers should skip
+// sending "Challenge starting!" messages a second time when this returns false.
+export async function startRoom(roomId: number): Promise<boolean> {
+  const { rowCount } = await pool.query(
+    `UPDATE practice_rooms SET status = 'active', started_at = NOW() WHERE id = $1 AND status = 'waiting'`,
     [roomId]
   );
+  return !!rowCount;
 }
 
 export async function recordChallengeAnswer(
@@ -1095,9 +1099,12 @@ export async function finishParticipant(roomId: number, telegramId: number): Pro
   );
 }
 
-export async function endRoom(roomId: number): Promise<void> {
-  await pool.query(
-    `UPDATE practice_rooms SET status = 'ended', ended_at = NOW() WHERE id = $1`,
+// Returns false if the room was already ended — i.e. an overlapping cron tick or a
+// concurrent finish already processed it. Callers should skip broadcasting results
+// a second time when this returns false.
+export async function endRoom(roomId: number): Promise<boolean> {
+  const { rowCount } = await pool.query(
+    `UPDATE practice_rooms SET status = 'ended', ended_at = NOW() WHERE id = $1 AND status != 'ended'`,
     [roomId]
   );
   await pool.query(
@@ -1105,6 +1112,7 @@ export async function endRoom(roomId: number): Promise<void> {
      WHERE room_id = $1 AND finished = false`,
     [roomId]
   );
+  return !!rowCount;
 }
 
 export async function getExpiredActiveRooms(): Promise<PracticeRoom[]> {

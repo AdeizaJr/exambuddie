@@ -68,6 +68,15 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
         const sess = await redis.getSession(telegramId);
         if (!sess?.questionDeadline || sess.questionDeadline !== deadline) return;
 
+        // handleAnswer holds this same lock while it scores/logs/writes the session for a
+        // manual tap landing in the same instant the timer fires. Without contending for
+        // it here too, both paths could pass the questionDeadline check above (read before
+        // the other's write lands) and each overwrite fields the other just set — the user
+        // could get both the "time's up" message and the manual result message, and either
+        // one's session write could silently wipe the other's (e.g. a genuine correct
+        // answer's score getting clobbered by the timer's awaitingNext/total write).
+        if (!(await redis.acquireActionLock(telegramId, 'practice:answer'))) return;
+
         const q = sess.currentQuestion;
         await redis.updateSession(telegramId, {
           questionDeadline: undefined,

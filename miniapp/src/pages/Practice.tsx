@@ -181,7 +181,7 @@ export default function Practice() {
   if (isDrill && stage === 'subject' && subject && weakTopics.length > 0 && !drillTopic) {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">🎯 Topic Drill</h2>
+        <h1 className="text-lg font-bold mb-1">🎯 Topic Drill</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">Your weakest topics in {SUBJECT_LABELS[subject] || subject}</p>
         <div className="flex flex-col gap-3">
           {weakTopics.map(t => (
@@ -202,7 +202,7 @@ export default function Practice() {
   if (stage === 'subject') {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">{isDrill ? '🎯 Topic Drill' : '📚 Practice'}</h2>
+        <h1 className="text-lg font-bold mb-1">{isDrill ? '🎯 Topic Drill' : '📚 Practice'}</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">Choose a subject to start</p>
         <SubjectPicker subjects={user.subjects} onSelect={handleSubject} />
       </div>
@@ -213,7 +213,7 @@ export default function Practice() {
   if (stage === 'examtype') {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">🎓 Exam Type</h2>
+        <h1 className="text-lg font-bold mb-1">🎓 Exam Type</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">Which exam are you preparing for?</p>
         <div className="flex flex-col gap-3">
           {EXAM_TYPES.map(et => (
@@ -237,7 +237,7 @@ export default function Practice() {
   if (stage === 'topic') {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">🎯 Choose Topic</h2>
+        <h1 className="text-lg font-bold mb-1">🎯 Choose Topic</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">
           {SUBJECT_LABELS[subject] || subject} — pick a topic or practise all
         </p>
@@ -268,7 +268,7 @@ export default function Practice() {
   if (stage === 'timer') {
     return (
       <div className="page px-4 pt-6">
-        <h2 className="text-lg font-bold mb-1">⏱️ Per-Question Timer</h2>
+        <h1 className="text-lg font-bold mb-1">⏱️ Per-Question Timer</h1>
         <p className="text-sm text-[var(--tg-hint)] mb-5">How long per question?</p>
         <div className="grid grid-cols-2 gap-3">
           {TIMER_OPTIONS.map(opt => (
@@ -289,7 +289,7 @@ export default function Practice() {
     return (
       <div className="page px-4 pt-10 flex flex-col items-center text-center">
         <span className="text-6xl mb-4">{acc >= 70 ? '🏆' : acc >= 50 ? '👍' : '💪'}</span>
-        <h2 className="text-2xl font-bold mb-2">Session Complete</h2>
+        <h1 className="text-2xl font-bold mb-2">Session Complete</h1>
         <p className="text-[var(--tg-hint)] mb-6">You answered {total} question{total !== 1 ? 's' : ''}</p>
         <div className="grid grid-cols-2 gap-4 w-full max-w-xs mb-8">
           <div className="bg-white/70 rounded-2xl p-4 border border-gray-100 text-center">
@@ -359,6 +359,8 @@ export default function Practice() {
             className="px-4 py-3 rounded-2xl font-medium border text-base transition-colors"
             style={bookmarked ? { background: '#FFF7ED', border: '1.5px solid #FB923C', color: '#EA580C' } : { border: '1.5px solid rgba(0,0,0,0.12)', color: 'var(--tg-hint)' }}
             title={bookmarked ? 'Remove bookmark' : 'Bookmark'}
+            aria-label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+            aria-pressed={bookmarked}
           >
             {bookmarked ? '🔖' : '☆'}
           </button>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -93,15 +93,16 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
     <Modal title="Change Password" onClose={onClose}>
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
-          { label: "Current Password", value: current, setter: setCurrent, auto: "current-password" },
-          { label: "New Password",     value: next,    setter: setNext,    auto: "new-password"     },
-          { label: "Confirm New Password", value: confirm, setter: setConfirm, auto: "new-password" },
-        ].map(({ label, value, setter, auto }, i) => (
-          <div key={label}>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted">
+          { id: "pw-current", label: "Current Password", value: current, setter: setCurrent, auto: "current-password" },
+          { id: "pw-next",    label: "New Password",      value: next,    setter: setNext,    auto: "new-password"     },
+          { id: "pw-confirm", label: "Confirm New Password", value: confirm, setter: setConfirm, auto: "new-password" },
+        ].map(({ id, label, value, setter, auto }, i) => (
+          <div key={id}>
+            <label htmlFor={id} className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted">
               {label}
             </label>
             <input
+              id={id}
               type="password"
               value={value}
               onChange={(e) => setter(e.target.value)}
@@ -134,6 +135,16 @@ export default function Layout({ pendingFlags, pendingAlerts, onLogout }: Layout
   const [mobileOpen, setMobileOpen] = useState(false);
 
   function closeMobile() { setMobileOpen(false); }
+
+  // The backdrop itself is only click-dismissible — this covers keyboard users, who
+  // otherwise had no way to back out of the open sidebar short of tabbing all the way
+  // to its own close button.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") closeMobile(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [mobileOpen]);
 
   const sidebarContent = (
     <>

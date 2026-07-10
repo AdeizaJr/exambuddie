@@ -39,7 +39,13 @@ async function pickWeakTopicQuestion(
 
 export default function startCrons(bot: any): void {
   // ── Every 15s — manage challenge rooms ────────────────────────────────────
+  // startRoom/endRoom are status-guarded so a re-processed room is a no-op even if this
+  // tick does overlap — this flag is the cheap first line of defense so a slow tick
+  // (busy lobby, slow Telegram API) doesn't even attempt to re-query/re-send at all.
+  let challengeTickRunning = false;
   setInterval(async () => {
+    if (challengeTickRunning) return;
+    challengeTickRunning = true;
     try {
       // Start waiting rooms whose 60s lobby timer has expired
       const expiredLobbies = await db.getExpiredLobbyRooms();
@@ -56,6 +62,8 @@ export default function startCrons(bot: any): void {
       }
     } catch (e) {
       console.error('[CRON] challenge room error:', e);
+    } finally {
+      challengeTickRunning = false;
     }
   }, 15_000);
 
