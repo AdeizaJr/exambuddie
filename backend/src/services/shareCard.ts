@@ -118,6 +118,101 @@ function statTile(x: number, w: number, value: string, label: string, valueColor
   ${label ? textPath(label, cx, 782, 26, '#94a3b8', { anchor: 'middle' }) : ''}`;
 }
 
+// Gold/silver/bronze for the top 3, a neutral slate badge for everyone else — same rank
+// gets the same treatment regardless of how many people played, so a 1st-place finish
+// in a 2-player duel reads identically to a 1st-place finish in an 8-player room.
+function rankBadge(cx: number, cy: number, size: number, rank: number): string {
+  if (rank === 1) return medalIcon(cx, cy, size);
+  const colors: Record<number, { fill: string; stroke: string; text: string }> = {
+    2: { fill: 'url(#silverGrad)', stroke: '#64748b', text: '#0f172a' },
+    3: { fill: 'url(#bronzeGrad)', stroke: '#92400e', text: '#fffbeb' },
+  };
+  const c = colors[rank] || { fill: '#1e293b', stroke: '#334155', text: '#f8fafc' };
+  const r = size / 2;
+  return `
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="${c.fill}" stroke="${c.stroke}" stroke-width="4"/>
+  ${textPath(`#${rank}`, cx, cy + size * 0.14, size * 0.4, c.text, { bold: true, anchor: 'middle' })}`;
+}
+
+export interface ChallengeResultCardData {
+  firstName: string;
+  subject: string;
+  numQuestions: number;
+  rank: number;
+  totalPlayers: number;
+  correct: number;
+  topPlayer: { firstName: string; correct: number } | null;
+  joinHandle: string;
+}
+
+export async function renderChallengeResultCard(data: ChallengeResultCardData): Promise<Buffer> {
+  const W = 1080;
+  const H = 1350;
+  const accuracy = Math.round((data.correct / data.numQuestions) * 100);
+  const accColor = accuracyColor(accuracy);
+  const isWinner = data.rank === 1;
+  // Bragging line only makes sense when someone else set the bar — the winner's own
+  // card shouldn't congratulate them on beating themselves.
+  const topLine = !isWinner && data.topPlayer
+    ? `Top score: ${data.topPlayer.firstName} — ${data.topPlayer.correct}/${data.numQuestions}`
+    : '';
+
+  const colW = 300;
+  const gap = 30;
+  const totalW = colW * 3 + gap * 2;
+  const startX = (W - totalW) / 2;
+
+  const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111a2e"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="topBar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="silverGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="bronzeGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="${W}" height="${H}" fill="url(#bg)"/>
+  <rect width="${W}" height="10" fill="url(#topBar)"/>
+
+  ${textPath(`${data.firstName} · ExamBuddie`, 60, 110, 34, '#94a3b8', { bold: true })}
+
+  ${rankBadge(W / 2, 340, 220, data.rank)}
+  ${textPath(`${data.rank === 1 ? '1st' : data.rank === 2 ? '2nd' : data.rank === 3 ? '3rd' : data.rank + 'th'} place`, W / 2, 490, 46, '#f8fafc', { bold: true, anchor: 'middle' })}
+  ${textPath(`out of ${data.totalPlayers} players`, W / 2, 540, 32, '#94a3b8', { anchor: 'middle' })}
+
+  ${statTile(startX, colW, `${data.correct}/${data.numQuestions}`, 'Score', '#f8fafc')}
+  ${statTile(startX + colW + gap, colW, `${accuracy}%`, 'Accuracy', accColor)}
+  ${statTile(startX + (colW + gap) * 2, colW, '', 'Subject', '#f8fafc')}
+  ${textPath(data.subject, startX + (colW + gap) * 2 + colW / 2, 740, 34, '#f8fafc', { bold: true, anchor: 'middle' })}
+
+  <line x1="80" y1="870" x2="${W - 80}" y2="870" stroke="#1e293b" stroke-width="2"/>
+
+  ${topLine ? textPath(topLine, W / 2, 960, 34, '#94a3b8', { anchor: 'middle' }) : ''}
+
+  <rect x="0" y="1180" width="${W}" height="170" fill="#16a34a"/>
+  ${textPath('Studying smarter for WAEC / JAMB / NECO', W / 2, 1250, 38, '#052e16', { bold: true, anchor: 'middle' })}
+  ${textPath(`Join me → ${data.joinHandle}`, W / 2, 1310, 34, '#052e16', { anchor: 'middle' })}
+</svg>`;
+
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
 export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
   const W = 1080;
   const H = 1350;
