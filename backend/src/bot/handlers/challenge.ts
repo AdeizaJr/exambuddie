@@ -691,6 +691,10 @@ export async function handleChallengeNext(ctx: any): Promise<void> {
   if (!session || session.mode !== 'challenge') return;
   await ctx.answerCbQuery();
 
+  // A double-tap re-sends the same next question twice — not data-corrupting since
+  // this handler doesn't itself advance currentQIdx, but a duplicate message is annoying.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'challenge:next'))) return;
+
   if (Date.now() > session.endTime) {
     await finishParticipant(ctx, session);
     return;

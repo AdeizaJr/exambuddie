@@ -215,8 +215,13 @@ export const getQOTDQuestion = async (date: string, examType: string): Promise<n
   return val ? parseInt(val, 10) : null;
 };
 
-export const markQOTDAnswered = async (telegramId: number | string, date: string): Promise<void> => {
-  await client.set(`qotd:answered:${telegramId}:${date}`, '1', { EX: QOTD_TTL });
+// Atomic SET NX — returns true if this call actually marked it (first answer), false if
+// already marked. The caller previously did a separate getQOTDAnswered read followed by
+// this write later on, which left a TOCTOU window for two near-simultaneous taps to both
+// pass the read check before either write landed.
+export const markQOTDAnswered = async (telegramId: number | string, date: string): Promise<boolean> => {
+  const result = await client.set(`qotd:answered:${telegramId}:${date}`, '1', { EX: QOTD_TTL, NX: true });
+  return result === 'OK';
 };
 
 export const getQOTDAnswered = async (telegramId: number | string, date: string): Promise<boolean> => {
