@@ -760,11 +760,66 @@ async function broadcastResults(telegram: any, room: db.PracticeRoom, participan
     msg += `${medals[i] || `${i + 1}.`} <b>${p.first_name}</b> — ${p.correct}/${room.num_questions} (${acc}%)\n`;
   });
 
+  const top = sorted[0];
+  for (const [i, p] of sorted.entries()) {
+    await redis.saveChallengeResult(p.telegram_id, {
+      subject: sub,
+      numQuestions: room.num_questions,
+      rank: i + 1,
+      totalPlayers: sorted.length,
+      correct: p.correct,
+      topPlayer: top ? { firstName: top.first_name, correct: top.correct } : null,
+    });
+  }
+
   for (const p of participants) {
-    await telegram.sendMessage(p.telegram_id, msg, { parse_mode: 'HTML' }).catch(() => {});
+    await telegram.sendMessage(p.telegram_id, msg, {
+      parse_mode: 'HTML',
+      reply_markup: { inline_keyboard: [[{ text: '📤 Share Results', callback_data: 'challenge:share' }]] },
+    }).catch(() => {});
     await telegram.sendMessage(p.telegram_id, 'Use the menu below to continue 👇', {
       reply_markup: fmt.persistentMenuKeyboard(),
     }).catch(() => {});
+  }
+}
+
+export async function handleChallengeShare(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const result = await redis.getChallengeResult(ctx.from.id);
+  if (!result) {
+    await ctx.reply('No recent challenge result found. Join a challenge first!');
+    return;
+  }
+
+  const accuracy = Math.round((result.correct / result.numQuestions) * 100);
+  const place = result.rank === 1 ? '1st' : result.rank === 2 ? '2nd' : result.rank === 3 ? '3rd' : `${result.rank}th`;
+  const caption = `🎉 <b>${place} place, ${ctx.from.first_name}!</b>\n\nSave the image above and post it, or forward it straight to a friend.`;
+
+  try {
+    const { renderChallengeResultCard } = await import('../../services/shareCard');
+    const image = await renderChallengeResultCard({
+      firstName: ctx.from.first_name,
+      subject: result.subject,
+      numQuestions: result.numQuestions,
+      rank: result.rank,
+      totalPlayers: result.totalPlayers,
+      correct: result.correct,
+      topPlayer: result.topPlayer,
+      joinHandle: `@${BOT_USERNAME}`,
+    });
+    await ctx.replyWithPhoto({ source: image }, { caption, parse_mode: 'HTML' });
+  } catch (err) {
+    // Render failure (e.g. bad host font setup) — fall back to the text card so sharing still works
+    console.error('[challenge] share card render failed:', (err as Error).message);
+    const card = `🏆 <b>ExamBuddie Challenge Result</b>
+
+📚 Subject: ${result.subject}
+🏅 Place: ${place} of ${result.totalPlayers}
+✅ Score: ${result.correct}/${result.numQuestions}
+🎯 Accuracy: ${accuracy}%
+
+Practice free at @${BOT_USERNAME}`;
+    await ctx.reply(card, { parse_mode: 'HTML' });
   }
 }
 

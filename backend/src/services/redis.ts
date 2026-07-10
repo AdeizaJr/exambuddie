@@ -163,6 +163,23 @@ export const getQuizResult = async (telegramId: number | string): Promise<QuizRe
   return getJson<QuizResultSummary>(`quiz_result:${telegramId}`);
 };
 
+export interface ChallengeResultSummary {
+  subject: string;
+  numQuestions: number;
+  rank: number;
+  totalPlayers: number;
+  correct: number;
+  topPlayer: { firstName: string; correct: number } | null;
+}
+
+export const saveChallengeResult = async (telegramId: number | string, result: ChallengeResultSummary): Promise<void> => {
+  await setJson(`challenge_result:${telegramId}`, result, QUIZ_RESULT_TTL);
+};
+
+export const getChallengeResult = async (telegramId: number | string): Promise<ChallengeResultSummary | null> => {
+  return getJson<ChallengeResultSummary>(`challenge_result:${telegramId}`);
+};
+
 export const getCachedAdminStats = async (): Promise<Record<string, unknown> | null> => {
   return getJson<Record<string, unknown>>('cache:admin_stats');
 };

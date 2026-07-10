@@ -173,6 +173,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('challenge:leave:')) return challenge.handleChallengeLeave(ctx);
   if (data === 'challenge:next') return challenge.handleChallengeNext(ctx);
   if (data === 'challenge:finish') return challenge.handleChallengeFinish(ctx);
+  if (data === 'challenge:share') return challenge.handleChallengeShare(ctx);
 
   // Practice
   if (data === 'practice:pick') return practice.handlePractice(ctx);
