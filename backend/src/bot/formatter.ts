@@ -86,8 +86,14 @@ function fracWrap(s: string): string {
 }
 
 // Convert LaTeX math notation to readable plain text for Telegram.
-function convertLatex(text: string): string {
-  return text
+function convertLatex(text: string, subject?: string): string {
+  const chemLike = subject === 'chemistry' || subject === 'biology';
+  let out = text
+    // normalize U+2212 (proper Unicode minus, common in AI-generated math text) to ASCII
+    // hyphen FIRST — every sign check below (frac exponents, bare "^-3", unit exponents,
+    // SUP_MAP) only recognizes ASCII "-", so "^{−\frac{1}{3}}" fell through all of them
+    // untouched instead of becoming a negative fractional exponent.
+    .replace(/−/g, '-')
     // fractional exponents FIRST — must run before \frac so ^{-\frac{1}{3}} → ^(-1/3)
     .replace(/\^\{(-?)\\?frac\{([^{}]+)\}\{([^{}]+)\}\}/g, (_, sign, n, d) => `^(${sign}${n.trim()}/${d.trim()})`)
     // frac(n)(d) — scraping artifact using parentheses instead of braces
@@ -120,6 +126,15 @@ function convertLatex(text: string): string {
     .replace(/(\d+(?:\.\d+)?)\s*[x×]\s*10-(\d{1,3})(?=[^0-9]|$)/g, (_, c, e) => `${c} × 10^{-${e}}`)
     // scraping artifact: unit negative exponents "NC-1" → "NC⁻¹", "Nm-2" → "Nm⁻²"
     .replace(/\b([A-Z]{1,2}[a-z]{0,2})-(\d{1,2})\b/g, (_, u, e) => `${u}${toSup(`-${e}`)}`)
+    // negative fractional exponent, braced or parenthesized ("^{-1/3}" / "^(-1/3)" — the
+    // \frac-with-sign rule above emits the paren shape): match the existing bare
+    // "y^1/3 → y¹⁄₃" convention below — numerator superscript, denominator SUBSCRIPT —
+    // instead of falling through to the generic brace/paren rule, which would superscript
+    // the denominator too and leave a full-height "/" sitting among tiny digits (Telegram
+    // has no <sup>/<sub> tags, so this subscript-denominator pairing is the closest
+    // Unicode gets to a matching size). Must run before the generic brace/paren rules.
+    .replace(/\^\{(-?)(\d+)\/(\d+)\}/g, (_, sign, n, d) => `${sign ? '⁻' : ''}${toSup(n)}⁄${toSub(d)}`)
+    .replace(/\^\((-?)(\d+)\/(\d+)\)/g, (_, sign, n, d) => `${sign ? '⁻' : ''}${toSup(n)}⁄${toSub(d)}`)
     // superscripts
     .replace(/\^\{([^}]+)\}/g, (_, e) => toSup(e))
     // parenthesized exponents: 2^(2 + n/3) → 2⁽² ⁺ ⁿ/³⁾
@@ -136,25 +151,39 @@ function convertLatex(text: string): string {
     // trig squared: sin2θ → sin²θ, cos2x → cos²x (digit is the power; allow letters after)
     .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + toSup(d))
     // log base: log2 → log₂, log10 → log₁₀
-    .replace(/\blog([0-9]+)(?![0-9])/g, (_, d) => 'log' + toSub(d))
-    // chemistry two-letter elements: Na2 → Na₂, SO4 → SO₄ (two-letter symbols are unambiguous)
-    .replace(/\b([A-Z][a-z])([0-9]+)/g, (_, sym, n) => sym + toSub(n))
-    // chemistry: single-letter element before another element in formula: H in H2O, C in CH4.
-    // (?<![a-zA-Z]) not \b: a leading coefficient with no space ("2H2O") is a digit-letter
-    // transition with no \b, same gap fixed on the standalone-diatomic rule below.
-    .replace(/(?<![a-zA-Z])([HCNOFPSBI])([0-9]+)(?=[A-Z])/g, (_, sym, n) => sym + toSub(n))
-    // chemistry: element digit at end of formula, preceded by another element: O in CO2
-    .replace(/(?<=[A-Za-z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z])/g, (_, sym, n) => sym + toSub(n))
-    // chemistry standalone diatomic/molecules: O2 → O₂, N2 → N₂. A coefficient sits
-    // directly against the formula with no space ("2H2 + O2 → 2H2O") — digit-then-letter
-    // has no \b, so this used to fall through to the physics superscript rule below and
-    // render H2 as H² instead of H₂. (?<![a-zA-Z]) allows a leading digit through, same
-    // permissive style already used by the algebra/physics rules just below this one.
-    .replace(/(?<![a-zA-Z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z0-9])/g, (_, sym, n) => sym + toSub(n))
+    .replace(/\blog([0-9]+)(?![0-9])/g, (_, d) => 'log' + toSub(d));
+
+  if (chemLike) {
+    out = out
+      // chemistry two-letter elements: Na2 → Na₂, SO4 → SO₄ (two-letter symbols are unambiguous)
+      .replace(/\b([A-Z][a-z])([0-9]+)/g, (_, sym, n) => sym + toSub(n))
+      // chemistry: single-letter element before another element in formula: H in H2O, C in CH4.
+      // (?<![a-zA-Z]) not \b: a leading coefficient with no space ("2H2O") is a digit-letter
+      // transition with no \b, same gap fixed on the standalone-diatomic rule below.
+      .replace(/(?<![a-zA-Z])([HCNOFPSBI])([0-9]+)(?=[A-Z])/g, (_, sym, n) => sym + toSub(n))
+      // chemistry: element digit at end of formula, preceded by another element: O in CO2
+      .replace(/(?<=[A-Za-z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z])/g, (_, sym, n) => sym + toSub(n))
+      // chemistry standalone diatomic/molecules: O2 → O₂, N2 → N₂ (also covers biology's F1/F2
+      // filial-generation notation, since F ∈ this element set). A coefficient sits directly
+      // against the formula with no space ("2H2 + O2 → 2H2O") — digit-then-letter has no \b,
+      // so this used to fall through to the physics superscript rule below and render H2 as
+      // H² instead of H₂. (?<![a-zA-Z]) allows a leading digit through, same permissive style
+      // already used by the algebra/physics rules just below this one.
+      // Gated to chemistry/biology only — elsewhere "N" is almost always Naira ("N800"),
+      // and this rule doesn't know the difference between Nitrogen and currency. Even within
+      // chemistry, a Naira mention can share a question with real formulas ("cost is N20.00");
+      // no chemical formula ever has a decimal subscript ("N2.5"), so a digit run immediately
+      // followed by ".digit" is a safe currency signal to exclude.
+      .replace(/(?<![a-zA-Z])([HCNOFPSBI])([0-9]+)(?![a-zA-Z0-9]|\.\d)/g, (_, sym, n) => sym + toSub(n));
+  }
+
+  return out
     // algebra bare power: 4x2 → 4x², x2 → x² (not preceded by letter, not followed by alphanum)
     .replace(/(?<![a-zA-Z])([a-z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
-    // physics/math uppercase variables: D2 R → D² R (D not in chemistry list; D2K stays — letter follows)
-    .replace(/(?<![a-zA-Z])([A-Z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
+    // physics/math uppercase variables: D2 R → D² R (D not in chemistry list; D2K stays — letter follows).
+    // N excluded — in this corpus "N" immediately followed by digits is essentially always a
+    // Naira amount ("N5,000"), never a bare algebra variable, so it collided with currency.
+    .replace(/(?<![a-zA-Z])([A-MO-Z])([2-9])(?![a-zA-Z0-9])/g, (_, l, d) => l + toSup(d))
     // chemistry state symbols: Zn_(s) → Zn(s), H2O_(l) → H₂O(l)
     .replace(/_\(([slgaq]+)\)/gi, '($1)')
     // subscripts
@@ -243,7 +272,7 @@ function convertLatex(text: string): string {
 
 const SUP_MAP: Record<string, string> = {
   '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
-  '+':'⁺','-':'⁻','=':'⁼','(':'⁽',')':'⁾',
+  '+':'⁺','-':'⁻','=':'⁼','(':'⁽',')':'⁾','/':'⁄',
   'a':'ᵃ','b':'ᵇ','c':'ᶜ','d':'ᵈ','e':'ᵉ','f':'ᶠ','g':'ᵍ','h':'ʰ','i':'ⁱ','j':'ʲ',
   'k':'ᵏ','l':'ˡ','m':'ᵐ','n':'ⁿ','o':'ᵒ','p':'ᵖ','r':'ʳ','s':'ˢ','t':'ᵗ','u':'ᵘ',
   'v':'ᵛ','w':'ʷ','x':'ˣ','y':'ʸ','z':'ᶻ',
@@ -262,9 +291,9 @@ function toSub(s: string): string {
 }
 
 // HTML-escape dynamic DB content, render LaTeX math, and convert *word* markup to <u>word</u>.
-function md(text: string | null | undefined): string {
+function md(text: string | null | undefined, subject?: string): string {
   if (!text) return '';
-  const mathConverted = convertLatex(text);
+  const mathConverted = convertLatex(text, subject);
   return mathConverted
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -542,7 +571,7 @@ export function formatQuestion(q: Question, number: number, total: number | stri
   return `${modeTag}
 <i>${q.exam_type} ${q.subject.charAt(0).toUpperCase() + q.subject.slice(1)} ${q.year}</i>
 
-${tryFormatColumnTable(questionText) ?? md(questionText)}`;
+${tryFormatColumnTable(questionText) ?? md(questionText, q.subject)}`;
 }
 
 export function answerKeyboard(hasOptionE = false) {
@@ -561,12 +590,12 @@ export function answerKeyboard(hasOptionE = false) {
 }
 
 export function answerOptions(q: Question): string {
-  let text = `\n\n<b>A.</b> ${md(q.option_a)}\n<b>B.</b> ${md(q.option_b)}\n<b>C.</b> ${md(q.option_c)}\n<b>D.</b> ${md(q.option_d)}`;
-  if (q.option_e) text += `\n<b>E.</b> ${md(q.option_e)}`;
+  let text = `\n\n<b>A.</b> ${md(q.option_a, q.subject)}\n<b>B.</b> ${md(q.option_b, q.subject)}\n<b>C.</b> ${md(q.option_c, q.subject)}\n<b>D.</b> ${md(q.option_d, q.subject)}`;
+  if (q.option_e) text += `\n<b>E.</b> ${md(q.option_e, q.subject)}`;
   return text;
 }
 
-export function formatExplanation(rawText: string): string {
+export function formatExplanation(rawText: string, subject?: string): string {
   // Scraped/OCR'd explanations routinely use "º" (U+00BA, masculine ordinal indicator) where
   // they mean the degree sign "°" (U+00B0) — visually near-identical, but every degree-based
   // splitting rule below matches literal U+00B0, so content using the wrong codepoint sailed
@@ -634,7 +663,7 @@ export function formatExplanation(rawText: string): string {
     // "( where X = " → on its own line
     .replace(/\(\s*where\b/gi, '\n(where')
     .trim();
-  const converted = convertLatex(preFormatted);
+  const converted = convertLatex(preFormatted, subject);
   return converted
     // "= 0" then the next equation step begins (chain of steps ending in = 0) — this must
     // run BEFORE the equation-chain collapser below, and its lookahead must include digits
@@ -720,8 +749,8 @@ export function correctAnswer(q: Question, selected: string): string {
     A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d, E: q.option_e,
   };
 
-  const correctText = md(optionText[q.correct_option] ?? '');
-  const explanation = q.explanation ? formatExplanation(q.explanation) : '<i>Explanation not yet available.</i>';
+  const correctText = md(optionText[q.correct_option] ?? '', q.subject);
+  const explanation = q.explanation ? formatExplanation(q.explanation, q.subject) : '<i>Explanation not yet available.</i>';
 
   return `${header}
 
@@ -1142,8 +1171,9 @@ export const MAX_SUBJECTS = 5;    // including English
 export const SUBJECT_Q_LIMIT = 5; // questions per subject per 6-hour window
 export const SUBJECT_WINDOW_HRS = 6;
 
-export function subjectKeyboard(selectedSubjects: string[] = []) {
+export function subjectKeyboard(selectedSubjects: string[] = [], allowedSubjects?: string[]) {
   const subjects = Object.entries(SUBJECT_MAP)
+    .filter(([code]) => !allowedSubjects || allowedSubjects.includes(code))
     .map(([code, name]) => ({ code, label: `${SUBJECT_EMOJI[code] || '📖'} ${name}`, name }))
     .sort((a, b) => {
       if (a.code === 'english') return -1;
