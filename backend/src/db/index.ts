@@ -117,6 +117,17 @@ export async function getSubjectAvailability(subject: string): Promise<{ examTyp
   return rows.map((r: any) => ({ examType: r.exam_type as string, years: r.years as number[] }));
 }
 
+export async function getSubjectsWithQuestions(examType: string): Promise<string[]> {
+  const all = isAllExams(examType);
+  const params: any[] = all ? [] : [examType];
+  const examFilter = all ? '' : 'AND exam_type = $1';
+  const { rows } = await pool.query(
+    `SELECT DISTINCT subject FROM questions WHERE is_active = TRUE ${examFilter}`,
+    params
+  );
+  return rows.map((r: any) => r.subject as string);
+}
+
 export async function getTopicsForSubject(examType: string, subject: string): Promise<string[]> {
   const all = isAllExams(examType);
   const params: any[] = all ? [subject] : [examType, subject];

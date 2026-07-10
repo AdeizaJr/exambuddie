@@ -41,7 +41,7 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
     : `❌ <b>Wrong.</b> The answer is <b>${q.correct_option}</b>.`;
 
   const explanation = q.explanation
-    ? `\n\n💡 ${formatExplanation(q.explanation)}`
+    ? `\n\n💡 ${formatExplanation(q.explanation, q.subject)}`
     : '';
 
   const correctOptKey = `option_${q.correct_option.toLowerCase()}` as keyof typeof q;
