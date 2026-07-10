@@ -365,6 +365,9 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
 
 export async function handleQuizNext(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
+  // A double-tap re-sends the same next question twice — not data-corrupting since
+  // this handler doesn't itself advance qIndex, but a duplicate message is annoying.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'quiz:next'))) return;
   const quizState = await redis.getQuizState(ctx.from.id);
   if (!quizState) { await ctx.reply('No active quiz. Use /quiz to start.'); return; }
 
@@ -451,6 +454,12 @@ export async function handleQuizStopCancel(ctx: any): Promise<void> {
 }
 
 export async function endQuiz(ctx: any, quizState: QuizState, reason: string): Promise<void> {
+  // Five different call sites can reach this (timeout, revoked, stop-confirm, natural
+  // completion) — a double-tap on "Stop" landing the same instant the overall timer
+  // expires could invoke this twice for the same quiz, sending duplicate "Quiz
+  // Complete!"/rank-up messages and double-saving the quiz result.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'quiz:end'))) return;
+
   timerService.clearQuestionTimer(ctx.from.id);
 
   const endTime = Date.now();

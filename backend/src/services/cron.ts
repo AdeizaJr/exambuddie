@@ -37,6 +37,22 @@ async function pickWeakTopicQuestion(
   return rows[0]?.id ?? null;
 }
 
+// node-cron catches a rejected task internally (so a failure never crashes the process)
+// but only emits an unlistened 'task-failed' event — a transient DB hiccup during, say,
+// the hourly expired-subscription check silently no-ops that entire run with zero
+// console output and no alert. Wrapping every scheduled task through this gives each one
+// the same logging + system_alerts row the QOTD cron already had.
+function safeCron(pattern: string, name: string, task: () => Promise<void>, options?: any): void {
+  cron.schedule(pattern, async () => {
+    try {
+      await task();
+    } catch (e: any) {
+      console.error(`[CRON] ${name} error:`, e);
+      await db.createAlert(`cron:${name}`, e?.message || String(e), 'warning').catch(() => {});
+    }
+  }, options);
+}
+
 export default function startCrons(bot: any): void {
   // ── Every 15s — manage challenge rooms ────────────────────────────────────
   // startRoom/endRoom are status-guarded so a re-processed room is a no-op even if this
@@ -68,8 +84,9 @@ export default function startCrons(bot: any): void {
   }, 15_000);
 
   // ── Every midnight WAT (UTC+1) — reset daily counts ─────────────────────
-  cron.schedule(
+  safeCron(
     '0 23 * * *',
+    'daily-reset',
     async () => {
       // WAT midnight = 23:00 UTC
       console.log('[CRON] Resetting daily question counts and broken streaks...');
@@ -93,12 +110,12 @@ export default function startCrons(bot: any): void {
 
   // ── Every hour — refresh pricing cache (backstop; updatePricing() already
   // refreshes it immediately on admin edit — this just guards against drift) ──
-  cron.schedule('0 * * * *', async () => {
+  safeCron('0 * * * *', 'pricing-refresh', async () => {
     await refreshPricing().catch((e) => console.error('[CRON] pricing refresh error:', e.message));
   });
 
   // ── Every hour — check expired subscriptions ──────────────────────────────
-  cron.schedule('0 * * * *', async () => {
+  safeCron('0 * * * *', 'expired-subscriptions', async () => {
     const expired = await payments.checkExpiredSubscriptions();
     for (const user of expired) {
       if (!user.notifications_enabled) continue;
@@ -117,7 +134,7 @@ export default function startCrons(bot: any): void {
   });
 
   // ── 3-day expiry reminders — runs daily at 9am WAT (8am UTC) ──────────────
-  cron.schedule('0 8 * * *', async () => {
+  safeCron('0 8 * * *', 'expiry-reminders', async () => {
     const { rows } = await db.query(
       `SELECT telegram_id, first_name, plan_expires_at
        FROM users
@@ -142,7 +159,7 @@ export default function startCrons(bot: any): void {
   // One-shot: activation_nudge_sent_at gates re-sends, so the >20h window doesn't
   // need to be exact — a user only ever gets this once regardless of when the
   // daily run catches them.
-  cron.schedule('0 9 * * *', async () => {
+  safeCron('0 9 * * *', 'activation-nudge', async () => {
     const { rows } = await db.query(
       `SELECT telegram_id, first_name FROM users u
        WHERE joined_at < NOW() - INTERVAL '20 hours'
@@ -173,14 +190,14 @@ export default function startCrons(bot: any): void {
   });
 
   // ── Sunday 22:55 UTC (23:55 WAT) — snapshot leaderboard before weekly reset ──
-  cron.schedule('55 22 * * 0', async () => {
+  safeCron('55 22 * * 0', 'leaderboard-snapshot', async () => {
     console.log('[CRON] Snapshotting weekly leaderboard...');
     const saved = await db.snapshotLeaderboard();
     console.log(`[CRON] Leaderboard snapshot: ${saved} entries saved`);
   }, { timezone: 'UTC' } as any);
 
   // ── Sunday 8am UTC (9am WAT) — morning wave ──────────────────────────────
-  cron.schedule('0 8 * * 0', async () => {
+  safeCron('0 8 * * 0', 'weekly-summary-morning', async () => {
     console.log('[CRON] Weekly summaries — morning wave...');
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan, u.last_active_date
@@ -200,7 +217,7 @@ export default function startCrons(bot: any): void {
   });
 
   // ── Sunday 4pm UTC (5pm WAT) — evening wave (also catches any morning failures) ──
-  cron.schedule('0 16 * * 0', async () => {
+  safeCron('0 16 * * 0', 'weekly-summary-evening', async () => {
     console.log('[CRON] Weekly summaries — evening wave...');
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan, u.last_active_date
@@ -213,7 +230,7 @@ export default function startCrons(bot: any): void {
   });
 
   // ── Daily 7am UTC (8am WAT) — Did You Know ───────────────────────────────
-  cron.schedule('0 7 * * *', async () => {
+  safeCron('0 7 * * *', 'did-you-know', async () => {
     console.log('[CRON] Sending Did You Know facts...');
 
     const { rows: users } = await db.query(
@@ -288,7 +305,7 @@ export default function startCrons(bot: any): void {
   });
 
   // ── Daily 2pm UTC (3pm WAT) — 3-day inactivity nudge ────────────────────
-  cron.schedule('0 14 * * *', async () => {
+  safeCron('0 14 * * *', 'inactivity-nudge', async () => {
     const watNow = new Date(Date.now() + 60 * 60 * 1000);
     const threeDaysAgoWAT = new Date(watNow.getTime() - 3 * 86400000).toISOString().split('T')[0];
 
@@ -322,7 +339,7 @@ export default function startCrons(bot: any): void {
   });
 
   // ── Hourly — daily auto-challenge ────────────────────────────────────────
-  cron.schedule('0 * * * *', async () => {
+  safeCron('0 * * * *', 'auto-challenge', async () => {
     const watHour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
     const watToday = new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0];
 
@@ -409,7 +426,7 @@ export default function startCrons(bot: any): void {
   });
 
   // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────
-  cron.schedule('0 17 * * 5', async () => {
+  safeCron('0 17 * * 5', 'friday-nudge', async () => {
     console.log('[CRON] Friday nudge...');
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.streak,
@@ -450,7 +467,7 @@ ${streakLine} → /practice`;
   // ── 1st of every month — NDPA data retention: purge inactive accounts ───────
   // Deletes free-plan users with no activity for 24+ months (data minimisation).
   // Premium/trial users are excluded — they have an active commercial relationship.
-  cron.schedule('0 2 1 * *', async () => {
+  safeCron('0 2 1 * *', 'ndpa-retention', async () => {
     console.log('[CRON] NDPA retention: purging long-inactive accounts...');
     const { rows } = await db.query(
       `SELECT telegram_id FROM users
@@ -478,7 +495,7 @@ ${streakLine} → /practice`;
   // On the morning a user's own exam is actually sitting, replace the usual QOTD noise
   // with one calm, subject-specific message instead — checked here, ahead of QOTD below,
   // so the QOTD cron can skip anyone who already got this.
-  cron.schedule('30 5 * * *', async () => {
+  safeCron('30 5 * * *', 'exam-day-companion', async () => {
     const { todaysExamSubjects } = await import('../bot/handlers/timetable');
     // subject slugs that don't map 1:1 onto a /formula sheet key
     const FORMULA_ALIAS: Record<string, string> = { math: 'maths' };
@@ -515,7 +532,7 @@ ${streakLine} → /practice`;
   });
 
   // ── Daily 6am UTC (7am WAT) — Question of the Day broadcast ──────────────
-  cron.schedule('0 6 * * *', async () => {
+  safeCron('0 6 * * *', 'question-of-the-day', async () => {
     console.log('[CRON] Sending Question of the Day...');
     const { todaysExamSubjects } = await import('../bot/handlers/timetable');
     const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
@@ -646,7 +663,7 @@ ${streakLine} → /practice`;
   // ── Daily 7am WAT (6am UTC) — Exam timetable reminders (1, 3, 7 days out) ──
   // Each subject rolls to next year on its own once this year's sitting has passed
   // (nextOccurrence) — no dependency on the user's stored target_year.
-  cron.schedule('5 6 * * *', async () => {
+  safeCron('5 6 * * *', 'exam-timetable-reminders', async () => {
     const { WAEC_2026, NECO_2026, JAMB_2026, nextOccurrence } = await import('../bot/handlers/timetable');
     const today = new Date();
     today.setHours(0, 0, 0, 0);

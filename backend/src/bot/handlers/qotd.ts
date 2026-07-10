@@ -11,10 +11,11 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.answerCbQuery(); return; }
 
-  // Prevent double-answering
+  // Prevent double-answering — the SET NX below is the atomic guard (returns false if
+  // already marked), closing the gap a separate read-then-write-later left for two
+  // near-simultaneous taps to both pass a check before either write landed.
   const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
-  const alreadyAnswered = await redis.getQOTDAnswered(ctx.from.id, date);
-  if (alreadyAnswered) {
+  if (!(await redis.markQOTDAnswered(ctx.from.id, date))) {
     await ctx.answerCbQuery('You already answered today\'s question!', { show_alert: true });
     return;
   }
@@ -25,16 +26,13 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
 
   const isCorrect = option === q.correct_option;
 
-  await Promise.all([
-    redis.markQOTDAnswered(ctx.from.id, date),
-    db.logAttempt({
-      userId: user.id,
-      questionId: q.id,
-      selectedOption: option,
-      isCorrect,
-      sessionId: `qotd_${date}`,
-    }),
-  ]);
+  await db.logAttempt({
+    userId: user.id,
+    questionId: q.id,
+    selectedOption: option,
+    isCorrect,
+    sessionId: `qotd_${date}`,
+  });
 
   const resultLine = isCorrect
     ? '✅ <b>Correct!</b>'
