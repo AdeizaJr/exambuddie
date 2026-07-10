@@ -119,6 +119,11 @@ export async function handleSRAnswer(ctx: any, selected: string): Promise<void> 
   const user = await db.getUser(ctx.from.id);
   if (!user) return;
 
+  // Two taps landing close enough that both read session above before either write
+  // below completes — without this, both would log an attempt and advance srIndex,
+  // silently skipping a card. ctx.answerCbQuery() already fired above.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'sr:answer'))) return;
+
   const isCorrect = selected === q.correct_option;
 
   // Update SR interval and log attempt

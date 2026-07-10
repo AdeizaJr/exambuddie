@@ -663,6 +663,12 @@ export async function handleChallengeAnswer(ctx: any): Promise<void> {
   const question = await db.getQuestionById(session.questionIds[session.currentQIdx]);
   if (!question) return;
 
+  // Two taps landing close enough that both read currentQIdx above before either write
+  // below completes — recordChallengeAnswer does an atomic SQL increment, so unlike a
+  // Redis race this genuinely double-counts: current_q_idx/total_answered both actually
+  // advance, silently skipping the user a question ahead in the live duel.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'challenge:answer'))) return;
+
   const isCorrect = selected === question.correct_option;
   await db.recordChallengeAnswer(room.id, ctx.from.id, isCorrect);
 

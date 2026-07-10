@@ -381,6 +381,14 @@ export async function handleAnswer(ctx: any): Promise<void> {
   // Timer already fired automatically — ignore late tap
   if (session.awaitingNext && !session.questionDeadline) return;
 
+  // Two taps (e.g. A then B) landing close enough that both read the session above
+  // before either write below completes — without this, both would score, log an
+  // attempt, and message the user. Same lock practice.ts's handleNext already uses.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'practice:answer'))) {
+    await ctx.answerCbQuery();
+    return;
+  }
+
   ctx.answerCbQuery().catch(() => {}); // fire and forget — removes Telegram spinner immediately
 
   const isCorrect = selected === q.correct_option;

@@ -173,13 +173,29 @@ export async function activateSubscription(
   // match future renewal charges (which arrive with no telegram_id/plan metadata) back to this user
   const customerCode = txData.customer?.customer_code ?? null;
 
-  // Update subscription record
-  await db.query(
+  // Update subscription record. This can be called twice for the same tx_ref — the
+  // browser redirect (/payment/callback) and the charge.success webhook both call
+  // activateSubscription, and typically land within moments of each other. The
+  // `AND status != 'active'` guard makes the second call a no-op instead of
+  // re-extending expiry from "now" a second time for one payment.
+  const { rowCount } = await db.query(
     `UPDATE subscriptions
      SET status = 'active', paystack_tx_id = $1, started_at = NOW(), expires_at = $2, paystack_customer_code = $3
-     WHERE paystack_tx_ref = $4`,
+     WHERE paystack_tx_ref = $4 AND status != 'active'`,
     [txData.id, expiresAt.toISOString(), customerCode, txRef]
   );
+
+  if (!rowCount) {
+    // Already activated by a concurrent/duplicate call — report the existing state
+    // rather than extending expiry again.
+    const existing = await db.getUser(telegramId);
+    if (!existing) throw new Error('User not found during duplicate activation');
+    return {
+      user: existing,
+      expiresAt: existing.plan_expires_at ? new Date(existing.plan_expires_at) : expiresAt,
+      planType,
+    };
+  }
 
   // Update user plan
   const user = await db.updateUser(telegramId, {
@@ -256,14 +272,18 @@ export async function handleRecurringCharge(
   expiresAt.setDate(expiresAt.getDate() + plan.duration);
   const amountNgn = typeof data.amount === 'number' ? data.amount / 100 : plan.amount;
 
-  // Log the renewal as its own row so revenue history stays accurate
-  await db.query(
+  // Log the renewal as its own row so revenue history stays accurate. Paystack's webhook
+  // delivery is at-least-once, so this INSERT can be replayed for the same tx_ref — the
+  // ON CONFLICT DO NOTHING de-dupes the row, but rowCount tells us whether this call is
+  // the real renewal or a duplicate delivery; only the real one should reset expiry.
+  const { rowCount } = await db.query(
     `INSERT INTO subscriptions
        (user_id, plan, amount_ngn, paystack_tx_ref, paystack_plan_code, paystack_customer_code, status, started_at, expires_at, is_recurring)
      VALUES ($1, $2, $3, $4, $5, $6, 'active', NOW(), $7, TRUE)
      ON CONFLICT (paystack_tx_ref) DO NOTHING`,
     [match.user_id, planType, amountNgn, data.reference, planCode, customerCode, expiresAt.toISOString()]
   );
+  if (!rowCount) return null; // duplicate webhook delivery — already processed this tx_ref
 
   const user = await db.updateUser(match.telegram_id, {
     plan: 'premium',
@@ -309,12 +329,17 @@ export async function getManageLink(subscriptionCode: string): Promise<string> {
 // Verify Paystack webhook signature (HMAC-SHA512 over raw body, signed with the secret key)
 export function verifyWebhook(signature: string | string[] | undefined, rawBody: string | Buffer): boolean {
   if (!signature) return false;
+  const secret = process.env.PAYSTACK_SECRET_KEY;
+  // Without this, an unset secret would compute the HMAC with an empty key — a value
+  // anyone could reproduce — instead of failing closed.
+  if (!secret) return false;
   const sigStr = Array.isArray(signature) ? signature[0] : signature;
-  const hash = crypto
-    .createHmac('sha512', process.env.PAYSTACK_SECRET_KEY || '')
-    .update(rawBody)
-    .digest('hex');
-  return hash === sigStr;
+  const hash = crypto.createHmac('sha512', secret).update(rawBody).digest('hex');
+  // timingSafeEqual requires equal-length buffers; a length mismatch already means the
+  // signatures differ, so short-circuit before it throws.
+  const hashBuf = Buffer.from(hash, 'hex');
+  const sigBuf = Buffer.from(sigStr, 'hex');
+  return hashBuf.length === sigBuf.length && crypto.timingSafeEqual(hashBuf, sigBuf);
 }
 
 export async function checkExpiredSubscriptions(): Promise<any[]> {
