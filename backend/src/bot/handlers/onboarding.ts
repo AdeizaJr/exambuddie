@@ -95,15 +95,17 @@ export async function handleExamType(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
 
   // English is always compulsory — pre-select it
+  const allowedSubjects = await db.getSubjectsWithQuestions(examType);
   await redis.updateSession(ctx.from.id, {
     step: 'subjects',
     examType,
     selectedSubjects: ['english'],
+    allowedSubjects,
   });
 
   await ctx.editMessageText(fmt.askSubjects(examType), {
     parse_mode: 'HTML',
-    reply_markup: fmt.subjectKeyboard(['english']),
+    reply_markup: fmt.subjectKeyboard(['english'], allowedSubjects),
   });
 }
 
@@ -138,7 +140,7 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
 
   await ctx.answerCbQuery();
   await redis.updateSession(ctx.from.id, { selectedSubjects: selected });
-  await ctx.editMessageReplyMarkup(fmt.subjectKeyboard(selected));
+  await ctx.editMessageReplyMarkup(fmt.subjectKeyboard(selected, session.allowedSubjects));
 }
 
 // Step 3 — Subjects done → save everything, show main menu
@@ -300,13 +302,15 @@ export async function handleSettingsSubjects(ctx: any): Promise<void> {
   const current = user.subjects?.includes('english')
     ? user.subjects
     : ['english', ...(user.subjects || [])];
+  const allowedSubjects = await db.getSubjectsWithQuestions(user.exam_type || '');
   await redis.setSession(ctx.from.id, {
     step: 'change_subjects',
     selectedSubjects: current,
+    allowedSubjects,
   });
   await ctx.editMessageText(
     `📚 <b>Edit Subjects</b>\n\nEnglish is compulsory. You can select up to ${fmt.MAX_SUBJECTS} subjects total.`,
-    { parse_mode: 'HTML', reply_markup: fmt.subjectKeyboard(current) }
+    { parse_mode: 'HTML', reply_markup: fmt.subjectKeyboard(current, allowedSubjects) }
   );
 }
 
