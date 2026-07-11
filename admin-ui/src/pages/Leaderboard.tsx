@@ -97,9 +97,9 @@ export default function Leaderboard() {
   const monthGroups = groupByMonth(snapshotWeeks);
 
   return (
-    <div className="flex gap-6 p-6">
+    <div className="flex flex-col gap-6 p-6 lg:flex-row">
       {/* Sidebar */}
-      <aside className="w-56 shrink-0 space-y-2">
+      <aside className="w-full shrink-0 space-y-2 lg:w-56">
         {/* This week */}
         <button
           onClick={() => setSelectedWeek(null)}
@@ -209,38 +209,40 @@ export default function Leaderboard() {
                 : "No data for this week."}
             </div>
           ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="w-16 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Rank</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">User</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Telegram ID</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Correct</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Total</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Accuracy</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {entries.map((e) => (
-                  <tr key={e.telegram_id} className="transition-colors hover:bg-surface2">
-                    <td className="px-4 py-3 text-lg">
-                      {MEDALS[e.rank - 1] ?? (
-                        <span className="font-mono text-sm text-muted">{e.rank}</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 font-medium text-white">{e.first_name}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-muted">{e.telegram_id}</td>
-                    <td className="px-4 py-3 text-white">{e.correct}</td>
-                    <td className="px-4 py-3 text-muted">{e.total}</td>
-                    <td className="px-4 py-3">
-                      <Badge variant={e.accuracy >= 80 ? "green" : e.accuracy >= 60 ? "amber" : "red"}>
-                        {e.accuracy}%
-                      </Badge>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="w-16 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Rank</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">User</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Telegram ID</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Correct</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Total</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Accuracy</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {entries.map((e) => (
+                    <tr key={e.telegram_id} className="transition-colors hover:bg-surface2">
+                      <td className="px-4 py-3 text-lg">
+                        {MEDALS[e.rank - 1] ?? (
+                          <span className="font-mono text-sm text-muted">{e.rank}</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-white">{e.first_name}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-muted">{e.telegram_id}</td>
+                      <td className="px-4 py-3 text-white">{e.correct}</td>
+                      <td className="px-4 py-3 text-muted">{e.total}</td>
+                      <td className="px-4 py-3">
+                        <Badge variant={e.accuracy >= 80 ? "green" : e.accuracy >= 60 ? "amber" : "red"}>
+                          {e.accuracy}%
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
