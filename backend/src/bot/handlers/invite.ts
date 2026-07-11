@@ -1,4 +1,5 @@
 import * as db from '../../db';
+import { escHtml } from '../formatter';
 
 const BOT_USERNAME = process.env.BOT_USERNAME || 'ExamBuddieBot';
 
@@ -64,7 +65,7 @@ export async function handleReferralLeaderboard(ctx: any): Promise<void> {
   for (let i = 0; i < topReferrers.length; i++) {
     const r = topReferrers[i];
     const medal = medals[i] || `${i + 1}.`;
-    text += `${medal} ${r.first_name} — ${r.referrals} friend${r.referrals !== 1 ? 's' : ''}\n`;
+    text += `${medal} ${escHtml(r.first_name)} — ${r.referrals} friend${r.referrals !== 1 ? 's' : ''}\n`;
   }
   text += '\n<i>Invite 2 active friends → earn 3 days Premium free! /invite</i>';
 

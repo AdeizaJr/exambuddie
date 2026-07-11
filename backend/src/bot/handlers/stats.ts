@@ -382,7 +382,7 @@ async function showTopicMasteryForSubject(ctx: any, user: any, subject: string):
 
   const lines = topics.map(t => {
     const bar = t.accuracy >= 80 ? '🟢' : t.accuracy >= 50 ? '🟡' : '🔴';
-    return `${bar} <b>${t.topic}</b>: ${t.accuracy}% (${t.correct}/${t.attempts})`;
+    return `${bar} <b>${fmt.escHtml(t.topic)}</b>: ${t.accuracy}% (${t.correct}/${t.attempts})`;
   });
 
   await ctx.reply(
@@ -474,7 +474,7 @@ export async function handleWeeklyReport(ctx: any): Promise<void> {
 
   const weakLines = weakTopics.map((t) => {
     const subjectName = SUBJECT_MAP[t.subject] || t.subject;
-    return `  • ${t.topic} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${t.topic}`;
+    return `  • ${fmt.escHtml(t.topic)} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${fmt.escHtml(t.topic)}`;
   }).join('\n');
 
   const bestLine = bestSubject

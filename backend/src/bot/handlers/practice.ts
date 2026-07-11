@@ -654,7 +654,7 @@ export async function handleNext(ctx: any): Promise<void> {
 
   if (!q) {
     const yearStr = session.year ? ` for ${session.year}` : '';
-    const topicStr = session.topic ? ` on topic "${session.topic}"` : '';
+    const topicStr = session.topic ? ` on topic "${fmt.escHtml(session.topic)}"` : '';
     const subjectLabel = session.practiceSubjects && session.practiceSubjects.length > 1
       ? 'all selected subjects'
       : `this subject${yearStr}${topicStr}`;
