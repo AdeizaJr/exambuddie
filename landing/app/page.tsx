@@ -170,7 +170,7 @@ export default async function Home() {
             { value: "Free", label: "To Start" },
           ].map(({ value, label }) => (
             <div key={label}>
-              <div className="whitespace-nowrap text-lg leading-tight font-extrabold sm:text-xl md:text-2xl">
+              <div className="text-lg leading-tight font-extrabold sm:text-xl sm:whitespace-nowrap md:text-2xl">
                 {value}
               </div>
               <div className="mt-1 text-xs text-brand-light/80 sm:text-sm">{label}</div>
@@ -539,8 +539,8 @@ export default async function Home() {
               Compare how students prepare, and why the bot wins.
             </p>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <table className="w-full min-w-[520px] text-sm">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6 dark:text-slate-400">Feature</th>
