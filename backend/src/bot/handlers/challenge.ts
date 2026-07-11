@@ -23,7 +23,7 @@ function formatLobby(room: db.PracticeRoom, participants: db.RoomParticipant[], 
   const mins = Math.floor(room.time_limit_secs / 60);
   const readyCount = participants.filter(p => p.ready).length;
   const playerList = participants
-    .map(p => `${p.ready ? '✅' : '⏳'} ${p.first_name}${p.telegram_id === room.creator_telegram_id ? ' 👑' : ''}`)
+    .map(p => `${p.ready ? '✅' : '⏳'} ${fmt.escHtml(p.first_name)}${p.telegram_id === room.creator_telegram_id ? ' 👑' : ''}`)
     .join('\n');
   const countdownStr = secsLeft > 0
     ? `⏳ <b>${secsLeft}s</b> lobby countdown — auto-starts when all ${room.max_players} players are ready`
@@ -151,7 +151,7 @@ export async function handleChallengeCodeInput(ctx: any): Promise<void> {
         await ctx.telegram
           .sendMessage(
             p.telegram_id,
-            `👤 <b>${user.first_name}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
+            `👤 <b>${fmt.escHtml(user.first_name)}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
             { parse_mode: 'HTML' }
           )
           .catch(() => {});
@@ -320,7 +320,7 @@ async function createAndNotifyDuel(ctx: any, session: any, expected: number): Pr
     const sub = fmt.SUBJECT_MAP[room.subject] || room.subject;
     ctx.telegram.sendMessage(
       session.duelOpponentId,
-      `⚔️ <b>${user.first_name} challenged you to a duel!</b>\n\n📚 ${sub} · ${room.num_questions} questions\n\nTap below to accept:`,
+      `⚔️ <b>${fmt.escHtml(user.first_name)} challenged you to a duel!</b>\n\n📚 ${sub} · ${room.num_questions} questions\n\nTap below to accept:`,
       {
         parse_mode: 'HTML',
         reply_markup: { inline_keyboard: [[{ text: '⚔️ Accept Duel', url: inviteLink(room.code) }]] },
@@ -460,7 +460,7 @@ export async function handleChallengeJoin(ctx: any, code: string): Promise<void>
         await ctx.telegram
           .sendMessage(
             p.telegram_id,
-            `👤 <b>${firstName}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
+            `👤 <b>${fmt.escHtml(firstName)}</b> joined the room! (${updated.filter(x => x.ready).length}/${room.max_players} ready)`,
             { parse_mode: 'HTML' }
           )
           .catch(() => {});
@@ -503,7 +503,7 @@ export async function handleChallengeReady(ctx: any): Promise<void> {
   for (const p of participants) {
     if (p.telegram_id !== ctx.from.id) {
       await ctx.telegram
-        .sendMessage(p.telegram_id, `✅ <b>${ctx.from.first_name}</b> is ready!`, { parse_mode: 'HTML' })
+        .sendMessage(p.telegram_id, `✅ <b>${fmt.escHtml(ctx.from.first_name)}</b> is ready!`, { parse_mode: 'HTML' })
         .catch(() => {});
     }
   }
@@ -573,7 +573,7 @@ export async function handleChallengeLeave(ctx: any): Promise<void> {
       await ctx.telegram
         .sendMessage(
           p.telegram_id,
-          `👤 <b>${ctx.from.first_name}</b> left the room. (${remaining.filter(p => p.ready).length}/${room.max_players} ready)`,
+          `👤 <b>${fmt.escHtml(ctx.from.first_name)}</b> left the room. (${remaining.filter(p => p.ready).length}/${room.max_players} ready)`,
           { parse_mode: 'HTML' }
         )
         .catch(() => {});
@@ -732,7 +732,7 @@ async function finishParticipant(ctx: any, session: any): Promise<void> {
     for (const p of participants) {
       if (!p.finished && p.telegram_id !== ctx.from.id) {
         await ctx.telegram
-          .sendMessage(p.telegram_id, `🏃 <b>${ctx.from.first_name}</b> has finished! Keep going! 💪`, { parse_mode: 'HTML' })
+          .sendMessage(p.telegram_id, `🏃 <b>${fmt.escHtml(ctx.from.first_name)}</b> has finished! Keep going! 💪`, { parse_mode: 'HTML' })
           .catch(() => {});
       }
     }
@@ -757,7 +757,7 @@ async function broadcastResults(telegram: any, room: db.PracticeRoom, participan
   msg += `📚 ${sub} · ${room.year || 'Any Year'} · ${room.num_questions}Q\n\n`;
   sorted.forEach((p, i) => {
     const acc = Math.round((p.correct / room.num_questions) * 100);
-    msg += `${medals[i] || `${i + 1}.`} <b>${p.first_name}</b> — ${p.correct}/${room.num_questions} (${acc}%)\n`;
+    msg += `${medals[i] || `${i + 1}.`} <b>${fmt.escHtml(p.first_name)}</b> — ${p.correct}/${room.num_questions} (${acc}%)\n`;
   });
 
   const top = sorted[0];
@@ -793,7 +793,7 @@ export async function handleChallengeShare(ctx: any): Promise<void> {
 
   const accuracy = Math.round((result.correct / result.numQuestions) * 100);
   const place = result.rank === 1 ? '1st' : result.rank === 2 ? '2nd' : result.rank === 3 ? '3rd' : `${result.rank}th`;
-  const caption = `🎉 <b>${place} place, ${ctx.from.first_name}!</b>\n\nSave the image above and post it, or forward it straight to a friend.`;
+  const caption = `🎉 <b>${place} place, ${fmt.escHtml(ctx.from.first_name)}!</b>\n\nSave the image above and post it, or forward it straight to a friend.`;
 
   try {
     const { renderChallengeResultCard } = await import('../../services/shareCard');

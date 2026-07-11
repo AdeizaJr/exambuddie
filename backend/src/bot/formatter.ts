@@ -290,6 +290,15 @@ function toSub(s: string): string {
   return mapped === s ? `_${s}` : mapped;
 }
 
+// Plain HTML-escape for dynamic strings that must NOT go through convertLatex/markup
+// (names, topic labels) — without this, a first name or topic containing "<", ">", or a
+// bare "&" (e.g. "Lexis & Structure", "Acids, Bases & Salts") breaks Telegram's strict
+// HTML parser and the whole message fails to send.
+export function escHtml(text: string | null | undefined): string {
+  if (!text) return '';
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 // HTML-escape dynamic DB content, render LaTeX math, and convert *word* markup to <u>word</u>.
 function md(text: string | null | undefined, subject?: string): string {
   if (!text) return '';
@@ -379,7 +388,7 @@ export const SUBJECT_EMOJI: Record<string, string> = {
 };
 
 export function consentPrompt(firstName: string): string {
-  return `🎓 <b>Welcome to ExamBuddie, ${firstName}!</b>
+  return `🎓 <b>Welcome to ExamBuddie, ${escHtml(firstName)}!</b>
 
 I'll give you 41,000+ real WAEC, JAMB &amp; NECO past questions, explain every answer, and track your progress.
 
@@ -451,7 +460,7 @@ export function askSubjects(examType: string): string {
 export function profileComplete(user: User): string {
   const subjects = user.subjects.map(s => SUBJECT_MAP[s] || s).join(', ');
   const yearLabel = user.target_year ? `<b>${user.target_year}</b>` : '<b>Any Year</b>';
-  return `🎉 <b>${timeGreeting()}, ${user.first_name}! You're all set.</b>
+  return `🎉 <b>${timeGreeting()}, ${escHtml(user.first_name)}! You're all set.</b>
 
 📋 <b>Your Profile:</b>
 • 📅 Exam Year: ${yearLabel}
@@ -542,7 +551,7 @@ export function formatQuestion(q: Question, number: number, total: number | stri
   const modeTag = mode === 'quiz'
     ? `📋 <b>Question ${number}/${total}</b>`
     : mode === 'drill'
-    ? `🎯 <b>Topic Drill: ${q.topic || 'Mixed'}</b>`
+    ? `🎯 <b>Topic Drill: ${escHtml(q.topic) || 'Mixed'}</b>`
     : mode === 'challenge'
     ? `🎯 <b>Question ${number}/${total}</b>`
     : mode === 'sr_review'
@@ -928,12 +937,12 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 
   const weakSection = weakTopics && weakTopics.length > 0
     ? '\n⚠️ <b>Weak Topics (focus here!):</b>\n' +
-      weakTopics.map(t => `  • ${t.topic}: ${t.accuracy}% accuracy (${t.attempts} attempts)`).join('\n')
+      weakTopics.map(t => `  • ${escHtml(t.topic)}: ${t.accuracy}% accuracy (${t.attempts} attempts)`).join('\n')
     : '';
 
   const worstTopic = weakTopics && weakTopics.length > 0 ? weakTopics[0] : null;
   const drillTip = worstTopic
-    ? `\n\n💡 <b>Score Tip:</b> Drilling <i>${worstTopic.topic}</i> (${worstTopic.accuracy}%) could meaningfully boost your score. Use /drill to target it now.`
+    ? `\n\n💡 <b>Score Tip:</b> Drilling <i>${escHtml(worstTopic.topic)}</i> (${worstTopic.accuracy}%) could meaningfully boost your score. Use /drill to target it now.`
     : '';
 
   const mistakeTip = mistakePattern ? `\n\n🔍 <b>Mistake Pattern:</b> ${mistakePattern}` : '';
@@ -965,7 +974,7 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
     : `🏅 Rank: <b>${rank.label}</b> · 👑 Max rank reached!`;
   return `📈 <b>Your ${examLabel} Stats</b>
 
-👤 ${user.first_name}
+👤 ${escHtml(user.first_name)}
 📋 Exam: ${user.exam_type || 'Not set'}
 🗓️ Joined: ${new Date(user.joined_at).toLocaleDateString('en-NG')}${countdown ? `\n${countdown}` : ''}
 

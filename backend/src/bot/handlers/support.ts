@@ -1,6 +1,7 @@
 // handlers/support.ts — /support command and contact/help flows
 import * as redis from '../../services/redis';
 import { sendSupportEmail } from '../../services/email';
+import { escHtml } from '../formatter';
 
 const SUPPORT_CHAT_ID = process.env.SUPPORT_CHAT_ID
   ? parseInt(process.env.SUPPORT_CHAT_ID, 10)
@@ -68,16 +69,16 @@ export async function handleBugReport(ctx: any, bot: any): Promise<void> {
   if (SUPPORT_CHAT_ID) {
     const msg =
       `🐛 <b>Bug Report</b>\n` +
-      `From: ${name}\n` +
+      `From: ${escHtml(name)}\n` +
       `ID: <code>${ctx.from.id}</code>\n\n` +
-      `<b>Message:</b>\n${text}`;
+      `<b>Message:</b>\n${escHtml(text)}`;
     await bot.telegram.sendMessage(SUPPORT_CHAT_ID, msg, { parse_mode: 'HTML' }).catch(() => {});
   }
 
   // Send via Zoho Mail
   await sendSupportEmail({
     subject: `[ExamBuddie] Bug Report from ${name}`,
-    html: `<p><b>From:</b> ${name} (Telegram ID: ${ctx.from.id})</p><p><b>Message:</b></p><pre>${text}</pre>`,
+    html: `<p><b>From:</b> ${escHtml(name)} (Telegram ID: ${ctx.from.id})</p><p><b>Message:</b></p><pre>${escHtml(text)}</pre>`,
   }).catch(() => {});
 
   await ctx.reply(

@@ -18,7 +18,7 @@ export async function handleStart(ctx: any): Promise<void> {
     const subLines = [streakLine, statsLine].filter(Boolean).join('\n');
     const body = subLines ? `\n\n${subLines}` : '';
     await ctx.reply(
-      `👋 <b>${fmt.timeGreeting()}, ${user.first_name}!</b>${body}\n\nReady to practise?`,
+      `👋 <b>${fmt.timeGreeting()}, ${fmt.escHtml(user.first_name)}!</b>${body}\n\nReady to practise?`,
       { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() }
     );
 
@@ -208,7 +208,7 @@ async function maybeSendBeatYourInviter(ctx: any, user: any): Promise<void> {
     if (attempts < 5) return; // referrer hasn't done enough to show off
     const streakLine = (referrer.streak || 0) > 0 ? ` a <b>${referrer.streak}-day streak</b> and` : '';
     await ctx.reply(
-      `👀 <b>${referrer.first_name} invited you.</b>\n\nThey have${streakLine} <b>${accuracy}% accuracy</b> across ${attempts.toLocaleString()} questions.\n\nThink you can beat them? 💪\n\n📚 /practice`,
+      `👀 <b>${fmt.escHtml(referrer.first_name)} invited you.</b>\n\nThey have${streakLine} <b>${accuracy}% accuracy</b> across ${attempts.toLocaleString()} questions.\n\nThink you can beat them? 💪\n\n📚 /practice`,
       { parse_mode: 'HTML' }
     );
   } catch { /* non-critical */ }

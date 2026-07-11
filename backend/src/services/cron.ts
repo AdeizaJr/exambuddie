@@ -122,7 +122,7 @@ export default function startCrons(bot: any): void {
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `⏰ <b>Your ExamBuddie Premium has expired, ${user.first_name}!</b>\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
+          `⏰ <b>Your ExamBuddie Premium has expired, ${fmt.escHtml(user.first_name)}!</b>\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
           { parse_mode: 'HTML' }
         );
       } catch {
@@ -148,7 +148,7 @@ export default function startCrons(bot: any): void {
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `⚠️ <b>Reminder, ${user.first_name}!</b>\n\nYour ExamBuddie Premium expires on <b>${expiryDate}</b>. Renew now to keep uninterrupted access to unlimited questions.\n\n/subscribe`,
+          `⚠️ <b>Reminder, ${fmt.escHtml(user.first_name)}!</b>\n\nYour ExamBuddie Premium expires on <b>${expiryDate}</b>. Renew now to keep uninterrupted access to unlimited questions.\n\n/subscribe`,
           { parse_mode: 'HTML' }
         );
       } catch { /* user blocked or unavailable */ }
@@ -172,7 +172,7 @@ export default function startCrons(bot: any): void {
       try {
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `👋 <b>Hey ${user.first_name}!</b>\n\nYou joined ExamBuddie but haven't answered your first question yet. It only takes 30 seconds — tap below and give one a shot 👇`,
+          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou joined ExamBuddie but haven't answered your first question yet. It only takes 30 seconds — tap below and give one a shot 👇`,
           {
             parse_mode: 'HTML',
             reply_markup: { inline_keyboard: [[{ text: '📚 Try a Question', callback_data: 'practice:pick' }]] },
@@ -283,7 +283,7 @@ export default function startCrons(bot: any): void {
           if (!fact) return;
 
           const subjectLabel = fact.subject;
-          const topicLabel = fact.topic ? ` · ${fact.topic}` : '';
+          const topicLabel = fact.topic ? ` · ${fmt.escHtml(fact.topic)}` : '';
 
           const msg = `💡 <b>Did You Know?</b>\n\n${fact.fact_text}\n\n<i>📚 ${subjectLabel}${topicLabel}</i>`;
           const ctaButton = fact.topic
@@ -327,7 +327,7 @@ export default function startCrons(bot: any): void {
             ? `\n\n⚠️ Your <b>${user.streak}-day streak</b> is at risk!` : '';
           await bot.telegram.sendMessage(
             user.telegram_id,
-            `👋 <b>Miss us, ${user.first_name}?</b>\n\nYou haven't practised in 3 days. Even 5 questions today keeps you on track for your exam.${streakWarn}\n\n📚 /practice`,
+            `👋 <b>Miss us, ${fmt.escHtml(user.first_name)}?</b>\n\nYou haven't practised in 3 days. Even 5 questions today keeps you on track for your exam.${streakWarn}\n\n📚 /practice`,
             { parse_mode: 'HTML' }
           );
           sent++;
@@ -372,14 +372,14 @@ export default function startCrons(bot: any): void {
             // Fall back to plain text reminder
             await bot.telegram.sendMessage(
               user.telegram_id,
-              `⏰ <b>Daily Challenge, ${user.first_name}!</b>\n\nTime to practise! Even 5 questions keeps the momentum going.\n\n📚 /practice`,
+              `⏰ <b>Daily Challenge, ${fmt.escHtml(user.first_name)}!</b>\n\nTime to practise! Even 5 questions keeps the momentum going.\n\n📚 /practice`,
               { parse_mode: 'HTML' }
             );
             sent++;
             return;
           }
 
-          const msgText = `⏰ <b>Daily Challenge, ${user.first_name}!</b>\n\n`
+          const msgText = `⏰ <b>Daily Challenge, ${fmt.escHtml(user.first_name)}!</b>\n\n`
             + fmt.formatQuestion(q, 1, 5, 'practice')
             + fmt.answerOptions(q);
 
@@ -450,7 +450,7 @@ export default function startCrons(bot: any): void {
           const streakLine = (user.streak || 0) > 0
             ? `🔥 Keep your ${user.streak}-day streak alive`
             : '🔥 Start a new streak';
-          const msg = `📚 <b>Weekend's here, ${user.first_name}!</b>
+          const msg = `📚 <b>Weekend's here, ${fmt.escHtml(user.first_name)}!</b>
 
 You've done <b>${attempts} questions</b> this week at <b>${accuracy}%</b> accuracy — the exam doesn't take weekends off 😤
 
@@ -517,7 +517,7 @@ ${streakLine} → /practice`;
 
         const isJamb = subjectsToday[0] === 'ALL';
         const subjectLine = isJamb ? 'JAMB UTME' : `${user.exam_type} ${subjectsToday.map(s => SUBJECT_MAP[s] || s).join(' & ')}`;
-        const msg = `🍀 <b>Today's the day, ${user.first_name}!</b>\n\nYour ${subjectLine} exam is today. Stay calm, trust your practice, and take it one question at a time. You've got this.`;
+        const msg = `🍀 <b>Today's the day, ${fmt.escHtml(user.first_name)}!</b>\n\nYour ${subjectLine} exam is today. Stay calm, trust your practice, and take it one question at a time. You've got this.`;
 
         const formulaSlug = !isJamb ? (FORMULA_ALIAS[subjectsToday[0]] || subjectsToday[0]) : null;
         const keyboard = formulaSlug && FORMULA_SHEETS.has(formulaSlug)
@@ -707,7 +707,7 @@ ${streakLine} → /practice`;
 
         if (reminders.length === 0) continue;
 
-        const msg = `⏰ <b>Exam Alert, ${user.first_name}!</b>\n\n${reminders.join('\n')}\n\n📚 <a href="t.me/exambuddiebot?start=practice">Practise now</a>`;
+        const msg = `⏰ <b>Exam Alert, ${fmt.escHtml(user.first_name)}!</b>\n\n${reminders.join('\n')}\n\n📚 <a href="t.me/exambuddiebot?start=practice">Practise now</a>`;
         await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
         sent++;
       } catch { /* blocked or unavailable */ }
@@ -746,7 +746,7 @@ function buildWeeklyPremiumMsg(user: any, report: db.WeeklyReport): string {
   if (thisWeek.attempts < 5) {
     const streakWarn = streakAtRisk
       ? `\n\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
-    return `💎 <b>Slow week, ${user.first_name}</b>
+    return `💎 <b>Slow week, ${fmt.escHtml(user.first_name)}</b>
 
 Only ${thisWeek.attempts} questions this week. Even 10 more today makes a real difference.
 🎯 Accuracy: ${thisWeek.accuracy}%${deltaStr}
@@ -764,7 +764,7 @@ Back on track? /practice`;
 
   const weakLines = weakTopics.map((t) => {
     const subjectName = SUBJECT_MAP[t.subject] || t.subject;
-    return `  • ${t.topic} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${t.topic}`;
+    return `  • ${fmt.escHtml(t.topic)} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${fmt.escHtml(t.topic)}`;
   }).join('\n');
 
   const bestLine = bestSubject
@@ -788,7 +788,7 @@ Back on track? /practice`;
     ? `\n\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
 
   const countdown = examCountdown(user.exam_type || null, user.target_year || null);
-  return `💎 <b>Your Weekly Report, ${user.first_name}!</b>${countdown ? `\n${countdown}` : ''}
+  return `💎 <b>Your Weekly Report, ${fmt.escHtml(user.first_name)}!</b>${countdown ? `\n${countdown}` : ''}
 
 📅 <b>This Week:</b>
 📝 Questions answered: ${thisWeek.attempts}
@@ -828,7 +828,7 @@ async function buildFreeMsg(user: any): Promise<string> {
     ? `\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
 
   const weakSection = weakTopics.length > 0
-    ? `\n\n⚠️ <b>Weak Topics:</b>\n${weakTopics.map(t => `  • ${t.topic}: ${t.accuracy}% accuracy`).join('\n')}`
+    ? `\n\n⚠️ <b>Weak Topics:</b>\n${weakTopics.map(t => `  • ${fmt.escHtml(t.topic)}: ${t.accuracy}% accuracy`).join('\n')}`
     : '';
 
   const blurredBreakdown = subjects.length > 0
@@ -840,7 +840,7 @@ async function buildFreeMsg(user: any): Promise<string> {
     : `\n\n💎 <i>Upgrade to Premium for subject breakdowns, week-over-week tracking, and drill suggestions.</i> /subscribe`;
 
   if (weeklyAttempts < 5) {
-    return `📊 <b>Slow week, ${user.first_name}</b>
+    return `📊 <b>Slow week, ${fmt.escHtml(user.first_name)}</b>
 
 Only ${weeklyAttempts} questions this week — that's okay, let's pick it up.
 🔥 Streak: ${user.streak || 0} days${streakWarn}
@@ -848,7 +848,7 @@ Only ${weeklyAttempts} questions this week — that's okay, let's pick it up.
 Even 10 questions today puts you back on track → /practice${blurredBreakdown}`;
   }
 
-  return `📊 <b>Your Week in Review, ${user.first_name}!</b>
+  return `📊 <b>Your Week in Review, ${fmt.escHtml(user.first_name)}!</b>
 
 🎯 Accuracy: ${weeklyAccuracy}%
 📝 Questions: ${weeklyAttempts}

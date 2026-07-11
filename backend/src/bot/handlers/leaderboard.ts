@@ -1,5 +1,5 @@
 import * as db from '../../db';
-import { getRank } from '../formatter';
+import { getRank, escHtml } from '../formatter';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
 
@@ -24,7 +24,7 @@ function formatLeaderboard(
   const rows = entries.map((e) => {
     const you = e.telegram_id === callerTelegramId ? ' ← you' : '';
     const userRank = getRank(Number(e.total));
-    return `${rankLabel(e.rank)} <b>${e.first_name}</b> [${userRank.label}] — ${e.accuracy}% (${e.correct}/${e.total})${you}`;
+    return `${rankLabel(e.rank)} <b>${escHtml(e.first_name)}</b> [${userRank.label}] — ${e.accuracy}% (${e.correct}/${e.total})${you}`;
   });
 
   const yourRankLine =
@@ -42,7 +42,7 @@ function formatLastWeek(entries: db.LeaderboardEntry[]): string {
     return '📜 <b>Last Week\'s Leaderboard</b>\n\nNo snapshot available yet.';
   }
   const rows = entries.map(e =>
-    `${rankLabel(e.rank)} <b>${e.first_name}</b> — ${e.accuracy}% (${e.correct}/${e.total})`
+    `${rankLabel(e.rank)} <b>${escHtml(e.first_name)}</b> — ${e.accuracy}% (${e.correct}/${e.total})`
   );
   return `📜 <b>Last Week\'s Leaderboard</b>\n\n${rows.join('\n')}`;
 }
