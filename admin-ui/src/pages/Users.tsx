@@ -510,7 +510,7 @@ export default function Users() {
               {activity.subjects.length > 0 && (
                 <div>
                   <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">By Subject</h3>
-                  <div className="overflow-hidden rounded-lg border border-border">
+                  <div className="overflow-x-auto rounded-lg border border-border">
                     <table className="w-full text-xs">
                       <thead>
                         <tr className="border-b border-border bg-surface2">
@@ -539,7 +539,7 @@ export default function Users() {
               {activity.weakTopics?.length > 0 && (
                 <div>
                   <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Weak Topics</h3>
-                  <div className="overflow-hidden rounded-lg border border-border">
+                  <div className="overflow-x-auto rounded-lg border border-border">
                     <table className="w-full text-xs">
                       <thead>
                         <tr className="border-b border-border bg-surface2">
@@ -570,7 +570,7 @@ export default function Users() {
               {activity.recent.length > 0 && (
                 <div>
                   <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Recent Attempts (last 50)</h3>
-                  <div className="max-h-56 overflow-y-auto rounded-lg border border-border">
+                  <div className="max-h-56 overflow-auto rounded-lg border border-border">
                     <table className="w-full text-xs">
                       <thead className="sticky top-0 bg-surface">
                         <tr className="border-b border-border">

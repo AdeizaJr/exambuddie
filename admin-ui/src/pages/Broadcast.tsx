@@ -242,7 +242,7 @@ export default function Broadcast() {
   return (
     <div className="p-6">
       {/* Two-column layout: broadcast left, DM right */}
-      <div className="flex gap-6 items-start">
+      <div className="flex flex-col gap-6 items-start lg:flex-row">
         {/* Left — bulk broadcast */}
         <div className="min-w-0 flex-1 max-w-2xl space-y-6">
         <div className="flex items-start justify-between">
@@ -413,7 +413,7 @@ export default function Broadcast() {
         </div>{/* end left column */}
 
         {/* Right — direct message, sticky top */}
-        <div className="w-80 shrink-0 sticky top-6">
+        <div className="w-full shrink-0 lg:w-80 lg:sticky lg:top-6">
           <DirectMessage />
         </div>
       </div>
