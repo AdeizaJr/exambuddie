@@ -147,7 +147,7 @@ function convertLatex(text: string, subject?: string): string {
     .replace(/(?<=[a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => `${toSup(n)}⁄${toSub(d)}`)
     // fraction coefficient with ^ prefix, NO base (scraper artifact): ^2/5x → ⅖x, ^3/4 → ¾
     .replace(/(?<![a-zA-Z0-9])\^(\d+)\/(\d+)/g, (_, n, d) => UNICODE_FRACS[`${n}/${d}`] ?? `${n}/${d}`)
-    .replace(/\^(\w)/g, (_, e) => toSup(e))
+    .replace(/\^(\w+)/g, (_, e) => toSup(e))
     // trig squared: sin2θ → sin²θ, cos2x → cos²x (digit is the power; allow letters after)
     .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + toSup(d))
     // log base: log2 → log₂, log10 → log₁₀
@@ -188,7 +188,7 @@ function convertLatex(text: string, subject?: string): string {
     .replace(/_\(([slgaq]+)\)/gi, '($1)')
     // subscripts
     .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
-    .replace(/_(\w)/g, (_, e) => toSub(e))
+    .replace(/_(\w+)/g, (_, e) => toSub(e))
     // operators
     .replace(/\\times/g, '×').replace(/\\div/g, '÷')
     .replace(/\\pm/g, '±').replace(/\\mp/g, '∓')
