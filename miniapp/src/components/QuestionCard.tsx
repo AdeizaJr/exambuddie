@@ -176,10 +176,12 @@ function QuestionCard({ question, qNum, total, selected, revealed, onSelect, dis
           border: '1px solid rgba(99,102,241,0.12)',
         }}
       >
-        <p
-          className="question-text text-sm font-medium text-[var(--tg-text)] leading-relaxed whitespace-pre-wrap"
-          dangerouslySetInnerHTML={{ __html: renderMath(question.question_text) }}
-        />
+        <div className="overflow-x-auto">
+          <p
+            className="question-text text-sm font-medium text-[var(--tg-text)] leading-relaxed whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: renderMath(question.question_text) }}
+          />
+        </div>
         {question.image_url && (
           <img
             src={question.image_url}
@@ -212,7 +214,7 @@ function QuestionCard({ question, qNum, total, selected, revealed, onSelect, dis
               {opt}
             </span>
             <span
-              className="text-sm font-medium flex-1"
+              className="text-sm font-medium flex-1 min-w-0 overflow-x-auto"
               dangerouslySetInnerHTML={{ __html: renderMath(optionText(question, opt)) }}
             />
             {revealed && opt === question.correct_option && (
@@ -233,7 +235,7 @@ function QuestionCard({ question, qNum, total, selected, revealed, onSelect, dis
         >
           <p className="font-bold text-green-800 mb-1">💡 Explanation</p>
           <span
-            className="text-green-900 leading-relaxed"
+            className="block overflow-x-auto text-green-900 leading-relaxed"
             dangerouslySetInnerHTML={{ __html: renderMath(question.explanation || '') }}
           />
         </div>
