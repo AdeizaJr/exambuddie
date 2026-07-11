@@ -736,7 +736,11 @@ export async function handleChangeSubject(ctx: any): Promise<void> {
 }
 
 // /drill command or auto-drill
-export async function handleDrill(ctx: any, topicOverride?: string): Promise<void> {
+export async function handleDrill(ctx: any, topicOverride?: string, subjectHint?: string): Promise<void> {
+  // Guards against a double-tap firing two overlapping drill starts, which each ran the
+  // full question-select + session-write flow independently and sent the question twice.
+  if (!(await redis.acquireActionLock(ctx.from.id, 'drill:start'))) return;
+
   const user = await requireProfile(ctx);
   if (!user) return;
   if (user.plan !== 'premium') {
@@ -765,10 +769,15 @@ export async function handleDrill(ctx: any, topicOverride?: string): Promise<voi
 
   // Topic names aren't unique across subjects (e.g. "Reproduction" is Biology, not
   // whatever the user's first subject happens to be) — try each of the user's
-  // subjects until one actually has matching questions.
+  // subjects until one actually has matching questions. When the caller already
+  // knows the subject (e.g. from a "Did you know" fact's own subject_code), check
+  // it first so the common case is one query instead of scanning every subject.
   let subject = user.subjects[0];
   let questions: Question[] = [];
-  for (const s of user.subjects) {
+  const subjectsToTry = subjectHint && user.subjects.includes(subjectHint)
+    ? [subjectHint, ...user.subjects.filter(s => s !== subjectHint)]
+    : user.subjects;
+  for (const s of subjectsToTry) {
     questions = await db.getQuestionsByTopic(user.exam_type || '', s, topic, 10);
     if (questions.length > 0) { subject = s; break; }
   }
@@ -828,6 +837,7 @@ export async function handleAutoDrill(ctx: any): Promise<void> {
 export async function handleDrillTopic(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const parts = ctx.callbackQuery.data.split(':');
+  const subject = parts[2] || undefined;
   const topic = parts.slice(3).join(':');
-  await handleDrill(ctx, topic);
+  await handleDrill(ctx, topic, subject);
 }
