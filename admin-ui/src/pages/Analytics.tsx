@@ -139,7 +139,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Engagement */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
           { label: "DAU", value: analytics.engagement?.dau ?? 0, sub: "active today" },
           { label: "WAU", value: analytics.engagement?.wau ?? 0, sub: "active this week" },
@@ -160,7 +160,7 @@ export default function AnalyticsPage() {
             <h2 className="text-sm font-semibold text-white">User Retention (60-day cohort)</h2>
             <p className="mt-0.5 text-xs text-muted">% of new users who returned on day 1 / 7 / 30</p>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
               { label: "D1 Retention", rate: retention.d1_rate, count: retention.d1, color: retention.d1_rate >= 20 ? "text-accent" : retention.d1_rate >= 10 ? "text-amber-400" : "text-red-400" },
               { label: "D7 Retention", rate: retention.d7_rate, count: retention.d7, color: retention.d7_rate >= 10 ? "text-accent" : retention.d7_rate >= 5 ? "text-amber-400" : "text-red-400" },
@@ -231,7 +231,7 @@ export default function AnalyticsPage() {
             <p className="mt-0.5 text-xs text-muted">Landing page views, in-house tracking (no third-party pixel)</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <p className="text-xs text-muted mb-1">Page Views</p>
               <p className="font-display text-2xl font-bold text-white">{pageViews.totalViews.toLocaleString()}</p>
