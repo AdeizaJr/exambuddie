@@ -727,7 +727,7 @@ function watToday(): string {
   return new Date(Date.now() + 3600000).toISOString().split('T')[0];
 }
 
-function buildWeeklyPremiumMsg(user: any, report: db.WeeklyReport): string {
+function buildWeeklyPremiumMsg(user: any, report: db.WeeklyReport): { msg: string; keyboard?: any } {
   const { thisWeek, lastWeek, subjectBreakdown, weakTopics, bestSubject, coverageStats, percentileRank } = report;
 
   const delta = lastWeek.attempts > 0 ? thisWeek.accuracy - lastWeek.accuracy : null;
@@ -740,13 +740,13 @@ function buildWeeklyPremiumMsg(user: any, report: db.WeeklyReport): string {
   if (thisWeek.attempts < 5) {
     const streakWarn = streakAtRisk
       ? `\n\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
-    return `💎 <b>Slow week, ${fmt.escHtml(user.first_name)}</b>
+    return { msg: `💎 <b>Slow week, ${fmt.escHtml(user.first_name)}</b>
 
 Only ${thisWeek.attempts} questions this week. Even 10 more today makes a real difference.
 🎯 Accuracy: ${thisWeek.accuracy}%${deltaStr}
 🔥 Streak: ${user.streak || 0} days${streakWarn}
 
-Back on track? /practice`;
+Back on track? /practice` };
   }
 
   const subjectLines = subjectBreakdown.map((s) => {
@@ -758,8 +758,13 @@ Back on track? /practice`;
 
   const weakLines = weakTopics.map((t) => {
     const subjectName = SUBJECT_MAP[t.subject] || t.subject;
-    return `  • ${fmt.escHtml(t.topic)} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${fmt.escHtml(t.topic)}`;
+    return `  • ${fmt.escHtml(t.topic)} <i>(${subjectName})</i> — ${t.accuracy}%`;
   }).join('\n');
+
+  const weakButtons = weakTopics.map((t) => ([{
+    text: `🎯 Drill ${t.topic}`,
+    callback_data: `drill:topic:${t.subject}:${t.topic}`,
+  }]));
 
   const bestLine = bestSubject
     ? `\n🌟 Best subject: ${SUBJECT_MAP[bestSubject.subject] || bestSubject.subject} at ${bestSubject.accuracy}%`
@@ -782,7 +787,7 @@ Back on track? /practice`;
     ? `\n\n⚡ <b>Practice today to protect your ${user.streak}-day streak!</b>` : '';
 
   const countdown = examCountdown(user.exam_type || null, user.target_year || null);
-  return `💎 <b>Your Weekly Report, ${fmt.escHtml(user.first_name)}!</b>${countdown ? `\n${countdown}` : ''}
+  const msg = `💎 <b>Your Weekly Report, ${fmt.escHtml(user.first_name)}!</b>${countdown ? `\n${countdown}` : ''}
 
 📅 <b>This Week:</b>
 📝 Questions answered: ${thisWeek.attempts}
@@ -799,6 +804,10 @@ ${coverageLines}` : ''}${weakTopics.length > 0 ? `
 ${weakLines}` : '\n\n✅ No weak topics this week — great work!'}${streakWarn}
 
 Consistency wins exams. 💪 /practice`;
+
+  return weakTopics.length > 0
+    ? { msg, keyboard: { inline_keyboard: weakButtons } }
+    : { msg };
 }
 
 async function buildFreeMsg(user: any): Promise<string> {
@@ -861,13 +870,14 @@ async function sendWeeklySummaries(users: any[], bot: any, waveName: string): Pr
     await Promise.allSettled(batch.map(async (user) => {
       try {
         let msg: string;
+        let keyboard: any;
         if (user.plan === 'premium') {
           const report = await db.getWeeklyReport(user.id);
-          msg = buildWeeklyPremiumMsg(user, report);
+          ({ msg, keyboard } = buildWeeklyPremiumMsg(user, report));
         } else {
           msg = await buildFreeMsg(user);
         }
-        await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
+        await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML', reply_markup: keyboard });
         sentIds.push(user.id);
         sent++;
       } catch { /* blocked or unavailable */ }
