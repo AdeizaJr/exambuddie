@@ -286,13 +286,7 @@ export default function startCrons(bot: any): void {
           const topicLabel = fact.topic ? ` · ${fmt.escHtml(fact.topic)}` : '';
 
           const msg = `💡 <b>Did You Know?</b>\n\n${fact.fact_text}\n\n<i>📚 ${subjectLabel}${topicLabel}</i>`;
-          const ctaButton = fact.topic
-            ? { text: '🎯 Drill this topic', callback_data: `drill:topic:${fact.subject_code}:${fact.topic}` }
-            : { text: `📚 Practice ${SUBJECT_MAP[fact.subject_code] || fact.subject}`, callback_data: `practice:subject:${fact.subject_code}` };
-          await bot.telegram.sendMessage(user.telegram_id, msg, {
-            parse_mode: 'HTML',
-            reply_markup: { inline_keyboard: [[ctaButton]] },
-          });
+          await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
           usedFactIds.add(fact.id);
           sent++;
         } catch { /* blocked or unavailable */ }
@@ -616,7 +610,7 @@ ${streakLine} → /practice`;
 
         const keyboard = {
           inline_keyboard: [
-            ['A', 'B', 'C', 'D'].filter(opt => q[`option_${opt.toLowerCase()}`]).map(opt => ({
+            ['A', 'B', 'C', 'D', 'E'].filter(opt => q[`option_${opt.toLowerCase()}`]).map(opt => ({
               text: opt,
               callback_data: `qotd:answer:${q.id}:${opt}`,
             })),
