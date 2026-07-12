@@ -474,8 +474,13 @@ export async function handleWeeklyReport(ctx: any): Promise<void> {
 
   const weakLines = weakTopics.map((t) => {
     const subjectName = SUBJECT_MAP[t.subject] || t.subject;
-    return `  • ${fmt.escHtml(t.topic)} <i>(${subjectName})</i> — ${t.accuracy}% → /drill ${fmt.escHtml(t.topic)}`;
+    return `  • ${fmt.escHtml(t.topic)} <i>(${subjectName})</i> — ${t.accuracy}%`;
   }).join('\n');
+
+  const weakButtons = weakTopics.map((t) => ([{
+    text: `🎯 Drill ${t.topic}`,
+    callback_data: `drill:topic:${t.subject}:${t.topic}`,
+  }]));
 
   const bestLine = bestSubject
     ? `\n🌟 Best subject: ${SUBJECT_MAP[bestSubject.subject] || bestSubject.subject} at ${bestSubject.accuracy}%`
@@ -513,6 +518,6 @@ ${weakLines}` : '\n\n✅ No weak topics this week — great work!'}`;
 
   await ctx.reply(msg, {
     parse_mode: 'HTML',
-    reply_markup: { inline_keyboard: [[{ text: '← Back to Settings', callback_data: 'settings:back' }]] },
+    reply_markup: { inline_keyboard: [...weakButtons, [{ text: '← Back to Settings', callback_data: 'settings:back' }]] },
   });
 }
