@@ -7,6 +7,10 @@ export type Subject = {
   waec: { count: number } | null;
   jamb: { count: number } | null;
   neco: { count: number } | null;
+  // Bump this to today whenever this subject's entry actually changes —
+  // it feeds the sitemap's lastModified so Google can tell real edits
+  // from a no-op redeploy. Same pattern as `date` on blog posts.
+  updatedAt: string;
 };
 
 export const subjects: Subject[] = [
@@ -29,6 +33,7 @@ export const subjects: Subject[] = [
     waec: { count: 781 },
     jamb: { count: 843 },
     neco: { count: 179 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "english",
@@ -48,6 +53,7 @@ export const subjects: Subject[] = [
     waec: { count: 1910 },
     jamb: { count: 1765 },
     neco: { count: 271 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "biology",
@@ -68,6 +74,7 @@ export const subjects: Subject[] = [
     waec: { count: 820 },
     jamb: { count: 1016 },
     neco: { count: 351 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "chemistry",
@@ -88,6 +95,7 @@ export const subjects: Subject[] = [
     waec: { count: 770 },
     jamb: { count: 1009 },
     neco: { count: 168 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "physics",
@@ -108,6 +116,7 @@ export const subjects: Subject[] = [
     waec: { count: 787 },
     jamb: { count: 988 },
     neco: { count: 322 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "economics",
@@ -128,6 +137,7 @@ export const subjects: Subject[] = [
     waec: { count: 781 },
     jamb: { count: 987 },
     neco: { count: 272 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "government",
@@ -147,6 +157,7 @@ export const subjects: Subject[] = [
     waec: { count: 795 },
     jamb: { count: 890 },
     neco: { count: 297 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "geography",
@@ -167,6 +178,7 @@ export const subjects: Subject[] = [
     waec: { count: 703 },
     jamb: { count: 2477 },
     neco: null,
+    updatedAt: "2026-07-06",
   },
   {
     slug: "literature",
@@ -186,6 +198,7 @@ export const subjects: Subject[] = [
     waec: { count: 801 },
     jamb: { count: 2388 },
     neco: null,
+    updatedAt: "2026-07-06",
   },
   {
     slug: "accounts",
@@ -206,6 +219,7 @@ export const subjects: Subject[] = [
     waec: { count: 1757 },
     jamb: { count: 1617 },
     neco: null,
+    updatedAt: "2026-07-06",
   },
   {
     slug: "agric",
@@ -225,6 +239,7 @@ export const subjects: Subject[] = [
     waec: { count: 826 },
     jamb: { count: 630 },
     neco: null,
+    updatedAt: "2026-07-06",
   },
   {
     slug: "further-math",
@@ -245,6 +260,7 @@ export const subjects: Subject[] = [
     waec: { count: 637 },
     jamb: null,
     neco: null,
+    updatedAt: "2026-07-06",
   },
   {
     slug: "commerce",
@@ -265,6 +281,7 @@ export const subjects: Subject[] = [
     waec: { count: 789 },
     jamb: { count: 963 },
     neco: { count: 383 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "computer",
@@ -284,6 +301,7 @@ export const subjects: Subject[] = [
     waec: { count: 597 },
     jamb: { count: 293 },
     neco: { count: 60 },
+    updatedAt: "2026-07-06",
   },
   {
     slug: "crk",
@@ -303,6 +321,7 @@ export const subjects: Subject[] = [
     waec: { count: 802 },
     jamb: { count: 2484 },
     neco: null,
+    updatedAt: "2026-07-06",
   },
   {
     slug: "irk",
@@ -322,5 +341,6 @@ export const subjects: Subject[] = [
     waec: { count: 485 },
     jamb: { count: 850 },
     neco: null,
+    updatedAt: "2026-07-06",
   },
 ];
