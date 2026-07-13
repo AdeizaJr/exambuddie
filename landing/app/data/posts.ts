@@ -1410,4 +1410,99 @@ export const posts: Post[] = [
       },
     ],
   },
+
+  {
+    slug: "waec-jamb-financial-accounting-past-questions-guide",
+    title: "Financial Accounting Past Questions: Topics, Formats and How to Score High",
+    description:
+      "A complete guide to WAEC and JAMB Financial Accounting past questions: the highest-yield topics, the exact formats examiners expect, and how to turn Accounting into a scoring subject.",
+    date: "2026-07-13",
+    readingMinutes: 6,
+    keywords: [
+      "Financial Accounting past questions",
+      "WAEC Financial Accounting topics",
+      "JAMB Principles of Accounts past questions",
+      "how to pass WAEC Accounting",
+      "Financial Accounting 2026",
+      "Accounting past questions Nigeria",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "Financial Accounting has a reputation for being a hard subject, but it is actually one of the most scoreable: almost every question follows a fixed format you can learn once and reuse. Students who drill the standard formats and practise past questions consistently tend to score higher in Accounting than in subjects that feel easier on the surface.",
+      },
+      { type: "h2", text: "The WAEC and JAMB Financial Accounting Exam Structure" },
+      {
+        type: "p",
+        text: "WAEC Financial Accounting has two papers: Paper 1 (objective, 50 questions, 50 minutes) and Paper 2 (theory and computational questions, 2 hours 30 minutes). JAMB tests Financial Accounting as one of its objective subjects, 40 questions among your total 100, with the same question patterns as WAEC's Paper 1.",
+      },
+      {
+        type: "p",
+        text: "Paper 2 is where most marks are won or lost. It rewards students who can lay out a full set of accounts correctly, not just students who understand the theory. A correct answer in the wrong format still loses marks.",
+      },
+      { type: "h2", text: "Highest-Yield Financial Accounting Topics" },
+      {
+        type: "p",
+        text: "Based on WAEC and JAMB Financial Accounting past questions from 2010 to 2025, these topics carry the most marks:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Double Entry Bookkeeping: the debit/credit rule behind every other topic",
+          "Trial Balance: extracting balances, locating errors that don't affect the totals",
+          "Final Accounts: Trading Account, Profit and Loss Account, Balance Sheet",
+          "Ledger: posting from day books (Purchases, Sales, Returns) to individual accounts",
+          "Cash Book: three-column cash books, contra entries, discounts",
+          "Bank Reconciliation Statement: adjusting cash book and bank statement balances",
+          "Depreciation: straight-line and reducing-balance methods",
+          "Partnership Accounts: profit-sharing ratios, appropriation accounts, capital and current accounts",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Focus first: if your exam is in 6 weeks, spend the first 3 weeks on Double Entry, Trial Balance, and Final Accounts. Every other topic in the syllabus builds on these three.",
+      },
+      { type: "h2", text: "Why Students Fail Financial Accounting" },
+      {
+        type: "ul",
+        items: [
+          "Memorising rules without understanding why a transaction is debited or credited",
+          "Skipping Ledger practice because it feels repetitive, then losing marks on posting errors under exam pressure",
+          "Learning Final Accounts once and never timing themselves: a Trading and Profit and Loss Account plus Balance Sheet takes real practice to finish inside the time limit",
+          "Confusing similar concepts: capital vs revenue expenditure, provision vs reserve, trade discount vs cash discount",
+          "Starting past question practice too late: Accounting formats need repetition to become automatic",
+        ],
+      },
+      { type: "h2", text: "The Formats Examiners Always Test" },
+      {
+        type: "p",
+        text: "Financial Accounting is unusually format-driven. The accounts examiners test most consistently: the Trading, Profit and Loss Account (in the correct vertical or T-format), the Balance Sheet (assets, liabilities, and capital laid out correctly), the three-column Cash Book, the Bank Reconciliation Statement, and the Partnership Appropriation Account. Know these five formats cold: an accounting answer with the right numbers in the wrong layout still loses marks.",
+      },
+      { type: "h2", text: "How to Use Past Questions Effectively" },
+      {
+        type: "ol",
+        items: [
+          "Start with 10–15 objective questions per session, grouped by topic",
+          "For every computational question, write out the full format by hand, not just the final figure",
+          "After each question, read the explanation even when your answer is correct",
+          "Note which topics you consistently miss: those are your high-priority revision areas",
+          "In the final month, switch to full timed mock papers, including at least one full Paper 2 under real exam time",
+        ],
+      },
+      {
+        type: "cta",
+        text: "Practice Financial Accounting past questions free on Telegram →",
+        href: BOT_URL,
+      },
+      {
+        type: "related",
+        items: [
+          { text: "WAEC Financial Accounting Past Questions", href: "/waec/accounts" },
+          { text: "JAMB Financial Accounting Past Questions", href: "/jamb/accounts" },
+          { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
+          { text: "5 Study Habits of Top WAEC Students", href: "/blog/5-study-habits-top-waec-jamb-students" },
+        ],
+      },
+    ],
+  },
 ];
