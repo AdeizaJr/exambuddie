@@ -255,6 +255,7 @@ export default function startCrons(bot: any): void {
     const BATCH_SIZE = 20;
     let sent = 0;
     const usedFactIds = new Set<number>();
+    const sentUserIds: number[] = [];
 
     // New to the subject (no attempts) defaults to 'easy' — build confidence before
     // stretching them. Thresholds match the accuracy-color convention used elsewhere
@@ -288,6 +289,7 @@ export default function startCrons(bot: any): void {
           const msg = `💡 <b>Did You Know?</b>\n\n${fact.fact_text}\n\n<i>📚 ${subjectLabel}${topicLabel}</i>`;
           await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
           usedFactIds.add(fact.id);
+          sentUserIds.push(user.id);
           sent++;
         } catch { /* blocked or unavailable */ }
       }));
@@ -295,6 +297,9 @@ export default function startCrons(bot: any): void {
     }
 
     await db.markFactsSent([...usedFactIds]);
+    if (sentUserIds.length) {
+      await db.query(`UPDATE users SET last_dyk_sent_at = NOW() WHERE id = ANY($1)`, [sentUserIds]);
+    }
     console.log(`[CRON] Did You Know sent to ${sent}/${users.length} users`);
   });
 
@@ -580,6 +585,7 @@ ${streakLine} → /practice`;
     let sent = 0;
     let personalized = 0;
     let noQuestion = 0;
+    const sentUserIds: number[] = [];
     const BATCH_SIZE = 25;
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
@@ -632,10 +638,14 @@ ${streakLine} → /practice`;
             });
           }
           sent++;
+          sentUserIds.push(user.id);
           if (personalizedQId) personalized++;
         } catch { /* blocked or unavailable */ }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
+    }
+    if (sentUserIds.length) {
+      await db.query(`UPDATE users SET last_qotd_sent_at = NOW() WHERE id = ANY($1)`, [sentUserIds]);
     }
     console.log(`[CRON] QOTD sent to ${sent}/${users.length} users (${personalized} personalized)`);
 

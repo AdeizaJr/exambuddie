@@ -536,6 +536,10 @@ WHERE id = 116125`,
   )`,
   `CREATE INDEX IF NOT EXISTS idx_page_views_created_at ON page_views(created_at)`,
   `CREATE INDEX IF NOT EXISTS idx_page_views_path ON page_views(path)`,
+
+  // ── QOTD / Did You Know send tracking (so recipients are actually queryable) ──
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_qotd_sent_at TIMESTAMPTZ DEFAULT NULL`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_dyk_sent_at TIMESTAMPTZ DEFAULT NULL`,
 ];
 
 async function migrate(): Promise<void> {
