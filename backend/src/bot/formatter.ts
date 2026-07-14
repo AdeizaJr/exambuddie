@@ -425,17 +425,6 @@ function buildYearKeyboard(prefix: string, backButton?: { text: string; callback
   return { inline_keyboard: rows };
 }
 
-export function questionTypeKeyboard(subject: string) {
-  return {
-    inline_keyboard: [
-      [
-        { text: '📝 Objective (MCQ)', callback_data: `practice:type:obj:${subject}` },
-        { text: '✍️ Theory', callback_data: `practice:type:theory:${subject}` },
-      ],
-    ],
-  };
-}
-
 export function onboardYearKeyboard() {
   return buildYearKeyboard('onboard:year');
 }
@@ -468,22 +457,6 @@ export function profileComplete(user: User): string {
 • 📚 Subjects: ${subjects}
 
 What would you like to do?`;
-}
-
-export function mainMenuKeyboard(plan?: string) {
-  const isPremium = plan === 'premium';
-  return {
-    inline_keyboard: [
-      [
-        { text: '📚 Practice',   callback_data: 'practice:pick' },
-        { text: '📋 CBT Mode',   callback_data: 'quiz:pick' },
-      ],
-      [
-        { text: '📊 My Stats',   callback_data: 'stats:show' },
-        ...(isPremium ? [] : [{ text: '💎 Subscribe', callback_data: 'menu:subscribe' }]),
-      ],
-    ],
-  };
 }
 
 export function persistentMenuKeyboard() {
@@ -988,24 +961,6 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 
 💳 <b>Plan:</b> ${plan}
 ${subjectSection}${weakSection}${drillTip}${mistakeTip}`;
-}
-
-export function freeLimitMessage(remaining: number, limit: number): string | null {
-  if (remaining === 0) {
-    const p = getPricing();
-    return `⏰ <b>Daily limit reached!</b>
-
-You've used all ${limit} free questions for today. Come back tomorrow, or upgrade to Premium for <b>unlimited access</b>.
-
-💎 <b>ExamBuddie Premium:</b>
-• Unlimited questions, every day
-• Quiz mode &amp; Topic drills
-• Progress tracking &amp; weak-topic detection
-• From ₦${p.monthly_ngn.toLocaleString()}/month · ₦${p.term_ngn.toLocaleString()} for 3 months · ₦${p.yearly_ngn.toLocaleString()}/year
-
-👇 Tap to upgrade:`;
-  }
-  return null; // no message needed
 }
 
 export function upgradeMessage(): string {

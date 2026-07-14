@@ -1,7 +1,6 @@
 export type Subject = {
   slug: string;
   displayName: string;
-  icon: string;
   topics: string[];
   blurb: string;
   waec: { count: number } | null;
@@ -17,7 +16,6 @@ export const subjects: Subject[] = [
   {
     slug: "math",
     displayName: "Mathematics",
-    icon: "📐",
     topics: [
       "Number & Numeration",
       "Algebra",
@@ -38,7 +36,6 @@ export const subjects: Subject[] = [
   {
     slug: "english",
     displayName: "English Language",
-    icon: "📖",
     topics: [
       "Comprehension",
       "Summary",
@@ -58,7 +55,6 @@ export const subjects: Subject[] = [
   {
     slug: "biology",
     displayName: "Biology",
-    icon: "🔬",
     topics: [
       "Cell Biology",
       "Genetics & Evolution",
@@ -79,7 +75,6 @@ export const subjects: Subject[] = [
   {
     slug: "chemistry",
     displayName: "Chemistry",
-    icon: "⚗️",
     topics: [
       "Atomic Structure",
       "Bonding",
@@ -100,7 +95,6 @@ export const subjects: Subject[] = [
   {
     slug: "physics",
     displayName: "Physics",
-    icon: "⚡",
     topics: [
       "Mechanics",
       "Waves & Sound",
@@ -121,7 +115,6 @@ export const subjects: Subject[] = [
   {
     slug: "economics",
     displayName: "Economics",
-    icon: "💰",
     topics: [
       "Demand & Supply",
       "National Income",
@@ -142,7 +135,6 @@ export const subjects: Subject[] = [
   {
     slug: "government",
     displayName: "Government",
-    icon: "🏛️",
     topics: [
       "Nigerian Constitution",
       "Arms of Government",
@@ -162,7 +154,6 @@ export const subjects: Subject[] = [
   {
     slug: "geography",
     displayName: "Geography",
-    icon: "🌍",
     topics: [
       "Map Reading",
       "Weather & Climate",
@@ -183,7 +174,6 @@ export const subjects: Subject[] = [
   {
     slug: "literature",
     displayName: "Literature in English",
-    icon: "📚",
     topics: [
       "Drama",
       "Poetry",
@@ -203,7 +193,6 @@ export const subjects: Subject[] = [
   {
     slug: "accounts",
     displayName: "Financial Accounting",
-    icon: "📊",
     topics: [
       "Double Entry Bookkeeping",
       "Trial Balance",
@@ -224,7 +213,6 @@ export const subjects: Subject[] = [
   {
     slug: "agric",
     displayName: "Agricultural Science",
-    icon: "🌱",
     topics: [
       "Crop Science",
       "Soil Science",
@@ -244,7 +232,6 @@ export const subjects: Subject[] = [
   {
     slug: "further-math",
     displayName: "Further Mathematics",
-    icon: "🔢",
     topics: [
       "Sets & Logic",
       "Algebra",
@@ -265,7 +252,6 @@ export const subjects: Subject[] = [
   {
     slug: "commerce",
     displayName: "Commerce",
-    icon: "🏪",
     topics: [
       "Trade",
       "Business Organisation",
@@ -286,7 +272,6 @@ export const subjects: Subject[] = [
   {
     slug: "computer",
     displayName: "Computer Studies",
-    icon: "💻",
     topics: [
       "Hardware & Software",
       "Data Processing",
@@ -306,7 +291,6 @@ export const subjects: Subject[] = [
   {
     slug: "crk",
     displayName: "Christian Religious Knowledge",
-    icon: "✝️",
     topics: [
       "Old Testament",
       "New Testament",
@@ -326,7 +310,6 @@ export const subjects: Subject[] = [
   {
     slug: "irk",
     displayName: "Islamic Religious Knowledge",
-    icon: "☪️",
     topics: [
       "Quran",
       "Hadith",

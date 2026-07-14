@@ -213,13 +213,6 @@ export default function Users() {
     return `${count} user${count !== 1 ? "s" : ""}`;
   }
 
-  function confirmBodyNames() {
-    if (selectAllPages) return null;
-    const names = pendingUsers.slice(0, 3).map((u) => u.first_name);
-    const extra = pendingUsers.length - names.length;
-    return names.join(", ") + (extra > 0 ? `, and ${extra} more` : "");
-  }
-
   const bulkCount = selectAllPages ? (result?.total ?? 0) : selected.size;
 
   return (

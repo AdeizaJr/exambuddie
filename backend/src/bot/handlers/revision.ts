@@ -121,13 +121,3 @@ export async function handleRevisionStart(ctx: any): Promise<void> {
 
   return startRevisionSession(ctx, user, questions);
 }
-
-// Called from handleNext in practice.ts when session.revisionPool exists
-export async function getNextRevisionQuestion(
-  revisionQuestions: Question[],
-  revisionIndex: number
-): Promise<{ question: Question; index: number } | null> {
-  const nextIndex = revisionIndex + 1;
-  if (nextIndex >= revisionQuestions.length) return null;
-  return { question: revisionQuestions[nextIndex], index: nextIndex };
-}

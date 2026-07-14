@@ -30,11 +30,6 @@ function cacheSet(key: string, data: unknown, ttlMs: number) {
   _cache.set(key, { data, expires: Date.now() + ttlMs });
 }
 
-export function invalidateCache(key?: string) {
-  if (key) _cache.delete(key);
-  else _cache.clear();
-}
-
 function authHeader(): Record<string, string> {
   const initData = tg?.initData || '';
   const headers: Record<string, string> = {
@@ -130,9 +125,6 @@ export const api = {
   updateProfile: (body: { exam_type?: string; subjects?: string[] }) =>
     req<User>('PUT', '/me', body),
 
-  checkDailyLimit: () =>
-    req<{ allowed: boolean; used: number; limit: number }>('GET', '/limit'),
-
   getBookmarks: () => req<Question[]>('GET', '/bookmarks'),
 
   addBookmark: (questionId: number) =>
@@ -140,9 +132,6 @@ export const api = {
 
   removeBookmark: (questionId: number) =>
     req<{ ok: boolean }>('DELETE', `/bookmarks/${questionId}`),
-
-  checkBookmark: (questionId: number) =>
-    req<{ bookmarked: boolean }>('GET', `/bookmarks/${questionId}/check`),
 
   getLeaderboard: () =>
     req<{ entries: LeaderboardEntry[]; myRank: number | null }>('GET', '/leaderboard'),
