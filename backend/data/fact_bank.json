@@ -2313,14 +2313,6 @@
       "source": "general knowledge"
     },
     {
-      "id": "sci_137",
-      "subject": "Chemistry",
-      "topic": "Bonding",
-      "fact": "Ionic bonds form when electrons are transferred between atoms, while covalent bonds form when electrons are shared.",
-      "difficulty": "medium",
-      "source": "general knowledge"
-    },
-    {
       "id": "sci_138",
       "subject": "Chemistry",
       "topic": "States of Matter",
@@ -2526,14 +2518,6 @@
       "topic": "Soil Management",
       "fact": "Adding organic compost to soil improves its structure, helping it retain both water and essential nutrients for plant growth.",
       "difficulty": "easy",
-      "source": "general knowledge"
-    },
-    {
-      "id": "agric_015",
-      "subject": "Agricultural Science",
-      "topic": "Pest Control",
-      "fact": "Integrated pest management combines biological, chemical, and physical methods to control pests while minimizing environmental harm.",
-      "difficulty": "hard",
       "source": "general knowledge"
     },
     {
@@ -3857,14 +3841,6 @@
       "source": "general knowledge"
     },
     {
-      "id": "sci_200",
-      "subject": "Chemistry",
-      "topic": "States of Matter",
-      "fact": "Sublimation is the process where a solid changes directly into a gas without passing through the liquid state, as seen with dry ice.",
-      "difficulty": "easy",
-      "source": "general knowledge"
-    },
-    {
       "id": "sci_201",
       "subject": "Biology",
       "topic": "Human Body",
@@ -3982,14 +3958,6 @@
       "topic": "Galaxies",
       "fact": "The Milky Way is a barred spiral galaxy containing an estimated 100 to 400 billion stars.",
       "difficulty": "medium",
-      "source": "general knowledge"
-    },
-    {
-      "id": "sci_216",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "fact": "The sum of the interior angles of any triangle always equals 180 degrees, regardless of the triangle's shape or size.",
-      "difficulty": "easy",
       "source": "general knowledge"
     },
     {
@@ -4609,14 +4577,6 @@
       "source": "general knowledge"
     },
     {
-      "id": "sci_229",
-      "subject": "Chemistry",
-      "topic": "Bonding",
-      "fact": "Ionic bonds form when electrons are transferred between atoms, while covalent bonds form when electrons are shared.",
-      "difficulty": "medium",
-      "source": "general knowledge"
-    },
-    {
       "id": "sci_230",
       "subject": "Chemistry",
       "topic": "Gases",
@@ -4729,27 +4689,11 @@
       "source": "general knowledge"
     },
     {
-      "id": "sci_244",
-      "subject": "Astronomy",
-      "topic": "Galaxies",
-      "fact": "The Milky Way is a barred spiral galaxy containing an estimated 100 to 400 billion stars.",
-      "difficulty": "medium",
-      "source": "general knowledge"
-    },
-    {
       "id": "sci_245",
       "subject": "Mathematics",
       "topic": "Algebra",
       "fact": "Any number raised to the power of zero equals one, except zero itself, which is undefined at that power.",
       "difficulty": "medium",
-      "source": "general knowledge"
-    },
-    {
-      "id": "sci_246",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "fact": "The sum of the interior angles of any triangle always equals 180 degrees, regardless of the triangle's shape or size.",
-      "difficulty": "easy",
       "source": "general knowledge"
     },
     {
@@ -4790,14 +4734,6 @@
       "topic": "World Wars",
       "fact": "World War I began in 1914 after the assassination of Archduke Franz Ferdinand of Austria-Hungary, triggering a chain of alliances into war.",
       "difficulty": "medium",
-      "source": "general knowledge"
-    },
-    {
-      "id": "hist_043",
-      "subject": "History",
-      "topic": "Nigerian History",
-      "fact": "Nigeria gained independence from British colonial rule on October 1, 1960.",
-      "difficulty": "easy",
       "source": "general knowledge"
     },
     {
@@ -5174,14 +5110,6 @@
       "topic": "First Aid",
       "fact": "For a minor burn, the recommended first response is to cool the area under running water for several minutes rather than applying ice directly.",
       "difficulty": "medium",
-      "source": "general knowledge"
-    },
-    {
-      "id": "phe_022",
-      "subject": "Physical Education",
-      "topic": "Fitness Components",
-      "fact": "Cardiovascular endurance refers to the heart and lungs' ability to supply oxygen to muscles during sustained physical activity.",
-      "difficulty": "easy",
       "source": "general knowledge"
     },
     {
@@ -10397,6 +10325,4230 @@
       "subject": "Islamic Religious Knowledge",
       "topic": "Names of God",
       "fact": "Muslims believe that God has 99 names describing His attributes, such as the Most Merciful.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_353",
+      "subject": "Physics",
+      "topic": "Nuclear Physics",
+      "fact": "Nuclear fission splits a heavy atomic nucleus into smaller ones, releasing the energy used in nuclear power stations.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_354",
+      "subject": "Physics",
+      "topic": "Nuclear Physics",
+      "fact": "Nuclear fusion, the joining of light nuclei, is the process that powers the Sun and other stars.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_355",
+      "subject": "Physics",
+      "topic": "Radioactivity",
+      "fact": "The half-life of a radioactive substance is the time taken for half of its atoms to decay.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_356",
+      "subject": "Physics",
+      "topic": "Radioactivity",
+      "fact": "Alpha, beta, and gamma are the three main types of nuclear radiation, with gamma being the most penetrating.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_357",
+      "subject": "Physics",
+      "topic": "Electromagnetism",
+      "fact": "An electric current flowing through a wire creates a magnetic field around it, the principle behind the electromagnet.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_358",
+      "subject": "Physics",
+      "topic": "Electromagnetism",
+      "fact": "A transformer changes the voltage of an alternating current using two coils wound on an iron core.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_359",
+      "subject": "Physics",
+      "topic": "Heat Transfer",
+      "fact": "The three methods of heat transfer are conduction, convection, and radiation.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_360",
+      "subject": "Physics",
+      "topic": "Heat",
+      "fact": "Evaporation causes cooling because the fastest-moving molecules escape, lowering the average energy of those left behind.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_361",
+      "subject": "Physics",
+      "topic": "Units",
+      "fact": "The SI unit of force is the newton, named after Sir Isaac Newton.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_362",
+      "subject": "Physics",
+      "topic": "Units",
+      "fact": "The SI unit of energy and work is the joule.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_363",
+      "subject": "Physics",
+      "topic": "Pressure",
+      "fact": "Hydraulic machines rely on Pascal's principle, that pressure applied to an enclosed liquid is transmitted equally in all directions.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_364",
+      "subject": "Physics",
+      "topic": "Floatation",
+      "fact": "An object floats when the upthrust from a fluid equals its weight, a result of Archimedes' principle.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_365",
+      "subject": "Physics",
+      "topic": "Waves",
+      "fact": "The Doppler effect explains why the pitch of a siren seems to rise as it approaches and fall as it moves away.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_366",
+      "subject": "Physics",
+      "topic": "Optics",
+      "fact": "Total internal reflection lets light travel along optical fibres, which carry internet and telephone signals.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_367",
+      "subject": "Physics",
+      "topic": "Light",
+      "fact": "White light can be split into a spectrum of seven colours by a prism and recombined by a second prism.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_368",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "A fuse protects a circuit by melting and breaking the connection when the current becomes too high.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_369",
+      "subject": "Physics",
+      "topic": "Electricity",
+      "fact": "Static electricity builds up when electrons are transferred by rubbing two materials together.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_370",
+      "subject": "Physics",
+      "topic": "Energy Resources",
+      "fact": "Renewable energy sources such as wind, solar, and hydro do not run out, unlike fossil fuels.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_371",
+      "subject": "Physics",
+      "topic": "Circular Motion",
+      "fact": "A body moving in a circle experiences a centripetal force directed toward the centre of the circle.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_372",
+      "subject": "Physics",
+      "topic": "Measurement",
+      "fact": "A vernier caliper can measure length more precisely than an ordinary ruler, down to a fraction of a millimetre.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_373",
+      "subject": "Physics",
+      "topic": "Temperature",
+      "fact": "Absolute zero, about minus 273 degrees Celsius, is the lowest possible temperature, where particle motion is at a minimum.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_374",
+      "subject": "Physics",
+      "topic": "Forces",
+      "fact": "Weight is the force of gravity on a mass, so an object weighs less on the Moon even though its mass is unchanged.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_375",
+      "subject": "Chemistry",
+      "topic": "Atomic Structure",
+      "fact": "An atom is mostly empty space, with a tiny dense nucleus surrounded by orbiting electrons.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_376",
+      "subject": "Chemistry",
+      "topic": "Atomic Structure",
+      "fact": "Protons carry a positive charge, electrons a negative charge, and neutrons no charge at all.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_377",
+      "subject": "Chemistry",
+      "topic": "Atomic Structure",
+      "fact": "The atomic number of an element is its number of protons, and it is what identifies the element.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_378",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Moving across a period of the periodic table from left to right, elements change gradually from metals to non-metals.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_379",
+      "subject": "Chemistry",
+      "topic": "Periodic Table",
+      "fact": "Group 1 metals such as sodium and potassium become more reactive as you move down the group.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_380",
+      "subject": "Chemistry",
+      "topic": "Bonding",
+      "fact": "A metallic bond is described as positive ions sitting in a 'sea' of free-moving electrons, which is why metals conduct electricity.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_381",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "Neutralisation is the reaction between an acid and a base, and it produces a salt and water.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_382",
+      "subject": "Chemistry",
+      "topic": "Acids and Bases",
+      "fact": "Universal indicator is more useful than litmus because its range of colours shows how strong an acid or alkali is, not merely which it is.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_383",
+      "subject": "Chemistry",
+      "topic": "Reactions",
+      "fact": "Raising the temperature speeds up a reaction because particles collide more often and with greater energy.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_384",
+      "subject": "Chemistry",
+      "topic": "Energy Changes",
+      "fact": "An exothermic reaction gives out heat, while an endothermic reaction takes heat in.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_385",
+      "subject": "Chemistry",
+      "topic": "Corrosion",
+      "fact": "Rusting of iron needs both oxygen and water, which is why painting or oiling metal helps prevent it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_386",
+      "subject": "Chemistry",
+      "topic": "Air",
+      "fact": "Air is roughly 78 percent nitrogen and 21 percent oxygen, with small amounts of other gases.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_387",
+      "subject": "Chemistry",
+      "topic": "Gases",
+      "fact": "Carbon dioxide turns limewater milky, which is a common laboratory test for the gas.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_388",
+      "subject": "Chemistry",
+      "topic": "Gases",
+      "fact": "Hydrogen gas burns with a squeaky pop when a lighted splint is brought near it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_389",
+      "subject": "Chemistry",
+      "topic": "Organic Chemistry",
+      "fact": "Hydrocarbons are made only of hydrogen and carbon, and include fuels such as methane and petrol.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_390",
+      "subject": "Chemistry",
+      "topic": "Organic Chemistry",
+      "fact": "Ethanol, the alcohol found in drinks, is produced when yeast ferments sugar.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_391",
+      "subject": "Chemistry",
+      "topic": "Metals",
+      "fact": "The reactivity series ranks metals by how vigorously they react, with potassium near the top and gold near the bottom.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_392",
+      "subject": "Chemistry",
+      "topic": "Alloys",
+      "fact": "Alloys such as steel and brass are mixtures involving metals, made to be stronger or more useful than pure metals.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_393",
+      "subject": "Chemistry",
+      "topic": "Electrolysis",
+      "fact": "Electrolysis uses electricity to break down compounds and is used to extract reactive metals such as aluminium.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_394",
+      "subject": "Chemistry",
+      "topic": "Separation Techniques",
+      "fact": "Chromatography separates the different coloured substances in a mixture, such as the dyes in an ink.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_395",
+      "subject": "Chemistry",
+      "topic": "Mole Concept",
+      "fact": "One mole of any substance contains about 6.02 times ten to the power 23 particles, a value called Avogadro's number.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_396",
+      "subject": "Chemistry",
+      "topic": "Water Chemistry",
+      "fact": "Hard water contains dissolved calcium and magnesium salts, which can leave a scale inside kettles.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_397",
+      "subject": "Biology",
+      "topic": "Cells",
+      "fact": "The cell is the basic unit of life, and all living things are made of one or more cells.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_398",
+      "subject": "Biology",
+      "topic": "Cells",
+      "fact": "Plant cells have a cell wall and chloroplasts, which animal cells do not.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_399",
+      "subject": "Biology",
+      "topic": "Cells",
+      "fact": "The nucleus controls the activities of a cell and holds the chromosomes that carry genetic information.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_400",
+      "subject": "Biology",
+      "topic": "Photosynthesis",
+      "fact": "Photosynthesis uses carbon dioxide, water, and sunlight to make glucose and release oxygen.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_401",
+      "subject": "Biology",
+      "topic": "Respiration",
+      "fact": "Aerobic respiration uses oxygen to release energy, while anaerobic respiration releases energy without it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_402",
+      "subject": "Biology",
+      "topic": "Circulation",
+      "fact": "Blood is made up of red cells, white cells, platelets, and a liquid called plasma.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_403",
+      "subject": "Biology",
+      "topic": "Circulation",
+      "fact": "Red blood cells carry oxygen using a pigment called haemoglobin, which also gives blood its red colour.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_404",
+      "subject": "Biology",
+      "topic": "Nervous System",
+      "fact": "A reflex action is an automatic, rapid response that does not require conscious thought.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_405",
+      "subject": "Biology",
+      "topic": "Nervous System",
+      "fact": "Neurons are specialised cells that carry electrical messages around the body.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_406",
+      "subject": "Biology",
+      "topic": "Digestion",
+      "fact": "Enzymes speed up digestion by breaking large food molecules into smaller ones the body can absorb.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_407",
+      "subject": "Biology",
+      "topic": "Digestion",
+      "fact": "Bile, produced by the liver, helps break down fats during digestion.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_408",
+      "subject": "Biology",
+      "topic": "Excretion",
+      "fact": "The kidneys filter waste products from the blood to form urine.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_409",
+      "subject": "Biology",
+      "topic": "Reproduction",
+      "fact": "In flowering plants, pollination is the transfer of pollen from the anther to the stigma.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_410",
+      "subject": "Biology",
+      "topic": "Classification",
+      "fact": "Living things are sorted into large groups called kingdoms, including animals, plants, fungi, and bacteria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_411",
+      "subject": "Biology",
+      "topic": "Ecology",
+      "fact": "A food chain shows how energy passes from producers to consumers as one organism is eaten by another.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_412",
+      "subject": "Biology",
+      "topic": "Ecology",
+      "fact": "Decomposers such as fungi and bacteria break down dead matter and return nutrients to the soil.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_413",
+      "subject": "Biology",
+      "topic": "Ecology",
+      "fact": "In a food web, the loss of a single species can affect many others because feeding relationships are linked.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_414",
+      "subject": "Biology",
+      "topic": "Plants",
+      "fact": "Transpiration is the loss of water vapour from a plant's leaves, mainly through tiny pores called stomata.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_415",
+      "subject": "Biology",
+      "topic": "Plants",
+      "fact": "Xylem carries water up a plant, while phloem carries food made in the leaves to the rest of the plant.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_416",
+      "subject": "Biology",
+      "topic": "Microbiology",
+      "fact": "Viruses are not considered fully alive because they cannot reproduce without a host cell to infect.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_417",
+      "subject": "Biology",
+      "topic": "Immunity",
+      "fact": "Vaccines work by training the immune system to recognise a germ before a real infection happens.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_418",
+      "subject": "Biology",
+      "topic": "Evolution",
+      "fact": "Charles Darwin proposed the theory of evolution by natural selection, sometimes summed up as survival of the fittest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_419",
+      "subject": "Earth Science",
+      "topic": "Structure of the Earth",
+      "fact": "The Earth has four main layers: the crust, the mantle, the outer core, and the inner core.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_420",
+      "subject": "Earth Science",
+      "topic": "Structure of the Earth",
+      "fact": "The Earth's inner core is solid iron and nickel, kept solid by immense pressure despite the great heat.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_421",
+      "subject": "Earth Science",
+      "topic": "Rocks",
+      "fact": "There are three main types of rock: igneous, sedimentary, and metamorphic.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_422",
+      "subject": "Earth Science",
+      "topic": "Rocks",
+      "fact": "Igneous rocks form when molten magma or lava cools and hardens.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_423",
+      "subject": "Earth Science",
+      "topic": "Rocks",
+      "fact": "The rock cycle describes how rocks are continually changed from one type into another over geological time.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_424",
+      "subject": "Earth Science",
+      "topic": "Rocks",
+      "fact": "Metamorphic rocks form when existing rocks are changed by heat and pressure, as when limestone becomes marble.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_425",
+      "subject": "Earth Science",
+      "topic": "Volcanoes",
+      "fact": "Molten rock is called magma while it is below ground and lava once it erupts at the surface.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_426",
+      "subject": "Earth Science",
+      "topic": "Earthquakes",
+      "fact": "Earthquakes are caused by the sudden movement of rocks along faults in the Earth's crust.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_427",
+      "subject": "Earth Science",
+      "topic": "Earthquakes",
+      "fact": "The vibrations of an earthquake are detected and recorded by instruments called seismographs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_428",
+      "subject": "Earth Science",
+      "topic": "Atmosphere",
+      "fact": "The ozone layer protects living things by absorbing much of the Sun's harmful ultraviolet radiation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_429",
+      "subject": "Earth Science",
+      "topic": "Atmosphere",
+      "fact": "The atmosphere has several layers, the lowest being the troposphere, where weather takes place.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_430",
+      "subject": "Earth Science",
+      "topic": "Weather",
+      "fact": "A barometer measures atmospheric pressure and helps forecasters predict the weather.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_431",
+      "subject": "Earth Science",
+      "topic": "Weathering and Erosion",
+      "fact": "Weathering breaks rock down where it stands, while erosion carries the loosened pieces away.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_432",
+      "subject": "Earth Science",
+      "topic": "Soil",
+      "fact": "Soil forms slowly over thousands of years from weathered rock mixed with decayed organic matter.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_433",
+      "subject": "Earth Science",
+      "topic": "Groundwater",
+      "fact": "Groundwater is water stored underground in spaces within rocks, and it supplies many wells and springs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_434",
+      "subject": "Earth Science",
+      "topic": "Oceans",
+      "fact": "Ocean tides are caused mainly by the gravitational pull of the Moon on the Earth's water.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_435",
+      "subject": "Earth Science",
+      "topic": "Minerals",
+      "fact": "A mineral's hardness can be tested using Mohs scale, on which diamond is the hardest at 10.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_436",
+      "subject": "Earth Science",
+      "topic": "Fossils",
+      "fact": "Fossils are the preserved remains or traces of ancient organisms, usually found in sedimentary rock.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_437",
+      "subject": "Earth Science",
+      "topic": "Climate",
+      "fact": "Greenhouse gases such as carbon dioxide trap heat in the atmosphere and warm the planet.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_438",
+      "subject": "Earth Science",
+      "topic": "Natural Resources",
+      "fact": "Fossil fuels such as coal, oil, and gas formed from the remains of organisms buried millions of years ago.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_439",
+      "subject": "Earth Science",
+      "topic": "Landforms",
+      "fact": "A delta forms where a river drops its sediment as it flows into a sea or lake.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_440",
+      "subject": "Earth Science",
+      "topic": "Geological Time",
+      "fact": "The Earth is estimated to be about 4.6 billion years old.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_441",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "A prime number has exactly two factors: one and itself.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_442",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "Two is the only even prime number, because every other even number is divisible by two.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_443",
+      "subject": "Mathematics",
+      "topic": "Fractions",
+      "fact": "To add or subtract fractions, they must first share a common denominator.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_444",
+      "subject": "Mathematics",
+      "topic": "Percentages",
+      "fact": "To find a percentage of a quantity, multiply the quantity by the percentage and divide by 100.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_445",
+      "subject": "Mathematics",
+      "topic": "Ratios",
+      "fact": "A ratio compares two or more quantities, and it is simplified in the same way as a fraction.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_446",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The exterior angles of any polygon always add up to 360 degrees, no matter how many sides it has.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_447",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The interior angles of any quadrilateral add up to 360 degrees.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_448",
+      "subject": "Mathematics",
+      "topic": "Mensuration",
+      "fact": "The volume of a cuboid is found by multiplying its length, breadth, and height.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_449",
+      "subject": "Mathematics",
+      "topic": "Number Systems",
+      "fact": "Pi is an irrational number close to 3.142, giving the ratio of a circle's circumference to its diameter.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_450",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "Angles on a straight line add up to 180 degrees, while angles around a point add up to 360 degrees.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_451",
+      "subject": "Mathematics",
+      "topic": "Algebra",
+      "fact": "In algebra, letters are used to stand for unknown numbers within equations.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_452",
+      "subject": "Mathematics",
+      "topic": "Indices",
+      "fact": "Any number raised to the power of one is equal to itself.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_453",
+      "subject": "Mathematics",
+      "topic": "Statistics",
+      "fact": "The mean is found by adding all the values and dividing by how many there are.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_454",
+      "subject": "Mathematics",
+      "topic": "Statistics",
+      "fact": "The range of a set of data is the difference between the largest and smallest values.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_455",
+      "subject": "Mathematics",
+      "topic": "Statistics",
+      "fact": "The mode is the value that appears most frequently in a set of data.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_456",
+      "subject": "Mathematics",
+      "topic": "Probability",
+      "fact": "A probability of one half means an event is as likely to happen as not, like a fair coin landing on heads.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_457",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "The lowest common multiple of two numbers is the smallest number that both divide into exactly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_458",
+      "subject": "Mathematics",
+      "topic": "Number Theory",
+      "fact": "The highest common factor of two numbers is the largest number that divides exactly into both.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_459",
+      "subject": "Mathematics",
+      "topic": "Number Systems",
+      "fact": "In Roman numerals, I, V, X, L, C, D, and M stand for 1, 5, 10, 50, 100, 500, and 1000.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_460",
+      "subject": "Mathematics",
+      "topic": "Sequences",
+      "fact": "The Fibonacci sequence begins 0, 1, 1, 2, 3, 5, 8, where each term is the sum of the two before it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_461",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "An acute angle is less than 90 degrees, a right angle is exactly 90, and an obtuse angle lies between 90 and 180.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_462",
+      "subject": "Mathematics",
+      "topic": "Mensuration",
+      "fact": "The perimeter is the distance around the edge of a shape, while the area is the amount of surface it covers.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_463",
+      "subject": "Astronomy",
+      "topic": "Solar System",
+      "fact": "The planets of the Solar System all orbit the Sun in the same direction, travelling along paths that are slightly oval.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_464",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Venus is the hottest planet, because a thick atmosphere of carbon dioxide traps heat close to its surface.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_465",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Saturn is best known for its bright rings, which are made mostly of ice and rock.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_466",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Mercury is the closest planet to the Sun and has the shortest year, orbiting in just 88 Earth days.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_467",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Mars is called the Red Planet because its surface is rich in iron oxide, which is rust.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_468",
+      "subject": "Astronomy",
+      "topic": "Dwarf Planets",
+      "fact": "Pluto was reclassified from a planet to a dwarf planet in 2006.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_469",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "The Sun is a medium-sized star that produces energy by fusing hydrogen into helium.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_470",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "Stars appear to twinkle because their light is bent as it passes through the moving layers of Earth's atmosphere.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_471",
+      "subject": "Astronomy",
+      "topic": "Distance",
+      "fact": "Light from the Sun takes about eight minutes to reach the Earth, so we always see the Sun as it was minutes ago.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_472",
+      "subject": "Astronomy",
+      "topic": "Galaxies",
+      "fact": "Our Solar System lies within a spiral galaxy known as the Milky Way.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_473",
+      "subject": "Astronomy",
+      "topic": "Galaxies",
+      "fact": "The nearest large galaxy to the Milky Way is Andromeda, which is slowly moving toward it.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_474",
+      "subject": "Astronomy",
+      "topic": "Moon",
+      "fact": "The same side of the Moon always faces the Earth because it turns once for every orbit it completes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_475",
+      "subject": "Astronomy",
+      "topic": "Moon",
+      "fact": "The Moon has no atmosphere, so astronauts' footprints there could last for millions of years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_476",
+      "subject": "Astronomy",
+      "topic": "Eclipses",
+      "fact": "A solar eclipse happens when the Moon passes between the Sun and the Earth and blocks the Sun's light.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_477",
+      "subject": "Astronomy",
+      "topic": "Eclipses",
+      "fact": "A lunar eclipse happens when the Earth passes between the Sun and the Moon and casts its shadow on the Moon.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_478",
+      "subject": "Astronomy",
+      "topic": "Comets",
+      "fact": "A comet's tail always points away from the Sun because it is pushed by the solar wind.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_479",
+      "subject": "Astronomy",
+      "topic": "Asteroids",
+      "fact": "Most asteroids orbit the Sun in a belt lying between Mars and Jupiter.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_480",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "Yuri Gagarin became the first human to travel into space in 1961.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_481",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "Neil Armstrong became the first person to walk on the Moon in 1969.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_482",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "A satellite is any object that orbits a planet, including the Moon and thousands of artificial ones.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_483",
+      "subject": "Astronomy",
+      "topic": "Gravity",
+      "fact": "Gravity keeps the planets in orbit around the Sun and the Moon in orbit around the Earth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_484",
+      "subject": "Astronomy",
+      "topic": "Seasons",
+      "fact": "The Earth has seasons because its axis is tilted as it travels around the Sun.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_064",
+      "subject": "History",
+      "topic": "Ancient Egypt",
+      "fact": "The ancient Egyptians preserved their dead through mummification, believing in a life beyond the grave.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_065",
+      "subject": "History",
+      "topic": "Ancient Egypt",
+      "fact": "The Rosetta Stone allowed scholars to finally decode ancient Egyptian hieroglyphics.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_066",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "The old Kingdom of Benin was famous for its skilled bronze casters, whose works now sit in museums worldwide.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_067",
+      "subject": "History",
+      "topic": "Nigerian History",
+      "fact": "Nigeria became a republic in 1963, replacing the British monarch as head of state with a Nigerian president.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_068",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "The medieval Kingdom of Mali grew wealthy from the trade in gold and salt across the Sahara.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_069",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "Mansa Musa, a ruler of Mali, is often described as one of the wealthiest individuals in history.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_070",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "Great Zimbabwe was a large stone city built by a powerful African kingdom centuries ago.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_071",
+      "subject": "History",
+      "topic": "Inventions",
+      "fact": "The printing press, developed by Johannes Gutenberg around 1440, made books far cheaper and more widely available.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_072",
+      "subject": "History",
+      "topic": "World History",
+      "fact": "The Renaissance was a period of renewed interest in art and learning that began in Italy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_073",
+      "subject": "History",
+      "topic": "Exploration",
+      "fact": "In 1492, Christopher Columbus crossed the Atlantic and reached the Americas.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_074",
+      "subject": "History",
+      "topic": "World Wars",
+      "fact": "The First World War lasted from 1914 to 1918.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_075",
+      "subject": "History",
+      "topic": "World Wars",
+      "fact": "The Second World War ended in 1945 after six years of fighting.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_076",
+      "subject": "History",
+      "topic": "Trade Routes",
+      "fact": "The trans-Saharan trade carried gold, salt, and kola nuts across the desert by camel caravan for centuries.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_077",
+      "subject": "History",
+      "topic": "Slavery and Abolition",
+      "fact": "Freed slaves helped found Liberia and Sierra Leone, settlements that became homes for returnees from the Americas.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_078",
+      "subject": "History",
+      "topic": "Revolutions",
+      "fact": "The French Revolution began in 1789 with the storming of the Bastille prison in Paris.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_079",
+      "subject": "History",
+      "topic": "Revolutions",
+      "fact": "The Industrial Revolution began in Britain and changed how goods were made using machines and factories.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_080",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The ancient Romans built roads, aqueducts, and an empire that ringed the Mediterranean Sea.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_081",
+      "subject": "History",
+      "topic": "Ancient Civilizations",
+      "fact": "The Great Wall of China was built over many centuries to defend against invasions from the north.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_082",
+      "subject": "History",
+      "topic": "Independence Movements",
+      "fact": "Mahatma Gandhi led India to independence from Britain in 1947 through non-violent protest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_083",
+      "subject": "History",
+      "topic": "Cold War",
+      "fact": "The Berlin Wall, which divided a city for 28 years, was pulled down in 1989.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_084",
+      "subject": "History",
+      "topic": "African History",
+      "fact": "Nelson Mandela became South Africa's first Black president in 1994, after the end of apartheid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "hist_085",
+      "subject": "History",
+      "topic": "Empires",
+      "fact": "The Ottoman Empire ruled parts of the Middle East, North Africa, and southeastern Europe for over 600 years.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_060",
+      "subject": "Geography",
+      "topic": "Continents",
+      "fact": "There are seven continents: Asia, Africa, North America, South America, Antarctica, Europe, and Australia.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_061",
+      "subject": "Geography",
+      "topic": "Continents",
+      "fact": "Asia is the largest continent by both land area and population.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_062",
+      "subject": "Geography",
+      "topic": "Oceans",
+      "fact": "There are five oceans, and the Pacific is the largest and deepest of them.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_063",
+      "subject": "Geography",
+      "topic": "Rivers",
+      "fact": "The Nile, flowing through north-eastern Africa, is often regarded as the longest river in the world.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_064",
+      "subject": "Geography",
+      "topic": "Rivers",
+      "fact": "A tributary is a smaller river that flows into a larger one, as the Benue flows into the Niger.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_065",
+      "subject": "Geography",
+      "topic": "Mountains",
+      "fact": "Mount Everest, in the Himalayas, is the highest mountain above sea level on Earth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_066",
+      "subject": "Geography",
+      "topic": "Mountains",
+      "fact": "Fold mountains, such as the Himalayas, form where two tectonic plates push against each other.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_067",
+      "subject": "Geography",
+      "topic": "Deserts",
+      "fact": "Antarctica is technically the largest desert on Earth, because a desert is defined by low rainfall rather than by heat.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_068",
+      "subject": "Geography",
+      "topic": "Climate",
+      "fact": "Regions near the equator receive the most direct sunlight, giving them a hot climate throughout the year.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_069",
+      "subject": "Geography",
+      "topic": "Latitude",
+      "fact": "The Tropic of Cancer and the Tropic of Capricorn mark the furthest points north and south where the Sun can be directly overhead.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_070",
+      "subject": "Geography",
+      "topic": "Longitude",
+      "fact": "The Prime Meridian, at 0 degrees longitude, passes through Greenwich in London.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_071",
+      "subject": "Geography",
+      "topic": "Time Zones",
+      "fact": "The world is divided into 24 time zones, roughly one for each hour of the day.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_072",
+      "subject": "Geography",
+      "topic": "Map Skills",
+      "fact": "A key, or legend, explains what the symbols on a map stand for.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_073",
+      "subject": "Geography",
+      "topic": "Map Skills",
+      "fact": "Contour lines on a map join points of equal height and reveal the shape of the land.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_074",
+      "subject": "Geography",
+      "topic": "Population",
+      "fact": "Population density is the number of people living in each square kilometre of land.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_075",
+      "subject": "Geography",
+      "topic": "Natural Resources",
+      "fact": "Nigeria is one of the largest producers of crude oil in Africa.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_076",
+      "subject": "Geography",
+      "topic": "Vegetation",
+      "fact": "A tropical rainforest receives very high rainfall and holds a large share of the world's plant and animal species.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_077",
+      "subject": "Geography",
+      "topic": "Settlement",
+      "fact": "An urban area is a town or city, while a rural area is countryside with a smaller, more scattered population.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_078",
+      "subject": "Geography",
+      "topic": "The Earth",
+      "fact": "The Earth is the third planet from the Sun and the only one known to support life.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_079",
+      "subject": "Geography",
+      "topic": "Weather Instruments",
+      "fact": "A rain gauge is used to measure the amount of rainfall over a period of time.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_080",
+      "subject": "Geography",
+      "topic": "Countries",
+      "fact": "Russia is the largest country in the world by land area and stretches across two continents.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "geo_081",
+      "subject": "Geography",
+      "topic": "Map Reading",
+      "fact": "Lines of latitude and longitude form a grid that lets any place on Earth be located precisely.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_056",
+      "subject": "English Language",
+      "topic": "Tenses",
+      "fact": "The three basic tenses in English are the past, the present, and the future.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_057",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "A complete sentence must contain at least a subject and a verb.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_058",
+      "subject": "English Language",
+      "topic": "Parts of Speech",
+      "fact": "A verb is a word that expresses an action or a state of being.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_059",
+      "subject": "English Language",
+      "topic": "Parts of Speech",
+      "fact": "An adverb often describes how, when, or where an action happens, and many end in the letters '-ly'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_060",
+      "subject": "English Language",
+      "topic": "Punctuation",
+      "fact": "A question mark is placed at the end of a direct question.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_061",
+      "subject": "English Language",
+      "topic": "Punctuation",
+      "fact": "An apostrophe can show possession, as in 'the boy's book', or mark missing letters in a contraction like 'don't'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_062",
+      "subject": "English Language",
+      "topic": "Punctuation",
+      "fact": "A colon introduces a list, an explanation, or a quotation that follows on from the sentence before it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_063",
+      "subject": "English Language",
+      "topic": "Sentence Types",
+      "fact": "A compound sentence joins two independent clauses, often with a word such as 'and' or 'but'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_064",
+      "subject": "English Language",
+      "topic": "Figures of Speech",
+      "fact": "Hyperbole is deliberate exaggeration used for effect, as in 'I have told you a thousand times'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_065",
+      "subject": "English Language",
+      "topic": "Figures of Speech",
+      "fact": "Onomatopoeia describes words that imitate sounds, such as 'buzz', 'hiss', and 'crash'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_066",
+      "subject": "English Language",
+      "topic": "Idioms",
+      "fact": "An idiom is an expression whose meaning cannot be worked out from its individual words, such as 'kick the bucket'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_067",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "A homophone is a word that sounds the same as another but has a different meaning, like 'their' and 'there'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_068",
+      "subject": "English Language",
+      "topic": "Vocabulary",
+      "fact": "A homograph is a word spelt the same as another but with a different meaning, such as 'lead' the metal and 'lead' meaning to guide.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_069",
+      "subject": "English Language",
+      "topic": "Word Formation",
+      "fact": "A suffix is added to the end of a word to change its meaning or type, such as '-ness' in 'kindness'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_070",
+      "subject": "English Language",
+      "topic": "Spelling",
+      "fact": "The old rhyme 'i before e except after c' has many exceptions, including 'weird' and 'seize'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_071",
+      "subject": "English Language",
+      "topic": "Speech",
+      "fact": "Direct speech quotes a speaker's exact words in quotation marks, while reported speech puts them into your own words.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_072",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "In the active voice the subject performs the action, while in the passive voice the subject receives it.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_073",
+      "subject": "English Language",
+      "topic": "Concord",
+      "fact": "Subject-verb agreement, also called concord, means a singular subject takes a singular verb.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_074",
+      "subject": "English Language",
+      "topic": "Writing",
+      "fact": "A formal letter uses a polite, professional tone and a set structure, unlike an informal letter to a friend.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_075",
+      "subject": "English Language",
+      "topic": "Reading Skills",
+      "fact": "A summary keeps the main ideas of a passage while leaving out examples and repetition.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_076",
+      "subject": "English Language",
+      "topic": "Register",
+      "fact": "Register is the level of formality in language, which shifts depending on the audience and situation.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_077",
+      "subject": "English Language",
+      "topic": "Word Formation",
+      "fact": "The prefix 'bi-' means two, as in 'bicycle', while 'tri-' means three, as in 'triangle'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_050",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "Rhythm in poetry comes from the pattern of stressed and unstressed syllables, which is known as metre.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_051",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "A rhyming couplet is a pair of consecutive lines that rhyme and often express one complete idea.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_052",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "An ode is a poem written in praise or celebration of a person, thing, or idea.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_053",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "An elegy is a poem of mourning, often written to lament someone who has died.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_054",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "Free verse is poetry that does not follow a regular rhyme scheme or metre.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_055",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "A limerick is a humorous five-line poem with a bouncing rhythm and an AABBA rhyme scheme.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_056",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "A tragedy usually ends with the downfall of the main character, while a comedy typically ends happily.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_057",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "The three classical unities of drama are the unities of action, time, and place.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_058",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "A monologue is a long speech by one character whether or not others are present, unlike a soliloquy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_059",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "An aside is a remark a character makes to the audience that the other characters are not meant to hear.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_060",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "A short story is a brief work of fiction that can usually be read in a single sitting.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_061",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "A biography is the account of a person's life written by someone else.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_062",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "A novella is a work of fiction that is longer than a short story but shorter than a novel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_063",
+      "subject": "Literature",
+      "topic": "Literary Devices",
+      "fact": "A symbol is an object or image that stands for a larger idea, such as a dove representing peace.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_064",
+      "subject": "Literature",
+      "topic": "Literary Devices",
+      "fact": "Imagery is descriptive language that appeals to the senses and helps readers picture a scene.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_065",
+      "subject": "Literature",
+      "topic": "Literary Devices",
+      "fact": "Satire uses humour, irony, or exaggeration to expose and criticise people's faults or society.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_066",
+      "subject": "Literature",
+      "topic": "Narrative",
+      "fact": "A first-person narrator tells the story using 'I', while a third-person narrator uses 'he', 'she', and 'they'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_067",
+      "subject": "Literature",
+      "topic": "Narrative",
+      "fact": "An omniscient narrator is all-knowing and can reveal the thoughts and feelings of every character.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_068",
+      "subject": "Literature",
+      "topic": "Conflict",
+      "fact": "An internal conflict is a struggle within a character, while an external conflict is with another person or force.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_069",
+      "subject": "Literature",
+      "topic": "Oral Literature",
+      "fact": "A proverb is a short, well-known saying that expresses a general truth or piece of advice.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_070",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "The mood of a poem is the feeling it stirs in the reader, while the tone is the poet's attitude to the subject.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_071",
+      "subject": "Literature",
+      "topic": "World Literature",
+      "fact": "William Shakespeare wrote around 37 plays and 154 sonnets and is regarded as a giant of English literature.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_047",
+      "subject": "Civic Education",
+      "topic": "Democracy",
+      "fact": "Democracy is a system of government in which power belongs to the people, usually through elected representatives.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_048",
+      "subject": "Civic Education",
+      "topic": "Democracy",
+      "fact": "The description 'government of the people, by the people, for the people' captures the spirit of democracy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_049",
+      "subject": "Civic Education",
+      "topic": "Citizenship",
+      "fact": "A citizen is a legally recognised member of a country who holds both rights and duties.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_050",
+      "subject": "Civic Education",
+      "topic": "Citizenship",
+      "fact": "Citizenship can be acquired by birth, by descent, by registration, or by naturalisation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_051",
+      "subject": "Civic Education",
+      "topic": "Human Rights",
+      "fact": "Fundamental human rights include the rights to life, dignity, education, and freedom of expression.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_052",
+      "subject": "Civic Education",
+      "topic": "Civic Duties",
+      "fact": "Paying taxes and obeying the law are important civic duties of every citizen.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_053",
+      "subject": "Civic Education",
+      "topic": "National Values",
+      "fact": "National values such as honesty, discipline, and patriotism help hold a society together.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_054",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "A national flag is a symbol of a country's identity and independence.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_055",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "A national anthem is a patriotic song that represents and honours a nation.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_056",
+      "subject": "Civic Education",
+      "topic": "Constitution",
+      "fact": "A constitution is the supreme set of rules by which a country is governed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_057",
+      "subject": "Civic Education",
+      "topic": "Civic Duties",
+      "fact": "Serving on a jury and taking part in a census are civic duties in many countries.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_058",
+      "subject": "Civic Education",
+      "topic": "Corruption",
+      "fact": "Corruption, such as bribery and embezzlement, harms society by diverting resources meant for the public.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_059",
+      "subject": "Civic Education",
+      "topic": "Conflict Resolution",
+      "fact": "Dialogue, negotiation, and mediation are peaceful ways of resolving conflicts.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_060",
+      "subject": "Civic Education",
+      "topic": "Civil Society",
+      "fact": "Non-governmental organisations work independently of government to serve the public good.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_061",
+      "subject": "Civic Education",
+      "topic": "Voting",
+      "fact": "The right to vote lets citizens choose their leaders in a democracy.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_062",
+      "subject": "Civic Education",
+      "topic": "Community Service",
+      "fact": "Community service is voluntary work done to help others without expecting payment.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_063",
+      "subject": "Civic Education",
+      "topic": "Responsible Citizenship",
+      "fact": "A responsible citizen respects the rights of others and helps protect public property.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_064",
+      "subject": "Civic Education",
+      "topic": "National Values",
+      "fact": "Patriotism is a deep love and loyal support for one's country.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_065",
+      "subject": "Civic Education",
+      "topic": "Freedom",
+      "fact": "Freedom of speech lets people express their opinions, but it carries the responsibility not to harm others.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_066",
+      "subject": "Civic Education",
+      "topic": "Gender Equality",
+      "fact": "Gender equality means giving men and women equal rights and equal opportunities.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_067",
+      "subject": "Civic Education",
+      "topic": "Drug Abuse",
+      "fact": "Drug abuse is the harmful use of drugs, which damages health and can lead to crime.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_068",
+      "subject": "Civic Education",
+      "topic": "Road Safety",
+      "fact": "Obeying traffic rules, such as stopping at a red light, helps protect lives on the road.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_047",
+      "subject": "Economics",
+      "topic": "Basic Concepts",
+      "fact": "Economics is the study of how people use limited resources to satisfy their unlimited wants.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_048",
+      "subject": "Economics",
+      "topic": "Basic Concepts",
+      "fact": "Utility is the satisfaction a consumer gets from using a good or service.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_049",
+      "subject": "Economics",
+      "topic": "Basic Concepts",
+      "fact": "Economic goods are scarce and have a price, while free goods such as air are available without limit.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_050",
+      "subject": "Economics",
+      "topic": "Production",
+      "fact": "Capital in economics means goods used to produce other goods, such as tools and machinery, rather than money itself.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_051",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "The law of demand states that, other things being equal, people buy more of a good when its price falls.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_052",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "The law of supply states that producers offer more of a good for sale when its price rises.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_053",
+      "subject": "Economics",
+      "topic": "Markets",
+      "fact": "Market equilibrium is reached when the quantity demanded equals the quantity supplied.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_054",
+      "subject": "Economics",
+      "topic": "Money",
+      "fact": "Money replaced barter because it is a convenient and widely accepted medium of exchange.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_055",
+      "subject": "Economics",
+      "topic": "Inflation",
+      "fact": "Inflation is a general and sustained rise in the prices of goods and services over time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_056",
+      "subject": "Economics",
+      "topic": "Inflation",
+      "fact": "When prices rise, the purchasing power of money falls, so the same amount buys less.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_057",
+      "subject": "Economics",
+      "topic": "Banking",
+      "fact": "A central bank controls a country's money supply and issues its currency.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_058",
+      "subject": "Economics",
+      "topic": "Production",
+      "fact": "Division of labour splits a job into tasks so that workers can specialise and produce more.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_059",
+      "subject": "Economics",
+      "topic": "National Income",
+      "fact": "Per capita income is a country's total income divided by its population, giving an average income per person.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_060",
+      "subject": "Economics",
+      "topic": "International Trade",
+      "fact": "A country tends to export goods it can make cheaply and import goods that are costly to produce at home.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_061",
+      "subject": "Economics",
+      "topic": "Taxation",
+      "fact": "A direct tax such as income tax is paid straight to the government, while indirect taxes are added to the prices of goods.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_062",
+      "subject": "Economics",
+      "topic": "Unemployment",
+      "fact": "Unemployment occurs when people who are willing and able to work cannot find jobs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_063",
+      "subject": "Economics",
+      "topic": "Economic Systems",
+      "fact": "In a mixed economy, both the government and private businesses take part in economic activity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_064",
+      "subject": "Economics",
+      "topic": "Consumers",
+      "fact": "A consumer is a person who buys goods and services to satisfy their needs and wants.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_065",
+      "subject": "Economics",
+      "topic": "Savings",
+      "fact": "Saving is the part of income that is not spent and can be kept for future needs or investment.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_066",
+      "subject": "Economics",
+      "topic": "Population",
+      "fact": "A large working-age population can strengthen an economy when there are enough jobs to go round.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_067",
+      "subject": "Economics",
+      "topic": "Standard of Living",
+      "fact": "The standard of living describes the level of comfort and wealth enjoyed by people in a country.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_068",
+      "subject": "Economics",
+      "topic": "Development",
+      "fact": "A developing economy is one working to raise its income, industry, and living standards.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_049",
+      "subject": "Government",
+      "topic": "Basic Concepts",
+      "fact": "Government is the body of people and institutions that make and enforce the laws of a state.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_050",
+      "subject": "Government",
+      "topic": "Checks and Balances",
+      "fact": "Checks and balances allow each arm of government to limit the powers of the others and prevent abuse.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_051",
+      "subject": "Government",
+      "topic": "Legislature",
+      "fact": "A bicameral legislature has two chambers, such as a senate and a house of representatives.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_052",
+      "subject": "Government",
+      "topic": "Executive",
+      "fact": "The executive is the arm of government that carries out and enforces the laws.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_053",
+      "subject": "Government",
+      "topic": "Judiciary",
+      "fact": "An independent judiciary is one that can make decisions free from interference by the other arms of government.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_054",
+      "subject": "Government",
+      "topic": "Democracy",
+      "fact": "In a representative democracy, citizens elect officials to make decisions on their behalf.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_055",
+      "subject": "Government",
+      "topic": "Systems of Government",
+      "fact": "In a presidential system, the president is both the head of state and the head of government.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_056",
+      "subject": "Government",
+      "topic": "Systems of Government",
+      "fact": "In a parliamentary system, the head of government, usually a prime minister, is drawn from the legislature.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_057",
+      "subject": "Government",
+      "topic": "Constitution",
+      "fact": "A written constitution is set out in a single document, while an unwritten one is drawn from many sources.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_058",
+      "subject": "Government",
+      "topic": "Federalism",
+      "fact": "A confederation is a loose union in which member states keep most of their power and the centre stays weak.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_059",
+      "subject": "Government",
+      "topic": "Systems of Government",
+      "fact": "In a unitary system, most political power is held by a single central government.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_060",
+      "subject": "Government",
+      "topic": "Elections",
+      "fact": "Suffrage is the right to vote, and universal adult suffrage extends that right to all adult citizens.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_061",
+      "subject": "Government",
+      "topic": "Elections",
+      "fact": "A by-election is held to fill a seat that falls vacant between general elections.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_062",
+      "subject": "Government",
+      "topic": "Political Parties",
+      "fact": "A political party is an organised group that seeks to win power and form a government.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_063",
+      "subject": "Government",
+      "topic": "Political Parties",
+      "fact": "In a one-party state, only one political party is legally allowed to hold power.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_064",
+      "subject": "Government",
+      "topic": "Public Opinion",
+      "fact": "A free press is often described as a watchdog, holding government to account by informing the public.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_065",
+      "subject": "Government",
+      "topic": "Sovereignty",
+      "fact": "Sovereignty is the supreme power of a state to govern itself without outside control.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_066",
+      "subject": "Government",
+      "topic": "Rule of Law",
+      "fact": "The rule of law ensures that government power is exercised within legal limits.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_067",
+      "subject": "Government",
+      "topic": "Citizenship",
+      "fact": "A citizen owes allegiance to a state and in return enjoys its protection and rights.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_068",
+      "subject": "Government",
+      "topic": "Local Government",
+      "fact": "Local government brings administration closer to the people at the grassroots level.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_069",
+      "subject": "Government",
+      "topic": "International Relations",
+      "fact": "Diplomacy is the practice of managing relations between countries, often through ambassadors.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_070",
+      "subject": "Government",
+      "topic": "International Organisations",
+      "fact": "The African Union was formed to promote unity and cooperation among African states.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_050",
+      "subject": "Agricultural Science",
+      "topic": "Branches",
+      "fact": "Agriculture covers crop farming, livestock rearing, fishery, and forestry.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_051",
+      "subject": "Agricultural Science",
+      "topic": "Crops",
+      "fact": "Cash crops such as cocoa, cotton, and rubber are grown mainly for sale rather than for food.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_052",
+      "subject": "Agricultural Science",
+      "topic": "Crops",
+      "fact": "Food crops such as maize, rice, and yam are grown mainly to be eaten.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_053",
+      "subject": "Agricultural Science",
+      "topic": "Crop Production",
+      "fact": "Crop rotation means growing different crops on the same land in a planned order to keep the soil fertile.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_054",
+      "subject": "Agricultural Science",
+      "topic": "Soil",
+      "fact": "Loam is often the best soil for farming because it holds water well and is rich in nutrients.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_055",
+      "subject": "Agricultural Science",
+      "topic": "Soil Fertility",
+      "fact": "Legumes such as beans and groundnuts enrich the soil by fixing nitrogen from the air.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_056",
+      "subject": "Agricultural Science",
+      "topic": "Soil Fertility",
+      "fact": "Organic manure such as compost and animal dung improves both the fertility and the structure of the soil.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_057",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "Livestock are farm animals kept for products such as meat, milk, eggs, and hides.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_058",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "Battery cage and deep litter are two common systems used for housing poultry.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_059",
+      "subject": "Agricultural Science",
+      "topic": "Livestock",
+      "fact": "Ruminants such as cattle, sheep, and goats have a special stomach that lets them digest grass.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_060",
+      "subject": "Agricultural Science",
+      "topic": "Fisheries",
+      "fact": "Fish farming, also called aquaculture, is the rearing of fish in ponds or tanks for food.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_061",
+      "subject": "Agricultural Science",
+      "topic": "Forestry",
+      "fact": "Afforestation is the planting of trees where there were none, helping to check erosion and supply timber.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_062",
+      "subject": "Agricultural Science",
+      "topic": "Pests and Diseases",
+      "fact": "Pests such as insects and rodents lower crop yields by damaging plants and stored produce.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_063",
+      "subject": "Agricultural Science",
+      "topic": "Pest Control",
+      "fact": "Biological control uses natural enemies, such as predators, to reduce the number of pests.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_064",
+      "subject": "Agricultural Science",
+      "topic": "Farm Tools",
+      "fact": "Simple farm tools include the hoe, cutlass, and rake, while machines include the tractor and plough.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_065",
+      "subject": "Agricultural Science",
+      "topic": "Drainage",
+      "fact": "Drainage removes excess water from farmland, preventing waterlogging that would starve roots of air.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_066",
+      "subject": "Agricultural Science",
+      "topic": "Plant Propagation",
+      "fact": "Some crops grow from seeds, while others such as cassava and sugarcane grow from stem cuttings.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_067",
+      "subject": "Agricultural Science",
+      "topic": "Farm Management",
+      "fact": "Keeping farm records helps a farmer track costs, yields, and profits.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_068",
+      "subject": "Agricultural Science",
+      "topic": "Farming Practices",
+      "fact": "Subsistence farming produces mainly for the family, while commercial farming produces for sale.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_069",
+      "subject": "Agricultural Science",
+      "topic": "Harvesting",
+      "fact": "Harvesting crops at the right time gives the best quality and reduces losses.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_070",
+      "subject": "Agricultural Science",
+      "topic": "Storage",
+      "fact": "Storing harvested crops in dry, clean conditions helps prevent spoilage and pest damage.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_071",
+      "subject": "Agricultural Science",
+      "topic": "Land Management",
+      "fact": "Planting cover crops and building terraces are ways to reduce soil erosion on farmland.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_049",
+      "subject": "Computer Science",
+      "topic": "Basics",
+      "fact": "A computer is an electronic device that accepts input, processes data, and produces output.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_050",
+      "subject": "Computer Science",
+      "topic": "Basics",
+      "fact": "The four basic functions of a computer are input, processing, storage, and output.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_051",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "Hardware refers to the physical parts of a computer, such as the keyboard, monitor, and mouse.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_052",
+      "subject": "Computer Science",
+      "topic": "Software",
+      "fact": "Software is the set of programs and instructions that tell the hardware what to do.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_053",
+      "subject": "Computer Science",
+      "topic": "Software",
+      "fact": "Word processors, spreadsheets, and web browsers are all examples of application software.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_054",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "The CPU is made up of the control unit and the arithmetic and logic unit, which together fetch and process instructions.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_055",
+      "subject": "Computer Science",
+      "topic": "Storage",
+      "fact": "RAM is temporary memory that is lost when a computer is switched off, unlike a hard drive.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_056",
+      "subject": "Computer Science",
+      "topic": "Data Representation",
+      "fact": "A byte is made up of eight bits and can store a single character such as a letter.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_057",
+      "subject": "Computer Science",
+      "topic": "Binary System",
+      "fact": "Computers store all their data using the binary system, which uses only the digits 0 and 1.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_058",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "A scanner is an input device that converts printed images or text into digital form.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_059",
+      "subject": "Computer Science",
+      "topic": "Hardware",
+      "fact": "A printer and a monitor are both output devices that present results to the user.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_060",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "The World Wide Web is a system of linked web pages that are accessed through the internet.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_061",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "An email address and a website address do different jobs: one sends messages, the other locates web pages.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_062",
+      "subject": "Computer Science",
+      "topic": "Networking",
+      "fact": "A network connects two or more computers so they can share data and resources.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_063",
+      "subject": "Computer Science",
+      "topic": "Cybersecurity",
+      "fact": "A strong password mixes letters, numbers, and symbols to help protect an account.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_064",
+      "subject": "Computer Science",
+      "topic": "Cybersecurity",
+      "fact": "A computer virus is a harmful program that can copy itself and damage files.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_065",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "Pseudocode sets out the logic of a program in plain language before it is written in an actual programming language.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_066",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "A flowchart uses shapes and arrows to show the steps of a process or an algorithm.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_067",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "A syntax error breaks the rules of a programming language, while a logic error lets a program run but gives the wrong result.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_068",
+      "subject": "Computer Science",
+      "topic": "Databases",
+      "fact": "A database is an organised collection of data that can be searched and updated easily.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_069",
+      "subject": "Computer Science",
+      "topic": "History",
+      "fact": "Charles Babbage is often called the father of the computer for designing an early mechanical computing machine.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_070",
+      "subject": "Computer Science",
+      "topic": "Artificial Intelligence",
+      "fact": "Artificial intelligence is the ability of a computer to perform tasks that normally need human intelligence.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_049",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "Malnutrition can mean either too little food or the wrong kind, so a person can be overweight and still poorly nourished.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_050",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "Proteins are known as body-building foods because they are needed for growth and repair.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_051",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "Vitamin C, found in citrus fruits, helps prevent scurvy and supports the immune system.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_052",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A shortage of vitamin D and calcium can cause weak, soft bones, a condition called rickets in children.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_053",
+      "subject": "Health Education",
+      "topic": "Hygiene",
+      "fact": "Washing the hands with soap and water before eating helps prevent the spread of germs.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_054",
+      "subject": "Health Education",
+      "topic": "Personal Hygiene",
+      "fact": "Brushing the teeth twice a day helps prevent tooth decay and gum disease.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_055",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Communicable diseases such as measles spread from person to person, unlike non-communicable ones.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_056",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Malaria is spread by the bite of an infected female Anopheles mosquito.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_057",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Sleeping under an insecticide-treated net is an effective way to prevent malaria.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_058",
+      "subject": "Health Education",
+      "topic": "Immunity",
+      "fact": "Immunisation protects children against dangerous diseases such as polio and tetanus.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_059",
+      "subject": "Health Education",
+      "topic": "Sanitation",
+      "fact": "Safe disposal of refuse and sewage helps prevent diseases such as cholera and typhoid.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_060",
+      "subject": "Health Education",
+      "topic": "Sanitation",
+      "fact": "Drinking clean, treated water helps prevent water-borne diseases.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_061",
+      "subject": "Health Education",
+      "topic": "First Aid",
+      "fact": "The recovery position keeps an unconscious but breathing person's airway open while help is awaited.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_062",
+      "subject": "Health Education",
+      "topic": "First Aid",
+      "fact": "A minor cut should be cleaned and covered to stop the bleeding and keep out infection.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_063",
+      "subject": "Health Education",
+      "topic": "Mental Health",
+      "fact": "Enough sleep, regular exercise, and social support all help to protect mental health.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_064",
+      "subject": "Health Education",
+      "topic": "Mental Health",
+      "fact": "Stress is the body's response to pressure, and learning to manage it is important for good health.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_065",
+      "subject": "Health Education",
+      "topic": "Fitness",
+      "fact": "Regular physical exercise strengthens the heart, the muscles, and the bones.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_066",
+      "subject": "Health Education",
+      "topic": "Substance Abuse",
+      "fact": "Smoking damages the lungs and raises the risk of serious diseases such as cancer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_067",
+      "subject": "Health Education",
+      "topic": "Substance Abuse",
+      "fact": "Alcohol abuse can harm the liver and impair a person's judgement.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_068",
+      "subject": "Health Education",
+      "topic": "Reproductive Health",
+      "fact": "Adolescence is the stage of rapid physical and emotional change between childhood and adulthood.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_069",
+      "subject": "Health Education",
+      "topic": "Safety Education",
+      "fact": "Knowing basic road safety rules helps prevent accidents for pedestrians and cyclists.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_070",
+      "subject": "Health Education",
+      "topic": "Environmental Health",
+      "fact": "Keeping the environment clean reduces the breeding grounds for disease-carrying pests.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_047",
+      "subject": "Financial Literacy",
+      "topic": "Money Management",
+      "fact": "Money is anything that is generally accepted as a means of paying for goods and services.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_048",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "A budget is a plan that shows expected income and how it will be spent.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_049",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "Spending less than you earn allows you to save the difference.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_050",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Saving regularly, even in small amounts, adds up to a meaningful sum over time.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_051",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Paying yourself first means setting money aside for savings as soon as income arrives, rather than saving whatever is left over.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_052",
+      "subject": "Financial Literacy",
+      "topic": "Interest",
+      "fact": "Interest is the extra money paid for borrowing, or the money earned for saving.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_053",
+      "subject": "Financial Literacy",
+      "topic": "Interest",
+      "fact": "Simple interest is worked out only on the original sum, so it grows more slowly than compound interest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_054",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "A fixed deposit account locks money away for an agreed period in return for a higher rate of interest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_055",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "An ATM lets customers withdraw cash and check their balance without going into a bank branch.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_056",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "Borrowing money means it usually has to be paid back with added interest.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_057",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "A loan that is not repaid on time can lead to extra charges and a poor credit reputation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_058",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "Investing means putting money into assets that may grow in value or earn income over time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_059",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "Spreading money across different assets, known as diversifying, helps reduce the overall risk.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_060",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "Higher potential returns generally come hand in hand with higher risk.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_061",
+      "subject": "Financial Literacy",
+      "topic": "Insurance",
+      "fact": "Insurance guards against financial loss in exchange for a small, regular premium.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_062",
+      "subject": "Financial Literacy",
+      "topic": "Taxes",
+      "fact": "Taxes are compulsory payments to the government that are used to fund public services.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_063",
+      "subject": "Financial Literacy",
+      "topic": "Currency",
+      "fact": "An exchange rate shows how much one currency is worth in terms of another.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_064",
+      "subject": "Financial Literacy",
+      "topic": "Entrepreneurship",
+      "fact": "An entrepreneur starts and runs a business, taking on risk in the hope of earning a profit.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_065",
+      "subject": "Financial Literacy",
+      "topic": "Entrepreneurship",
+      "fact": "Profit is what remains after the costs of running a business are taken away from its income.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_066",
+      "subject": "Financial Literacy",
+      "topic": "Money Management",
+      "fact": "Telling needs, which are essential, apart from wants, which are merely desirable, helps in spending wisely.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_067",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "Financial scams often promise unusually high returns for little effort, so caution is wise.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_068",
+      "subject": "Financial Literacy",
+      "topic": "Money Management",
+      "fact": "Keeping records of income and spending helps people manage their money and stay out of debt.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_047",
+      "subject": "Creative Arts",
+      "topic": "Colour Theory",
+      "fact": "The three primary colours are red, blue, and yellow, and other colours are mixed from them.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_048",
+      "subject": "Creative Arts",
+      "topic": "Colour Theory",
+      "fact": "Warm colours such as red and orange seem to advance toward the viewer, while cool blues and greens appear to recede.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_049",
+      "subject": "Creative Arts",
+      "topic": "Colour Theory",
+      "fact": "A tint is a colour mixed with white, while a shade is a colour mixed with black.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_050",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "The elements of art include line, shape, colour, texture, form, space, and value.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_051",
+      "subject": "Creative Arts",
+      "topic": "Drawing",
+      "fact": "Shading uses light and dark tones to give a drawing a sense of depth and solidity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_052",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "A still life is a work of art showing arranged inanimate objects, such as fruit, flowers, or pots.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_053",
+      "subject": "Creative Arts",
+      "topic": "Sculpture",
+      "fact": "Relief sculpture is carved so that it stands out from a flat background rather than standing free on all sides.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_054",
+      "subject": "Creative Arts",
+      "topic": "Sculpture",
+      "fact": "Carving removes material and is a subtractive process, while modelling with clay adds material.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_055",
+      "subject": "Creative Arts",
+      "topic": "Pottery",
+      "fact": "A potter's wheel spins clay so that it can be shaped evenly into round vessels such as pots and bowls.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_056",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "The Benin bronzes are celebrated cast sculptures from the old Kingdom of Benin in Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_057",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "Traditional African masks are often used in ceremonies, festivals, and storytelling.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_058",
+      "subject": "Creative Arts",
+      "topic": "Textiles",
+      "fact": "Tie and dye involves tying cloth before dyeing to create patterns, as seen in adire fabric.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_059",
+      "subject": "Creative Arts",
+      "topic": "Textiles",
+      "fact": "Weaving interlaces threads to make cloth, a craft seen in the Nigerian aso-oke fabric.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_060",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "The seven notes of the musical scale are do, re, mi, fa, so, la, and ti.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_061",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Rhythm is the pattern of beats in music, while melody is the tune made by a sequence of notes.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_062",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Musical instruments are grouped into families such as strings, wind, and percussion.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_063",
+      "subject": "Creative Arts",
+      "topic": "Drama",
+      "fact": "A playwright writes a play, while a director guides how that play is performed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_064",
+      "subject": "Creative Arts",
+      "topic": "Drama",
+      "fact": "Costume and make-up help an actor look like the character they are playing.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_065",
+      "subject": "Creative Arts",
+      "topic": "Dance",
+      "fact": "Traditional dances often tell stories or mark occasions such as festivals and weddings.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_066",
+      "subject": "Creative Arts",
+      "topic": "Photography",
+      "fact": "A photograph is made when light is captured by a camera onto film or a digital sensor.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_067",
+      "subject": "Creative Arts",
+      "topic": "Design",
+      "fact": "Graphic design combines images and text to communicate a message, as in posters and logos.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_068",
+      "subject": "Creative Arts",
+      "topic": "Crafts",
+      "fact": "Craftwork includes handmade objects such as baskets, beads, and carvings, often carrying cultural meaning.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_046",
+      "subject": "Physical Education",
+      "topic": "Definition",
+      "fact": "Physical education is learning through physical activity to build fitness, skills, and healthy habits.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_047",
+      "subject": "Physical Education",
+      "topic": "Fitness Components",
+      "fact": "The main components of physical fitness include strength, speed, endurance, flexibility, and balance.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_048",
+      "subject": "Physical Education",
+      "topic": "Warm-Up",
+      "fact": "Stretching improves flexibility and prepares the muscles for the demands of activity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_049",
+      "subject": "Physical Education",
+      "topic": "Cool-Down",
+      "fact": "Cooling down after exercise helps the body return to rest and reduces muscle stiffness.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_050",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "A marathon is a long-distance running race of about 42 kilometres.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_051",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "In a relay race, team members take turns to run and pass a baton to one another.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_052",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In football, a player is shown a red card for a serious offence and must leave the field, leaving the team a player short.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_053",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "A football team has eleven players on the field at a time, including the goalkeeper.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_054",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In basketball, a basket from open play is usually worth two points, or three from beyond the arc.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_055",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In volleyball, a team is allowed at most three touches to return the ball over the net.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_056",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In table tennis, a game is normally won by the first player to reach 11 points with a two-point lead.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_057",
+      "subject": "Physical Education",
+      "topic": "Sportsmanship",
+      "fact": "Good sportsmanship means playing fairly, respecting opponents, and accepting the result gracefully.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_058",
+      "subject": "Physical Education",
+      "topic": "Officials",
+      "fact": "A referee or umpire enforces the rules and settles disputes during a game.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_059",
+      "subject": "Physical Education",
+      "topic": "Injury Prevention",
+      "fact": "Wearing proper footwear and protective gear helps prevent sports injuries.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_060",
+      "subject": "Physical Education",
+      "topic": "Injury Prevention",
+      "fact": "The RICE method, standing for rest, ice, compression, and elevation, is used to treat sprains.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_061",
+      "subject": "Physical Education",
+      "topic": "Body Systems",
+      "fact": "Regular exercise strengthens the cardiovascular system, improving the health of the heart and lungs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_062",
+      "subject": "Physical Education",
+      "topic": "Human Body",
+      "fact": "Muscles work in pairs, with one contracting while the other relaxes in order to move a joint.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_063",
+      "subject": "Physical Education",
+      "topic": "Nutrition for Sports",
+      "fact": "Athletes need enough carbohydrates for energy and plenty of water to stay hydrated during activity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_064",
+      "subject": "Physical Education",
+      "topic": "Sports History",
+      "fact": "The modern Olympic Games are held every four years and gather athletes from around the world.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_065",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "The high jump and long jump are field events, while sprints and the marathon are track events.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_066",
+      "subject": "Physical Education",
+      "topic": "Health Benefits",
+      "fact": "Regular physical activity helps control body weight and lowers the risk of many diseases.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_067",
+      "subject": "Physical Education",
+      "topic": "Team Sports",
+      "fact": "Team sports help develop cooperation, communication, and leadership skills.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_061",
+      "subject": "Accounting",
+      "topic": "Books of Original Entry",
+      "fact": "The purchases day book records only credit purchases of goods meant for resale, not cash purchases.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_062",
+      "subject": "Accounting",
+      "topic": "Books of Original Entry",
+      "fact": "The sales day book lists credit sales, while cash sales are entered straight into the cash book.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_063",
+      "subject": "Accounting",
+      "topic": "Returns",
+      "fact": "Goods sent back by customers are recorded in the returns inwards, or sales returns, book.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_064",
+      "subject": "Accounting",
+      "topic": "Returns",
+      "fact": "Goods a business sends back to its suppliers are recorded in the returns outwards, or purchases returns, book.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_065",
+      "subject": "Accounting",
+      "topic": "Trial Balance",
+      "fact": "On a trial balance, assets and expenses usually show debit balances while liabilities, capital, and income show credit balances.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_066",
+      "subject": "Accounting",
+      "topic": "Taxation",
+      "fact": "Value Added Tax is collected by businesses on behalf of the government and added to the price of goods.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_067",
+      "subject": "Accounting",
+      "topic": "Depreciation",
+      "fact": "Depreciation appears as an expense in the profit and loss account and reduces the recorded value of the asset on the balance sheet.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_068",
+      "subject": "Accounting",
+      "topic": "Concepts",
+      "fact": "Under the accruals concept, income and expenses are recorded when they are earned or incurred, not when cash actually moves.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_069",
+      "subject": "Accounting",
+      "topic": "Capital",
+      "fact": "A person's capital in a business can be found by subtracting the liabilities from the assets.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_070",
+      "subject": "Accounting",
+      "topic": "Errors",
+      "fact": "Once the errors behind a suspense account have been corrected, the suspense account is cleared to zero.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_071",
+      "subject": "Accounting",
+      "topic": "Depreciation",
+      "fact": "Assets lose value through wear and tear, the passage of time, and obsolescence.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_072",
+      "subject": "Accounting",
+      "topic": "Balance Sheet",
+      "fact": "A balance sheet always balances because assets are equal to capital plus liabilities.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_073",
+      "subject": "Accounting",
+      "topic": "Cash Flow",
+      "fact": "A business can be profitable yet still short of cash if too much money is tied up in stock or unpaid debts.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_074",
+      "subject": "Accounting",
+      "topic": "Debtors and Creditors",
+      "fact": "A debtor is someone who owes the business money, while a creditor is someone the business owes money to.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_075",
+      "subject": "Accounting",
+      "topic": "Petty Cash",
+      "fact": "The petty cash book records small, everyday payments such as postage, transport, and refreshments.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_076",
+      "subject": "Accounting",
+      "topic": "Purchases",
+      "fact": "Net purchases equal total purchases plus carriage inwards, less any returns outwards.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_077",
+      "subject": "Accounting",
+      "topic": "Sales",
+      "fact": "Turnover is another name for the total sales a business makes over a period.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_078",
+      "subject": "Accounting",
+      "topic": "Ledger",
+      "fact": "The ledger is often divided into the sales ledger, the purchases ledger, and the general ledger.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_079",
+      "subject": "Accounting",
+      "topic": "Final Accounts",
+      "fact": "The trial balance also provides the list of figures from which the final accounts are prepared.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_080",
+      "subject": "Accounting",
+      "topic": "Assets",
+      "fact": "Land, buildings, machinery, and motor vehicles are all examples of fixed assets.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_081",
+      "subject": "Accounting",
+      "topic": "Liabilities",
+      "fact": "Trade creditors and bank overdrafts are common examples of current liabilities.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "acc_082",
+      "subject": "Accounting",
+      "topic": "Objectives",
+      "fact": "A key objective of accounting is to show the profit or loss of a business and its financial position.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_061",
+      "subject": "Further Mathematics",
+      "topic": "Sets",
+      "fact": "The union of two sets contains all elements found in either set, while the intersection contains only those in both.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_062",
+      "subject": "Further Mathematics",
+      "topic": "Sets",
+      "fact": "The number of elements in the union of two sets equals the sum of their sizes minus the size of their intersection.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_063",
+      "subject": "Further Mathematics",
+      "topic": "Logarithms",
+      "fact": "The logarithm of a number to its own base is always one, since a base raised to the power one gives itself.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_064",
+      "subject": "Further Mathematics",
+      "topic": "Indices",
+      "fact": "A negative index means a reciprocal, so a to the power minus n equals one divided by a to the power n.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_065",
+      "subject": "Further Mathematics",
+      "topic": "Series",
+      "fact": "The sum of an arithmetic series is n over two times the sum of the first and last terms.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_066",
+      "subject": "Further Mathematics",
+      "topic": "Trigonometry",
+      "fact": "The tangent of an angle is equal to its sine divided by its cosine.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_067",
+      "subject": "Further Mathematics",
+      "topic": "Trigonometry",
+      "fact": "In the sine rule, each side of a triangle is proportional to the sine of the angle opposite it.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_068",
+      "subject": "Further Mathematics",
+      "topic": "Trigonometry",
+      "fact": "The cosine rule extends Pythagoras' theorem to triangles that are not right-angled.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_069",
+      "subject": "Further Mathematics",
+      "topic": "Calculus",
+      "fact": "The second derivative of a function shows whether a turning point is a maximum or a minimum.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_070",
+      "subject": "Further Mathematics",
+      "topic": "Calculus",
+      "fact": "The gradient of a straight-line graph is constant, so its derivative is a single fixed number.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_071",
+      "subject": "Further Mathematics",
+      "topic": "Probability",
+      "fact": "The probabilities of all the possible outcomes of an event add up to one.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_072",
+      "subject": "Further Mathematics",
+      "topic": "Probability",
+      "fact": "Conditional probability is the chance of one event happening given that another has already occurred.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_073",
+      "subject": "Further Mathematics",
+      "topic": "Statistics",
+      "fact": "The variance of a set of data is the square of its standard deviation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_074",
+      "subject": "Further Mathematics",
+      "topic": "Statistics",
+      "fact": "The mode of a data set can be read off as the tallest bar of a bar chart or histogram.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_075",
+      "subject": "Further Mathematics",
+      "topic": "Vectors",
+      "fact": "A unit vector has a magnitude of exactly one and is used to indicate direction.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_076",
+      "subject": "Further Mathematics",
+      "topic": "Binomial Theorem",
+      "fact": "The coefficients in a binomial expansion can be written using combination notation.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_077",
+      "subject": "Further Mathematics",
+      "topic": "Matrices",
+      "fact": "The identity matrix behaves like the number one, leaving any matrix unchanged when it multiplies it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_078",
+      "subject": "Further Mathematics",
+      "topic": "Number",
+      "fact": "A rational number can be written as a fraction of two integers, while an irrational number cannot.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_079",
+      "subject": "Further Mathematics",
+      "topic": "Inequalities",
+      "fact": "Multiplying or dividing both sides of an inequality by a negative number reverses the inequality sign.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_080",
+      "subject": "Further Mathematics",
+      "topic": "Coordinate Geometry",
+      "fact": "Parallel lines have equal gradients but different intercepts.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_081",
+      "subject": "Further Mathematics",
+      "topic": "Series",
+      "fact": "In a convergent geometric series, the terms grow steadily smaller and approach zero.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fmath_082",
+      "subject": "Further Mathematics",
+      "topic": "Functions",
+      "fact": "A one-to-one function pairs each input with a unique output, which means it has an inverse.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_061",
+      "subject": "Commerce",
+      "topic": "Occupations",
+      "fact": "Occupations are grouped into industry, commerce, and services, which together make up production.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_062",
+      "subject": "Commerce",
+      "topic": "Production",
+      "fact": "Production is only complete when goods reach the final consumer, which is where commerce plays its part.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_063",
+      "subject": "Commerce",
+      "topic": "Production",
+      "fact": "Primary production extracts raw materials, secondary production manufactures goods, and tertiary production provides services.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_064",
+      "subject": "Commerce",
+      "topic": "Retail",
+      "fact": "A supermarket is a large self-service store that sells a wide range of household goods.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_065",
+      "subject": "Commerce",
+      "topic": "Retail",
+      "fact": "An itinerant trader, such as a hawker, moves from place to place to sell goods.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_066",
+      "subject": "Commerce",
+      "topic": "Banking",
+      "fact": "A cheque is a written order instructing a bank to pay a stated sum from the drawer's account.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_067",
+      "subject": "Commerce",
+      "topic": "Banking",
+      "fact": "A crossed cheque must be paid into a bank account and cannot be cashed over the counter.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_068",
+      "subject": "Commerce",
+      "topic": "Money",
+      "fact": "Token money is coinage whose face value is greater than the value of the metal it is made from.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_069",
+      "subject": "Commerce",
+      "topic": "Insurance",
+      "fact": "Motor insurance is compulsory in many countries before a vehicle may be driven on public roads.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_070",
+      "subject": "Commerce",
+      "topic": "Communication",
+      "fact": "The postal service and courier companies help move letters and parcels from sender to receiver.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_071",
+      "subject": "Commerce",
+      "topic": "Transport",
+      "fact": "Water transport is usually the cheapest way to move heavy, bulky goods over long distances.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_072",
+      "subject": "Commerce",
+      "topic": "Advertising",
+      "fact": "A trademark is a special name or sign that identifies a company's goods and cannot legally be copied.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_073",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "Under 'ex-works' terms, the buyer takes responsibility for goods from the seller's premises onward.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_074",
+      "subject": "Commerce",
+      "topic": "Capital",
+      "fact": "Fixed capital buys lasting assets like machinery, while circulating capital covers stock and daily running costs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_075",
+      "subject": "Commerce",
+      "topic": "Business Finance",
+      "fact": "A business can raise money by selling shares, taking loans, or ploughing back its own profits.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_076",
+      "subject": "Commerce",
+      "topic": "Business Organisations",
+      "fact": "A public corporation is a business owned by the state and set up to provide an essential service.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_077",
+      "subject": "Commerce",
+      "topic": "Warehousing",
+      "fact": "A bonded warehouse stores imported goods until the import duties owed on them have been paid.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_078",
+      "subject": "Commerce",
+      "topic": "Foreign Trade",
+      "fact": "Entrepot trade is the importing of goods in order to re-export them to other countries.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_079",
+      "subject": "Commerce",
+      "topic": "Consumer Protection",
+      "fact": "A guarantee, or warranty, is a seller's promise to repair or replace faulty goods within a set period.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_080",
+      "subject": "Commerce",
+      "topic": "Stock Turnover",
+      "fact": "The rate of stock turnover measures how many times a business sells and replaces its stock in a period.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_081",
+      "subject": "Commerce",
+      "topic": "Trade",
+      "fact": "A market exists wherever buyers and sellers are in contact to exchange goods, whether in person or online.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "comm_082",
+      "subject": "Commerce",
+      "topic": "Aids to Trade",
+      "fact": "Aids to trade are the commercial services, such as banking and insurance, that support buying and selling.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_061",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Creation",
+      "fact": "According to Genesis, God created human beings in his own image on the sixth day.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_062",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Genesis",
+      "fact": "In the Genesis account, a serpent tempted Eve to eat fruit from the forbidden tree.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_063",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Patriarchs",
+      "fact": "Isaac was the son promised to Abraham and Sarah in their old age.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_064",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Patriarchs",
+      "fact": "Esau sold his birthright to his younger twin brother Jacob for a bowl of stew.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_065",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joseph",
+      "fact": "Joseph's brothers were jealous of the colourful coat their father Jacob had given him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_066",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Moses",
+      "fact": "As a baby, Moses was hidden in a basket among the reeds along the River Nile.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_067",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Moses",
+      "fact": "God spoke to Moses from a bush that burned but was not consumed by the flames.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_068",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passover",
+      "fact": "The Passover recalls how the Israelites were spared during the final plague in Egypt.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_069",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Wilderness",
+      "fact": "God provided the Israelites with manna, a bread-like food, during their years in the wilderness.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_070",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "Jesus taught that the greatest commandments are to love God and to love one's neighbour.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_071",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Kings",
+      "fact": "King Saul's disobedience led to the kingdom being taken away from his family.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_072",
+      "subject": "Christian Religious Knowledge",
+      "topic": "David",
+      "fact": "David spared King Saul's life even when he had the chance to take it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_073",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The prophet Jonah was swallowed by a great fish after trying to run from God's command.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_074",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The prophet Isaiah foretold the coming of a saviour, words that Christians link to Jesus.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_075",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Daniel",
+      "fact": "Daniel's three friends were kept safe in a blazing furnace, according to the Bible.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_076",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Birth of Jesus",
+      "fact": "The angel Gabriel announced to Mary that she would give birth to Jesus.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_077",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Ministry of Jesus",
+      "fact": "Jesus began his public ministry after he was baptised and then tempted in the wilderness.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_078",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "Jesus is recorded as calming a storm on the Sea of Galilee with a single command.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_079",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "According to John's Gospel, Jesus raised his friend Lazarus from the dead.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_080",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "In the parable of the sower, seed falls on different kinds of ground and yields different results.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_081",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Resurrection",
+      "fact": "The Gospels record that women were the first to discover the empty tomb of Jesus.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_082",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "Stephen is remembered in the book of Acts as the first Christian martyr.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_061",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The Quran was revealed in Arabic, and Muslims regard the original Arabic text as its true form.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_062",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The longest chapter of the Quran is Surah Al-Baqarah, meaning 'The Cow'.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_063",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "A single verse of the Quran is called an ayah.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_064",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Ibrahim is honoured in Islam as a builder of the Kaaba together with his son Ismail.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_065",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Musa is mentioned more often in the Quran than any other prophet.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_066",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The story of Prophet Yusuf is described in the Quran as one of the most beautiful of narratives.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_067",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Even before his prophethood, Muhammad was known as Al-Amin, meaning 'the trustworthy'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_068",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Khadijah, a successful merchant, was the first wife of Prophet Muhammad and the first person to accept Islam.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_069",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Bilal, a companion of the Prophet, became the first person to call Muslims to prayer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_070",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Companions",
+      "fact": "The companions of Prophet Muhammad are known in Arabic as the Sahabah.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_071",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "Wudu is broken by actions such as using the toilet, after which it must be renewed before prayer.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_072",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "The person who leads Muslims in congregational prayer is called the Imam.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_073",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "Each unit of Islamic prayer, with its set movements and recitations, is called a rak'ah.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_074",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Zakat",
+      "fact": "Zakat is one of the pillars of Islam and is intended to purify a Muslim's wealth.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_075",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "On Hajj, pilgrims wear simple white garments called ihram to show that all people are equal before God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_076",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "The standing at the plain of Arafat is regarded as the most important rite of the Hajj.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_077",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Festivals",
+      "fact": "During Eid al-Adha, able Muslims traditionally sacrifice an animal and share the meat with those in need.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_078",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Ethics",
+      "fact": "Islam forbids riba, the taking of interest, in financial dealings.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_079",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Akhlaq",
+      "fact": "Truthfulness and the keeping of promises are strongly encouraged in Islamic teaching.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_080",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Angels",
+      "fact": "Muslims believe the angel Israfil will sound the trumpet that announces the Day of Judgement.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_081",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Articles of Faith",
+      "fact": "Muslims believe God revealed earlier scriptures, including the Tawrat to Musa and the Injil to Isa.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_082",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Community",
+      "fact": "The worldwide community of Muslims is known as the Ummah.",
       "difficulty": "medium",
       "source": "general knowledge"
     }
