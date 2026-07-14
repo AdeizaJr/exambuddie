@@ -1,7 +1,7 @@
 // src/bot/handlers/qotd.ts — Question of the Day answer handler
 import * as db from '../../db';
 import * as redis from '../../services/redis';
-import { formatExplanation } from '../formatter';
+import { correctAnswer } from '../formatter';
 
 // QOTD answer is handled outside a session — look up the question directly
 export async function handleQOTDAnswer(ctx: any, questionId: string, option: string): Promise<void> {
@@ -42,19 +42,8 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
   }).catch((err) => console.error('[handleQOTDAnswer] logAttempt persist error:', err));
   db.updateStreak(ctx.from.id).catch((err) => console.error('[handleQOTDAnswer] updateStreak error:', err));
 
-  const resultLine = isCorrect
-    ? '✅ <b>Correct!</b>'
-    : `❌ <b>Wrong.</b> The answer is <b>${q.correct_option}</b>.`;
-
-  const explanation = q.explanation
-    ? `\n\n💡 ${formatExplanation(q.explanation, q.subject)}`
-    : '';
-
-  const correctOptKey = `option_${q.correct_option.toLowerCase()}` as keyof typeof q;
-  const correctText = q[correctOptKey] as string || '';
-
   await ctx.reply(
-    `📅 <b>Question of the Day: Result</b>\n\n${resultLine}\n<b>${q.correct_option}.</b> ${correctText}${explanation}`,
+    `📅 <b>Question of the Day: Result</b>\n\n${correctAnswer(q, option)}`,
     {
       parse_mode: 'HTML',
       reply_markup: {
