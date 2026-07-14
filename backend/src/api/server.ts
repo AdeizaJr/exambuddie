@@ -713,14 +713,35 @@ export default function createServer(bot: any) {
     if (req.query.plan === 'free') conditions.push(`plan = 'free'`);
     if (req.query.plan === 'trial') conditions.push(`(plan = 'premium' AND trial_used = TRUE AND plan_expires_at > NOW())`);
 
+    // Filter by who received QOTD / Did You Know on a given day (defaults to today,
+    // client always sends an explicit date so "today" means the client's today).
+    if ((req.query.sent === 'qotd' || req.query.sent === 'dyk') && req.query.sentDate) {
+      params.push(req.query.sentDate);
+      const col = req.query.sent === 'qotd' ? 'last_qotd_sent_at' : 'last_dyk_sent_at';
+      conditions.push(`${col}::date = $${params.length}::date`);
+    }
+
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
     params.push(limit);
     params.push(offset);
 
+    // streak is only zeroed for real by the midnight-WAT cron (cron.ts) — if that tick
+    // gets skipped (e.g. a deploy restarts the process at that exact minute), the raw
+    // column stays stale until the user's next answer. Compute the true current value
+    // here instead of trusting the column, so the dashboard is never behind that cron.
+    const liveStreakExpr = `
+      CASE
+        WHEN plan = 'premium' AND streak_freeze_used_at = (NOW() + INTERVAL '1 hour')::date THEN streak
+        WHEN last_active_date IS NULL THEN 0
+        WHEN last_active_date < ((NOW() + INTERVAL '1 hour')::date - INTERVAL '1 day') THEN 0
+        ELSE streak
+      END`;
+
     const { rows } = await db.query(
       `SELECT telegram_id, first_name, username, exam_type, subjects,
-              plan, plan_expires_at, streak, joined_at, daily_count, last_active_date, phone_number
+              plan, plan_expires_at, ${liveStreakExpr} AS streak, joined_at, daily_count,
+              last_active_date, phone_number, last_qotd_sent_at, last_dyk_sent_at
        FROM users ${where}
        ORDER BY joined_at DESC
        LIMIT $${params.length - 1} OFFSET $${params.length}`,
@@ -1177,14 +1198,22 @@ export default function createServer(bot: any) {
   app.get('/api/admin/users/export', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(`
       SELECT telegram_id, first_name, username, exam_type, plan,
-             streak, joined_at, last_active_date, daily_count
+             CASE
+               WHEN plan = 'premium' AND streak_freeze_used_at = (NOW() + INTERVAL '1 hour')::date THEN streak
+               WHEN last_active_date IS NULL THEN 0
+               WHEN last_active_date < ((NOW() + INTERVAL '1 hour')::date - INTERVAL '1 day') THEN 0
+               ELSE streak
+             END AS streak,
+             joined_at, last_active_date, daily_count,
+             last_qotd_sent_at, last_dyk_sent_at
       FROM users ORDER BY joined_at DESC
     `);
-    const header = 'telegram_id,first_name,username,exam_type,plan,streak,joined_at,last_active_date,daily_count\n';
+    const header = 'telegram_id,first_name,username,exam_type,plan,streak,joined_at,last_active_date,daily_count,last_qotd_sent_at,last_dyk_sent_at\n';
     const csv = rows.map(r =>
       [r.telegram_id, `"${(r.first_name||'').replace(/"/g,'""')}"`,
        r.username||'', r.exam_type||'', r.plan, r.streak,
-       r.joined_at?.toISOString()||'', r.last_active_date||'', r.daily_count
+       r.joined_at?.toISOString()||'', r.last_active_date||'', r.daily_count,
+       r.last_qotd_sent_at?.toISOString()||'', r.last_dyk_sent_at?.toISOString()||''
       ].join(',')
     ).join('\n');
     res.setHeader('Content-Type', 'text/csv');

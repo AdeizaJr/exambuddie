@@ -15,6 +15,11 @@ function formatDate(dateStr: string | null): string {
   });
 }
 
+// WAT (UTC+1) — matches the date the backend cron stamps sends with.
+function watToday(): string {
+  return new Date(Date.now() + 3600000).toISOString().split("T")[0];
+}
+
 function TrashIcon() {
   return (
     <svg
@@ -43,6 +48,8 @@ export default function Users() {
 
   const search = searchParams.get("q") ?? "";
   const planFilter = (searchParams.get("plan") ?? "all") as "all" | "premium" | "free" | "trial";
+  const sentFilter = (searchParams.get("sent") ?? "") as "" | "qotd" | "dyk";
+  const sentDate = searchParams.get("sentDate") || watToday();
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
 
   const [result, setResult] = useState<PaginatedResponse<User> | null>(null);
@@ -88,7 +95,14 @@ export default function Users() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getUsers({ page, limit: 50, search: search || undefined, plan: planFilter === 'all' ? undefined : planFilter });
+      const data = await getUsers({
+        page,
+        limit: 50,
+        search: search || undefined,
+        plan: planFilter === 'all' ? undefined : planFilter,
+        sent: sentFilter || undefined,
+        sentDate: sentFilter ? sentDate : undefined,
+      });
       setResult(data);
       setError(null);
       setSelected(new Set());
@@ -98,7 +112,7 @@ export default function Users() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, planFilter]);
+  }, [page, search, planFilter, sentFilter, sentDate]);
 
   useEffect(() => {
     load();
@@ -240,6 +254,33 @@ export default function Users() {
         ))}
       </div>
 
+      {/* Sent filter tabs — who received QOTD / Did You Know on a given day */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex gap-1 rounded-lg border border-border bg-surface p-1 w-fit">
+          {(["", "qotd", "dyk"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setFilter("sent", s)}
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                sentFilter === s
+                  ? "bg-accent text-white"
+                  : "text-muted hover:text-white"
+              }`}
+            >
+              {s === "" ? "Any" : s === "qotd" ? "Got QOTD" : "Got Did You Know"}
+            </button>
+          ))}
+        </div>
+        {sentFilter && (
+          <input
+            type="date"
+            value={sentDate}
+            onChange={(e) => setFilter("sentDate", e.target.value, true)}
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs text-white focus:border-accent focus:outline-none"
+          />
+        )}
+      </div>
+
       <div className="flex flex-wrap gap-3">
         <input
           type="text"
@@ -349,6 +390,12 @@ export default function Users() {
                       Last Active
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
+                      QOTD Sent
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
+                      DYK Sent
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
                       Joined
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">
@@ -399,6 +446,8 @@ export default function Users() {
                       <td className="px-4 py-3 text-xs text-muted">
                         {formatDate(u.last_active_date)}
                       </td>
+                      <td className="px-4 py-3 text-xs text-muted">{formatDate(u.last_qotd_sent_at)}</td>
+                      <td className="px-4 py-3 text-xs text-muted">{formatDate(u.last_dyk_sent_at)}</td>
                       <td className="px-4 py-3 text-xs text-muted">{formatDate(u.joined_at)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
