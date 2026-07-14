@@ -673,7 +673,10 @@ export async function handleChallengeAnswer(ctx: any): Promise<void> {
   if (!(await redis.acquireActionLock(ctx.from.id, 'challenge:answer'))) return;
 
   const isCorrect = selected === question.correct_option;
-  await db.recordChallengeAnswer(room.id, ctx.from.id, isCorrect);
+  await Promise.all([
+    db.recordChallengeAnswer(room.id, ctx.from.id, isCorrect),
+    db.updateStreak(ctx.from.id),
+  ]);
 
   const nextIdx = session.currentQIdx + 1;
   const isLast = nextIdx >= room.num_questions;

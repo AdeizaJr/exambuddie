@@ -126,7 +126,7 @@ export async function handleSRAnswer(ctx: any, selected: string): Promise<void> 
 
   const isCorrect = selected === q.correct_option;
 
-  // Update SR interval and log attempt
+  // Update SR interval, log attempt, and count this toward today's streak
   await Promise.all([
     db.updateSRCard(user.id, q.id, isCorrect),
     db.logAttempt({
@@ -136,6 +136,7 @@ export async function handleSRAnswer(ctx: any, selected: string): Promise<void> 
       isCorrect,
       sessionId: session.sessionId,
     }),
+    db.updateStreak(ctx.from.id),
   ]);
 
   const newCorrect = session.correct + (isCorrect ? 1 : 0);
