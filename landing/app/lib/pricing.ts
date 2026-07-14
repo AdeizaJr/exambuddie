@@ -4,14 +4,12 @@ export interface PricingData {
   monthly_ngn: number;
   term_ngn: number;
   yearly_ngn: number;
-  free_daily_limit: number;
 }
 
 const DEFAULTS: PricingData = {
   monthly_ngn: 1500,
   term_ngn: 3500,
   yearly_ngn: 12000,
-  free_daily_limit: 5,
 };
 
 export async function getPricing(): Promise<PricingData> {

@@ -1273,28 +1273,6 @@ export default function createServer(bot: any) {
   // ── GET /api/admin/qotd ─────────────────────────────────────────────────────
   app.get('/api/admin/qotd', adminAuth, async (_req: Request, res: Response) => {
     const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0];
-    const examTypes = ['WAEC', 'JAMB', 'NECO'];
-    const result: Record<string, any> = {};
-    for (const et of examTypes) {
-      const { rows } = await db.query(
-        `SELECT k.value as question_id FROM
-           (SELECT current_setting('myapp.dummy', true)) dummy
-         LIMIT 0`
-      ).catch(() => ({ rows: [] }));
-      void rows;
-
-      const { rows: cached } = await db.query(
-        `SELECT 'cached' as source, q.id, q.exam_type, q.subject, q.year,
-                LEFT(q.question_text, 120) as question_preview, q.correct_option
-         FROM questions q
-         WHERE q.id = (
-           SELECT NULLIF(current_setting('app.qotd_${et}_${date}', true), '')::int
-         ) LIMIT 0`
-      ).catch(() => ({ rows: [] }));
-      void cached;
-
-      result[et] = null;
-    }
 
     const { rows: recentBroadcasts } = await db.query(
       `SELECT q.id, q.exam_type, q.subject, q.year,
@@ -1304,7 +1282,7 @@ export default function createServer(bot: any) {
        ORDER BY RANDOM() LIMIT 3`
     );
 
-    res.json({ date, qotd: result, sample: recentBroadcasts });
+    res.json({ date, sample: recentBroadcasts });
   });
 
   // ── GET /api/admin/analytics/ranks ─────────────────────────────────────────

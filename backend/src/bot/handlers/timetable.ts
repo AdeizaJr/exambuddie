@@ -57,13 +57,6 @@ export function nextOccurrence(iso: string): string {
   return new Date(thisYear) < now ? withYear(iso, now.getFullYear() + 1) : thisYear;
 }
 
-export function getExamDate(examType: string, subject: string): Date | null {
-  if (examType === 'JAMB') return new Date(nextOccurrence(JAMB_2026));
-  const map = examType === 'NECO' ? NECO_2026 : WAEC_2026;
-  const iso = map[subject];
-  return iso ? new Date(nextOccurrence(iso)) : null;
-}
-
 function todayIso(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;

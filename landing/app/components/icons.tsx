@@ -71,19 +71,3 @@ export function TrendDownIcon(props: IconProps) {
   );
 }
 
-export function CheckCircleIcon(props: IconProps) {
-  return (
-    <svg {...base} {...props}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="m8.5 12.5 2.5 2.5 5-5.5" />
-    </svg>
-  );
-}
-
-export function BoltIcon(props: IconProps) {
-  return (
-    <svg {...base} {...props}>
-      <path d="M13 3 5 13.5h5.5L11 21l8-10.5h-5.5L13 3Z" />
-    </svg>
-  );
-}
