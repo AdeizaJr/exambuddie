@@ -11,6 +11,8 @@ export interface User {
   daily_count: number;
   last_active_date: string | null;
   phone_number: string | null;
+  last_qotd_sent_at: string | null;
+  last_dyk_sent_at: string | null;
 }
 
 export interface Question {
