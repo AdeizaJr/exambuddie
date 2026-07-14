@@ -40,6 +40,7 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
     isCorrect,
     sessionId: `qotd_${date}`,
   }).catch((err) => console.error('[handleQOTDAnswer] logAttempt persist error:', err));
+  db.updateStreak(ctx.from.id).catch((err) => console.error('[handleQOTDAnswer] updateStreak error:', err));
 
   const resultLine = isCorrect
     ? '✅ <b>Correct!</b>'
