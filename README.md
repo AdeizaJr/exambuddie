@@ -1,6 +1,6 @@
 # 🎓 ExamBuddie — WAEC, JAMB & NECO Exam Prep on Telegram
 
-> Practice 50,000+ real past questions with instant explanations and progress tracking — right inside Telegram.
+> Practice 41,000+ real past questions with instant explanations and progress tracking — right inside Telegram.
 
 ---
 
@@ -142,7 +142,7 @@ If `API_URL` is unset, the pricing section and Terms page fall back to hardcoded
 | `/review` | Spaced repetition — review cards due today |
 | `/revision` | Practise only questions you previously got wrong |
 | `/bookmarks` | View and practise your saved questions |
-| `/formula` | Quick-access formula sheets (Physics, Chemistry, Maths, Further Maths, Biology, Economics, Government) |
+| `/formula` | Quick-access formula sheets (Physics, Chemistry, Maths, Further Maths, Biology, Economics, Government, English, Geography, Literature, Financial Accounting, Agricultural Science, Commerce, Computer Studies, CRK, IRK) |
 | `/timetable` | Exam timetable with countdown per subject (WAEC/NECO/JAMB) — each subject auto-rolls to next year once its sitting has passed |
 | `/challenge` | Create or join a multiplayer challenge room (create = premium) |
 | `/invite` | Referral link — invite 2 friends → 3 days Premium free |
@@ -211,26 +211,45 @@ All endpoints require a JWT Bearer token (obtained via `POST /api/admin/login`).
 | Endpoint | Description |
 |----------|-------------|
 | `POST /api/admin/login` | Authenticate, returns JWT |
+| `PUT /api/admin/password` | Change admin password |
 | `GET /api/admin/stats` | Users, premium count, attempts today, revenue |
 | `GET /api/admin/acquisition` | Signup breakdown by source |
 | `GET /api/admin/flags` | Open flagged explanations |
 | `GET /api/admin/flags/top-questions` | Most-flagged questions (top 20) |
 | `POST /api/admin/flags/:id/resolve` | Resolve a flag (optionally save edited explanation/text) |
+| `GET /api/admin/alerts` | Open (unresolved) system alerts |
+| `POST /api/admin/alerts/:id/resolve` | Resolve an alert |
 | `GET /api/admin/questions` | Paginated question list with search + filters |
 | `PUT /api/admin/questions/:id` | Edit question text, options, correct answer, explanation |
 | `PATCH /api/admin/questions/:id/active` | Toggle question active/inactive |
 | `POST /api/admin/questions/:id/generate-explanation` | AI-generate explanation via Claude API |
 | `DELETE /api/admin/questions/:id` | Delete a question |
+| `POST /api/admin/questions/:id/image` | Upload/replace a question's diagram image |
+| `DELETE /api/admin/questions/:id/image` | Remove a question's diagram image |
+| `POST /api/admin/questions/bulk-import` | Bulk-import questions from JSON (max 500 per request) |
 | `GET /api/admin/users` | Paginated user list with search |
 | `PUT /api/admin/users/:telegramId/plan` | Change user plan (free/premium) + expiry |
 | `DELETE /api/admin/users` | Delete users by ID list or search filter |
+| `GET /api/admin/users/:telegramId/activity` | Single user's attempt history, subject breakdown, weak topics |
+| `GET /api/admin/users/export` | CSV export of all users |
+| `GET /api/admin/subscriptions` | Subscription/payment history with recurring status |
+| `GET /api/admin/analytics` | 14-day dashboard: daily attempts, subjects, missing explanations, flags, weak topics, DAU |
 | `GET /api/admin/analytics/hard-questions` | Questions with ≥10 attempts and ≥70% wrong rate |
-| `POST /api/admin/broadcast` | Send message to all/waec/jamb/neco/premium/free users |
+| `GET /api/admin/analytics/pageviews` | Landing page pageview stats |
+| `GET /api/admin/analytics/growth` | Signup/growth trend over time |
+| `GET /api/admin/analytics/retention` | Cohort retention breakdown |
+| `GET /api/admin/analytics/funnel` | Onboarding → first answer → premium conversion funnel |
+| `GET /api/admin/analytics/ranks` | Per-user total-answered counts, used for rank distribution |
+| `GET /api/admin/leaderboard` | Current weekly leaderboard |
+| `GET /api/admin/leaderboard/weeks` | List of past leaderboard weeks (archive index) |
+| `GET /api/admin/leaderboard/snapshot` | Archived leaderboard for a given past week |
+| `GET /api/admin/qotd` | Preview candidate Question of the Day picks |
 | `POST /api/admin/dm` | Send direct message to a single user by telegram_id |
+| `POST /api/admin/broadcast` | Send message to all/waec/jamb/neco/premium/free users |
+| `GET /api/admin/broadcast/history` | Last 50 broadcasts sent (message, target, sent/failed/total) |
 | `GET /api/admin/pricing` | Current pricing + free daily limit |
 | `PUT /api/admin/pricing` | Update pricing — pushes changes to live Paystack plans immediately |
 | `GET /api/admin/pricing/history` | Audit log of pricing changes (who, when, old → new) |
-| `GET /api/admin/subscriptions` | Subscription/payment history with recurring status |
 
 ---
 
