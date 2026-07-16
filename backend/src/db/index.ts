@@ -711,6 +711,7 @@ export async function updateStreak(telegramId: number | string): Promise<{ strea
     today,
     telegramId,
   ]);
+  await clearCachedUser(telegramId).catch(() => {});
   return { streak: newStreak, isFirstToday: true };
 }
 
