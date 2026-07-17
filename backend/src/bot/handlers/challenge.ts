@@ -673,7 +673,7 @@ export async function handleChallengeAnswer(ctx: any): Promise<void> {
   if (!(await redis.acquireActionLock(ctx.from.id, 'challenge:answer'))) return;
 
   const isCorrect = selected === question.correct_option;
-  await Promise.all([
+  const [, streakResult] = await Promise.all([
     db.recordChallengeAnswer(room.id, ctx.from.id, isCorrect),
     db.updateStreak(ctx.from.id),
   ]);
@@ -687,6 +687,14 @@ export async function handleChallengeAnswer(ctx: any): Promise<void> {
     : { inline_keyboard: [[{ text: '➡️ Next Question', callback_data: 'challenge:next' }]] };
 
   await ctx.reply(fmt.correctAnswer(question, selected), { parse_mode: 'HTML', reply_markup: afterKb });
+
+  if (streakResult?.isFirstToday) {
+    const user = await db.getUser(ctx.from.id);
+    if (user) {
+      const weekActivity = await db.getWeeklyActivity(user.id);
+      await ctx.reply(fmt.formatStreakCard(streakResult.streak, weekActivity), { parse_mode: 'HTML' });
+    }
+  }
 }
 
 export async function handleChallengeNext(ctx: any): Promise<void> {
