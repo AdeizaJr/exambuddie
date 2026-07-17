@@ -1,7 +1,7 @@
 // src/bot/handlers/qotd.ts — Question of the Day answer handler
 import * as db from '../../db';
 import * as redis from '../../services/redis';
-import { correctAnswer } from '../formatter';
+import { correctAnswer, formatStreakCard } from '../formatter';
 
 // QOTD answer is handled outside a session — look up the question directly
 export async function handleQOTDAnswer(ctx: any, questionId: string, option: string): Promise<void> {
@@ -40,7 +40,10 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
     isCorrect,
     sessionId: `qotd_${date}`,
   }).catch((err) => console.error('[handleQOTDAnswer] logAttempt persist error:', err));
-  db.updateStreak(ctx.from.id).catch((err) => console.error('[handleQOTDAnswer] updateStreak error:', err));
+  const streakPromise = db.updateStreak(ctx.from.id).catch((err) => {
+    console.error('[handleQOTDAnswer] updateStreak error:', err);
+    return undefined;
+  });
 
   await ctx.reply(
     `📅 <b>Question of the Day: Result</b>\n\n${correctAnswer(q, option)}`,
@@ -54,4 +57,10 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
       },
     }
   );
+
+  const streakResult = await streakPromise;
+  if (streakResult?.isFirstToday) {
+    const weekActivity = await db.getWeeklyActivity(user.id);
+    await ctx.reply(formatStreakCard(streakResult.streak, weekActivity), { parse_mode: 'HTML' });
+  }
 }

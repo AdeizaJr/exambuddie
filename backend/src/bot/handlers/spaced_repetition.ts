@@ -127,7 +127,7 @@ export async function handleSRAnswer(ctx: any, selected: string): Promise<void> 
   const isCorrect = selected === q.correct_option;
 
   // Update SR interval, log attempt, and count this toward today's streak
-  await Promise.all([
+  const [, , streakResult] = await Promise.all([
     db.updateSRCard(user.id, q.id, isCorrect),
     db.logAttempt({
       userId: user.id,
@@ -154,6 +154,11 @@ export async function handleSRAnswer(ctx: any, selected: string): Promise<void> 
       ],
     },
   });
+
+  if (streakResult?.isFirstToday) {
+    const weekActivity = await db.getWeeklyActivity(user.id);
+    await ctx.reply(fmt.formatStreakCard(streakResult.streak, weekActivity), { parse_mode: 'HTML' });
+  }
 }
 
 export async function handleSRNext(ctx: any): Promise<void> {
