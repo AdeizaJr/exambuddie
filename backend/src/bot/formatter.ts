@@ -753,15 +753,26 @@ export const FLAG_REASONS: Record<string, string> = {
   other: '🤷 Other',
 };
 
-export function flagReasonKeyboard() {
+export function flagReasonKeyboard(questionId?: number) {
+  const suffix = questionId ? `:${questionId}` : '';
   return {
     inline_keyboard: [
       ...Object.entries(FLAG_REASONS).map(([code, label]) => [
-        { text: label, callback_data: `flag:reason:${code}` },
+        { text: label, callback_data: `flag:reason:${code}${suffix}` },
       ]),
       [{ text: '« Cancel', callback_data: 'flag:cancel' }],
     ],
   };
+}
+
+export function qotdResultKeyboard(questionId: number, hasUnderline: boolean) {
+  const rows: any[] = [
+    [{ text: '📚 Keep Practising', callback_data: 'practice:pick' }],
+    [{ text: '📋 Take a Quiz', callback_data: 'quiz:pick' }],
+  ];
+  if (hasUnderline) rows.push([{ text: '🔤 Wrong Underline?', callback_data: `flag:qotd_underline:${questionId}` }]);
+  rows.push([{ text: '🚩 Flag', callback_data: `flag:qotd:${questionId}` }]);
+  return { inline_keyboard: rows };
 }
 
 export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questionId?: number, hasExplanation = false) {

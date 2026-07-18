@@ -314,7 +314,9 @@ bot.on('callback_query', async (ctx: any) => {
 
   // Flag
   if (data === 'flag:question') return stats.handleFlagQuestion(ctx);
+  if (data.startsWith('flag:qotd:')) return stats.handleFlagQuestion(ctx, data.slice('flag:qotd:'.length));
   if (data === 'flag:underline') return stats.handleFlagUnderline(ctx);
+  if (data.startsWith('flag:qotd_underline:')) return stats.handleFlagUnderline(ctx, data.slice('flag:qotd_underline:'.length));
   if (data.startsWith('flag:reason:')) return stats.handleFlagReason(ctx, data.slice('flag:reason:'.length));
   if (data === 'flag:cancel') return stats.handleFlagCancel(ctx);
 
