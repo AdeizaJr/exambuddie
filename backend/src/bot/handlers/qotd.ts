@@ -1,7 +1,7 @@
 // src/bot/handlers/qotd.ts — Question of the Day answer handler
 import * as db from '../../db';
 import * as redis from '../../services/redis';
-import { correctAnswer, formatStreakCard } from '../formatter';
+import { correctAnswer, formatStreakCard, qotdResultKeyboard } from '../formatter';
 
 // QOTD answer is handled outside a session — look up the question directly
 export async function handleQOTDAnswer(ctx: any, questionId: string, option: string): Promise<void> {
@@ -49,12 +49,7 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
     `📅 <b>Question of the Day: Result</b>\n\n${correctAnswer(q, option)}`,
     {
       parse_mode: 'HTML',
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: '📚 Keep Practising', callback_data: 'practice:pick' }],
-          [{ text: '📋 Take a Quiz', callback_data: 'quiz:pick' }],
-        ],
-      },
+      reply_markup: qotdResultKeyboard(q.id, q.question_text.includes('*')),
     }
   );
 

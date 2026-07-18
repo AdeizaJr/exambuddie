@@ -197,10 +197,15 @@ export async function handleQuizHistory(ctx: any): Promise<void> {
   });
 }
 
-export async function handleFlagUnderline(ctx: any): Promise<void> {
-  const s = await redis.getSession(ctx.from.id);
-  const quizState = await redis.getQuizState(ctx.from.id);
-  const q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+export async function handleFlagUnderline(ctx: any, questionId?: string): Promise<void> {
+  let q;
+  if (questionId) {
+    q = await db.getQuestionById(parseInt(questionId, 10));
+  } else {
+    const s = await redis.getSession(ctx.from.id);
+    const quizState = await redis.getQuizState(ctx.from.id);
+    q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+  }
 
   if (!q || !q.question_text.includes('*')) {
     await ctx.answerCbQuery('Nothing to flag right now.', { show_alert: false });
@@ -220,11 +225,15 @@ export async function handleFlagUnderline(ctx: any): Promise<void> {
   await db.query(`UPDATE questions SET flag_count = flag_count + 1 WHERE id = $1`, [q.id]);
 }
 
-export async function handleFlagQuestion(ctx: any): Promise<void> {
-  const s = await redis.getSession(ctx.from.id);
-  const quizState = await redis.getQuizState(ctx.from.id);
-
-  const q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+export async function handleFlagQuestion(ctx: any, questionId?: string): Promise<void> {
+  let q;
+  if (questionId) {
+    q = await db.getQuestionById(parseInt(questionId, 10));
+  } else {
+    const s = await redis.getSession(ctx.from.id);
+    const quizState = await redis.getQuizState(ctx.from.id);
+    q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+  }
 
   if (!q) {
     await ctx.answerCbQuery('Nothing to flag right now.', { show_alert: false });
@@ -233,14 +242,23 @@ export async function handleFlagQuestion(ctx: any): Promise<void> {
 
   await ctx.answerCbQuery();
   await ctx.reply('🚩 What\'s wrong with this question?', {
-    reply_markup: fmt.flagReasonKeyboard(),
+    reply_markup: fmt.flagReasonKeyboard(questionId ? q.id : undefined),
   });
 }
 
-export async function handleFlagReason(ctx: any, reasonCode: string): Promise<void> {
-  const s = await redis.getSession(ctx.from.id);
-  const quizState = await redis.getQuizState(ctx.from.id);
-  const q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+export async function handleFlagReason(ctx: any, reasonPayload: string): Promise<void> {
+  const sepIdx = reasonPayload.indexOf(':');
+  const reasonCode = sepIdx === -1 ? reasonPayload : reasonPayload.slice(0, sepIdx);
+  const questionId = sepIdx === -1 ? undefined : reasonPayload.slice(sepIdx + 1);
+
+  let q;
+  if (questionId) {
+    q = await db.getQuestionById(parseInt(questionId, 10));
+  } else {
+    const s = await redis.getSession(ctx.from.id);
+    const quizState = await redis.getQuizState(ctx.from.id);
+    q = s?.currentQuestion ?? quizState?.questions[quizState.qIndex] ?? null;
+  }
 
   if (!q) {
     await ctx.answerCbQuery('Nothing to flag right now.', { show_alert: false });
