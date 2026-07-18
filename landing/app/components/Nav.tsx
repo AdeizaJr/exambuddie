@@ -37,6 +37,9 @@ export function Nav() {
         <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex dark:text-slate-300">
           <a href="/#features" className="transition-colors hover:text-slate-900 dark:hover:text-white">Features</a>
           <a href="/#subjects" className="transition-colors hover:text-slate-900 dark:hover:text-white">Subjects</a>
+          <a href="/waec" className="transition-colors hover:text-slate-900 dark:hover:text-white">WAEC</a>
+          <a href="/jamb" className="transition-colors hover:text-slate-900 dark:hover:text-white">JAMB</a>
+          <a href="/neco" className="transition-colors hover:text-slate-900 dark:hover:text-white">NECO</a>
           <a href="/#pricing" className="transition-colors hover:text-slate-900 dark:hover:text-white">Pricing</a>
           <a href="/#faq" className="transition-colors hover:text-slate-900 dark:hover:text-white">FAQ</a>
           <a href="/blog" className="transition-colors hover:text-slate-900 dark:hover:text-white">Blog</a>
@@ -75,6 +78,9 @@ export function Nav() {
           <div className="flex flex-col gap-4 text-sm font-medium text-slate-600 dark:text-slate-300">
             <a href="/#features" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Features</a>
             <a href="/#subjects" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Subjects</a>
+            <a href="/waec" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">WAEC</a>
+            <a href="/jamb" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">JAMB</a>
+            <a href="/neco" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">NECO</a>
             <a href="/#pricing" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Pricing</a>
             <a href="/#faq" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">FAQ</a>
             <a href="/blog" onClick={() => setMenuOpen(false)} className="hover:text-slate-900 dark:hover:text-white">Blog</a>
