@@ -11,18 +11,18 @@ const BOT_URL = "https://t.me/ExamBuddieBot";
 const BOT_URL_LANDING = "https://t.me/ExamBuddieBot?start=from_landing";
 
 const subjects = [
-  { icon: "📐", name: "Mathematics" },
-  { icon: "🔬", name: "Biology" },
-  { icon: "⚗️", name: "Chemistry" },
-  { icon: "⚡", name: "Physics" },
-  { icon: "📖", name: "English Language" },
-  { icon: "🌍", name: "Geography" },
-  { icon: "📜", name: "History" },
-  { icon: "💰", name: "Economics" },
-  { icon: "📊", name: "Accounts" },
-  { icon: "✝️", name: "CRK / IRK" },
-  { icon: "🌱", name: "Agric Science" },
-  { icon: "🏛️", name: "Government" },
+  { icon: "📐", name: "Mathematics", slug: "math" },
+  { icon: "🔬", name: "Biology", slug: "biology" },
+  { icon: "⚗️", name: "Chemistry", slug: "chemistry" },
+  { icon: "⚡", name: "Physics", slug: "physics" },
+  { icon: "📖", name: "English Language", slug: "english" },
+  { icon: "🌍", name: "Geography", slug: "geography" },
+  { icon: "📜", name: "History", slug: null },
+  { icon: "💰", name: "Economics", slug: "economics" },
+  { icon: "📊", name: "Accounts", slug: "accounts" },
+  { icon: "✝️", name: "CRK / IRK", slug: "crk" },
+  { icon: "🌱", name: "Agric Science", slug: "agric" },
+  { icon: "🏛️", name: "Government", slug: "government" },
 ];
 
 const secondaryFeatures = [
@@ -504,15 +504,20 @@ export default async function Home() {
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
-            {subjects.map(({ icon, name }) => (
-              <div
-                key={name}
-                className="flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center transition-colors hover:bg-blue-50 sm:p-4 border border-slate-100 dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-800"
-              >
-                <span className="text-2xl sm:text-3xl">{icon}</span>
-                <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
-              </div>
-            ))}
+            {subjects.map(({ icon, name, slug }) => {
+              const className = "flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center transition-colors hover:bg-blue-50 sm:p-4 border border-slate-100 dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-800";
+              const content = (
+                <>
+                  <span className="text-2xl sm:text-3xl">{icon}</span>
+                  <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
+                </>
+              );
+              return slug ? (
+                <a key={name} href={`/waec/${slug}`} className={className}>{content}</a>
+              ) : (
+                <div key={name} className={className}>{content}</div>
+              );
+            })}
           </div>
         </div>
       </section>
