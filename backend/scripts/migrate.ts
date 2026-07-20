@@ -540,6 +540,36 @@ WHERE id = 116125`,
   // ── QOTD / Did You Know send tracking (so recipients are actually queryable) ──
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_qotd_sent_at TIMESTAMPTZ DEFAULT NULL`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_dyk_sent_at TIMESTAMPTZ DEFAULT NULL`,
+
+  // ── Audit logs (admin actions) — append-only, enforced by trigger below, not
+  // just app-level convention. Even a compromised admin's own DB credentials
+  // can't UPDATE/DELETE a row here, only INSERT new ones. ──────────────────
+  `CREATE TABLE IF NOT EXISTS audit_logs (
+    id SERIAL PRIMARY KEY,
+    admin_username VARCHAR(100) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    target_type VARCHAR(50),
+    target_id VARCHAR(100),
+    details JSONB,
+    ip_address VARCHAR(64),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at DESC)`,
+  `CREATE INDEX IF NOT EXISTS idx_audit_logs_admin ON audit_logs(admin_username)`,
+  `CREATE OR REPLACE FUNCTION audit_logs_immutable() RETURNS TRIGGER AS $$
+   BEGIN
+     RAISE EXCEPTION 'audit_logs is append-only — % not permitted', TG_OP;
+   END;
+   $$ LANGUAGE plpgsql`,
+  `DROP TRIGGER IF EXISTS trg_audit_logs_immutable ON audit_logs`,
+  `CREATE TRIGGER trg_audit_logs_immutable
+   BEFORE UPDATE OR DELETE ON audit_logs
+   FOR EACH ROW EXECUTE FUNCTION audit_logs_immutable()`,
+  // TRUNCATE bypasses row-level triggers entirely — needs its own statement-level guard.
+  `DROP TRIGGER IF EXISTS trg_audit_logs_no_truncate ON audit_logs`,
+  `CREATE TRIGGER trg_audit_logs_no_truncate
+   BEFORE TRUNCATE ON audit_logs
+   FOR EACH STATEMENT EXECUTE FUNCTION audit_logs_immutable()`,
 ];
 
 async function migrate(): Promise<void> {

@@ -61,6 +61,17 @@ export interface SystemAlert {
   created_at: string;
 }
 
+export interface AuditLogEntry {
+  id: number;
+  admin_username: string;
+  action: string;
+  target_type: string | null;
+  target_id: string | null;
+  details: Record<string, unknown> | null;
+  ip_address: string | null;
+  created_at: string;
+}
+
 export interface Subscription {
   id: number;
   plan: string;
