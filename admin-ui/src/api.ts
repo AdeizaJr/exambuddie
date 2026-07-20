@@ -16,6 +16,7 @@ import type {
   PricingSettings,
   PricingHistoryEntry,
   PageViewAnalytics,
+  AuditLogEntry,
 } from "./types";
 
 const BASE = (import.meta.env.VITE_API_URL ?? "") + "/api/admin";
@@ -346,4 +347,8 @@ export async function updatePricing(
 
 export async function getPricingHistory(): Promise<PricingHistoryEntry[]> {
   return req<PricingHistoryEntry[]>("GET", "/pricing/history");
+}
+
+export async function getAuditLogs(limit = 100, offset = 0): Promise<AuditLogEntry[]> {
+  return req<AuditLogEntry[]>("GET", "/audit-logs", undefined, { limit, offset });
 }

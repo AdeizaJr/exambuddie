@@ -11,7 +11,11 @@ import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
 import { getPricing, updatePricing, getPricingHistory, PricingSettings } from '../services/pricing';
 
-const diagramsDir = path.join(__dirname, '../../../public/diagrams');
+// process.cwd() is always backend/ (npm always cwd's into the package.json directory),
+// unlike __dirname-relative math which differs between ts-node (src/api) and the
+// compiled build (dist/src/api) — using __dirname here previously meant this only
+// resolved correctly under one of the two run modes at a time.
+const diagramsDir = path.join(process.cwd(), 'public/diagrams');
 if (!fs.existsSync(diagramsDir)) fs.mkdirSync(diagramsDir, { recursive: true });
 
 // Rejects a non-numeric :id before multer ever touches the filesystem. Without this,
@@ -82,7 +86,7 @@ export default function createServer(bot: any) {
   app.use('/api/miniapp', miniappRouter);
 
   // Serve question diagrams
-  app.use('/images', express.static(path.join(__dirname, '../../../public')));
+  app.use('/images', express.static(path.join(process.cwd(), 'public')));
 
   // Serve miniapp static files (built to backend/dist/miniapp/)
   const miniappDir = path.join(__dirname, '../../miniapp');
@@ -287,15 +291,18 @@ export default function createServer(bot: any) {
       [username]
     );
     if (rows.length === 0) {
+      await db.logAudit(username, 'admin.login_failed', { ip: req.ip }).catch(() => {});
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     const admin = rows[0];
     const valid = await comparePassword(password, admin.password_hash);
     if (!valid) {
+      await db.logAudit(username, 'admin.login_failed', { ip: req.ip }).catch(() => {});
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    await db.logAudit(admin.username, 'admin.login', { ip: req.ip }).catch(() => {});
     const token = signToken({ id: admin.id, username: admin.username });
     res.json({ token, expiresIn: process.env.JWT_EXPIRES_IN || '8h' });
   });
@@ -337,6 +344,7 @@ export default function createServer(bot: any) {
     const newHash = await hashPassword(newPassword);
     await db.query('UPDATE admin_users SET password_hash = $1 WHERE id = $2', [newHash, adminId]);
 
+    await db.logAudit((req as any).admin.username, 'admin.password_change', { ip: req.ip }).catch(() => {});
     res.json({ ok: true });
   });
 
@@ -368,6 +376,7 @@ export default function createServer(bot: any) {
 
     const adminUsername = (req as any).admin.username;
     const updated = await updatePricing(changes, adminUsername);
+    await db.logAudit(adminUsername, 'pricing.update', { details: changes, ip: req.ip }).catch(() => {});
 
     // Push price changes onto the live Paystack plans — applies to existing
     // recurring subscribers on their next billing cycle, not just new ones.
@@ -488,6 +497,14 @@ export default function createServer(bot: any) {
     res.json({ ok: true });
   });
 
+  // ── GET /api/admin/audit-logs ────────────────────────────────────────────────
+  app.get('/api/admin/audit-logs', adminAuth, async (req: Request, res: Response) => {
+    const limit = Math.min(200, Math.max(1, parseInt(req.query.limit as string) || 100));
+    const offset = Math.max(0, parseInt(req.query.offset as string) || 0);
+    const rows = await db.getAuditLogs(limit, offset);
+    res.json(rows);
+  });
+
   // ── GET /api/admin/questions ────────────────────────────────────────────────
   app.get('/api/admin/questions', adminAuth, async (req: Request, res: Response) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
@@ -598,6 +615,7 @@ export default function createServer(bot: any) {
       ]
     );
     if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
+    await db.logAudit((req as any).admin.username, 'question.edit', { targetType: 'question', targetId: String(req.params.id), ip: req.ip }).catch(() => {});
     res.json(rows[0]);
   });
 
@@ -611,6 +629,7 @@ export default function createServer(bot: any) {
         [is_active, req.params.id]
       );
       if (!rows.length) return res.status(404).json({ error: 'Question not found' });
+      await db.logAudit((req as any).admin.username, 'question.active_toggle', { targetType: 'question', targetId: String(req.params.id), details: { is_active }, ip: req.ip }).catch(() => {});
       res.json(rows[0]);
     } catch (err: any) {
       console.error('[toggle-active]', err);
@@ -663,6 +682,7 @@ export default function createServer(bot: any) {
       req.params.id,
     ]);
     if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
+    await db.logAudit((req as any).admin.username, 'question.delete', { targetType: 'question', targetId: rows[0].id, ip: req.ip }).catch(() => {});
     res.json({ ok: true, deleted: rows[0].id });
   });
 
@@ -676,6 +696,7 @@ export default function createServer(bot: any) {
       [imageUrl, req.params.id]
     );
     if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
+    await db.logAudit((req as any).admin.username, 'question.image_upload', { targetType: 'question', targetId: String(req.params.id), ip: req.ip }).catch(() => {});
     res.json(rows[0]);
   });
 
@@ -685,10 +706,11 @@ export default function createServer(bot: any) {
     if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
     const existing = rows[0].image_url as string | null;
     if (existing) {
-      const filePath = path.join(__dirname, '../../../public', existing.replace('/images/', ''));
+      const filePath = path.join(process.cwd(), 'public', existing.replace('/images/', ''));
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
     await db.query(`UPDATE questions SET image_url = NULL WHERE id = $1`, [req.params.id]);
+    await db.logAudit((req as any).admin.username, 'question.image_delete', { targetType: 'question', targetId: String(req.params.id), ip: req.ip }).catch(() => {});
     res.json({ ok: true });
   });
 
@@ -785,6 +807,7 @@ export default function createServer(bot: any) {
       const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
       const { rows: targets } = await db.query(`SELECT telegram_id FROM users ${where}`, params);
       await Promise.all(targets.map((r: any) => db.deleteUser(r.telegram_id)));
+      await db.logAudit((req as any).admin.username, 'user.delete', { details: { count: targets.length, all: true, search: search ?? null }, ip: req.ip }).catch(() => {});
       return res.json({ ok: true, deleted: targets.length });
     }
 
@@ -792,6 +815,7 @@ export default function createServer(bot: any) {
       return res.status(400).json({ error: 'ids must be a non-empty array' });
     }
     await Promise.all(ids.map((id: any) => db.deleteUser(id)));
+    await db.logAudit((req as any).admin.username, 'user.delete', { details: { count: ids.length, ids }, ip: req.ip }).catch(() => {});
     res.json({ ok: true, deleted: ids.length });
   });
 
@@ -816,6 +840,7 @@ export default function createServer(bot: any) {
       [plan, expiresAt, req.params.telegramId]
     );
     if (rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    await db.logAudit((req as any).admin.username, 'user.plan_change', { targetType: 'user', targetId: String(req.params.telegramId), details: { plan, months }, ip: req.ip }).catch(() => {});
     res.json(rows[0]);
   });
 
@@ -1084,6 +1109,7 @@ export default function createServer(bot: any) {
       `INSERT INTO broadcast_log (message, target, sent, failed, total) VALUES ($1, $2, $3, $4, $5)`,
       [message, target, sent, failed, total]
     );
+    await db.logAudit((req as any).admin.username, 'broadcast.send', { details: { target, sent, failed, total }, ip: req.ip }).catch(() => {});
 
     res.json({ sent, failed, total });
   });
@@ -1267,6 +1293,7 @@ export default function createServer(bot: any) {
       }
     }
 
+    await db.logAudit((req as any).admin.username, 'question.bulk_import', { details: { inserted, skipped }, ip: req.ip }).catch(() => {});
     res.json({ inserted, skipped, errors: errors.slice(0, 20) });
   });
 

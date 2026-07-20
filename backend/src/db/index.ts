@@ -1609,6 +1609,36 @@ export async function resolveAlert(id: number): Promise<void> {
   await pool.query(`UPDATE system_alerts SET resolved = true WHERE id = $1`, [id]);
 }
 
+// ── Audit logs (admin actions) — table is append-only, see migrate.ts trigger ──
+
+export async function logAudit(
+  adminUsername: string,
+  action: string,
+  opts: { targetType?: string; targetId?: string | number; details?: object; ip?: string } = {}
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO audit_logs (admin_username, action, target_type, target_id, details, ip_address)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [
+      adminUsername,
+      action,
+      opts.targetType ?? null,
+      opts.targetId != null ? String(opts.targetId) : null,
+      opts.details ? JSON.stringify(opts.details) : null,
+      opts.ip ?? null,
+    ]
+  );
+}
+
+export async function getAuditLogs(limit = 100, offset = 0): Promise<any[]> {
+  const { rows } = await pool.query(
+    `SELECT id, admin_username, action, target_type, target_id, details, ip_address, created_at
+     FROM audit_logs ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+    [limit, offset]
+  );
+  return rows;
+}
+
 // ── Landing-page analytics (in-house — no third-party pixel/SDK) ────────────
 
 export interface PageViewInput {
