@@ -11,7 +11,7 @@ import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
 import { getPricing, updatePricing, getPricingHistory, PricingSettings } from '../services/pricing';
 
-const diagramsDir = path.join(__dirname, '../../public/diagrams');
+const diagramsDir = path.join(__dirname, '../../../public/diagrams');
 if (!fs.existsSync(diagramsDir)) fs.mkdirSync(diagramsDir, { recursive: true });
 
 // Rejects a non-numeric :id before multer ever touches the filesystem. Without this,
@@ -82,7 +82,7 @@ export default function createServer(bot: any) {
   app.use('/api/miniapp', miniappRouter);
 
   // Serve question diagrams
-  app.use('/images', express.static(path.join(__dirname, '../../public')));
+  app.use('/images', express.static(path.join(__dirname, '../../../public')));
 
   // Serve miniapp static files (built to backend/dist/miniapp/)
   const miniappDir = path.join(__dirname, '../../miniapp');
@@ -685,7 +685,7 @@ export default function createServer(bot: any) {
     if (rows.length === 0) return res.status(404).json({ error: 'Question not found' });
     const existing = rows[0].image_url as string | null;
     if (existing) {
-      const filePath = path.join(__dirname, '../../public', existing.replace('/images/', ''));
+      const filePath = path.join(__dirname, '../../../public', existing.replace('/images/', ''));
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
     await db.query(`UPDATE questions SET image_url = NULL WHERE id = $1`, [req.params.id]);
