@@ -96,19 +96,33 @@ async function fetchJson(url: string): Promise<any | null> {
   return null;
 }
 
+// A bare filename (not a full URL) in the `image` field can live under any of several
+// storage subpaths depending on how/when it was originally uploaded to myschool.ng — verified
+// two different conventions directly (flat storage/classroom/ for older bulk-imported images,
+// storage/classroom/editor_images/ for newer editor-uploaded ones). Bare /storage/{file} alone
+// 404s (myschool.ng's own 404 page returns HTTP 200, so this can't be told apart by status code
+// alone — must check the actual bytes). Try each candidate and use whichever verifies as a real
+// image, rather than guessing one and getting it wrong silently.
+const STORAGE_SUBPATH_CANDIDATES = ['storage/classroom', 'storage/classroom/editor_images', 'storage'];
+
 // Pull the diagram URL out of an API response: prefer the dedicated `image` field, fall back
 // to the first <img src="..."> found inline in the question's HTML body. Only ever returns a
 // real http(s) URL — a data: URI can't be naively concatenated onto a domain (that produces
 // garbage, and Telegraf's replyWithPhoto needs a URL/Buffer/file, not a bare data: string) — a
 // question with only an inline base64 image is left unresolved rather than mis-handled.
-function extractImageUrl(payload: any): string | null {
+async function extractImageUrl(payload: any): Promise<string | null> {
   const q = payload?.data?.question;
   if (!q) return null;
 
   if (typeof q.image === 'string' && q.image.trim()) {
     const img = q.image.trim();
     if (img.startsWith('data:')) return null;
-    return img.startsWith('http') ? img : `https://myschool.ng/storage/${img}`;
+    if (img.startsWith('http')) return img;
+    for (const subpath of STORAGE_SUBPATH_CANDIDATES) {
+      const candidate = `https://myschool.ng/${subpath}/${img}`;
+      if (await verifyIsImage(candidate)) return candidate;
+    }
+    return null;
   }
 
   const html = typeof q.question === 'string' ? q.question : '';
@@ -190,7 +204,7 @@ async function run(): Promise<void> {
       const url = `${API_BASE}/${slug}/${msId}`;
 
       const payload = await fetchJson(url);
-      const imageUrl = extractImageUrl(payload);
+      const imageUrl = await extractImageUrl(payload);
 
       if (imageUrl && !isKnownDeadHost(imageUrl) && (await verifyIsImage(imageUrl))) {
         await pool.query(
