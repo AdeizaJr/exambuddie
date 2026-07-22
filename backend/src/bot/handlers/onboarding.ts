@@ -94,6 +94,35 @@ export async function handleExamType(ctx: any): Promise<void> {
   const examType = ctx.callbackQuery.data.split(':')[2];
   await ctx.answerCbQuery();
 
+  // Settings → "Change Exam Type" reuses this same callback data, but an existing user
+  // switching boards shouldn't lose their subjects or target year the way a brand-new
+  // user's first-time picks get built up — carry over whatever of their current subjects
+  // still has content for the new board instead of resetting to just English, and leave
+  // target_year alone entirely (this session never went through the year-selection step,
+  // so saving session.targetYear here would silently null it out).
+  const session = await redis.getSession(ctx.from.id);
+  if (session?.step === 'change_exam') {
+    const user = await db.getUser(ctx.from.id);
+    if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
+    const allowedSubjects = await db.getSubjectsWithQuestions(examType);
+    const carriedOver = (user.subjects || []).filter((s) => allowedSubjects.includes(s));
+    const subjects = carriedOver.includes('english') ? carriedOver : ['english', ...carriedOver];
+    const dropped = (user.subjects || []).filter((s) => s !== 'english' && !allowedSubjects.includes(s));
+
+    await db.updateUser(ctx.from.id, { exam_type: examType as any, subjects });
+    await redis.clearSession(ctx.from.id);
+
+    const droppedLine = dropped.length
+      ? `\n\n⚠️ These subjects aren't offered for ${examType}, so they were removed: ${dropped.map((s) => fmt.SUBJECT_MAP[s] || s).join(', ')}`
+      : '';
+    await ctx.editMessageText(
+      `✅ <b>Switched to ${examType}.</b>\n\nYour subjects carried over where possible.${droppedLine}\n\nUse Settings → Edit Subjects to fine-tune your list.`,
+      { parse_mode: 'HTML' }
+    );
+    return;
+  }
+
   // English is always compulsory — pre-select it
   const allowedSubjects = await db.getSubjectsWithQuestions(examType);
   await redis.updateSession(ctx.from.id, {
