@@ -90,15 +90,19 @@ export async function updateUser(
   return user;
 }
 
-export async function grantTrial(telegramId: number | string): Promise<void> {
-  await pool.query(
+export async function grantTrial(telegramId: number | string): Promise<User | null> {
+  const { rows } = await pool.query<User>(
     `UPDATE users SET
        plan = 'premium',
        plan_expires_at = NOW() + INTERVAL '14 days',
        trial_used = TRUE
-     WHERE telegram_id = $1 AND trial_used = FALSE`,
+     WHERE telegram_id = $1 AND trial_used = FALSE
+     RETURNING *`,
     [telegramId]
   );
+  const user = rows[0];
+  if (user) setCachedUser(telegramId, user).catch(() => {});
+  return user || null;
 }
 
 function isAllExams(examType: string): boolean {
@@ -933,11 +937,23 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
-  // Anonymise payment records instead of deleting — 7-year retention required by FIRS
+  // Anonymise payment records instead of deleting — 7-year retention required by FIRS.
+  // The plain `tx_ref` column this originally targeted no longer exists — it split into
+  // flutterwave_tx_ref/paystack_tx_ref when Paystack was added, and a row only ever has
+  // one of the two set, so this broke every single user deletion, not just referral cases.
   await pool.query(
-    `UPDATE subscriptions SET user_id = NULL, tx_ref = CONCAT('deleted_', tx_ref) WHERE user_id = $1`,
+    `UPDATE subscriptions SET
+       user_id = NULL,
+       flutterwave_tx_ref = CASE WHEN flutterwave_tx_ref IS NOT NULL THEN CONCAT('deleted_', flutterwave_tx_ref) END,
+       paystack_tx_ref = CASE WHEN paystack_tx_ref IS NOT NULL THEN CONCAT('deleted_', paystack_tx_ref) END
+     WHERE user_id = $1`,
     [userId]
   );
+  // referred_by is a self-referencing FK with no ON DELETE clause — deleting anyone who's
+  // successfully referred another user throws "violates foreign key constraint
+  // users_referred_by_fkey" otherwise. The referred users themselves are real accounts and
+  // shouldn't be touched, just detach them from a referrer that's about to stop existing.
+  await pool.query('UPDATE users SET referred_by = NULL WHERE referred_by = $1', [userId]);
   // bookmarks and sr_cards cascade from users ON DELETE CASCADE
   await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 }
