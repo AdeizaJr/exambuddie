@@ -134,7 +134,7 @@ export async function handleExamType(ctx: any): Promise<void> {
 
   await ctx.editMessageText(fmt.askSubjects(examType), {
     parse_mode: 'HTML',
-    reply_markup: fmt.subjectKeyboard(['english'], allowedSubjects),
+    reply_markup: fmt.subjectKeyboard(['english'], allowedSubjects, true),
   });
 }
 
@@ -154,12 +154,22 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
   // Always keep English in the list
   if (!selected.includes('english')) selected = ['english', ...selected];
 
+  // Premium subscribers get unlimited subjects — this is a paid benefit, not just a higher
+  // number, so the cap has to be skipped entirely for them, not just raised. Also unlimited
+  // during fresh onboarding (session.step === 'subjects'): the 14-day Premium trial is
+  // granted right after this step completes (handleSubjectsDone), so a brand-new user is
+  // still on the free plan *during* this exact pick — capping them here would be enforcing
+  // a free-plan limit on someone who's seconds away from Premium.
+  const isFreshOnboarding = session.step === 'subjects';
+  const user = isFreshOnboarding ? null : await db.getUser(ctx.from.id);
+  const unlimited = isFreshOnboarding || user?.plan === 'premium';
+
   if (selected.includes(subject)) {
     selected = selected.filter((s: string) => s !== subject);
   } else {
-    if (selected.length >= fmt.MAX_SUBJECTS) {
+    if (!unlimited && selected.length >= fmt.MAX_SUBJECTS) {
       await ctx.answerCbQuery(
-        `Maximum ${fmt.MAX_SUBJECTS} subjects (English + ${fmt.MAX_SUBJECTS - 1} others)`,
+        `Maximum ${fmt.MAX_SUBJECTS} subjects (English + ${fmt.MAX_SUBJECTS - 1} others) — go Premium for unlimited subjects!`,
         { show_alert: true }
       );
       return;
@@ -169,7 +179,7 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
 
   await ctx.answerCbQuery();
   await redis.updateSession(ctx.from.id, { selectedSubjects: selected });
-  await ctx.editMessageReplyMarkup(fmt.subjectKeyboard(selected, session.allowedSubjects));
+  await ctx.editMessageReplyMarkup(fmt.subjectKeyboard(selected, session.allowedSubjects, unlimited));
 }
 
 // Step 3 — Subjects done → save everything, show main menu
@@ -203,9 +213,12 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
 
   // Grant 14-day Premium trial to new users completing onboarding for the first time
   if (session.step === 'subjects' && !user.trial_used && user.plan === 'free') {
-    await db.grantTrial(ctx.from.id);
+    const trialUser = await db.grantTrial(ctx.from.id);
+    const expiryLine = trialUser?.plan_expires_at
+      ? `\n📅 Expires: <b>${new Date(trialUser.plan_expires_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</b>\n`
+      : '';
     await ctx.reply(
-      `🎁 <b>Welcome Gift!</b>\n\nWe're giving you <b>14 days of Premium free</b> to get started!\n\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nEnjoy — and subscribe when it expires to keep going! /subscribe`,
+      `🎁 <b>Welcome Gift!</b>\n\nWe're giving you <b>14 days of Premium free</b> to get started!\n${expiryLine}\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nEnjoy — and subscribe when it expires to keep going! /subscribe`,
       { parse_mode: 'HTML' }
     );
   }
@@ -337,9 +350,13 @@ export async function handleSettingsSubjects(ctx: any): Promise<void> {
     selectedSubjects: current,
     allowedSubjects,
   });
+  const unlimited = user.plan === 'premium';
+  const limitLine = unlimited
+    ? 'English is compulsory. As a Premium subscriber, you can select unlimited subjects.'
+    : `English is compulsory. You can select up to ${fmt.MAX_SUBJECTS} subjects total.`;
   await ctx.editMessageText(
-    `📚 <b>Edit Subjects</b>\n\nEnglish is compulsory. You can select up to ${fmt.MAX_SUBJECTS} subjects total.`,
-    { parse_mode: 'HTML', reply_markup: fmt.subjectKeyboard(current, allowedSubjects) }
+    `📚 <b>Edit Subjects</b>\n\n${limitLine}`,
+    { parse_mode: 'HTML', reply_markup: fmt.subjectKeyboard(current, allowedSubjects, unlimited) }
   );
 }
 

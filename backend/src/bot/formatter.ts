@@ -1146,7 +1146,7 @@ export const MAX_SUBJECTS = 5;    // including English
 export const SUBJECT_Q_LIMIT = 5; // questions per subject per 6-hour window
 export const SUBJECT_WINDOW_HRS = 6;
 
-export function subjectKeyboard(selectedSubjects: string[] = [], allowedSubjects?: string[]) {
+export function subjectKeyboard(selectedSubjects: string[] = [], allowedSubjects?: string[], unlimited = false) {
   const subjects = Object.entries(SUBJECT_MAP)
     .filter(([code]) => !allowedSubjects || allowedSubjects.includes(code))
     .map(([code, name]) => ({ code, label: `${SUBJECT_EMOJI[code] || '📖'} ${name}`, name }))
@@ -1173,8 +1173,11 @@ export function subjectKeyboard(selectedSubjects: string[] = [], allowedSubjects
     rows.push(buttons.slice(i, i + 2));
   }
   // Show done button as soon as english is selected (always)
+  const doneLabel = unlimited
+    ? `✅ Done (${selectedSubjects.length} selected)`
+    : `✅ Done (${selectedSubjects.length} selected, ${MAX_SUBJECTS - selectedSubjects.length} slots left)`;
   rows.push([{
-    text: `✅ Done (${selectedSubjects.length} selected, ${MAX_SUBJECTS - selectedSubjects.length} slots left)`,
+    text: doneLabel,
     callback_data: 'onboard:subjects:done',
   }]);
   return { inline_keyboard: rows };

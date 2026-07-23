@@ -410,9 +410,8 @@ export async function handleAnswer(ctx: any): Promise<void> {
 
   // Kick off all writes + slow reads in parallel — don't block the reply
   const streakPromise = db.updateStreak(ctx.from.id);
-  const totalAttemptsPromise = db.getTotalAttempts(user.id);
 
-  Promise.all([
+  const writesPromise = Promise.all([
     db.logAttempt({
       userId: user.id,
       questionId: q.id,
@@ -433,6 +432,12 @@ export async function handleAnswer(ctx: any): Promise<void> {
       awaitingNext: true,
     }),
   ]).catch((err) => console.error('[handleAnswer] persist error:', err));
+
+  // Chained onto writesPromise, not fired independently — this was racing logAttempt's own
+  // INSERT instead of running after it, so the count it read excluded the answer that was
+  // just submitted. Milestone badges (e.g. "First Step" for the first question) fired one
+  // question late as a result: the count on question N only reflected questions 1..N-1.
+  const totalAttemptsPromise = writesPromise.then(() => db.getTotalAttempts(user.id));
 
   // Referral reward — already fire-and-forget
   db.checkAndGrantReferralReward(user.id).then(({ granted, referrer }) => {
