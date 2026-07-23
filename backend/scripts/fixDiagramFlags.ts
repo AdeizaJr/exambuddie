@@ -103,27 +103,40 @@ async function fetchJson(url: string): Promise<any | null> {
 // 404s (myschool.ng's own 404 page returns HTTP 200, so this can't be told apart by status code
 // alone — must check the actual bytes). Try each candidate and use whichever verifies as a real
 // image, rather than guessing one and getting it wrong silently.
-const STORAGE_SUBPATH_CANDIDATES = ['storage/classroom', 'storage/classroom/editor_images', 'storage'];
+const STORAGE_SUBPATH_CANDIDATES = ['storage/classroom', 'storage/classroom/editor_images', 'storage/classroom_answers', 'storage'];
 
-// Pull the diagram URL out of an API response: prefer the dedicated `image` field, fall back
-// to the first <img src="..."> found inline in the question's HTML body. Only ever returns a
-// real http(s) URL — a data: URI can't be naively concatenated onto a domain (that produces
-// garbage, and Telegraf's replyWithPhoto needs a URL/Buffer/file, not a bare data: string) — a
-// question with only an inline base64 image is left unresolved rather than mis-handled.
+// Pull the diagram URL out of an API response. Checked in order:
+//   1. `image` — dedicated image field, when present
+//   2. `answer_image` — despite the name, this is NOT answer-revealing: verified against several
+//      questions where the `explanation` text says "from the diagram above", confirming this
+//      field holds the diagram meant to accompany the question stem itself. myschool.ng just
+//      names the field oddly (likely a historical quirk on their end).
+//   3. the first <img src="..."> found inline in the question's HTML body.
+// Only ever returns a real http(s) URL — a data: URI can't be naively concatenated onto a
+// domain (that produces garbage, and Telegraf's replyWithPhoto needs a URL/Buffer/file, not a
+// bare data: string) — a question with only an inline base64 image is left unresolved rather
+// than mis-handled.
+async function resolveFilenameField(value: unknown): Promise<string | null> {
+  if (typeof value !== 'string' || !value.trim()) return null;
+  const img = value.trim();
+  if (img.startsWith('data:')) return null;
+  if (img.startsWith('http')) return img;
+  for (const subpath of STORAGE_SUBPATH_CANDIDATES) {
+    const candidate = `https://myschool.ng/${subpath}/${img}`;
+    if (await verifyIsImage(candidate)) return candidate;
+  }
+  return null;
+}
+
 async function extractImageUrl(payload: any): Promise<string | null> {
   const q = payload?.data?.question;
   if (!q) return null;
 
-  if (typeof q.image === 'string' && q.image.trim()) {
-    const img = q.image.trim();
-    if (img.startsWith('data:')) return null;
-    if (img.startsWith('http')) return img;
-    for (const subpath of STORAGE_SUBPATH_CANDIDATES) {
-      const candidate = `https://myschool.ng/${subpath}/${img}`;
-      if (await verifyIsImage(candidate)) return candidate;
-    }
-    return null;
-  }
+  const fromImage = await resolveFilenameField(q.image);
+  if (fromImage) return fromImage;
+
+  const fromAnswerImage = await resolveFilenameField(q.answer_image);
+  if (fromAnswerImage) return fromAnswerImage;
 
   const html = typeof q.question === 'string' ? q.question : '';
   const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
