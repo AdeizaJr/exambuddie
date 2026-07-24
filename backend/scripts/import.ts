@@ -12,6 +12,29 @@ import * as path from 'path';
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const DATA_DIR = path.join(__dirname, '../data');
 
+// Loose heuristic: does this question look like it references a visual (diagram/figure/chart/
+// table) it can't be answered without? Applied ONCE, at insert time, to brand-new rows only —
+// this used to live in migrate.ts as a table-wide UPDATE that reran on every deploy, which kept
+// re-flipping has_diagram back to TRUE on questions an admin (or fixDiagramFlags.ts) had already
+// corrected to FALSE. Moving it here means it only ever runs once per question, at the moment it
+// first enters the DB, and never touches existing rows again.
+const DIAGRAM_HINT_RE = new RegExp([
+  'diagram', 'figure above', 'figure below', 'shown below', 'shown above', 'above shows',
+  'chart above', 'chart below', 'illustration above', 'illustration below', 'the diagram',
+  'use the.*above', 'table above', 'table below', 'use the table', 'shown in the table',
+  'the figure', 'venn diagram', 'circuit above', 'circuit below',
+  'bar chart', 'pie chart', 'histogram', 'the graph', 'from the graph', 'graph shows',
+  'graph above', 'graph below', 'frequency polygon', 'ogive', 'cumulative frequency.*curve',
+].join('|'), 'i');
+const DIAGRAM_HINT_RE_EXTRA = /Fig\.\s*[0-9]|Figure\s+[0-9]|Table\s+[0-9]|\b(part|path|curve)\s+labeled\s+[ivx0-9]/i;
+const EXPLANATION_HINT_RE = /chart provided|diagram provided|graph provided|from the chart|from the diagram|from the graph|from the figure|shown in the chart|shown in the diagram|shown in the figure|pie chart|bar chart/i;
+
+function looksLikeItNeedsDiagram(questionText: string, explanation: string | null): boolean {
+  return DIAGRAM_HINT_RE.test(questionText)
+    || DIAGRAM_HINT_RE_EXTRA.test(questionText)
+    || (explanation !== null && EXPLANATION_HINT_RE.test(explanation));
+}
+
 // Maps myschool.ng subject slug → DB subject code
 const SUBJECT_SLUG_TO_CODE: Record<string, string> = {
   'mathematics':                          'math',
@@ -114,19 +137,20 @@ async function importFile(client: any, filePath: string): Promise<{ inserted: nu
     const explanation = raw && raw !== 'Explanation' && raw.length > 10 ? raw : null;
 
     const imageUrl = q.imageUrl || null;
+    const hasDiagram = looksLikeItNeedsDiagram(q.questionText, explanation);
 
     try {
       const result = await client.query(
         `INSERT INTO questions
            (exam_type, subject, year, question_text,
             option_a, option_b, option_c, option_d, option_e,
-            correct_option, explanation, source_id, image_url)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+            correct_option, explanation, source_id, image_url, has_diagram)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
          ON CONFLICT (source_id) DO UPDATE SET image_url = EXCLUDED.image_url
          WHERE questions.image_url IS NULL`,
         [examType, subjectCode, q.year, q.questionText,
          optA, optB, optC, optD, optE,
-         q.correctAnswer, explanation, sourceId, imageUrl]
+         q.correctAnswer, explanation, sourceId, imageUrl, hasDiagram]
       );
       if (result.rowCount && result.rowCount > 0) inserted++;
       else skipped++;
