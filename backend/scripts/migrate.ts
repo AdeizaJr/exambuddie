@@ -137,43 +137,14 @@ const migrations = [
 
   // ── Flag questions that reference diagrams/images (unanswerable without visual) ──
   `ALTER TABLE questions ADD COLUMN IF NOT EXISTS has_diagram BOOLEAN DEFAULT FALSE`,
-  `UPDATE questions SET has_diagram = TRUE WHERE
-    question_text ILIKE '%diagram%' OR
-    question_text ILIKE '%figure above%' OR
-    question_text ILIKE '%figure below%' OR
-    question_text ILIKE '%shown below%' OR
-    question_text ILIKE '%shown above%' OR
-    question_text ILIKE '%above shows%' OR
-    question_text ILIKE '%chart above%' OR
-    question_text ILIKE '%chart below%' OR
-    question_text ILIKE '%illustration above%' OR
-    question_text ILIKE '%illustration below%' OR
-    question_text ILIKE '%the diagram%' OR
-    question_text ILIKE '%use the%above%' OR
-    question_text ~* 'Fig\\.\\s*[0-9]' OR
-    question_text ~* 'Figure\\s+[0-9]' OR
-    question_text ILIKE '%table above%' OR
-    question_text ILIKE '%table below%' OR
-    question_text ~* 'Table\\s+[0-9]' OR
-    question_text ILIKE '%use the table%' OR
-    question_text ILIKE '%shown in the table%' OR
-    question_text ILIKE '%the figure%' OR
-    question_text ILIKE '%venn diagram%' OR
-    question_text ILIKE '%circuit above%' OR
-    question_text ILIKE '%circuit below%' OR
-    question_text ~* '\\y(part|path|curve)\\s+labeled\\s+[ivx0-9]' OR
-    explanation ILIKE '%chart provided%' OR
-    explanation ILIKE '%diagram provided%' OR
-    explanation ILIKE '%graph provided%' OR
-    explanation ILIKE '%from the chart%' OR
-    explanation ILIKE '%from the diagram%' OR
-    explanation ILIKE '%from the graph%' OR
-    explanation ILIKE '%from the figure%' OR
-    explanation ILIKE '%shown in the chart%' OR
-    explanation ILIKE '%shown in the diagram%' OR
-    explanation ILIKE '%shown in the figure%' OR
-    explanation ILIKE '%pie chart%' OR
-    explanation ILIKE '%bar chart%'`,
+  // NOTE: the original one-time backfill UPDATE that lived here (loose ILIKE/regex match on
+  // question_text/explanation) was removed 2026-07-24. This array has no per-statement
+  // "already applied" tracking - every entry reruns on every deploy via `prestart` - so a
+  // data-mutating heuristic UPDATE like that one re-flipped has_diagram back to TRUE on every
+  // restart, undoing any correction made by fixDiagramFlags.ts or an admin in between deploys.
+  // It already did its job for the rows that existed at the time; leaving it in only kept
+  // reintroducing false positives. New rows default to has_diagram=FALSE via the column default
+  // (import.ts doesn't set it either).
 
   // ── Streak tracking columns (added after initial prod deploy) ───────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS streak INT DEFAULT 0`,
@@ -195,23 +166,7 @@ const migrations = [
    )
    WHERE question_text LIKE 'From the novel;%'`,
 
-  // ── Flag chart/graph questions missed by initial has_diagram pass ────────────
-  `UPDATE questions SET has_diagram = TRUE WHERE has_diagram = FALSE AND (
-    question_text ILIKE '%bar chart%' OR
-    question_text ILIKE '%pie chart%' OR
-    question_text ILIKE '%histogram%' OR
-    question_text ILIKE '%the graph%' OR
-    question_text ILIKE '%from the graph%' OR
-    question_text ILIKE '%graph shows%' OR
-    question_text ILIKE '%graph above%' OR
-    question_text ILIKE '%graph below%' OR
-    question_text ILIKE '%the bar chart%' OR
-    question_text ILIKE '%the pie chart%' OR
-    question_text ILIKE '%frequency polygon%' OR
-    question_text ILIKE '%ogive%' OR
-    question_text ILIKE '%cumulative frequency%curve%' OR
-    question_text ILIKE '%the histogram%'
-  )`,
+  // ── (removed 2026-07-24: same re-flipping problem as the pass above, see note there) ──
 
   // ── Referral system ──────────────────────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code VARCHAR(12) UNIQUE`,
