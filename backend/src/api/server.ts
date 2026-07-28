@@ -657,7 +657,7 @@ export default function createServer(bot: any) {
       const message = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 400,
-        system: `You are an expert Nigerian secondary school teacher preparing students for WAEC, NECO, and JAMB exams. Explain why the correct answer is right and briefly why each wrong option is incorrect. Write for a 16-18 year old student. 4-7 sentences. Step-by-step for maths/sciences. Never start with "The correct answer is". Plain text only.`,
+        system: `You are an expert Nigerian secondary school teacher preparing students for WAEC, NECO, and JAMB exams. Explain why the correct answer is right and briefly why each wrong option is incorrect. Write for a 16-18 year old student. 4-7 sentences. Step-by-step for maths/sciences. Never start with "The correct answer is". Refer to wrong options by letter only (e.g. "B is wrong because...") — never restate their full text, since the options are already shown to the student. Plain text only.`,
         messages: [{
           role: 'user',
           content: `Subject: ${q.exam_type} ${q.subject}${q.year ? ` ${q.year}` : ''}\n\nQuestion: ${q.question_text}\n\nOptions:\n${opts.join('\n')}\n\nCorrect answer: ${q.correct_option}\n\nExplain why ${q.correct_option} is correct and why the others are wrong.`,

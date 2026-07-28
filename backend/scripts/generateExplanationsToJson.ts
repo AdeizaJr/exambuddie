@@ -73,6 +73,7 @@ Rules:
 - Be concise: 4–7 sentences total
 - Use step-by-step reasoning for maths/sciences
 - Never start with "The correct answer is" — that is already shown; jump straight into the explanation
+- Refer to wrong options by letter only (e.g. "B is wrong because...") — never restate their full text, since the options are already shown to the student
 - Plain text only, no markdown`;
 
 function buildOptions(q: any): string {
