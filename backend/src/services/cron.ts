@@ -16,21 +16,26 @@ import { endExpiredRoom } from '../bot/handlers/challenge';
 async function pickWeakTopicQuestion(
   userId: number,
   subjects: string[],
-  examType: string | null
+  examType: string | null,
+  excludeIds: number[] = []
 ): Promise<number | null> {
   if (!subjects.length) return null;
   const weakTopics = await db.getWeakTopicsAllSubjects(userId, subjects);
   if (!weakTopics.length) return null;
 
   const { subject, topic } = weakTopics[Math.floor(Math.random() * weakTopics.length)];
-  const examClause = examType ? 'AND q.exam_type = $3' : '';
-  const params: any[] = examType ? [subject, topic, examType] : [subject, topic];
+  const params: any[] = [subject, topic];
+  let examClause = '';
+  if (examType) { params.push(examType); examClause = `AND q.exam_type = $${params.length}`; }
+  let excludeClause = '';
+  if (excludeIds.length) { params.push(excludeIds); excludeClause = `AND q.id != ALL($${params.length})`; }
   const { rows } = await db.query(
     `SELECT q.id FROM questions q
      WHERE q.is_active = TRUE
        AND q.subject = $1 AND q.topic = $2
        AND q.explanation IS NOT NULL AND length(q.explanation) > 20
        ${examClause}
+       ${excludeClause}
      ORDER BY RANDOM() LIMIT 1`,
     params
   );
@@ -552,9 +557,14 @@ ${streakLine} → /practice`;
         // Prefer a well-attempted question, but with only a small user base most
         // questions never reach a high attempt count — cascade the threshold down
         // rather than going silent for whole exam types on any given day.
-        const examClause = examTypeFilter ? 'AND q.exam_type = $2' : '';
-        const params: any[] = examTypeFilter ? [examTypeFilter] : [];
+        // Exclude recently-served ones so the same question doesn't repeat day after day.
+        const recentIds = await redis.getQOTDHistory(`shared:${key}`);
         for (const minAttempts of [5, 3, 1, 0]) {
+          const params: any[] = [minAttempts];
+          let examClause = '';
+          if (examTypeFilter) { params.push(examTypeFilter); examClause = `AND q.exam_type = $${params.length}`; }
+          let excludeClause = '';
+          if (recentIds.length) { params.push(recentIds); excludeClause = `AND q.id != ALL($${params.length})`; }
           const { rows } = await db.query(
             `SELECT q.id FROM questions q
              LEFT JOIN attempts a ON a.question_id = q.id
@@ -562,15 +572,17 @@ ${streakLine} → /practice`;
                AND q.explanation IS NOT NULL
                AND length(q.explanation) > 20
                ${examClause}
+               ${excludeClause}
              GROUP BY q.id
              HAVING COUNT(a.id) >= $1
              ORDER BY RANDOM() LIMIT 1`,
-            [minAttempts, ...params]
+            params
           );
           if (rows[0]) { qId = rows[0].id as number; break; }
         }
         if (!qId) continue;
         await redis.setQOTDQuestion(date, key, qId);
+        await redis.addQOTDHistory(`shared:${key}`, qId);
       }
       const q = await db.getQuestionById(qId as number);
       if (q) qotdMap[key] = q;
@@ -602,8 +614,12 @@ ${streakLine} → /practice`;
         // users or ones without enough attempt history won't have any yet.
         let personalizedQId: number | null = await redis.getQOTDQuestion(date, `user:${user.telegram_id}`);
         if (!personalizedQId) {
-          personalizedQId = await pickWeakTopicQuestion(user.id, user.subjects || [], examTypeFilter);
-          if (personalizedQId) await redis.setQOTDQuestion(date, `user:${user.telegram_id}`, personalizedQId);
+          const recentIds = await redis.getQOTDHistory(`user:${user.telegram_id}`);
+          personalizedQId = await pickWeakTopicQuestion(user.id, user.subjects || [], examTypeFilter, recentIds);
+          if (personalizedQId) {
+            await redis.setQOTDQuestion(date, `user:${user.telegram_id}`, personalizedQId);
+            await redis.addQOTDHistory(`user:${user.telegram_id}`, personalizedQId);
+          }
         }
 
         const q = personalizedQId ? await db.getQuestionById(personalizedQId) : qotdMap[bucketKey];

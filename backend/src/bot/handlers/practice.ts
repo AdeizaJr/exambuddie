@@ -209,7 +209,7 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   // Step 2 (all users): pick topic if any exist and none chosen yet
   const examType = sessionExamType || user.exam_type || '';
   if (topic === undefined) {
-    const topics = await db.getTopicsForSubject(examType, subject);
+    const topics = await db.getTopicsForSubject(examType, subject, year);
     if (topics.length > 0) {
       await redis.updateSession(ctx.from.id, {
         pendingSubject: subject,

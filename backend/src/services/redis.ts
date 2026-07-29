@@ -245,6 +245,25 @@ export const getQOTDAnswered = async (telegramId: number | string, date: string)
   return !!(await client.get(`qotd:answered:${telegramId}:${date}`));
 };
 
+// Rolling history of recently-served QOTD question ids per bucket (a shared exam-type
+// key, or a per-user key for personalized picks) — lets the picker exclude repeats
+// instead of relying on RANDOM() to avoid them. `qotd:${date}:*` above expires in 26h,
+// too short to look back across the multi-day window this needs.
+const QOTD_HISTORY_LEN = 10; // how many past sends to avoid repeating
+const QOTD_HISTORY_TTL = 30 * 24 * 3600; // 30 days
+
+export const getQOTDHistory = async (bucketKey: string): Promise<number[]> => {
+  const vals = await client.lRange(`qotd:history:${bucketKey}`, 0, QOTD_HISTORY_LEN - 1);
+  return vals.map((v) => parseInt(v, 10));
+};
+
+export const addQOTDHistory = async (bucketKey: string, questionId: number): Promise<void> => {
+  const key = `qotd:history:${bucketKey}`;
+  await client.lPush(key, String(questionId));
+  await client.lTrim(key, 0, QOTD_HISTORY_LEN - 1);
+  await client.expire(key, QOTD_HISTORY_TTL);
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
