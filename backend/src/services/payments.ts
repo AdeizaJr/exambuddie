@@ -166,7 +166,12 @@ export async function activateSubscription(
   const plan = getPlans()[planType];
   if (!plan) throw new Error('Invalid plan in payment metadata');
 
-  const expiresAt = new Date();
+  // Roll over any time remaining on the current plan instead of discarding it —
+  // renewing early extends from the existing expiry, not from "now".
+  const existingUser = await db.getUser(telegramId);
+  const currentExpiry = existingUser?.plan_expires_at ? new Date(existingUser.plan_expires_at) : null;
+  const base = currentExpiry && currentExpiry > new Date() ? currentExpiry : new Date();
+  const expiresAt = new Date(base);
   expiresAt.setDate(expiresAt.getDate() + plan.duration);
 
   // customer_code is only present once Paystack has processed the charge — needed to
@@ -254,7 +259,7 @@ export async function handleRecurringCharge(
   if (!customerCode || !planCode) return null;
 
   const { rows } = await db.query(
-    `SELECT s.plan, s.user_id, u.telegram_id
+    `SELECT s.plan, s.user_id, u.telegram_id, u.plan_expires_at
      FROM subscriptions s
      JOIN users u ON s.user_id = u.id
      WHERE s.paystack_customer_code = $1 AND s.paystack_plan_code = $2
@@ -268,7 +273,11 @@ export async function handleRecurringCharge(
   const plan = getPlans()[planType];
   if (!plan) return null;
 
-  const expiresAt = new Date();
+  // Roll over any time remaining on the current plan instead of discarding it — see
+  // the same logic in activateSubscription() above.
+  const currentExpiry = match.plan_expires_at ? new Date(match.plan_expires_at) : null;
+  const base = currentExpiry && currentExpiry > new Date() ? currentExpiry : new Date();
+  const expiresAt = new Date(base);
   expiresAt.setDate(expiresAt.getDate() + plan.duration);
   const amountNgn = typeof data.amount === 'number' ? data.amount / 100 : plan.amount;
 
