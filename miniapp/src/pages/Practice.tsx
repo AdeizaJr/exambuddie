@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { api } from '../api';
 import { haptic } from '../telegram';
 import type { User, Question } from '../types';

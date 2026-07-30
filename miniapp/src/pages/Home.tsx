@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { api } from '../api';
 import type { User } from '../types';
 import LoadingScreen from '../components/LoadingScreen';

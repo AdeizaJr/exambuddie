@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { getQuestions, updateQuestion, deleteQuestion, uploadQuestionImage, deleteQuestionImage, toggleQuestionActive, generateExplanation, bulkImportQuestions } from "../api";
 import type { Question, PaginatedResponse, BulkImportResult } from "../types";
 import Spinner from "../components/Spinner";

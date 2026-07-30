@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { getUsers, updateUserPlan, deleteUsers, getUserActivity, exportUsersCSV } from "../api";
 import type { User, UserActivity, UserWeakTopic, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
@@ -71,7 +71,7 @@ export default function Users() {
   const [activityLoading, setActivityLoading] = useState(false);
 
   const [toast, setToast] = useState<Toast | null>(null);
-  const toastTimer = useRef<ReturnType<typeof setTimeout>>();
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   function showToast(msg: string, type: Toast["type"] = "success") {
     clearTimeout(toastTimer.current);

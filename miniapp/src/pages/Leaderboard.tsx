@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { api, type LeaderboardEntry } from '../api';
 import LoadingScreen from '../components/LoadingScreen';
 
