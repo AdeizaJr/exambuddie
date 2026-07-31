@@ -525,6 +525,21 @@ WHERE id = 116125`,
   `CREATE TRIGGER trg_audit_logs_no_truncate
    BEFORE TRUNCATE ON audit_logs
    FOR EACH STATEMENT EXECUTE FUNCTION audit_logs_immutable()`,
+
+  // ── Trial grants (survives account deletion) ─────────────────────────────────
+  // users.trial_used gets wiped when deleteUser() hard-deletes the row, letting
+  // someone delete + rejoin for a second free 14-day trial. This table is never
+  // touched by deleteUser(), so it's the durable record grantTrial() checks instead.
+  `CREATE TABLE IF NOT EXISTS trial_grants (
+    telegram_id BIGINT PRIMARY KEY,
+    granted_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  // Backfill: anyone who already used a trial under the old column-only tracking
+  // needs a row here too, or they'd get a second trial by deleting + rejoining
+  // after this ships, even though they never actually deleted before.
+  `INSERT INTO trial_grants (telegram_id)
+   SELECT telegram_id FROM users WHERE trial_used = TRUE
+   ON CONFLICT (telegram_id) DO NOTHING`,
 ];
 
 async function migrate(): Promise<void> {

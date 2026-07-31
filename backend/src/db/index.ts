@@ -91,18 +91,42 @@ export async function updateUser(
 }
 
 export async function grantTrial(telegramId: number | string): Promise<User | null> {
-  const { rows } = await pool.query<User>(
-    `UPDATE users SET
-       plan = 'premium',
-       plan_expires_at = NOW() + INTERVAL '14 days',
-       trial_used = TRUE
-     WHERE telegram_id = $1 AND trial_used = FALSE
-     RETURNING *`,
-    [telegramId]
-  );
-  const user = rows[0];
-  if (user) setCachedUser(telegramId, user).catch(() => {});
-  return user || null;
+  // trial_grants is checked instead of relying on users.trial_used alone — that column
+  // lives on the users row, which deleteUser() hard-deletes, so a delete-and-rejoin would
+  // otherwise reset it to FALSE and hand out a second free trial. This table is never
+  // touched by deleteUser(), so it's the durable record of "has this telegram_id ever
+  // had a trial." The INSERT ... ON CONFLICT DO NOTHING doubles as the race guard: only
+  // one of two concurrent grantTrial() calls for the same telegramId can win the insert.
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const { rowCount } = await client.query(
+      `INSERT INTO trial_grants (telegram_id) VALUES ($1) ON CONFLICT (telegram_id) DO NOTHING`,
+      [telegramId]
+    );
+    if (!rowCount) {
+      await client.query('ROLLBACK');
+      return null;
+    }
+    const { rows } = await client.query<User>(
+      `UPDATE users SET
+         plan = 'premium',
+         plan_expires_at = NOW() + INTERVAL '14 days',
+         trial_used = TRUE
+       WHERE telegram_id = $1 AND trial_used = FALSE
+       RETURNING *`,
+      [telegramId]
+    );
+    await client.query('COMMIT');
+    const user = rows[0];
+    if (user) setCachedUser(telegramId, user).catch(() => {});
+    return user || null;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
 }
 
 function isAllExams(examType: string): boolean {
