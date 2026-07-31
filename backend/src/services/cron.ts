@@ -429,8 +429,8 @@ export default function startCrons(bot: any): void {
     if (users.length > 0) console.log(`[CRON] Daily challenge sent to ${sent}/${users.length} users at WAT ${watHour}:00`);
   });
 
-  // ── Friday 5pm UTC (6pm WAT) — mid-week nudge ────────────────────────────
-  safeCron('0 17 * * 5', 'friday-nudge', async () => {
+  // ── Friday 6pm UTC (7pm WAT) — mid-week nudge ────────────────────────────
+  safeCron('0 18 * * 5', 'friday-nudge', async () => {
     console.log('[CRON] Friday nudge...');
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.streak,
@@ -535,8 +535,8 @@ ${streakLine} → /practice`;
     if (sent > 0) console.log(`[CRON] Exam-day companion sent to ${sent} users`);
   });
 
-  // ── Daily 6am UTC (7am WAT) — Question of the Day broadcast ──────────────
-  safeCron('0 6 * * *', 'question-of-the-day', async () => {
+  // ── Daily 4pm UTC (5pm WAT) — Question of the Day broadcast ──────────────
+  safeCron('0 16 * * *', 'question-of-the-day', async () => {
     console.log('[CRON] Sending Question of the Day...');
     const { todaysExamSubjects } = await import('../bot/handlers/timetable');
     const date = new Date(Date.now() + 3600_000).toISOString().split('T')[0]; // WAT date
