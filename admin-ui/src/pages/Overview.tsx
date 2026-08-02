@@ -65,7 +65,7 @@ export default function Overview() {
     try {
       const [s, u, g, a] = await Promise.all([
         getStats(),
-        getUsers({ page: 1, limit: 8 }),
+        getUsers({ page: 1, limit: 8, sort: "activity" }),
         getGrowthAnalytics(),
         getAlerts(),
       ]);
@@ -195,14 +195,14 @@ export default function Overview() {
       {/* Recent users table */}
       <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-card">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <h2 className="text-sm font-semibold text-white">Recent Users</h2>
+          <h2 className="text-sm font-semibold text-white">Most Active Users</h2>
           <span className="text-xs text-muted">{recentUsers.length} shown</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-surface2/50">
-                {["Name", "Exam", "Plan", "Streak", "Joined"].map((h) => (
+                {["Name", "Exam", "Plan", "Streak", "Last Active"].map((h) => (
                   <th key={h} className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted">{h}</th>
                 ))}
               </tr>
@@ -229,7 +229,9 @@ export default function Overview() {
                       <span className={u.streak > 0 ? "text-white" : ""}>{u.streak}</span>
                     </span>
                   </td>
-                  <td className="px-5 py-3 text-xs text-muted">{formatDate(u.joined_at)}</td>
+                  <td className="px-5 py-3 text-xs text-muted">
+                    {u.last_active_date ? formatDate(u.last_active_date) : "—"}
+                  </td>
                 </tr>
               ))}
             </tbody>

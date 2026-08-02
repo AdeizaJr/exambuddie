@@ -202,6 +202,7 @@ export interface UsersFilter {
   plan?: 'all' | 'premium' | 'free' | 'trial';
   sent?: 'qotd' | 'dyk';
   sentDate?: string;
+  sort?: 'activity';
 }
 
 export async function getUsers(filter: UsersFilter = {}): Promise<PaginatedResponse<User>> {

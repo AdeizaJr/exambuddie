@@ -744,6 +744,9 @@ export default function createServer(bot: any) {
     }
 
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const orderBy = req.query.sort === 'activity'
+      ? 'last_active_date DESC NULLS LAST'
+      : 'joined_at DESC';
 
     params.push(limit);
     params.push(offset);
@@ -765,7 +768,7 @@ export default function createServer(bot: any) {
               plan, plan_expires_at, ${liveStreakExpr} AS streak, joined_at, daily_count,
               last_active_date, phone_number, last_qotd_sent_at, last_dyk_sent_at
        FROM users ${where}
-       ORDER BY joined_at DESC
+       ORDER BY ${orderBy}
        LIMIT $${params.length - 1} OFFSET $${params.length}`,
       params
     );
