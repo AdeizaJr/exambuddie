@@ -188,7 +188,10 @@ function convertLatex(text: string, subject?: string): string {
     .replace(/_\(([slgaq]+)\)/gi, '($1)')
     // subscripts
     .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
-    .replace(/_(\w+)/g, (_, e) => toSub(e))
+    // fill-in-the-blank runs of underscores ("not_________hot") aren't LaTeX subscript
+    // notation — require a single underscore, not part of a longer underscore run, so
+    // the word right after a blank line doesn't get partially converted to subscript glyphs.
+    .replace(/(?<!_)_(?!_)(\w+)/g, (_, e) => toSub(e))
     // operators
     .replace(/\\times/g, '×').replace(/\\div/g, '÷')
     .replace(/\\pm/g, '±').replace(/\\mp/g, '∓')
@@ -708,7 +711,9 @@ export function formatExplanation(rawText: string, subject?: string): string {
     // plain number followed by variable+equals (e.g. "75 y = 105°")
     .replace(/([\d,.]+)\s+([a-z])(?=\s*=)/g, '$1\n\n$2')
     // numeric/unit result followed by a capital word starting a new clause
-    .replace(/((?:°|%|[\d,.]+))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
+    // (unit suffix like "cm"/"kg" optional — "13cm Total surface area..." needs the
+    // break as much as a bare "13 Total surface area...")
+    .replace(/((?:°|%|[\d,.]+[a-z³²]*))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
     // ) or ° followed by trig/log function starting a new step
     .replace(/([)°])\s+(sin|cos|tan|log|ln)\b/g, '$1\n\n$2')
     // ° followed by a digit starting a new equation
