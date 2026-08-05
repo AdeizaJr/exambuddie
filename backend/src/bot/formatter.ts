@@ -736,12 +736,20 @@ export function correctAnswer(q: Question, selected: string): string {
     A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d, E: q.option_e,
   };
 
-  const correctText = md(optionText[q.correct_option] ?? '', q.subject);
+  // "Which is NOT/FALSE/INCORRECT/EXCEPT..." questions: the correct option's
+  // text is itself the false claim, so restating it next to a checkmark reads
+  // as asserting the claim is true. Drop the restatement for these.
+  const isNegativeQuestion = /\b(NOT|FALSE|INCORRECT|EXCEPT)\b/i.test(q.question_text);
+
   const explanation = q.explanation ? formatExplanation(q.explanation, q.subject) : '<i>Explanation not yet available.</i>';
+
+  const answerLine = isNegativeQuestion
+    ? `✔️ <b>Correct answer: ${q.correct_option}</b>`
+    : `✔️ <b>Answer ${q.correct_option}:</b> ${md(optionText[q.correct_option] ?? '', q.subject)}`;
 
   return `${header}
 
-✔️ <b>Answer ${q.correct_option}:</b> ${correctText}
+${answerLine}
 
 ━━━━━━━━━━━━━━
 💡 <b>Explanation</b>
