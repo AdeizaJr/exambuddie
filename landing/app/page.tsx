@@ -589,6 +589,53 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Origin Story */}
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-10 text-center sm:mb-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">Our story</span>
+            <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+              How ExamBuddie started
+            </h2>
+          </div>
+          <div className="space-y-5 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
+            <p>Not a business plan. A classroom.</p>
+            <p>
+              During my NYSC service year, I was posted to teach Basic Science, Technology, and Physics
+              at a secondary school. Exam season came, and my students needed to prepare for WAEC, NECO,
+              and JAMB. I watched what &ldquo;preparing&rdquo; actually looked like for them.
+            </p>
+            <p>
+              One student shared a single past-question booklet with three others, passing it around
+              like a library book with a waiting list. Another&apos;s copy was so worn the print had
+              gone soft in places, guessing what used to be there. A few just gave up on paper entirely
+              and leaned on some random forum they&apos;d found, because at least it loaded.
+            </p>
+            <p className="rounded-xl border-l-4 border-blue-600 bg-blue-50 px-5 py-4 font-medium text-slate-800 dark:border-blue-400 dark:bg-blue-950/40 dark:text-slate-200">
+              Here&apos;s what stopped me: every one of them had a phone in their pocket. Not one lacked
+              internet. The thing missing wasn&apos;t access. It was something worth accessing.
+            </p>
+            <p>
+              So I built it. Not a shinier version of the same booklet, but something that meets a
+              student exactly where they already are: phone in hand, ready to practice, one tap away
+              from an actual answer key that explains itself.
+            </p>
+            <p className="font-semibold text-slate-800 dark:text-slate-200">
+              That&apos;s ExamBuddie. Built in a classroom, for the classroom.
+            </p>
+          </div>
+          <div className="mt-8 flex items-center justify-end gap-3">
+            <div className="text-right">
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Alhassan Adeiza Hassan</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Founder, ExamBuddie</p>
+            </div>
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+              A
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-3xl">
