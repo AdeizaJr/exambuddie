@@ -324,6 +324,14 @@ WHERE id = 116125`,
   // ── Daily reminder opt-in (WAT hour 0–23, NULL = off) ─────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_reminder_hour INTEGER DEFAULT NULL`,
 
+  // ── Default daily reminder to 6pm WAT ─────────────────────────────────────
+  // Was opt-in-only via a buried settings menu, so nobody had set an hour and the
+  // hourly auto-challenge cron never matched anyone. Defaulting new signups to 18
+  // (WAT) and backfilling existing users who never touched the setting turns it on
+  // for everyone unless they explicitly change/disable it in Settings.
+  `ALTER TABLE users ALTER COLUMN daily_reminder_hour SET DEFAULT 18`,
+  `UPDATE users SET daily_reminder_hour = 18 WHERE daily_reminder_hour IS NULL`,
+
   // ── Acquisition source tracking ───────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS source VARCHAR(50) DEFAULT NULL`,
 
