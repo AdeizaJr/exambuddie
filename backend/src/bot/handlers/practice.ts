@@ -211,6 +211,7 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   if (topic === undefined) {
     const topics = await db.getTopicsForSubject(examType, subject, year);
     if (topics.length > 0) {
+      const hasDiagrams = await db.subjectHasDiagrams(examType, subject, year);
       await redis.updateSession(ctx.from.id, {
         pendingSubject: subject,
         pendingYear: year ?? null,
@@ -219,7 +220,7 @@ pendingTimerSecs: questionTimerSecs ?? 0,
       });
       await ctx.reply(
         '🎯 <b>Which topic would you like to practise?</b>',
-        { parse_mode: 'HTML', reply_markup: fmt.topicKeyboard(topics) }
+        { parse_mode: 'HTML', reply_markup: fmt.topicKeyboard(topics, hasDiagrams) }
       );
       return;
     }
@@ -230,13 +231,14 @@ pendingTimerSecs: questionTimerSecs ?? 0,
 
   // For non-premium, year may be undefined here — fall back to their saved target_year
   const effectiveYear = year !== undefined ? year : (user.target_year ?? null);
-  const effectiveTopic = topic === '__all__' ? null : topic;
-  const q = await db.getRandomQuestion(examType, subject, [], effectiveYear, effectiveTopic, user.id);
+  const diagramOnly = topic === '__diagram__';
+  const effectiveTopic = (topic === '__all__' || topic === '__diagram__') ? null : topic;
+  const q = await db.getRandomQuestion(examType, subject, [], effectiveYear, effectiveTopic, user.id, diagramOnly);
   if (!q) {
     const availability = await db.getSubjectAvailability(subject);
     const subjectName = fmt.SUBJECT_MAP[subject] || subject;
     const examStr = examType && !['ALL', 'BOTH'].includes(examType) ? ` under ${examType}` : '';
-    const topicStr = effectiveTopic ? ` on topic "<b>${effectiveTopic}</b>"` : '';
+    const topicStr = diagramOnly ? ` with a diagram` : (effectiveTopic ? ` on topic "<b>${effectiveTopic}</b>"` : '');
     if (availability.length === 0) {
       await ctx.reply(`No questions available for ${subjectName}. Please pick another subject.`, {
         reply_markup: { inline_keyboard: [[{ text: '📚 Pick Another Subject', callback_data: 'practice:pick' }, { text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
@@ -267,6 +269,7 @@ pendingTimerSecs: questionTimerSecs ?? 0,
     examType,
     year: effectiveYear,
     topic: effectiveTopic,
+    diagramOnly,
     sessionId,
     qNum: 1,
     correct: 0,
@@ -628,7 +631,7 @@ export async function handleNext(ctx: any): Promise<void> {
         const usage = await redis.getSubjectUsage(ctx.from.id, subj);
         if (usage.count >= fmt.SUBJECT_Q_LIMIT) continue;
       }
-      q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic, user.id);
+      q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic, user.id, session.diagramOnly);
       if (q) { pickedSubject = subj; break; }
     }
     if (!q) {
@@ -637,29 +640,31 @@ export async function handleNext(ctx: any): Promise<void> {
     }
   } else {
     if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
-    // Adaptive: when no explicit topic chosen, 60% probability drill a weak topic
+    // Adaptive: when no explicit topic chosen, 60% probability drill a weak topic.
+    // Skipped when diagram-only — a random weak topic isn't guaranteed to have diagram
+    // questions, and would silently break the filter the user explicitly asked for.
     const requestedTopic = session.topic;
     let adaptiveTopic = requestedTopic;
-    if (!adaptiveTopic) {
+    if (!adaptiveTopic && !session.diagramOnly) {
       const weak = await db.getWeakTopics(user.id, session.subject || '', session.examType || user.exam_type || '');
       if (weak.length > 0 && Math.random() < 0.6) {
         adaptiveTopic = weak[Math.floor(Math.random() * Math.min(3, weak.length))].topic;
       }
     }
-    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, adaptiveTopic, user.id);
+    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, adaptiveTopic, user.id, session.diagramOnly);
     // The adaptive topic pick isn't scoped to the current year/topic filters (it comes from
     // the user's overall weak-topic history), so it can legitimately match zero rows within
     // this specific year even when plenty of other unseen questions remain there. Retry
     // without it before concluding the pool is exhausted — but only when it was an internal
     // adaptive guess, not a topic the user explicitly asked to drill.
     if (!q && adaptiveTopic && adaptiveTopic !== requestedTopic) {
-      q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, requestedTopic, user.id);
+      q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, requestedTopic, user.id, session.diagramOnly);
     }
   }
 
   if (!q) {
     const yearStr = session.year ? ` for ${session.year}` : '';
-    const topicStr = session.topic ? ` on topic "${fmt.escHtml(session.topic)}"` : '';
+    const topicStr = session.diagramOnly ? ` with a diagram` : (session.topic ? ` on topic "${fmt.escHtml(session.topic)}"` : '');
     const subjectLabel = session.practiceSubjects && session.practiceSubjects.length > 1
       ? 'all selected subjects'
       : `this subject${yearStr}${topicStr}`;

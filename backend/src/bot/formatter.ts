@@ -1301,10 +1301,13 @@ export function quizSubjectKeyboard(subjects: string[], counts: Record<string, n
   return { inline_keyboard: rows };
 }
 
-export function topicKeyboard(topics: string[]) {
+export function topicKeyboard(topics: string[], hasDiagrams = false) {
   const rows: any[][] = [
     [{ text: '📚 All Topics', callback_data: 'practice:topic:__all__' }],
   ];
+  if (hasDiagrams) {
+    rows.push([{ text: '🖼 Questions with Diagram', callback_data: 'practice:topic:__diagram__' }]);
+  }
   for (let i = 0; i < topics.length; i += 2) {
     rows.push(topics.slice(i, i + 2).map(t => ({
       text: t,
