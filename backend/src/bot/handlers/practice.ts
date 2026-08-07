@@ -211,7 +211,12 @@ export async function startPractice(ctx: any, user: User | null, subject: string
   if (topic === undefined) {
     const topics = await db.getTopicsForSubject(examType, subject, year);
     if (topics.length > 0) {
-      const hasDiagrams = await db.subjectHasDiagrams(examType, subject, year);
+      // Not scoped to `year`: diagram questions are unevenly spread across years (some
+      // years have zero for a given exam type), so a year-scoped check made the button
+      // vanish and reappear inconsistently as users switched years. Show it whenever the
+      // subject has diagrams in any year; an empty year still falls through to the normal
+      // "no questions found, try another year" message below.
+      const hasDiagrams = await db.subjectHasDiagrams(examType, subject);
       await redis.updateSession(ctx.from.id, {
         pendingSubject: subject,
         pendingYear: year ?? null,
