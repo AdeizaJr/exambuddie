@@ -177,13 +177,38 @@ export async function getTopicsForSubject(
   return rows.map((r: any) => r.topic as string);
 }
 
+// Whether a subject has any diagram question at all — drives whether the
+// "🖼 Questions with Diagram" topic-picker button shows up for that subject.
+export async function subjectHasDiagrams(
+  examType: string,
+  subject: string,
+  year?: number | null
+): Promise<boolean> {
+  const all = isAllExams(examType);
+  const params: any[] = all ? [subject] : [examType, subject];
+  const subjectIdx = all ? 1 : 2;
+  const examFilter = all ? '' : 'AND exam_type = $1';
+  let yearFilter = '';
+  if (year) { params.push(year); yearFilter = `AND year = $${params.length}`; }
+  const { rows } = await pool.query(
+    `SELECT EXISTS (
+       SELECT 1 FROM questions
+       WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter}
+         AND image_url IS NOT NULL AND image_url != '' AND is_active = TRUE
+     ) AS exists`,
+    params
+  );
+  return !!rows[0]?.exists;
+}
+
 async function getSpacedQuestion(
   examType: string,
   subject: string,
   excludeIds: number[],
   year: number | null | undefined,
   topic: string | null | undefined,
-  userId: number
+  userId: number,
+  diagramOnly = false
 ): Promise<Question | null> {
   const all = isAllExams(examType);
   const params: any[] = [];
@@ -198,6 +223,7 @@ async function getSpacedQuestion(
   if (year) { yearFilter = `AND q.year = $${params.length + 1}`; params.push(year); }
   let topicFilter = '';
   if (topic) { topicFilter = `AND q.topic ILIKE $${params.length + 1}`; params.push(`%${topic}%`); }
+  const diagramFilter = diagramOnly ? `AND q.image_url IS NOT NULL AND q.image_url != ''` : '';
   const excStart = params.length + 1;
   const excFilter = excludeIds.length > 0
     ? `AND q.id NOT IN (${excludeIds.map((_, i) => `$${excStart + i}`).join(',')})`
@@ -207,7 +233,7 @@ async function getSpacedQuestion(
   const { rows } = await pool.query<Question>(
     `SELECT DISTINCT ON (q.id) q.* FROM questions q
      JOIN attempts a ON a.question_id = q.id
-     WHERE q.subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excFilter}
+     WHERE q.subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${diagramFilter} ${excFilter}
        AND q.is_active = TRUE
        AND a.user_id = $${userIdx}
        AND a.is_correct = FALSE
@@ -224,11 +250,12 @@ export async function getRandomQuestion(
   excludeIds: number[] = [],
   year?: number | null,
   topic?: string | null,
-  userId?: number
+  userId?: number,
+  diagramOnly = false
 ): Promise<Question | null> {
   // 40% chance: serve a previously wrong question (spaced repetition)
   if (userId && Math.random() < 0.4) {
-    const wrong = await getSpacedQuestion(examType, subject, excludeIds, year, topic, userId);
+    const wrong = await getSpacedQuestion(examType, subject, excludeIds, year, topic, userId, diagramOnly);
     if (wrong) return wrong;
   }
 
@@ -249,6 +276,8 @@ export async function getRandomQuestion(
     params.push(`%${topic}%`);
   }
 
+  const diagramFilter = diagramOnly ? `AND image_url IS NOT NULL AND image_url != ''` : '';
+
   const excludeStart = params.length + 1;
   const excludeFilter =
     excludeIds.length > 0
@@ -258,7 +287,7 @@ export async function getRandomQuestion(
 
   const { rows } = await pool.query<Question>(
     `SELECT * FROM questions
-     WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${excludeFilter}
+     WHERE subject = $${subjectIdx} ${examFilter} ${yearFilter} ${topicFilter} ${diagramFilter} ${excludeFilter}
        AND is_active = TRUE
      ORDER BY RANDOM() LIMIT 1`,
     params
