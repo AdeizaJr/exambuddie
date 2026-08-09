@@ -599,29 +599,27 @@ export default async function Home() {
             </h2>
           </div>
           <div className="space-y-5 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
-            <p>Not a business plan. A classroom.</p>
             <p>
-              During my NYSC service year, I was posted to teach Basic Science, Technology, and Physics
-              at a secondary school. Exam season came, and my students needed to prepare for WAEC, NECO,
-              and JAMB. I watched what &ldquo;preparing&rdquo; actually looked like for them.
-            </p>
-            <p>
-              One student shared a single past-question booklet with three others, passing it around
-              like a library book with a waiting list. Another&apos;s copy was so worn the print had
-              gone soft in places, guessing what used to be there. A few just gave up on paper entirely
-              and leaned on some random forum they&apos;d found, because at least it loaded.
-            </p>
-            <p className="rounded-xl border-l-4 border-blue-600 bg-blue-50 px-5 py-4 font-medium text-slate-800 dark:border-blue-400 dark:bg-blue-950/40 dark:text-slate-200">
-              Here&apos;s what stopped me: every one of them had a phone in their pocket. Not one lacked
-              internet. The thing missing wasn&apos;t access. It was something worth accessing.
+              I served my NYSC year teaching Basic Science, Technology, and Physics at a secondary
+              school. When exam season came around, I got to see up close how my students actually
+              prepared for WAEC, NECO, and JAMB.
             </p>
             <p>
-              So I built it. Not a shinier version of the same booklet, but something that meets a
-              student exactly where they already are: phone in hand, ready to practice, one tap away
-              from an actual answer key that explains itself.
+              It wasn&apos;t great. One past-questions booklet would get passed around a group of three
+              or four students, each waiting their turn. Some copies were so worn from reuse that parts
+              of the print had faded out completely, so students were half-guessing what the original
+              text even said. A few students skipped the booklets altogether and just Googled around for
+              answers on random websites.
             </p>
-            <p className="font-semibold text-slate-800 dark:text-slate-200">
-              That&apos;s ExamBuddie. Built in a classroom, for the classroom.
+            <p>
+              What got me was that every one of these students had a smartphone on them. None of them
+              were short on internet access. They just didn&apos;t have anything worth using once they
+              were online, nothing built for what they actually needed.
+            </p>
+            <p>
+              That&apos;s the gap ExamBuddie fills: past questions and explanations a student can pull up
+              on their own phone in seconds, instead of waiting for a shared booklet or trusting whatever
+              a random forum told them.
             </p>
           </div>
           <div className="mt-8 flex items-center justify-end gap-3">
