@@ -312,6 +312,10 @@ function md(text: string | null | undefined, subject?: string): string {
     .replace(/>/g, '&gt;')
     .replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>')
     .replace(/\*([^*\n]+)\*/g, '<u>$1</u>')
+    // _word_ → italic, for "word or phrase in italics" questions. Safe against fill-in-the-blank
+    // underscore runs ("________") since those never contain a non-underscore char between two
+    // underscores, so the [^_\n]+ requirement never matches inside a blank.
+    .replace(/_([^_\n]+)_/g, '<i>$1</i>')
     // Wrap IP addresses in <code> so Telegram doesn't auto-link them
     .replace(/\b(\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?)\b/g, '<code>$1</code>');
 }
