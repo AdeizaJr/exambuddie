@@ -247,6 +247,19 @@ function convertLatex(text: string, subject?: string): string {
        .replace(/&/g, ' | ')
        .replace(/\\\\/g, '\n')
     )
+    // vectors/matrices/determinants: \begin{pmatrix}...\end{pmatrix} (also v/b variants) had no
+    // handling at all — fell through to the generic backslash-command stripper below, which
+    // treats "begin"/"end" as commands and "pmatrix" as their brace content, leaving the raw
+    // word "pmatrix" sitting in the message twice with a literal "\\" row separator between
+    // rows. pmatrix/bmatrix render with round/square brackets; vmatrix (determinant) with bars.
+    // A row with no "&" is a column vector, shown as "(a, b)"; multi-column rows join with "; ".
+    .replace(/\\begin\s*\{(p|v|b)matrix\}([\s\S]*?)\\end\s*\{\1matrix\}/g, (_m, kind, content) => {
+      const [open, close] = kind === 'v' ? ['|', '|'] : kind === 'b' ? ['[', ']'] : ['(', ')'];
+      const rawRows = content.split('\\\\').map((r: string) => r.trim()).filter(Boolean);
+      const isColumnVector = rawRows.every((r: string) => !r.includes('&'));
+      const rows = rawRows.map((row: string) => row.split('&').map((cell: string) => cell.trim()).filter(Boolean).join(' '));
+      return `${open}${rows.join(isColumnVector ? ', ' : '; ')}${close}`;
+    })
     // strip remaining LaTeX delimiters
     .replace(/\$\$/g, '').replace(/\$/g, '')
     .replace(/\\\(|\\\)/g, '').replace(/\\\[|\\\]/g, '')
