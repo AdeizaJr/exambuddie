@@ -489,7 +489,7 @@ export function persistentMenuKeyboard() {
       [{ text: '📐 Formulas' }, { text: '⚙️ Settings' }],
     ],
     resize_keyboard: true,
-    persistent: true,
+    is_persistent: true,
   };
 }
 
