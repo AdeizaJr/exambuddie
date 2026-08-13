@@ -448,7 +448,10 @@ export async function handleChallengeJoin(ctx: any, code: string): Promise<void>
   const participants = await db.getRoomParticipants(room.id);
   const alreadyIn = participants.some(p => p.telegram_id === ctx.from.id);
 
+  // Joining a room auto-readies the player, same as the creator on room creation —
+  // no separate "Mark Ready" tap required.
   await db.joinRoom(room.id, ctx.from.id, firstName);
+  await db.setParticipantReady(room.id, ctx.from.id);
   await redis.clearSession(ctx.from.id);
   await redis.setSession(ctx.from.id, { step: 'challenge_lobby', roomCode: code });
 
@@ -473,9 +476,15 @@ export async function handleChallengeJoin(ctx: any, code: string): Promise<void>
 
   await ctx.reply(formatLobby(room, updated, secsLeft), {
     parse_mode: 'HTML',
-    reply_markup: lobbyKeyboard(code, false, false),
+    reply_markup: lobbyKeyboard(code, true, ctx.from.id === room.creator_telegram_id),
     disable_web_page_preview: true,
   });
+
+  // Auto-start if all expected players are now ready (mirrors handleChallengeReady).
+  const readyCount = updated.filter(p => p.ready).length;
+  if (readyCount >= room.max_players) {
+    await startChallenge(ctx.telegram, room, updated);
+  }
 }
 
 // ── Lobby: Ready ──────────────────────────────────────────────────────────────
