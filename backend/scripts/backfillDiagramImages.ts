@@ -26,7 +26,7 @@ const SUBJECT_MAP: Record<string, string> = {
 const MAX_RETRIES = 3;
 const CONCURRENCY = 3;
 
-const LOCAL_DB = 'postgresql://postgres:161996@localhost:5432/exambuddie';
+const LOCAL_DB = process.env.LOCAL_DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/exambuddie';
 const PROD_DB = process.env.DATABASE_URL!;
 
 const http = axios.create({
