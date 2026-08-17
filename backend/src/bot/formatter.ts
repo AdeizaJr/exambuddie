@@ -662,6 +662,12 @@ export function formatExplanation(rawText: string, subject?: string): string {
     // Closing paren/bracket followed by a new multi-word noun phrase leading to "="
     // e.g. "volume(dm³) molar concentration(C) =" → break before "molar"
     .replace(/\)\s+([a-z][a-z ]{2,25}(?:\([^)]{1,15}\))?\s*=)/g, ')\n$1')
+    // A degree value or closing paren/bracket followed by a short algebra symbol
+    // ("a", "b1", "c1", optionally "b1 + b2") leading to "=" is a new equation step in
+    // circle-theorem-style geometry proofs (e.g. "...quad.) a = 100°", "100° b1 = b2").
+    // Short-symbol only (≤2 letters+digits per term) — the word-phrase rule above already
+    // covers longer variable names, and staying short avoids swallowing genuine prose.
+    .replace(/(°|\))[ \t]+((?:\d{0,2}[a-zA-Z]\d{0,2})(?:[ \t]*[+\-][ \t]*\d{0,2}[a-zA-Z]\d{0,2})?[ \t]*=(?!=))/g, '$1\n$2')
     // "( where X = " → on its own line
     .replace(/\(\s*where\b/gi, '\n(where')
     .trim();
