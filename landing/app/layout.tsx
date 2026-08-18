@@ -88,7 +88,7 @@ const organizationJsonLd = {
   areaServed: "NG",
   knowsLanguage: "en-NG",
   sameAs: [
-    "https://x.com/exambuddie",
+    "https://x.com/exambuddiebot",
     "https://linkedin.com/company/exambuddie",
   ],
 };
