@@ -24,6 +24,7 @@
     "migrate": "ts-node scripts/migrate.ts",
     "format-explanations": "ts-node scripts/format-explanations.ts",
     "mark-underlined": "ts-node scripts/markUnderlinedWords.ts",
+    "generate-daily-flyer": "ts-node scripts/generateDailyFlyer.ts",
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
