@@ -768,7 +768,13 @@ export function formatExplanation(rawText: string, subject?: string): string {
     // numeric/unit result followed by a capital word starting a new clause
     // (unit suffix like "cm"/"kg" optional — "13cm Total surface area..." needs the
     // break as much as a bare "13 Total surface area...")
-    .replace(/((?:°|%|[\d,.]+[a-z³²]*))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
+    // A bare number with no unit requires ≥2 digits — CRK/IRK explanations cite Bible
+    // books as "1 Samuel", "2 Kings", "3 John" (always a single digit 1-3), and this
+    // rule was splitting those mid-reference into "1\n\nSamuel...". Real math results
+    // needing this break are virtually always ≥2 digits or carry a unit suffix, so
+    // requiring one or the other excludes the biblical-citation collision without
+    // losing the math case.
+    .replace(/((?:°|%|\d{2,}[\d,.]*[a-z³²]*|[\d,.]+[a-z³²]+))\s+([A-Z][a-z]{2,})/g, '$1\n\n$2')
     // ) or ° followed by trig/log function starting a new step
     .replace(/([)°])\s+(sin|cos|tan|log|ln)\b/g, '$1\n\n$2')
     // ° followed by a digit starting a new equation
