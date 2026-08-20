@@ -670,28 +670,40 @@ export function formatExplanation(rawText: string, subject?: string): string {
     .replace(/(°|\))[ \t]+((?:\d{0,2}[a-zA-Z]\d{0,2})(?:[ \t]*[+\-][ \t]*\d{0,2}[a-zA-Z]\d{0,2})?[ \t]*=(?!=))/g, '$1\n$2')
     // "( where X = " → on its own line
     .replace(/\(\s*where\b/gi, '\n(where')
-    // Algebra instructional connectives ("cross multiply", "divide both sides by a",
-    // "take cube root of both sides", "collect like terms", "make x the subject", ...)
-    // are step boundaries in math/physics/chemistry derivations, but the source glues
-    // them to the equation on both sides with just a space — e.g. "ax³ = 3yz + b divide
-    // both sides by a x³ = (3yz+b)/a take cube root of both sides" renders as one wall
-    // of text. Break before AND after the phrase so it reads as its own line between
-    // the two equations it separates. Verified against 117 glued candidates across
-    // math/further-math/physics/chemistry/accounts/economics/agric.
-    // Divisor/target after "by"/"to"/"from" is \S+ (one non-space token) — covers plain
-    // words, numbers, degree signs, Greek letters, and ungapped LaTeX groups like
-    // "\(\sqrt{2}\)" alike, since none of those contain a space. Multi-word divisors
-    // ("the LCM of 4 and 3") aren't captured whole and so don't get a clean second
-    // break — same trade-off already accepted elsewhere in this chain: narrow enough
-    // to avoid swallowing real prose, at the cost of leaving rarer multi-word phrasing
-    // less than perfectly split.
-    // Trailing [,:;]? swallows (and drops) a stray comma/colon/semicolon some sources
-    // put right after the phrase ("Divide through by 3:", "Cross multiply, hence...") —
-    // losing that punctuation is a minor cosmetic trade for not silently failing to
-    // match at all when the phrase isn't followed directly by whitespace.
-    .replace(/\s+\(?(cross\s+multiplying?|divide\s+(?:both(?:\s+the)?\s+sides|through)(?:\s+by\s+\S+)?|multiply\s+(?:both(?:\s+the)?\s+sides|through)(?:\s+by\s+\S+)?|take\s+(?:the\s+)?(?:cube|square)(?:\s+root)?(?:\s+of\s+both\s+sides)?|square\s+both\s+sides|collect(?:ing)?\s+(?:the\s+)?like\s+(?:terms?|roots?)(?:\s+together)?|rationaliz(?:e|ing)(?:\s+the\s+denominator)?|make\s+\S+\s+(?:the\s+)?subject(?:\s+of\s+(?:the\s+)?formula)?|add\s+\S+\s+to\s+both(?:\s+the)?\s+sides|subtract\s+\S+\s+from\s+both(?:\s+the)?\s+sides)\)?[,:;]?\s+/gi, '\n$1\n')
     .trim();
-  const converted = convertLatex(preFormatted, subject);
+  // Algebra instructional connectives ("cross multiply", "divide both sides by a",
+  // "take cube root of both sides", "collect like terms", "make x the subject", ...)
+  // are step boundaries in math/physics/chemistry derivations, but the source glues
+  // them to the equation on both sides with just a space — e.g. "ax³ = 3yz + b divide
+  // both sides by a x³ = (3yz+b)/a take cube root of both sides" renders as one wall
+  // of text. Break before AND after the phrase so it reads as its own line between
+  // the two equations it separates. Verified against 117 glued candidates across
+  // math/further-math/physics/chemistry/accounts/economics/agric.
+  // Subject-gated to calculation subjects only — several of these phrases are also
+  // ordinary English ("rationalize" = justify, "make X the subject" = grammar's
+  // subject-of-a-sentence) and fired on unrelated literature/government prose when
+  // this ran unconditionally, splicing a stray line break into the middle of a
+  // sentence about a novel's plot.
+  // Divisor/target after "by"/"to"/"from" is \S+ (one non-space token) — covers plain
+  // words, numbers, degree signs, Greek letters, and ungapped LaTeX groups like
+  // "\(\sqrt{2}\)" alike, since none of those contain a space. Multi-word divisors
+  // ("the LCM of 4 and 3") aren't captured whole and so don't get a clean second
+  // break — same trade-off already accepted elsewhere in this chain: narrow enough
+  // to avoid swallowing real prose, at the cost of leaving rarer multi-word phrasing
+  // less than perfectly split.
+  // Trailing [,:;]? swallows (and drops) a stray comma/colon/semicolon some sources
+  // put right after the phrase ("Divide through by 3:", "Cross multiply, hence...") —
+  // losing that punctuation is a minor cosmetic trade for not silently failing to
+  // match at all when the phrase isn't followed directly by whitespace.
+  const CALC_SUBJECTS = new Set([
+    'math', 'further-math', 'physics', 'chemistry', 'accounts', 'economics',
+    'commerce', 'agric', 'geography', 'book-keeping', 'insurance', 'computer',
+    'data-processing',
+  ]);
+  const withStepBreaks = CALC_SUBJECTS.has(subject ?? '')
+    ? preFormatted.replace(/\s+\(?(cross\s+multiplying?|divide\s+(?:both(?:\s+the)?\s+sides|through)(?:\s+by\s+\S+)?|multiply\s+(?:both(?:\s+the)?\s+sides|through)(?:\s+by\s+\S+)?|take\s+(?:the\s+)?(?:cube|square)(?:\s+root)?(?:\s+of\s+both\s+sides)?|square\s+both\s+sides|collect(?:ing)?\s+(?:the\s+)?like\s+(?:terms?|roots?)(?:\s+together)?|rationaliz(?:e|ing)(?:\s+the\s+denominator)?|make\s+\S+\s+(?:the\s+)?subject(?:\s+of\s+(?:the\s+)?formula)?|add\s+\S+\s+to\s+both(?:\s+the)?\s+sides|subtract\s+\S+\s+from\s+both(?:\s+the)?\s+sides)\)?[,:;]?\s+/gi, '\n$1\n')
+    : preFormatted;
+  const converted = convertLatex(withStepBreaks, subject);
   return converted
     // "= 0" then the next equation step begins (chain of steps ending in = 0) — this must
     // run BEFORE the equation-chain collapser below, and its lookahead must include digits
