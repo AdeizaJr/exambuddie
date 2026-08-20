@@ -292,7 +292,7 @@ function buildFlyerSVG(fact: { subject: string; topic: string | null; fact_text:
   </g>
 
   <rect x="0" y="${footerY}" width="${W}" height="${footerH}" fill="#16a34a"/>
-  ${textPath('Get free daily practice on Telegram', W / 2, footerY + 55, 30, '#052e16', { anchor: 'middle' })}
+  ${textPath('Search @ExamBuddieBot on Telegram', W / 2, footerY + 55, 30, '#052e16', { anchor: 'middle' })}
 
   <rect x="${W / 2 - ctaWidth / 2}" y="${footerY + 80}" width="${ctaWidth}" height="66" rx="33" fill="#052e16"/>
   ${textPath(botLinkLabel, W / 2, footerY + 124, ctaFontSize, '#4ade80', { bold: true, anchor: 'middle' })}
