@@ -37,6 +37,7 @@
   },
   "overrides": {
     "brace-expansion": "^5.0.8",
-    "minimatch": "^10.2.6"
+    "minimatch": "^10.2.6",
+    "js-yaml": "^5.3.0"
   }
 }
