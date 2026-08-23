@@ -221,8 +221,12 @@ export default function startCrons(bot: any): void {
     await sendWeeklySummaries(users, bot, 'morning');
   });
 
-  // ── Sunday 4pm UTC (5pm WAT) — evening wave (also catches any morning failures) ──
-  safeCron('0 16 * * 0', 'weekly-summary-evening', async () => {
+  // ── Sunday 6pm UTC (7pm WAT) — evening wave (also catches any morning failures) ──
+  // Was 4pm UTC, same slot as the daily question-of-the-day cron below — on Sundays
+  // both fired at the same second, doubling concurrent bot.telegram.send* pressure for
+  // any user eligible for both. Moved 2 hours clear of QOTD and 5 hours clear of the
+  // Sunday leaderboard-snapshot job (10:55pm UTC).
+  safeCron('0 18 * * 0', 'weekly-summary-evening', async () => {
     console.log('[CRON] Weekly summaries — evening wave...');
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan, u.last_active_date
