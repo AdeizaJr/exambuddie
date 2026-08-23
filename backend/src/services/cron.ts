@@ -597,6 +597,15 @@ ${streakLine} → /practice`;
     let sent = 0;
     let personalized = 0;
     let noQuestion = 0;
+    // "sent" alone can't tell an incident from a normal day — 56 eligible - 47 sent could
+    // mean 9 legitimate skips (exam-day, already-answered) or 9 real delivery failures, and
+    // the old code lumped all of it into one undifferentiated gap with a bare `catch {}`
+    // that dropped the actual Telegram error on the floor. These track each path separately
+    // so a spike in real failures is visible instead of hiding inside routine attrition.
+    let examDaySkip = 0;
+    let alreadyAnswered = 0;
+    let sendFailed = 0;
+    const failReasons: Record<string, number> = {};
     const sentUserIds: number[] = [];
     const BATCH_SIZE = 25;
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
@@ -604,7 +613,7 @@ ${streakLine} → /practice`;
       await Promise.allSettled(batch.map(async (user) => {
         // Anyone sitting their own exam today already got the calm, subject-specific Exam
         // Day Companion message above — don't also land an unrelated QOTD on top of it.
-        if (todaysExamSubjects(user.exam_type, user.subjects || []).length > 0) return;
+        if (todaysExamSubjects(user.exam_type, user.subjects || []).length > 0) { examDaySkip++; return; }
 
         const bucketKey = ['ALL', 'BOTH'].includes(user.exam_type) ? 'ALL' : user.exam_type;
         const examTypeFilter = bucketKey === 'ALL' ? null : user.exam_type;
@@ -626,7 +635,7 @@ ${streakLine} → /practice`;
         if (!q) { noQuestion++; return; }
 
         // Skip if user already answered today's QOTD
-        if (await redis.getQOTDAnswered(user.telegram_id, date)) return;
+        if (await redis.getQOTDAnswered(user.telegram_id, date)) { alreadyAnswered++; return; }
 
         const msgText = fmt.formatQuestion(q, 1, 1, 'qotd', !!personalizedQId) + fmt.answerOptions(q);
 
@@ -656,14 +665,43 @@ ${streakLine} → /practice`;
           sent++;
           sentUserIds.push(user.id);
           if (personalizedQId) personalized++;
-        } catch { /* blocked or unavailable */ }
+        } catch (err: any) {
+          sendFailed++;
+          // Telegraf surfaces the actual Telegram API rejection in err.response.description
+          // (e.g. "Forbidden: bot was blocked by the user", "Bad Request: chat not found") —
+          // bucket by that so the summary log shows a breakdown instead of one opaque count,
+          // and a routine blocked-bot rate is visually distinguishable from a new failure mode.
+          const reason = err?.response?.description || err?.message || 'unknown error';
+          failReasons[reason] = (failReasons[reason] || 0) + 1;
+        }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
     if (sentUserIds.length) {
       await db.query(`UPDATE users SET last_qotd_sent_at = NOW() WHERE id = ANY($1)`, [sentUserIds]);
     }
-    console.log(`[CRON] QOTD sent to ${sent}/${users.length} users (${personalized} personalized)`);
+    const failBreakdown = Object.entries(failReasons)
+      .map(([reason, count]) => `${count}x "${reason}"`)
+      .join(', ');
+    console.log(
+      `[CRON] QOTD sent to ${sent}/${users.length} users (${personalized} personalized) — ` +
+      `skipped: ${examDaySkip} exam-day, ${alreadyAnswered} already-answered, ${noQuestion} no-question — ` +
+      `failed: ${sendFailed}${failBreakdown ? ` (${failBreakdown})` : ''}`
+    );
+
+    // A blocked-bot rate of a few users a day is normal attrition, not an incident — only
+    // alert when failures unrelated to "the user blocked us" show up, since that's the
+    // signal for an actual delivery bug (rate limit, malformed request, bad image URL).
+    const unexpectedFailures = Object.entries(failReasons)
+      .filter(([reason]) => !/blocked by the user|chat not found|user is deactivated/i.test(reason))
+      .reduce((sum, [, count]) => sum + count, 0);
+    if (unexpectedFailures > 0) {
+      await db.createAlert(
+        'qotd_cron',
+        `QOTD: ${unexpectedFailures} send failure(s) not explained by a blocked/deleted chat — ${failBreakdown}`,
+        'warning'
+      );
+    }
 
     if (users.length > 0 && sent === 0) {
       await db.createAlert(
