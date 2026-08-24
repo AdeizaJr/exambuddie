@@ -55,8 +55,27 @@ function textPath(
   const anchor = opts.anchor || 'start';
   const width = font.getAdvanceWidth(text, fontSize);
   const startX = anchor === 'middle' ? x - width / 2 : anchor === 'end' ? x - width : x;
-  const p = font.getPath(text, startX, y, fontSize);
-  return `<path d="${p.toPathData(2)}" fill="${fill}"/>`;
+  // opentype.js's curve-flattening occasionally corrupts a single glyph's outline for a
+  // particular glyph/size/position combination — sometimes as a literal "NaN" control
+  // point that breaks the whole combined path string, sometimes as a self-intersecting
+  // shape with ordinary in-range numbers that just renders as a stray line slicing
+  // across the text. Requesting one Path per glyph (font.getPaths) and validating each
+  // one's own bounding box against its font size, rather than one Path for the whole
+  // string, catches both: a glyph whose outline balloons past a plausible size for a
+  // single character gets dropped instead of rendered — a small gap rather than a
+  // corrupted card going out to a user who shares it publicly.
+  const glyphPaths = font.getPaths(text, startX, y, fontSize);
+  const parts: string[] = [];
+  for (const gp of glyphPaths) {
+    const bbox = gp.getBoundingBox();
+    const w = bbox.x2 - bbox.x1;
+    const h = bbox.y2 - bbox.y1;
+    if (!Number.isFinite(w) || !Number.isFinite(h) || w > fontSize * 2 || h > fontSize * 2) continue;
+    const d = gp.toPathData(2);
+    if (d.includes('NaN') || d.includes('Infinity')) continue;
+    parts.push(d);
+  }
+  return `<path d="${parts.join(' ')}" fill="${fill}"/>`;
 }
 
 export interface ShareCardData {

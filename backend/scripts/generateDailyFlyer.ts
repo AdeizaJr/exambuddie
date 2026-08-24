@@ -57,14 +57,29 @@ function textPath(
   const anchor = opts.anchor || 'start';
   const width = font.getAdvanceWidth(text, fontSize);
   const startX = anchor === 'middle' ? x - width / 2 : anchor === 'end' ? x - width : x;
-  const p = font.getPath(text, startX, y, fontSize);
-  // opentype.js occasionally emits a literal "NaN" control-point coordinate for a
-  // particular glyph/size combination (a curve-flattening edge case, not specific to
-  // any one word) — one bad token breaks librsvg's path parser for the rest of the
-  // string, silently dropping everything after it. Sanitizing to 0 costs one glyph's
-  // curve a pixel of shape; leaving it in costs the rest of the line.
-  const d = p.toPathData(2).replace(/-?NaN/g, '0').replace(/-?Infinity/g, '0');
-  return `<path d="${d}" fill="${fill}"/>`;
+  // opentype.js's curve-flattening occasionally corrupts a single glyph's outline for a
+  // particular glyph/size/position combination — sometimes as a literal "NaN" control
+  // point, sometimes as a self-intersecting shape with ordinary-looking numbers that
+  // renders as a stray line slicing across the text. Neither is reliably catchable by
+  // scanning the combined path string (a per-glyph NaN check missed the second case
+  // entirely — confirmed by isolating the exact glyph, whose numbers were all finite
+  // and in-range, yet still rendered a visible artifact). Requesting one Path per glyph
+  // and sanity-checking each one's own bounding box against its font size, rather than
+  // string-matching the concatenated path, catches both failure modes: a glyph whose
+  // outline balloons past a plausible size for a single character gets dropped instead
+  // of rendered, leaving a small gap rather than a stray line across the sentence.
+  const glyphPaths = font.getPaths(text, startX, y, fontSize);
+  const parts: string[] = [];
+  for (const gp of glyphPaths) {
+    const bbox = gp.getBoundingBox();
+    const w = bbox.x2 - bbox.x1;
+    const h = bbox.y2 - bbox.y1;
+    if (!Number.isFinite(w) || !Number.isFinite(h) || w > fontSize * 2 || h > fontSize * 2) continue;
+    const d = gp.toPathData(2);
+    if (d.includes('NaN') || d.includes('Infinity')) continue;
+    parts.push(d);
+  }
+  return `<path d="${parts.join(' ')}" fill="${fill}"/>`;
 }
 
 // Greedy word-wrap measured against actual glyph advance widths, not a char-count
@@ -116,17 +131,44 @@ function bulbIcon(cx: number, cy: number, size: number): string {
   </g>`;
 }
 
-// Small rounded-square monogram badge — used for social handles instead of a plain
-// text wall, so the footer scans as icon+handle pairs rather than one dense line.
-function monogramBadge(x: number, cy: number, size: number, mono: string, fill: string, textColor: string): string {
+type Platform = 'instagram' | 'tiktok' | 'x';
+
+// Simplified single-color platform glyphs (not the literal trademarked logo files) drawn
+// on a 0-100 viewBox, same hand-drawn-icon approach as bulbIcon above.
+function platformIcon(platform: Platform, color: string): string {
+  switch (platform) {
+    case 'instagram':
+      // Camera body + lens + flash dot — the recognizable shape without the brand gradient.
+      return `
+        <rect x="18" y="18" width="64" height="64" rx="20" fill="none" stroke="${color}" stroke-width="7"/>
+        <circle cx="50" cy="50" r="16" fill="none" stroke="${color}" stroke-width="7"/>
+        <circle cx="68" cy="32" r="4.5" fill="${color}"/>`;
+    case 'tiktok':
+      // Eighth note — simplified single-color stand-in for the music/short-video platform.
+      return `
+        <ellipse cx="36" cy="72" rx="15" ry="11" fill="${color}" transform="rotate(-8 36 72)"/>
+        <rect x="46" y="16" width="7" height="58" rx="3.5" fill="${color}"/>
+        <path d="M53 16 Q78 22 78 42 L71 42 Q71 27 53 23 Z" fill="${color}"/>`;
+    case 'x':
+      // Two bold crossing strokes — the wordmark reduced to its simplest recognizable form.
+      return `
+        <line x1="24" y1="24" x2="76" y2="76" stroke="${color}" stroke-width="13" stroke-linecap="round"/>
+        <line x1="76" y1="24" x2="24" y2="76" stroke="${color}" stroke-width="13" stroke-linecap="round"/>`;
+  }
+}
+
+// Small rounded-square icon badge — used for social handles instead of a plain text
+// wall, so the footer scans as icon+handle pairs rather than one dense line.
+function platformBadge(x: number, cy: number, size: number, platform: Platform, fill: string, iconColor: string): string {
   const r = size * 0.28;
+  const s = size / 100;
   return `
   <rect x="${x}" y="${cy - size / 2}" width="${size}" height="${size}" rx="${r}" fill="${fill}"/>
-  ${textPath(mono, x + size / 2, cy + size * 0.15, size * 0.42, textColor, { bold: true, anchor: 'middle' })}`;
+  <g transform="translate(${x}, ${cy - size / 2}) scale(${s})">${platformIcon(platform, iconColor)}</g>`;
 }
 
 interface SocialHandle {
-  mono: string;
+  platform: Platform;
   handle: string;
 }
 
@@ -141,7 +183,7 @@ function socialRow(handles: SocialHandle[], cx: number, cy: number, badgeSize: n
   let x = cx - totalWidth / 2;
   const parts: string[] = [];
   handles.forEach((h, i) => {
-    parts.push(monogramBadge(x, cy, badgeSize, h.mono, badgeFill, badgeText));
+    parts.push(platformBadge(x, cy, badgeSize, h.platform, badgeFill, badgeText));
     parts.push(textPath(h.handle, x + badgeSize + gap, cy + fontSize * 0.35, fontSize, fill, { anchor: 'start' }));
     x += widths[i] + groupGap;
   });
@@ -234,9 +276,9 @@ function buildFlyerSVG(fact: { subject: string; topic: string | null; fact_text:
   const ctaWidth = boldFontForMeasure.getAdvanceWidth(botLinkLabel, ctaFontSize) + ctaPadX * 2;
 
   const socials: SocialHandle[] = [
-    { mono: 'IG', handle: INSTAGRAM },
-    { mono: 'TT', handle: TIKTOK },
-    { mono: 'X', handle: X_HANDLE },
+    { platform: 'instagram', handle: INSTAGRAM },
+    { platform: 'tiktok', handle: TIKTOK },
+    { platform: 'x', handle: X_HANDLE },
   ];
 
   return `
