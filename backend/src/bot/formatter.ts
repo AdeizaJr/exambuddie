@@ -656,6 +656,12 @@ export function formatExplanation(rawText: string, subject?: string): string {
     // Require first part to contain a digit so "number of" doesn't match
     // e.g. "0.25mol/dm3 volume =" → "0.25mol/dm3\nvolume ="
     .replace(/(\b\d[\d./]*[a-z³²]*)\s+([a-z][a-z ]{2,20}(?:\([^)]{1,10}\))?\s*=)/g, '$1\n$2')
+    // Same glued-step pattern but for a single-letter variable (any case) rather than a
+    // word phrase — mensuration explanations reuse short names like H, V, L, B, r, A.
+    // e.g. "...H = 1560 H = 1560/(15 x 8) = 13cm" → new line before the second "H ="
+    // (?<!\^) excludes a not-yet-converted LaTeX exponent digit (e.g. "\cos^2 x = 1"),
+    // where the trailing letter is the trig function's argument, not a new equation's LHS.
+    .replace(/(?<!\^)(\b\d[\d./]*[a-z³²]*)\s+([A-Za-z])(\s*=(?!=))/g, '$1\n$2$3')
     // "and WORD_PHRASE =" starting a new clause mid-sentence
     // e.g. "and number of mole(n) =" → new line
     .replace(/\s+and\s+([a-z][a-z ]{2,20}(?:\([^)]{1,10}\))?\s*=)/g, '\n\nand $1')
