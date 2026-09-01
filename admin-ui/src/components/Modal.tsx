@@ -13,14 +13,25 @@ const FOCUSABLE_SELECTOR =
 export default function Modal({ title, onClose, children, wide = false }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // Mount-only: steals focus into the panel once when it opens, and restores it to
+  // whatever triggered the modal once it closes. Deliberately NOT in the keydown
+  // effect below — onClose is a fresh function identity on every parent re-render
+  // (e.g. every keystroke in a controlled field inside the modal), and re-running
+  // this would call .focus() on the panel's first focusable element — the header's
+  // close button — after every keystroke, yanking focus out of whatever field the
+  // user was typing in.
   useEffect(() => {
-    // Tab/Shift+Tab could otherwise move focus onto the dimmed background page while
-    // the modal is open, and focus never returned to whatever triggered it on close.
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const panel = panelRef.current;
     const focusable = panel?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
     (focusable?.[0] ?? panel)?.focus();
+    return () => previouslyFocused?.focus();
+  }, []);
 
+  useEffect(() => {
+    // Tab/Shift+Tab could otherwise move focus onto the dimmed background page while
+    // the modal is open.
+    const panel = panelRef.current;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") { onClose(); return; }
       if (e.key !== "Tab" || !panel) return;
@@ -37,10 +48,7 @@ export default function Modal({ title, onClose, children, wide = false }: ModalP
       }
     };
     document.addEventListener("keydown", handler);
-    return () => {
-      document.removeEventListener("keydown", handler);
-      previouslyFocused?.focus();
-    };
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
   return (
