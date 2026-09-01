@@ -15,7 +15,7 @@ function formatDate(dateStr: string): string {
 
 interface FlagCardProps {
   flag: Flag;
-  onResolved: (id: number) => void;
+  onResolved: () => void;
 }
 
 function FlagCard({ flag, onResolved }: FlagCardProps) {
@@ -33,7 +33,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
       } else {
         await resolveFlag(flag.id, explanation);
       }
-      onResolved(flag.id);
+      onResolved();
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
       setSaving(false);
@@ -44,7 +44,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
     setSaving(true);
     try {
       await resolveFlag(flag.id);
-      onResolved(flag.id);
+      onResolved();
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to resolve");
       setSaving(false);
@@ -57,7 +57,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
     try {
       await toggleQuestionActive(flag.question_id, false);
       await resolveFlag(flag.id);
-      onResolved(flag.id);
+      onResolved();
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to deactivate");
       setDeactivating(false);
@@ -76,6 +76,11 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
               Correct: <strong className="text-white">{flag.correct_option}</strong>
             </span>
             <span className="text-xs text-muted">Q#{flag.question_id}</span>
+            {flag.resolved && (
+              <span className="rounded border border-green-500/30 bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400">
+                ✅ Resolved
+              </span>
+            )}
             {isUnderline && (
               <span className="rounded border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-400">
                 🔤 Wrong Underline
@@ -164,7 +169,16 @@ interface FlagsProps {
   onFlagsResolved?: () => void;
 }
 
+type StatusFilter = "unresolved" | "resolved" | "all";
+
+const STATUS_TABS: { value: StatusFilter; label: string }[] = [
+  { value: "unresolved", label: "Unresolved" },
+  { value: "resolved", label: "Resolved" },
+  { value: "all", label: "All" },
+];
+
 export default function Flags({ onFlagsResolved }: FlagsProps) {
+  const [status, setStatus] = useState<StatusFilter>("unresolved");
   const [flags, setFlags] = useState<Flag[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -172,7 +186,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getFlags();
+      const data = await getFlags(status);
       setFlags(data);
       setError(null);
       onFlagsResolved?.();
@@ -181,17 +195,26 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
     } finally {
       setLoading(false);
     }
-  }, [onFlagsResolved]);
+  }, [status, onFlagsResolved]);
 
-  const handleResolved = useCallback((id: number) => {
-    setFlags(prev => prev.filter(f => f.id !== id));
+  // Re-fetch (rather than filtering the resolved flag out of local state) so the list
+  // stays correct no matter which tab is active — resolving one on the "All" or
+  // "Resolved" tab should keep it visible, only the "Unresolved" tab should drop it.
+  const handleResolved = useCallback(() => {
     invalidateCache("/flags");
+    load();
     onFlagsResolved?.();
-  }, [onFlagsResolved]);
+  }, [load, onFlagsResolved]);
 
   useEffect(() => {
     load();
   }, [load]);
+
+  const emptyCopy = status === "resolved"
+    ? { title: "No resolved flags yet", body: "Flags will show up here once resolved." }
+    : status === "all"
+    ? { title: "No flags", body: "No explanations have been flagged." }
+    : { title: "No pending flags", body: "All flagged explanations have been resolved" };
 
   return (
     <div className="space-y-5 p-6">
@@ -200,7 +223,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
           <h1 className="font-display text-xl font-bold text-white">Flagged Explanations</h1>
           <p className="mt-0.5 text-sm text-muted">
             {flags.length > 0
-              ? `${flags.length} unresolved flag${flags.length === 1 ? "" : "s"}`
+              ? `${flags.length} ${status === "all" ? "" : status + " "}flag${flags.length === 1 ? "" : "s"}`
               : "All clear"}
           </p>
         </div>
@@ -210,6 +233,20 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
         >
           Refresh
         </button>
+      </div>
+
+      <div className="flex gap-1.5 rounded-lg border border-border bg-surface2 p-1 w-fit">
+        {STATUS_TABS.map((tab) => (
+          <button
+            key={tab.value}
+            onClick={() => setStatus(tab.value)}
+            className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+              status === tab.value ? "bg-accent text-white" : "text-muted hover:text-white"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {loading ? (
@@ -223,8 +260,8 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
       ) : flags.length === 0 ? (
         <div className="rounded-xl border border-border bg-surface p-12 text-center">
           <div className="mb-3 text-4xl">✅</div>
-          <p className="font-medium text-white">No pending flags</p>
-          <p className="mt-1 text-sm text-muted">All flagged explanations have been resolved</p>
+          <p className="font-medium text-white">{emptyCopy.title}</p>
+          <p className="mt-1 text-sm text-muted">{emptyCopy.body}</p>
         </div>
       ) : (
         <div className="space-y-4">
