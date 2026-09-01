@@ -119,8 +119,8 @@ export async function getStats(): Promise<Stats> {
   return cachedReq<Stats>("/stats");
 }
 
-export async function getFlags(): Promise<Flag[]> {
-  return cachedReq<Flag[]>("/flags", undefined, 30_000);
+export async function getFlags(status?: "unresolved" | "resolved" | "all"): Promise<Flag[]> {
+  return cachedReq<Flag[]>("/flags", { status }, 30_000);
 }
 
 export async function resolveFlag(

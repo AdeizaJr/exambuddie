@@ -447,7 +447,13 @@ export default function createServer(bot: any) {
   });
 
   // ── GET /api/admin/flags ────────────────────────────────────────────────────
-  app.get('/api/admin/flags', adminAuth, async (_req: Request, res: Response) => {
+  // ?status=unresolved (default) | resolved | all — lets the dashboard show what's
+  // already been fixed, not just the open queue.
+  app.get('/api/admin/flags', adminAuth, async (req: Request, res: Response) => {
+    const status = req.query.status === 'resolved' || req.query.status === 'all'
+      ? req.query.status
+      : 'unresolved';
+    const whereClause = status === 'all' ? '' : status === 'resolved' ? 'WHERE f.resolved = true' : 'WHERE f.resolved = false';
     const { rows } = await db.query(`
       SELECT f.id, f.flagged_at, f.reason, f.resolved,
              q.id as question_id, q.subject, q.question_text,
@@ -456,7 +462,7 @@ export default function createServer(bot: any) {
       FROM flagged_explanations f
       JOIN questions q ON f.question_id = q.id
       LEFT JOIN users u ON f.user_id = u.id
-      WHERE f.resolved = false
+      ${whereClause}
       ORDER BY f.flagged_at DESC LIMIT 50
     `);
     res.json(rows);
