@@ -7,7 +7,8 @@
   "overrides": {
     "node-cron": {
       "uuid": "^14.0.1"
-    }
+    },
+    "qs": "^6.16.0"
   },
   "scripts": {
     "build": "tsc",
