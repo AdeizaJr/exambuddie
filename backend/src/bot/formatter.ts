@@ -591,6 +591,13 @@ export function answerKeyboard(hasOptionE = false) {
   return { inline_keyboard: rows };
 }
 
+// Practice/drill only — quiz, challenge, and sr_review reuse answerKeyboard() as-is,
+// since skipping mid-quiz or mid-review would break those modes' fixed structure.
+export function practiceAnswerKeyboard(hasOptionE = false) {
+  const kb = answerKeyboard(hasOptionE);
+  return { inline_keyboard: [...kb.inline_keyboard, [{ text: '⏭ Skip (save for review)', callback_data: 'practice:skip' }]] };
+}
+
 export function answerOptions(q: Question): string {
   let text = `\n\n<b>A.</b> ${md(q.option_a, q.subject)}\n<b>B.</b> ${md(q.option_b, q.subject)}\n<b>C.</b> ${md(q.option_c, q.subject)}\n<b>D.</b> ${md(q.option_d, q.subject)}`;
   if (q.option_e) text += `\n<b>E.</b> ${md(q.option_e, q.subject)}`;

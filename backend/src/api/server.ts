@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import * as payments from '../services/payments';
 import * as db from '../db';
 import * as redis from '../services/redis';
+import * as fmt from '../bot/formatter';
 import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
 import { getPricing, updatePricing, getPricingHistory, PricingSettings } from '../services/pricing';
@@ -167,6 +168,49 @@ export default function createServer(bot: any) {
     try {
       const { user, expiresAt, planType } = await payments.activateSubscription(reference);
 
+      // A free user most commonly upgrades right after hitting the per-subject
+      // question limit mid-practice (checkSubjectLimit blocks further questions
+      // before the paywall prompt), so their session still has the subject/topic/
+      // year/usedIds from that interrupted run. Resume it instead of dropping them
+      // back to a cold "/practice" prompt that discards their progress.
+      let resumeQuestion: any = null;
+      let resumeQNum = 0;
+      try {
+        const session = await redis.getSession(user.telegram_id);
+        if (session?.subject && session.mode === 'practice') {
+          let q = session.currentQuestion;
+          let qNum = session.qNum || 1;
+          let usedIds = session.usedIds || [];
+          if (session.awaitingNext) {
+            // They'd already answered and were blocked before seeing the next question
+            q = await db.getRandomQuestion(
+              session.examType || user.exam_type || '',
+              session.subject,
+              usedIds,
+              session.year,
+              session.topic,
+              user.id,
+              session.diagramOnly
+            );
+            qNum = qNum + 1;
+            if (q) usedIds = [...usedIds, q.id];
+          }
+          if (q) {
+            await redis.updateSession(user.telegram_id, {
+              qNum,
+              currentQuestion: q,
+              usedIds,
+              awaitingNext: false,
+              lastQuestionTime: Date.now(),
+            });
+            resumeQuestion = q;
+            resumeQNum = qNum;
+          }
+        }
+      } catch (e: any) {
+        console.error('[payment] session resume lookup failed:', e.message);
+      }
+
       // Notify user on Telegram
       try {
         const expiry = new Date(expiresAt).toLocaleDateString('en-NG');
@@ -176,11 +220,28 @@ export default function createServer(bot: any) {
             `✅ Plan: ${planType === 'yearly' ? 'Annual' : 'Monthly'}\n` +
             `📅 Expires: ${expiry}\n\n` +
             `You now have *unlimited questions*, quiz mode, topic drills, and progress tracking.\n\n` +
-            `Start now: /practice`,
+            (resumeQuestion ? `Continuing your practice session below 👇` : `Start now: /practice`),
           { parse_mode: 'HTML' }
         );
       } catch (e: any) {
         console.error('Could not notify user:', e.message);
+      }
+
+      if (resumeQuestion) {
+        try {
+          const baseText = fmt.formatQuestion(resumeQuestion, resumeQNum, '?', 'practice') + fmt.answerOptions(resumeQuestion);
+          const keyboard = fmt.answerKeyboard(!!resumeQuestion.option_e);
+          const imageUrl = resumeQuestion.image_url?.startsWith('/')
+            ? `${process.env.APP_URL || ''}${resumeQuestion.image_url}`
+            : resumeQuestion.image_url;
+          if (imageUrl) {
+            await bot.telegram.sendPhoto(user.telegram_id, imageUrl, { caption: baseText, parse_mode: 'HTML', reply_markup: keyboard });
+          } else {
+            await bot.telegram.sendMessage(user.telegram_id, baseText, { parse_mode: 'HTML', reply_markup: keyboard });
+          }
+        } catch (e: any) {
+          console.error(`[payment] failed to resend question ${resumeQuestion.id} to ${user.telegram_id}:`, e.message);
+        }
       }
 
       res.send(`

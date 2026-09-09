@@ -37,7 +37,9 @@ async function sendQuestion(ctx: any, question: Question, session: { qNum: numbe
     + fmt.answerOptions(question);
   const timerLine = (secs: number) => `\n\n⏱️ <i>${secs}s remaining</i>`;
   const hasOptionE = !!question.option_e;
-  const keyboard = fmt.answerKeyboard(hasOptionE);
+  const keyboard = (session.mode === 'practice' || session.mode === 'drill')
+    ? fmt.practiceAnswerKeyboard(hasOptionE)
+    : fmt.answerKeyboard(hasOptionE);
 
   const msgText = baseText + (timerSecs > 0 ? timerLine(timerSecs) : '');
   const imageUrl = question.image_url?.startsWith('/')
@@ -531,6 +533,116 @@ export async function handleAnswer(ctx: any): Promise<void> {
   }
 }
 
+// Shared by handleNext and handleSkip — picks the next question for a practice
+// session given its subject/topic/year/usedIds filters. Does not touch the
+// session or reply; callers own persisting the result and messaging the user.
+async function pickNextQuestion(ctx: any, session: any, user: User): Promise<{ q: Question | null; pickedSubject: string }> {
+  let q: Question | null = null;
+  let pickedSubject = session.subject || '';
+
+  if (session.practiceSubjects && session.practiceSubjects.length > 1) {
+    // Multi-subject: try subjects in random order until one yields a question, skipping any subject that's hit its daily limit
+    const shuffled = [...session.practiceSubjects].sort(() => Math.random() - 0.5);
+    for (const subj of shuffled) {
+      if (user.plan !== 'premium') {
+        const usage = await redis.getSubjectUsage(ctx.from.id, subj);
+        if (usage.count >= fmt.SUBJECT_Q_LIMIT) continue;
+      }
+      q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic, user.id, session.diagramOnly);
+      if (q) { pickedSubject = subj; break; }
+    }
+    if (!q) {
+      // Either no questions left or every subject is at its daily limit — report against current subject
+      if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return { q: null, pickedSubject };
+    }
+  } else {
+    if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return { q: null, pickedSubject };
+    // Adaptive: when no explicit topic chosen, 60% probability drill a weak topic.
+    // Skipped when diagram-only — a random weak topic isn't guaranteed to have diagram
+    // questions, and would silently break the filter the user explicitly asked for.
+    const requestedTopic = session.topic;
+    let adaptiveTopic = requestedTopic;
+    if (!adaptiveTopic && !session.diagramOnly) {
+      const weak = await db.getWeakTopics(user.id, session.subject || '', session.examType || user.exam_type || '');
+      if (weak.length > 0 && Math.random() < 0.6) {
+        adaptiveTopic = weak[Math.floor(Math.random() * Math.min(3, weak.length))].topic;
+      }
+    }
+    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, adaptiveTopic, user.id, session.diagramOnly);
+    // The adaptive topic pick isn't scoped to the current year/topic filters (it comes from
+    // the user's overall weak-topic history), so it can legitimately match zero rows within
+    // this specific year even when plenty of other unseen questions remain there. Retry
+    // without it before concluding the pool is exhausted — but only when it was an internal
+    // adaptive guess, not a topic the user explicitly asked to drill.
+    if (!q && adaptiveTopic && adaptiveTopic !== requestedTopic) {
+      q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, requestedTopic, user.id, session.diagramOnly);
+    }
+  }
+
+  return { q, pickedSubject };
+}
+
+// Skip the current question without answering it — bookmarks it for later review
+// and immediately advances, same as handleNext but with no attempt logged and no
+// daily-limit/stats impact (the free-tier subject cap only counts answered
+// questions, via incrementSubjectUsage in handleAnswer, so skipping doesn't burn it).
+export async function handleSkip(ctx: any): Promise<void> {
+  const session = await redis.getSession(ctx.from.id);
+  if (!session || !session.currentQuestion) {
+    await ctx.answerCbQuery('No active question.', { show_alert: false });
+    return;
+  }
+
+  // Same stale-button guard as handleAnswer/handleNext: ignore a tap on a question
+  // that's already been answered and superseded (double-tap, or a late tap after
+  // the timer already advanced the session).
+  if (session.awaitingNext) {
+    await ctx.answerCbQuery();
+    return;
+  }
+
+  if (!(await redis.acquireActionLock(ctx.from.id, 'practice:answer'))) {
+    await ctx.answerCbQuery();
+    return;
+  }
+  ctx.answerCbQuery('⏭ Skipped — saved for review').catch(() => {});
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
+
+  timerService.clearQuestionTimer(ctx.from.id);
+  const skippedQuestion = session.currentQuestion;
+  await db.addBookmark(user.id, skippedQuestion.id).catch((err) => console.error('[practice:skip] bookmark failed:', err.message));
+
+  const { q, pickedSubject } = await pickNextQuestion(ctx, session, user);
+
+  if (!q) {
+    const yearStr = session.year ? ` for ${session.year}` : '';
+    const topicStr = session.diagramOnly ? ` with a diagram` : (session.topic ? ` on topic "${fmt.escHtml(session.topic)}"` : '');
+    const subjectLabel = session.practiceSubjects && session.practiceSubjects.length > 1
+      ? 'all selected subjects'
+      : `this subject${yearStr}${topicStr}`;
+    await ctx.reply(
+      `🔖 Saved for review. But that was the last question available for ${subjectLabel}! Try another year or subject.`,
+      { parse_mode: 'HTML', reply_markup: fmt.sessionKeyboard(session.subject || '', session.year) }
+    );
+    return;
+  }
+
+  const newQNum = (session.qNum || 1) + 1;
+  await redis.updateSession(ctx.from.id, {
+    qNum: newQNum,
+    subject: pickedSubject,
+    currentQuestion: q,
+    lastQuestionTime: Date.now(),
+    awaitingNext: false,
+    usedIds: [...(session.usedIds || []), skippedQuestion.id, q.id],
+  });
+
+  await db.incrementDailyCount(ctx.from.id);
+  await sendQuestion(ctx, q, { mode: 'practice', qNum: newQNum, questionTimerSecs: session.questionTimerSecs });
+}
+
 // Next question in practice
 export async function handleNext(ctx: any): Promise<void> {
   const session = await redis.getSession(ctx.from.id);
@@ -625,47 +737,7 @@ export async function handleNext(ctx: any): Promise<void> {
     return;
   }
 
-  let q = null;
-  let pickedSubject = session.subject || '';
-
-  if (session.practiceSubjects && session.practiceSubjects.length > 1) {
-    // Multi-subject: try subjects in random order until one yields a question, skipping any subject that's hit its daily limit
-    const shuffled = [...session.practiceSubjects].sort(() => Math.random() - 0.5);
-    for (const subj of shuffled) {
-      if (user.plan !== 'premium') {
-        const usage = await redis.getSubjectUsage(ctx.from.id, subj);
-        if (usage.count >= fmt.SUBJECT_Q_LIMIT) continue;
-      }
-      q = await db.getRandomQuestion(session.examType || user.exam_type || '', subj, session.usedIds || [], session.year, session.topic, user.id, session.diagramOnly);
-      if (q) { pickedSubject = subj; break; }
-    }
-    if (!q) {
-      // Either no questions left or every subject is at its daily limit — report against current subject
-      if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
-    }
-  } else {
-    if (!(await checkSubjectLimit(ctx, user, session.subject || ''))) return;
-    // Adaptive: when no explicit topic chosen, 60% probability drill a weak topic.
-    // Skipped when diagram-only — a random weak topic isn't guaranteed to have diagram
-    // questions, and would silently break the filter the user explicitly asked for.
-    const requestedTopic = session.topic;
-    let adaptiveTopic = requestedTopic;
-    if (!adaptiveTopic && !session.diagramOnly) {
-      const weak = await db.getWeakTopics(user.id, session.subject || '', session.examType || user.exam_type || '');
-      if (weak.length > 0 && Math.random() < 0.6) {
-        adaptiveTopic = weak[Math.floor(Math.random() * Math.min(3, weak.length))].topic;
-      }
-    }
-    q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, adaptiveTopic, user.id, session.diagramOnly);
-    // The adaptive topic pick isn't scoped to the current year/topic filters (it comes from
-    // the user's overall weak-topic history), so it can legitimately match zero rows within
-    // this specific year even when plenty of other unseen questions remain there. Retry
-    // without it before concluding the pool is exhausted — but only when it was an internal
-    // adaptive guess, not a topic the user explicitly asked to drill.
-    if (!q && adaptiveTopic && adaptiveTopic !== requestedTopic) {
-      q = await db.getRandomQuestion(session.examType || user.exam_type || '', session.subject || '', session.usedIds || [], session.year, requestedTopic, user.id, session.diagramOnly);
-    }
-  }
+  const { q, pickedSubject } = await pickNextQuestion(ctx, session, user);
 
   if (!q) {
     const yearStr = session.year ? ` for ${session.year}` : '';

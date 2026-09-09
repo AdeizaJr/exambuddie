@@ -197,6 +197,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('practice:topic:')) return practice.handlePracticeTopicPick(ctx);
   if (data.startsWith('practice:timer:')) return practice.handlePracticeTimerPick(ctx);
   if (data === 'practice:next') return practice.handleNext(ctx);
+  if (data === 'practice:skip') return practice.handleSkip(ctx);
   if (data === 'practice:stop') return practice.handleStop(ctx);
   if (data === 'practice:change_subject') return practice.handleChangeSubject(ctx);
   if (data === 'practice:add_subject') return onboarding.handleSettingsSubjects(ctx);
