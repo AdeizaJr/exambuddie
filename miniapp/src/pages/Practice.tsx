@@ -145,6 +145,41 @@ export default function Practice() {
     }).catch(() => {});
   }
 
+  // Skip without answering — bookmarks the question for later review and moves on.
+  // Builds excludeIds explicitly rather than reading `usedIds` state right after
+  // setUsedIds(), since that update hasn't flushed yet and the API call would miss
+  // the just-skipped id, letting it reappear on the very next fetch.
+  async function handleSkip() {
+    if (!question) return;
+    haptic('light');
+    api.addBookmark(question.id).catch(() => {});
+    setQNum(n => n + 1);
+
+    if (isDrill && drillQuestions.length > 0) {
+      const next = drillIndex + 1;
+      if (next >= drillQuestions.length) { setStage('done'); return; }
+      setDrillIndex(next);
+      setQuestion(drillQuestions[next]);
+      setSelected('');
+      setStage('question');
+      return;
+    }
+
+    const newUsedIds = [...usedIds, question.id];
+    setUsedIds(newUsedIds);
+    setLoading(true);
+    try {
+      const q = await api.getQuestion({ subject, examType, excludeIds: newUsedIds, topic });
+      if (!q) { setStage('done'); return; }
+      setQuestion(q);
+      setSelected('');
+      setBookmarked(false);
+      setStage('question');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function handleNext() {
     haptic('light');
     setQNum(n => n + 1);
@@ -335,6 +370,14 @@ export default function Practice() {
           onSelect={handleAnswer}
           disabled={stage === 'revealed'}
         />
+      )}
+
+      {/* Skip — only before answering; after reveal, use the bookmark button instead */}
+      {stage === 'question' && (
+        <button onClick={handleSkip}
+          className="mt-4 w-full py-3 rounded-2xl font-medium border border-gray-200 text-[var(--tg-hint)]">
+          ⏭ Skip (save for review)
+        </button>
       )}
 
       {/* Action row after reveal */}
