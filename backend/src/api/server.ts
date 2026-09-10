@@ -943,7 +943,7 @@ export default function createServer(bot: any) {
       `, [tid]),
       db.query(`
         SELECT
-          a.is_correct, a.selected_option, a.attempted_at,
+          a.question_id, a.is_correct, a.selected_option, a.attempted_at,
           q.subject, q.year, q.exam_type
         FROM attempts a
         JOIN users u ON a.user_id = u.id

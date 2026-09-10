@@ -616,6 +616,7 @@ export default function Users() {
                     <table className="w-full text-xs">
                       <thead className="sticky top-0 bg-surface">
                         <tr className="border-b border-border">
+                          <th className="px-3 py-2 text-left font-medium text-muted">Q ID</th>
                           <th className="px-3 py-2 text-left font-medium text-muted">Subject</th>
                           <th className="px-3 py-2 text-left font-medium text-muted">Exam / Year</th>
                           <th className="px-3 py-2 text-left font-medium text-muted">Result</th>
@@ -625,6 +626,7 @@ export default function Users() {
                       <tbody className="divide-y divide-border">
                         {activity.recent.map((a, i) => (
                           <tr key={i} className="hover:bg-surface2">
+                            <td className="px-3 py-2 text-muted">{a.question_id}</td>
                             <td className="px-3 py-2 capitalize text-white">{a.subject.replace(/-/g, " ")}</td>
                             <td className="px-3 py-2 text-muted">{a.exam_type} {a.year}</td>
                             <td className="px-3 py-2">

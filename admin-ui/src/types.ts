@@ -149,6 +149,7 @@ export interface UserActivitySubject {
 }
 
 export interface UserActivityAttempt {
+  question_id: number;
   is_correct: boolean;
   selected_option: string;
   attempted_at: string;
