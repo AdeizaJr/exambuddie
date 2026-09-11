@@ -349,15 +349,23 @@ function buildFlyerSVG(fact: { subject: string; topic: string | null; fact_text:
 
 // One subject per day, English first — cron needs no daily edits, it just advances
 // automatically. Order mixes core WAEC/JAMB subjects early, rest fill out the cycle.
+// crk/irk are pinned to Thu/Fri below instead of rotating, so they're excluded here
+// to avoid also landing on a random day through the cycle.
 const ROTATION: string[] = [
   'english', 'math', 'biology', 'chemistry', 'physics', 'government',
-  'economics', 'geography', 'agric', 'commerce', 'crk', 'irk',
+  'economics', 'geography', 'agric', 'commerce',
   'civic-education', 'computer', 'history', 'literature', 'accounts',
   'further-math', 'fine-arts', 'pe',
 ];
 const ROTATION_ANCHOR = Date.UTC(2026, 7, 18); // 2026-08-18 = day 0 = english
 
 function subjectForToday(): string {
+  // Africa/Lagos has no DST, fixed UTC+1 — safe as a plain offset.
+  const watNow = new Date(Date.now() + 60 * 60 * 1000);
+  const dayOfWeek = watNow.getUTCDay(); // 0=Sun ... 4=Thu, 5=Fri
+  if (dayOfWeek === 4) return 'crk';
+  if (dayOfWeek === 5) return 'irk';
+
   const daysSinceAnchor = Math.floor((Date.now() - ROTATION_ANCHOR) / 86400000);
   const idx = ((daysSinceAnchor % ROTATION.length) + ROTATION.length) % ROTATION.length;
   return ROTATION[idx];
