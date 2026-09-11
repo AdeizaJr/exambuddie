@@ -11385,6 +11385,310 @@
       "source": "general knowledge"
     },
     {
+      "id": "sci_485",
+      "subject": "Earth Science",
+      "topic": "Plate Tectonics",
+      "fact": "The Pacific 'Ring of Fire' is a horseshoe-shaped zone around the Pacific Ocean where most of the world's earthquakes and many active volcanoes occur.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_486",
+      "subject": "Earth Science",
+      "topic": "Volcanoes",
+      "fact": "A volcano is described as active if it erupts regularly, dormant if it has not erupted for a long time but may do so again, and extinct if it is not expected to erupt again.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_487",
+      "subject": "Earth Science",
+      "topic": "Rocks",
+      "fact": "In limestone caves, stalactites hang down from the ceiling while stalagmites build up from the floor.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_488",
+      "subject": "Earth Science",
+      "topic": "Weathering and Erosion",
+      "fact": "Weathering can be physical, such as rock cracking from repeated heating and cooling, chemical, such as rock dissolving in acidic rain, or biological, such as roots splitting rock.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_489",
+      "subject": "Earth Science",
+      "topic": "Landforms",
+      "fact": "An oxbow lake forms when a curve, or meander, of a river is cut off from the main channel, leaving a curved lake behind.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_490",
+      "subject": "Earth Science",
+      "topic": "Structure of the Earth",
+      "fact": "The boundary between the Earth's crust and the mantle beneath it is called the Mohorovičić discontinuity, or Moho.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_491",
+      "subject": "Earth Science",
+      "topic": "Structure of the Earth",
+      "fact": "Seismic S-waves cannot travel through liquids, and their absence on the far side of the Earth during earthquakes showed scientists that the outer core is liquid.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_492",
+      "subject": "Earth Science",
+      "topic": "Weather",
+      "fact": "Convectional rainfall, common in tropical regions, occurs when strong heating makes moist air rise, cool, and form towering thunderclouds.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_493",
+      "subject": "Mathematics",
+      "topic": "Geometry",
+      "fact": "The sum of the interior angles of a polygon with n sides is (n − 2) × 180 degrees.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_494",
+      "subject": "Mathematics",
+      "topic": "Circle Theorems",
+      "fact": "The angle that an arc subtends at the centre of a circle is twice the angle it subtends at any point on the remaining part of the circumference.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_495",
+      "subject": "Mathematics",
+      "topic": "Circle Theorems",
+      "fact": "Any angle drawn in a semicircle, from the ends of a diameter to a point on the circle, is a right angle.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_496",
+      "subject": "Mathematics",
+      "topic": "Circle Theorems",
+      "fact": "The opposite angles of a cyclic quadrilateral add up to 180 degrees.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_497",
+      "subject": "Mathematics",
+      "topic": "Trigonometry",
+      "fact": "SOH CAH TOA is a memory aid: sine is opposite over hypotenuse, cosine is adjacent over hypotenuse, and tangent is opposite over adjacent.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_498",
+      "subject": "Mathematics",
+      "topic": "Bearings",
+      "fact": "Three-figure bearings are measured clockwise from north, so due east is 090° and due south is 180°.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_499",
+      "subject": "Mathematics",
+      "topic": "Variation",
+      "fact": "If y varies directly as x, then y = kx, while if y varies inversely as x, then y = k/x, where k is a constant.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_500",
+      "subject": "Mathematics",
+      "topic": "Indices",
+      "fact": "A number in standard form is written as a number between 1 and 10 multiplied by a power of ten, such as 3.2 × 10⁴ for 32,000.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_501",
+      "subject": "Mathematics",
+      "topic": "Mensuration",
+      "fact": "The volume of a cylinder is πr²h, where r is the radius of its circular base and h is its height.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_502",
+      "subject": "Mathematics",
+      "topic": "Circle Theorems",
+      "fact": "Angles in the same segment of a circle, standing on the same arc, are equal.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_503",
+      "subject": "Mathematics",
+      "topic": "Trigonometry",
+      "fact": "The numbers 3, 4, and 5 form a Pythagorean triple, because 3² + 4² = 5².",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_504",
+      "subject": "Mathematics",
+      "topic": "Interest",
+      "fact": "Simple interest is calculated using I = PRT/100, where P is the principal, R is the rate per cent per year, and T is the time in years.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_505",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Mercury and Venus are the only planets in the Solar System that have no moons.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_506",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Venus is the brightest planet in the night sky and is often called the morning star or the evening star.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_507",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Olympus Mons on Mars is the tallest known volcano in the Solar System, about two and a half times the height of Mount Everest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_508",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Jupiter's Great Red Spot is a giant storm, wider than the Earth, that has been raging for well over a century.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_509",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Uranus is tilted so far on its axis that it spins almost on its side as it orbits the Sun.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_510",
+      "subject": "Astronomy",
+      "topic": "Planets",
+      "fact": "Neptune is the farthest planet from the Sun in our Solar System.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_511",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "Apart from the Sun, the nearest star to Earth is Proxima Centauri, about 4.2 light-years away.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_512",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "Polaris, the North Star, lies almost directly above the Earth's North Pole, so it appears to stay still while other stars circle around it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_513",
+      "subject": "Astronomy",
+      "topic": "Distance",
+      "fact": "An astronomical unit is the average distance between the Earth and the Sun, about 150 million kilometres.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_514",
+      "subject": "Astronomy",
+      "topic": "History of Astronomy",
+      "fact": "In 1610, Galileo Galilei used a telescope to discover the four largest moons of Jupiter.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_515",
+      "subject": "Astronomy",
+      "topic": "History of Astronomy",
+      "fact": "Nicolaus Copernicus proposed that the Earth and the other planets orbit the Sun, rather than everything orbiting the Earth.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_516",
+      "subject": "Astronomy",
+      "topic": "History of Astronomy",
+      "fact": "Johannes Kepler showed that planets travel around the Sun in elliptical orbits rather than perfect circles.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_517",
+      "subject": "Astronomy",
+      "topic": "Moons",
+      "fact": "Ganymede, a moon of Jupiter, is the largest moon in the Solar System and is even bigger than the planet Mercury.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_518",
+      "subject": "Astronomy",
+      "topic": "Moons",
+      "fact": "Titan, Saturn's largest moon, is the only moon known to have a thick atmosphere.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_519",
+      "subject": "Astronomy",
+      "topic": "Moon",
+      "fact": "The Moon goes through a full cycle of phases, from new moon to full moon and back again, in about 29.5 days.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_520",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "The Hubble Space Telescope was launched in 1990, and its more powerful successor, the James Webb Space Telescope, launched in December 2021.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_521",
+      "subject": "Astronomy",
+      "topic": "Space Exploration",
+      "fact": "Nigeria launched its first satellite, NigeriaSat-1, in 2003.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "sci_522",
+      "subject": "Astronomy",
+      "topic": "Stars",
+      "fact": "When a Sun-like star runs out of hydrogen in its core, it swells into a red giant and eventually leaves behind a small, dense white dwarf.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
       "id": "hist_064",
       "subject": "History",
       "topic": "Ancient Egypt",
@@ -11913,6 +12217,46 @@
       "source": "general knowledge"
     },
     {
+      "id": "eng_078",
+      "subject": "English Language",
+      "topic": "Oral English",
+      "fact": "Standard British English pronunciation (RP) is usually described as having 44 sounds: 20 vowel sounds and 24 consonant sounds.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_079",
+      "subject": "English Language",
+      "topic": "Oral English",
+      "fact": "A diphthong is a vowel sound that glides from one vowel position to another within a single syllable, as in 'boy' or 'day'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_080",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "A gerund is the '-ing' form of a verb used as a noun, as in 'Swimming is good exercise.'",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_081",
+      "subject": "English Language",
+      "topic": "Grammar",
+      "fact": "A question tag is a short question added to a statement, as in 'You are coming, aren't you?', and a positive statement usually takes a negative tag.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "eng_082",
+      "subject": "English Language",
+      "topic": "Concord",
+      "fact": "With 'either...or' and 'neither...nor', the verb usually agrees with the subject closest to it, as in 'Neither the teacher nor the students were late.'",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
       "id": "lit_050",
       "subject": "Literature",
       "topic": "Poetry",
@@ -12085,6 +12429,126 @@
       "subject": "Literature",
       "topic": "World Literature",
       "fact": "William Shakespeare wrote around 37 plays and 154 sonnets and is regarded as a giant of English literature.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_072",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Things Fall Apart tells the story of Okonkwo, a proud warrior of Umuofia, and takes its title from W. B. Yeats's poem 'The Second Coming'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_073",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Chinua Achebe followed Things Fall Apart with No Longer at Ease and Arrow of God, completing what is often called his African trilogy.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_074",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Ola Rotimi's play The Gods Are Not to Blame is an adaptation of the ancient Greek tragedy Oedipus Rex, set in a Yoruba kingdom.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_075",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Wole Soyinka's play The Lion and the Jewel centres on Sidi, the village beauty, who is courted by the schoolteacher Lakunle and the old chief Baroka.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_076",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Flora Nwapa's Efuru, published in 1966, made her one of the first African women novelists to be published internationally in English.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_077",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Amos Tutuola's The Palm-Wine Drinkard, published in 1952, draws heavily on Yoruba folktales.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_078",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Chimamanda Ngozi Adichie's novel Half of a Yellow Sun is set during the Nigerian Civil War.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_079",
+      "subject": "Literature",
+      "topic": "African Literature",
+      "fact": "Negritude was a literary movement, led by writers such as Léopold Sédar Senghor and Aimé Césaire, that celebrated Black African identity and culture.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_080",
+      "subject": "Literature",
+      "topic": "Drama",
+      "fact": "In tragedy, hamartia is the hero's fatal flaw or error of judgement, and catharsis is the emotional release the audience feels at the end.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_081",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "Blank verse is unrhymed poetry written in iambic pentameter, and Shakespeare used it widely in his plays.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_082",
+      "subject": "Literature",
+      "topic": "Poetry",
+      "fact": "Enjambment occurs when a sentence runs on from one line of poetry to the next without a pause at the line break.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_083",
+      "subject": "Literature",
+      "topic": "Figures of Speech",
+      "fact": "An oxymoron places two contradictory words side by side, as in 'deafening silence' or 'bittersweet'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_084",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "An allegory is a story whose characters and events stand for deeper ideas, as George Orwell's Animal Farm uses farm animals to represent political figures.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_085",
+      "subject": "Literature",
+      "topic": "Prose",
+      "fact": "A bildungsroman is a novel that follows a character's growth and development from youth to maturity.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "lit_086",
+      "subject": "Literature",
+      "topic": "World Literature",
+      "fact": "In Shakespeare's Othello, the villain Iago manipulates Othello into believing that his wife Desdemona has been unfaithful.",
       "difficulty": "medium",
       "source": "general knowledge"
     },
@@ -12265,6 +12729,118 @@
       "source": "general knowledge"
     },
     {
+      "id": "civ_069",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "Nigeria's national anthem, 'Nigeria, We Hail Thee', was first used at independence in 1960, replaced by 'Arise, O Compatriots' in 1978, and restored in May 2024.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_070",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "Nigeria's national flag was designed by Michael Taiwo Akinkunmi while he was a student in London, and it was first raised at independence in 1960.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_071",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "On Nigeria's coat of arms, the black shield represents the country's fertile soil, and the white Y-shaped band stands for the Rivers Niger and Benue.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_072",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "The eagle on Nigeria's coat of arms represents strength, while the two horses supporting the shield represent dignity.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_073",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "Nigeria's national motto is 'Unity and Faith, Peace and Progress'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_074",
+      "subject": "Civic Education",
+      "topic": "National Symbols",
+      "fact": "The Nigerian national pledge was written by Professor Felicia Adebola Adeyoyin in 1976.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_075",
+      "subject": "Civic Education",
+      "topic": "National Institutions",
+      "fact": "The National Youth Service Corps (NYSC) was established in 1973 to promote national unity, and it requires young graduates to serve the nation for one year.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_076",
+      "subject": "Civic Education",
+      "topic": "Corruption",
+      "fact": "The Economic and Financial Crimes Commission (EFCC) and the Independent Corrupt Practices and Other Related Offences Commission (ICPC) are Nigerian agencies set up to fight corruption.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_077",
+      "subject": "Civic Education",
+      "topic": "Road Safety",
+      "fact": "The Federal Road Safety Corps (FRSC), established in 1988, is responsible for road safety and traffic management on Nigeria's highways.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_078",
+      "subject": "Civic Education",
+      "topic": "Drug Abuse",
+      "fact": "The National Drug Law Enforcement Agency (NDLEA) is the Nigerian agency responsible for fighting the trafficking and abuse of illegal drugs.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_079",
+      "subject": "Civic Education",
+      "topic": "Human Trafficking",
+      "fact": "Human trafficking is the illegal recruitment and movement of people, often through deception, for purposes such as forced labour, and in Nigeria it is tackled by NAPTIP.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_080",
+      "subject": "Civic Education",
+      "topic": "Human Rights",
+      "fact": "Chapter IV of Nigeria's 1999 Constitution sets out the fundamental human rights of citizens, such as the rights to life, dignity, and freedom of expression.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_081",
+      "subject": "Civic Education",
+      "topic": "National Values",
+      "fact": "Nigeria's Democracy Day is celebrated on 12 June, in memory of the presidential election held on that date in 1993.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "civ_082",
+      "subject": "Civic Education",
+      "topic": "Cultism",
+      "fact": "Cultism in schools involves secret groups that often use violence and intimidation, and membership of such groups is a criminal offence in Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
       "id": "econ_047",
       "subject": "Economics",
       "topic": "Basic Concepts",
@@ -12437,6 +13013,126 @@
       "subject": "Economics",
       "topic": "Development",
       "fact": "A developing economy is one working to raise its income, industry, and living standards.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_069",
+      "subject": "Economics",
+      "topic": "Market Structures",
+      "fact": "In perfect competition, there are many buyers and sellers of an identical product, so no single firm can influence the market price.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_070",
+      "subject": "Economics",
+      "topic": "Market Structures",
+      "fact": "An oligopoly is a market dominated by a few large firms, such as the mobile telecommunications industry in many countries.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_071",
+      "subject": "Economics",
+      "topic": "Demand and Supply",
+      "fact": "Price elasticity of demand measures how strongly the quantity demanded of a good responds to a change in its price.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_072",
+      "subject": "Economics",
+      "topic": "Production",
+      "fact": "The law of diminishing returns states that adding more of one factor of production, while others stay fixed, eventually brings smaller and smaller increases in output.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_073",
+      "subject": "Economics",
+      "topic": "Costs",
+      "fact": "Fixed costs, such as rent, stay the same whatever the level of output, while variable costs, such as raw materials, rise as output increases.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_074",
+      "subject": "Economics",
+      "topic": "Money",
+      "fact": "Gresham's law states that 'bad money drives out good', meaning people tend to hoard money of higher value and spend money of lower value.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_075",
+      "subject": "Economics",
+      "topic": "Population",
+      "fact": "Thomas Malthus argued that population tends to grow geometrically while food supply grows only arithmetically.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_076",
+      "subject": "Economics",
+      "topic": "Public Finance",
+      "fact": "Fiscal policy uses government spending and taxation to influence the economy, while monetary policy uses interest rates and the money supply.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_077",
+      "subject": "Economics",
+      "topic": "International Trade",
+      "fact": "The balance of payments is a record of all of a country's economic transactions with the rest of the world over a period of time.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_078",
+      "subject": "Economics",
+      "topic": "Business Organisations",
+      "fact": "A cooperative society is a business owned and run by its members for their shared benefit rather than for outside shareholders.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_079",
+      "subject": "Economics",
+      "topic": "Economic Systems",
+      "fact": "In a capitalist economy, most resources are privately owned, while in a socialist economy, the state owns and controls the major means of production.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_080",
+      "subject": "Economics",
+      "topic": "Nigerian Economy",
+      "fact": "Crude oil was first discovered in commercial quantities in Nigeria at Oloibiri, in present-day Bayelsa State, in 1956.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_081",
+      "subject": "Economics",
+      "topic": "Nigerian Economy",
+      "fact": "The naira replaced the Nigerian pound as the country's currency on 1 January 1973.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_082",
+      "subject": "Economics",
+      "topic": "Nigerian Economy",
+      "fact": "The Central Bank of Nigeria was established by law in 1958 and began operations in 1959.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "econ_083",
+      "subject": "Economics",
+      "topic": "Nigerian Economy",
+      "fact": "Nigeria joined the Organization of the Petroleum Exporting Countries, OPEC, in 1971.",
       "difficulty": "medium",
       "source": "general knowledge"
     },
@@ -12617,6 +13313,142 @@
       "source": "general knowledge"
     },
     {
+      "id": "gov_071",
+      "subject": "Government",
+      "topic": "Colonial Administration",
+      "fact": "Lord Lugard amalgamated the Northern and Southern Protectorates in 1914 to form a single Colony and Protectorate of Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_072",
+      "subject": "Government",
+      "topic": "Colonial Administration",
+      "fact": "Indirect rule was the British policy of governing through traditional rulers, and it worked most smoothly in the emirates of Northern Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_073",
+      "subject": "Government",
+      "topic": "Constitutional Development",
+      "fact": "The Clifford Constitution of 1922 introduced the elective principle in Nigeria, allowing a few members of the Legislative Council to be elected from Lagos and Calabar.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_074",
+      "subject": "Government",
+      "topic": "Constitutional Development",
+      "fact": "The Richards Constitution of 1946 divided Nigeria into three regions: the Northern, Western, and Eastern Regions.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_075",
+      "subject": "Government",
+      "topic": "Constitutional Development",
+      "fact": "The Lyttleton Constitution of 1954 made Nigeria a federation, sharing power between the central government and the regions.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_076",
+      "subject": "Government",
+      "topic": "Nigerian Government",
+      "fact": "Sir Abubakar Tafawa Balewa was Nigeria's first and only Prime Minister, while Dr Nnamdi Azikiwe became the first President when Nigeria became a republic.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_077",
+      "subject": "Government",
+      "topic": "Military Rule",
+      "fact": "Nigeria's first military coup took place on 15 January 1966, bringing the First Republic to an end.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_078",
+      "subject": "Government",
+      "topic": "Nigerian Government",
+      "fact": "Nigeria adopted the presidential system of government in 1979, replacing the parliamentary system it had used since independence.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_079",
+      "subject": "Government",
+      "topic": "Nigerian Government",
+      "fact": "Nigeria's National Assembly has two chambers: the Senate, with 109 members, and the House of Representatives, with 360 members.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_080",
+      "subject": "Government",
+      "topic": "Nigerian Government",
+      "fact": "Each of Nigeria's 36 states elects three senators, while the Federal Capital Territory elects one.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_081",
+      "subject": "Government",
+      "topic": "Nigerian Government",
+      "fact": "Nigeria is made up of 36 states, the Federal Capital Territory, and 774 local government areas.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_082",
+      "subject": "Government",
+      "topic": "Nigerian Government",
+      "fact": "The Independent National Electoral Commission, INEC, is the body responsible for conducting federal and state elections in Nigeria.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_083",
+      "subject": "Government",
+      "topic": "International Organisations",
+      "fact": "The Economic Community of West African States, ECOWAS, was established in 1975 by the Treaty of Lagos.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_084",
+      "subject": "Government",
+      "topic": "International Organisations",
+      "fact": "The Organisation of African Unity was founded in Addis Ababa in 1963 and was replaced by the African Union in 2002.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_085",
+      "subject": "Government",
+      "topic": "Political Concepts",
+      "fact": "Legitimacy is the acceptance by the people that a government has the right to rule over them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_086",
+      "subject": "Government",
+      "topic": "Political Concepts",
+      "fact": "Delegated legislation is law made by bodies other than the legislature, such as ministries or local councils, using powers given to them by the legislature.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "gov_087",
+      "subject": "Government",
+      "topic": "Elections",
+      "fact": "Proportional representation is an electoral system that allocates seats to parties according to their share of the total vote.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
       "id": "agric_050",
       "subject": "Agricultural Science",
       "topic": "Branches",
@@ -12793,6 +13625,118 @@
       "source": "general knowledge"
     },
     {
+      "id": "agric_072",
+      "subject": "Agricultural Science",
+      "topic": "Crops",
+      "fact": "Nigeria is the world's largest producer of both cassava and yam.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_073",
+      "subject": "Agricultural Science",
+      "topic": "Crops",
+      "fact": "Cocoa is grown mainly in south-western Nigeria and was once the country's leading agricultural export.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_074",
+      "subject": "Agricultural Science",
+      "topic": "Crops",
+      "fact": "Before the oil boom, Kano was famous for its groundnut pyramids, huge stacks of bagged groundnuts awaiting export.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_075",
+      "subject": "Agricultural Science",
+      "topic": "Livestock",
+      "fact": "The White Fulani, also called Bunaji, is the most common breed of cattle in Nigeria and is kept for both milk and meat.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_076",
+      "subject": "Agricultural Science",
+      "topic": "Livestock",
+      "fact": "N'Dama cattle are valued in West Africa because they can tolerate trypanosomiasis, a disease spread by tsetse flies.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_077",
+      "subject": "Agricultural Science",
+      "topic": "Livestock",
+      "fact": "The Red Sokoto goat is prized for its high-quality skin, while the West African Dwarf goat is well suited to the humid south.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_078",
+      "subject": "Agricultural Science",
+      "topic": "Animal Health",
+      "fact": "Newcastle disease is a highly contagious viral disease of poultry that can be prevented by vaccination.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_079",
+      "subject": "Agricultural Science",
+      "topic": "Animal Health",
+      "fact": "Rinderpest, a deadly disease of cattle, was declared eradicated worldwide in 2011.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_080",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "Chicken eggs take about 21 days to hatch during incubation.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_081",
+      "subject": "Agricultural Science",
+      "topic": "Animal Husbandry",
+      "fact": "The gestation period is about nine months in a cow, about five months in a goat, and about three months, three weeks, and three days in a pig.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_082",
+      "subject": "Agricultural Science",
+      "topic": "Soil Management",
+      "fact": "Farmers can add lime to acidic soils to raise their pH and make nutrients more available to crops.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_083",
+      "subject": "Agricultural Science",
+      "topic": "Farming Practice",
+      "fact": "In shifting cultivation, farmers farm a piece of land until its fertility falls, then move to a new area and leave the old one to recover.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_084",
+      "subject": "Agricultural Science",
+      "topic": "Agricultural Policy",
+      "fact": "Operation Feed the Nation (1976) and the Green Revolution (1980) were Nigerian government programmes aimed at boosting food production.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "agric_085",
+      "subject": "Agricultural Science",
+      "topic": "Pests and Diseases",
+      "fact": "Maize streak is a viral disease of maize that is spread by leafhoppers.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
       "id": "cs_049",
       "subject": "Computer Science",
       "topic": "Basics",
@@ -12965,6 +13909,118 @@
       "subject": "Computer Science",
       "topic": "Artificial Intelligence",
       "fact": "Artificial intelligence is the ability of a computer to perform tasks that normally need human intelligence.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_071",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "The World Wide Web was invented by the British scientist Tim Berners-Lee in 1989.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_072",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "HTML, which stands for HyperText Markup Language, is the standard language used to structure web pages.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_073",
+      "subject": "Computer Science",
+      "topic": "Internet",
+      "fact": "HTTPS is the secure version of HTTP, and it encrypts the data sent between a browser and a website.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_074",
+      "subject": "Computer Science",
+      "topic": "Data Representation",
+      "fact": "ASCII is a character code that originally used 7 bits to represent 128 characters, including English letters, digits, and symbols.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_075",
+      "subject": "Computer Science",
+      "topic": "Storage",
+      "fact": "ROM, or read-only memory, keeps its contents when the computer is switched off and stores the instructions needed to start the computer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_076",
+      "subject": "Computer Science",
+      "topic": "Storage",
+      "fact": "In computing, a kilobyte has traditionally meant 1,024 bytes, because memory sizes are based on powers of two.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_077",
+      "subject": "Computer Science",
+      "topic": "History",
+      "fact": "First-generation computers used vacuum tubes, the second generation used transistors, the third used integrated circuits, and the fourth uses microprocessors.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_078",
+      "subject": "Computer Science",
+      "topic": "History",
+      "fact": "The abacus, which uses beads on rods to perform calculations, is one of the earliest known calculating devices.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_079",
+      "subject": "Computer Science",
+      "topic": "History",
+      "fact": "The Nigerian-born computer scientist Philip Emeagwali won the Gordon Bell Prize in 1989 for work on high-speed parallel computing.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_080",
+      "subject": "Computer Science",
+      "topic": "Programming",
+      "fact": "A compiler translates a whole program into machine code before it runs, while an interpreter translates and runs it one line at a time.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_081",
+      "subject": "Computer Science",
+      "topic": "Logic",
+      "fact": "Boolean logic, developed by George Boole, uses the operations AND, OR, and NOT, and forms the basis of digital circuits.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_082",
+      "subject": "Computer Science",
+      "topic": "Networking",
+      "fact": "A local area network (LAN) connects computers in a small area such as a school, while a wide area network (WAN) covers a large geographical area.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_083",
+      "subject": "Computer Science",
+      "topic": "Cybersecurity",
+      "fact": "Phishing is a scam in which criminals send fake messages that appear to come from trusted sources, to trick people into revealing passwords or bank details.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "cs_084",
+      "subject": "Computer Science",
+      "topic": "Cloud Computing",
+      "fact": "Cloud computing lets people store files and run software on remote servers accessed over the internet, rather than on their own device.",
       "difficulty": "medium",
       "source": "general knowledge"
     },
@@ -13145,6 +14201,110 @@
       "source": "general knowledge"
     },
     {
+      "id": "health_071",
+      "subject": "Health Education",
+      "topic": "Global Health",
+      "fact": "The World Health Organization was founded in 1948, and its founding date, 7 April, is marked every year as World Health Day.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_072",
+      "subject": "Health Education",
+      "topic": "Disease Prevention",
+      "fact": "Oral rehydration solution (ORS), a mixture of clean water, salt, and sugar, helps prevent dangerous dehydration during diarrhoea.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_073",
+      "subject": "Health Education",
+      "topic": "Disease",
+      "fact": "Lassa fever, first identified in the town of Lassa in present-day Borno State in 1969, is spread mainly through food or household items contaminated by the urine or droppings of infected rats.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_074",
+      "subject": "Health Education",
+      "topic": "Disease",
+      "fact": "Yellow fever is a viral disease spread by Aedes mosquitoes, and it can be prevented by vaccination.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_075",
+      "subject": "Health Education",
+      "topic": "Disease",
+      "fact": "Tuberculosis is a bacterial disease that mainly attacks the lungs, and the BCG vaccine is given to babies to help protect against it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_076",
+      "subject": "Health Education",
+      "topic": "Disease",
+      "fact": "Cholera is caused by the bacterium Vibrio cholerae and is usually spread through water or food contaminated with faeces.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_077",
+      "subject": "Health Education",
+      "topic": "Disease",
+      "fact": "HIV attacks the body's immune system, and if it is not treated it can lead to AIDS.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_078",
+      "subject": "Health Education",
+      "topic": "Disease",
+      "fact": "River blindness, or onchocerciasis, is a parasitic disease spread by the bites of blackflies that breed in fast-flowing rivers.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_079",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "Kwashiorkor is a form of severe malnutrition caused mainly by a lack of protein in the diet, and it often causes swelling of the legs and face.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_080",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A lack of iodine in the diet can cause goitre, a swelling of the thyroid gland in the neck.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_081",
+      "subject": "Health Education",
+      "topic": "Nutrition",
+      "fact": "A lack of iron can lead to anaemia, while a lack of vitamin A can cause night blindness.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_082",
+      "subject": "Health Education",
+      "topic": "Public Health",
+      "fact": "Nigeria was certified free of Guinea worm disease by the World Health Organization in 2013.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "health_083",
+      "subject": "Health Education",
+      "topic": "Public Health",
+      "fact": "In 2020, the World Health Organization certified the African region, including Nigeria, free of wild poliovirus.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
       "id": "fin_047",
       "subject": "Financial Literacy",
       "topic": "Money Management",
@@ -13318,6 +14478,126 @@
       "topic": "Money Management",
       "fact": "Keeping records of income and spending helps people manage their money and stay out of debt.",
       "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_069",
+      "subject": "Financial Literacy",
+      "topic": "Saving",
+      "fact": "Ajo, also called esusu or adashe, is a traditional rotating savings scheme in which members contribute regularly and each takes the full pot in turn.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_070",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "Buying shares makes you a part-owner of a company, while buying a bond means lending money to a government or company in return for interest.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_071",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "A dividend is a share of a company's profit that is paid out to its shareholders.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_072",
+      "subject": "Financial Literacy",
+      "topic": "Investing",
+      "fact": "The 'rule of 72' gives a rough estimate of how many years it takes money to double: divide 72 by the yearly interest rate.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_073",
+      "subject": "Financial Literacy",
+      "topic": "Money Management",
+      "fact": "Net worth is the value of everything you own, your assets, minus everything you owe, your liabilities.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_074",
+      "subject": "Financial Literacy",
+      "topic": "Income",
+      "fact": "Gross income is what you earn before deductions, while net income, or take-home pay, is what remains after taxes and other deductions.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_075",
+      "subject": "Financial Literacy",
+      "topic": "Taxes",
+      "fact": "PAYE, or Pay As You Earn, is a system in which income tax is deducted directly from an employee's salary by the employer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_076",
+      "subject": "Financial Literacy",
+      "topic": "Budgeting",
+      "fact": "Fixed expenses, such as rent, stay the same each month, while variable expenses, such as food and transport, can change.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_077",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "The Bank Verification Number (BVN), introduced by the Central Bank of Nigeria in 2014, links a customer's identity to all of their bank accounts.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_078",
+      "subject": "Financial Literacy",
+      "topic": "Banking",
+      "fact": "Deposits in Nigerian banks are protected up to a set limit by the Nigeria Deposit Insurance Corporation (NDIC) if a bank fails.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_079",
+      "subject": "Financial Literacy",
+      "topic": "Fraud Prevention",
+      "fact": "Banks will never ask for your PIN, password, or one-time password (OTP), so these should never be shared with anyone.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_080",
+      "subject": "Financial Literacy",
+      "topic": "Fraud Prevention",
+      "fact": "A Ponzi scheme pays earlier investors with money from new investors rather than real profits, so it collapses once new money stops coming in.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_081",
+      "subject": "Financial Literacy",
+      "topic": "Inflation",
+      "fact": "Inflation reduces the real value of savings, so money kept idle loses purchasing power when prices rise faster than the interest it earns.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_082",
+      "subject": "Financial Literacy",
+      "topic": "Money Management",
+      "fact": "Impulse buying means making unplanned purchases on the spot, and waiting a day before buying non-essentials can help avoid it.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "fin_083",
+      "subject": "Financial Literacy",
+      "topic": "Credit",
+      "fact": "A guarantor is a person who agrees to repay a loan if the borrower fails to do so.",
+      "difficulty": "medium",
       "source": "general knowledge"
     },
     {
@@ -13497,6 +14777,118 @@
       "source": "general knowledge"
     },
     {
+      "id": "art_069",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "The Ife heads, made in bronze and terracotta between about the twelfth and fifteenth centuries, are famous for their lifelike portrayal of human faces.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_070",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "The Igbo-Ukwu bronzes, dating to around the ninth or tenth century, are among the oldest known bronze castings in West Africa.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_071",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "Nsibidi is a system of symbols used for communication in parts of south-eastern Nigeria, especially among the Ejagham and Efik peoples.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_072",
+      "subject": "Creative Arts",
+      "topic": "African Art",
+      "fact": "Uli is a traditional Igbo art of drawing flowing, curved designs on the body and on walls.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_073",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "The Yoruba talking drum, or dundun, can imitate the rising and falling tones of speech, allowing drummers to 'speak' through music.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_074",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "Fela Anikulapo-Kuti pioneered Afrobeat, a style that blends West African music with jazz, funk, and highlife.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_075",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "In common time, a semibreve lasts four beats, a minim two beats, a crotchet one beat, and a quaver half a beat.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_076",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "In music, forte (f) means loud and piano (p) means soft; markings like these are called dynamics.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_077",
+      "subject": "Creative Arts",
+      "topic": "Music",
+      "fact": "The treble clef, also called the G clef, is used for higher notes, while the bass clef, or F clef, is used for lower notes.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_078",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "Ben Enwonwu was a pioneering Nigerian modernist artist whose best-known works include the portrait 'Tutu' and a sculpture of Queen Elizabeth II.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_079",
+      "subject": "Creative Arts",
+      "topic": "Drama",
+      "fact": "Hubert Ogunde, who founded one of Nigeria's first professional theatre companies, is often called the father of Nigerian theatre.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_080",
+      "subject": "Creative Arts",
+      "topic": "Film",
+      "fact": "Nigeria's film industry, known as Nollywood, is one of the largest in the world by the number of films it produces.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_081",
+      "subject": "Creative Arts",
+      "topic": "Textiles",
+      "fact": "Batik is a resist-dyeing technique in which melted wax is applied to cloth so that the waxed areas do not take up the dye.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "art_082",
+      "subject": "Creative Arts",
+      "topic": "Visual Arts",
+      "fact": "A collage is made by sticking materials such as paper, fabric, and photographs onto a surface, while a mosaic is made from small pieces of glass, stone, or tile.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
       "id": "phe_046",
       "subject": "Physical Education",
       "topic": "Definition",
@@ -13670,6 +15062,142 @@
       "topic": "Team Sports",
       "fact": "Team sports help develop cooperation, communication, and leadership skills.",
       "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_068",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "A standard outdoor running track measures 400 metres around its innermost lane.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_069",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "The triple jump is made up of a hop, a step, and a jump, performed in one continuous sequence.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_070",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "The four throwing events in athletics are the shot put, discus, javelin, and hammer throw.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_071",
+      "subject": "Physical Education",
+      "topic": "Athletics",
+      "fact": "The decathlon is a combined event of ten track and field disciplines, while the heptathlon has seven.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_072",
+      "subject": "Physical Education",
+      "topic": "Sports History",
+      "fact": "Basketball was invented in 1891 by James Naismith, a physical education teacher in the United States.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_073",
+      "subject": "Physical Education",
+      "topic": "Sports History",
+      "fact": "FIFA, the world governing body of football, was founded in Paris in 1904.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_074",
+      "subject": "Physical Education",
+      "topic": "Sports History",
+      "fact": "The five interlocking Olympic rings represent the union of the five continents taking part in the Games.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_075",
+      "subject": "Physical Education",
+      "topic": "Nigerian Sports",
+      "fact": "Nigeria's men's football team won the Olympic gold medal at the 1996 Atlanta Games.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_076",
+      "subject": "Physical Education",
+      "topic": "Nigerian Sports",
+      "fact": "Nigeria won its first Olympic medal in 1964, when the boxer Nojim Maiyegun took bronze in Tokyo.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_077",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "A volleyball team has six players on the court, while a basketball team has five.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_078",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In football, a penalty kick is taken from a spot 11 metres (12 yards) from the goal line.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_079",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "In lawn tennis, points are counted as love (zero), 15, 30, and 40, and a tie at 40 is called deuce.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_080",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "A netball team has seven players, and each player may only move in certain areas of the court according to their position.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_081",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "Badminton is played with a shuttlecock rather than a ball.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_082",
+      "subject": "Physical Education",
+      "topic": "Sports Rules",
+      "fact": "A hockey team fields eleven players, including the goalkeeper.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_083",
+      "subject": "Physical Education",
+      "topic": "Health and Fitness",
+      "fact": "Body Mass Index (BMI) is calculated by dividing a person's weight in kilograms by the square of their height in metres.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "phe_084",
+      "subject": "Physical Education",
+      "topic": "Fitness Components",
+      "fact": "Agility is the ability to change direction quickly while keeping balance and control.",
+      "difficulty": "medium",
       "source": "general knowledge"
     },
     {
@@ -14377,6 +15905,1054 @@
       "source": "general knowledge"
     },
     {
+      "id": "crk_083",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Bible",
+      "fact": "Most Protestant Bibles contain 66 books: 39 in the Old Testament and 27 in the New Testament.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_084",
+      "subject": "Christian Religious Knowledge",
+      "topic": "The Bible",
+      "fact": "The first five books of the Bible, Genesis to Deuteronomy, are known as the Pentateuch, or the Torah in Jewish tradition.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_085",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Genesis",
+      "fact": "According to Genesis, God confused the language of the people building the Tower of Babel and scattered them across the earth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_086",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Genesis",
+      "fact": "Methuselah is recorded in Genesis as living 969 years, the longest lifespan mentioned in the Bible.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_087",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Abraham",
+      "fact": "God called Abram to leave his country and his father's house, promising to make him into a great nation.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_088",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Covenant",
+      "fact": "In the covenant recorded in Genesis 17, God changed Abram's name to Abraham and gave circumcision as the sign of the covenant.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_089",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Abraham",
+      "fact": "When God destroyed Sodom and Gomorrah, Lot's wife looked back and became a pillar of salt.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_090",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Patriarchs",
+      "fact": "Jacob dreamed of a ladder reaching up to heaven with angels going up and down on it, at a place he named Bethel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_091",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Patriarchs",
+      "fact": "After wrestling through the night at Peniel, Jacob was told that his name would no longer be Jacob but Israel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_092",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joseph",
+      "fact": "Joseph's brothers sold him to a group of passing traders for twenty pieces of silver.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_093",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joseph",
+      "fact": "In Egypt, Joseph was thrown into prison after Potiphar's wife falsely accused him.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_094",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joseph",
+      "fact": "Joseph's two sons, Manasseh and Ephraim, were blessed by Jacob, and their descendants became tribes of Israel.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_095",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Moses",
+      "fact": "When Moses doubted his ability to speak before Pharaoh, God appointed his brother Aaron to be his spokesman.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_096",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Moses",
+      "fact": "While Moses was on Mount Sinai, the Israelites persuaded Aaron to make a golden calf, which they worshipped.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_097",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Leadership",
+      "fact": "Moses' father-in-law Jethro advised him to appoint capable men as judges, so that Moses would not carry the burden of leadership alone.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_098",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Moses",
+      "fact": "Because Moses struck the rock at Meribah instead of speaking to it as God commanded, he was not allowed to enter the Promised Land.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_099",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Moses",
+      "fact": "Before he died, Moses was shown the Promised Land from the top of Mount Nebo.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_100",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Covenant",
+      "fact": "At Mount Sinai, God made a covenant with Israel, promising that they would be his treasured people if they obeyed his commands.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_101",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Wilderness",
+      "fact": "Of the twelve spies Moses sent into Canaan, only Joshua and Caleb brought back a hopeful report and urged the people to trust God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_102",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joshua",
+      "fact": "Rahab, a woman of Jericho, hid the Israelite spies and was spared along with her family when the city fell.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_103",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joshua",
+      "fact": "The Israelites were defeated at Ai because Achan had secretly kept items from Jericho that God had ordered to be destroyed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_104",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Joshua",
+      "fact": "In his farewell speech, Joshua challenged Israel to choose whom they would serve, declaring that he and his household would serve the LORD.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_105",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Judges",
+      "fact": "Deborah, a prophetess and judge, encouraged Barak to lead Israel into battle against Sisera, the commander of the Canaanite army.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_106",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Judges",
+      "fact": "Sisera, the defeated Canaanite commander, was killed by a woman named Jael after he fled to her tent.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_107",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Judges",
+      "fact": "Gideon tested God's call using a fleece of wool, and later defeated the Midianites with only three hundred men.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_108",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Judges",
+      "fact": "Samson revealed the secret of his strength to Delilah, who then betrayed him to the Philistines.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_109",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Samuel",
+      "fact": "Hannah prayed earnestly for a child, and God answered her with the birth of Samuel, whom she dedicated to God's service.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_110",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Samuel",
+      "fact": "As a boy serving at the house of the LORD in Shiloh, Samuel heard God calling him by name during the night.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_111",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parental Responsibility",
+      "fact": "Eli the priest failed to restrain his wicked sons, Hophni and Phinehas, and both died on the same day the Philistines captured the Ark of the Covenant.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_112",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Kings",
+      "fact": "The Israelites demanded a king partly because Samuel's sons, Joel and Abijah, took bribes and perverted justice.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_113",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Kings",
+      "fact": "When Saul spared King Agag and the best of the Amalekites' animals, Samuel told him that to obey is better than sacrifice.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_114",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Kings",
+      "fact": "Near the end of his reign, King Saul consulted a medium at Endor, even though he himself had banned mediums from the land.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_115",
+      "subject": "Christian Religious Knowledge",
+      "topic": "David",
+      "fact": "King David brought the Ark of the Covenant to Jerusalem, making the city the religious centre of Israel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_116",
+      "subject": "Christian Religious Knowledge",
+      "topic": "David",
+      "fact": "After David arranged the death of Uriah in order to marry Bathsheba, the prophet Nathan rebuked him with a parable about a stolen lamb.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_117",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parental Responsibility",
+      "fact": "Absalom, David's son, rebelled against his father and was killed by Joab after his head caught in the branches of an oak tree.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_118",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Solomon",
+      "fact": "When God appeared to Solomon in a dream at Gibeon, Solomon asked for wisdom to govern his people rather than riches or a long life.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_119",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Solomon",
+      "fact": "Solomon showed his wisdom by settling a dispute between two women who each claimed to be the mother of the same baby.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_120",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Solomon",
+      "fact": "In his old age, Solomon's many foreign wives turned his heart towards other gods, bringing God's judgement on his kingdom.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_121",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Divided Kingdom",
+      "fact": "Rehoboam, Solomon's son, rejected the elders' advice to lighten the people's burdens, and the northern tribes broke away from him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_122",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Divided Kingdom",
+      "fact": "Jeroboam, the first king of the northern kingdom, set up golden calves at Bethel and Dan so that his people would not go to worship in Jerusalem.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_123",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "King Ahab and his wife Jezebel had Naboth killed so that Ahab could seize his vineyard, and the prophet Elijah condemned them for it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_124",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "During a drought, the prophet Elijah was fed by ravens beside the brook Cherith.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_125",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Before Elijah was taken up to heaven in a whirlwind, his successor Elisha asked to inherit a double portion of his spirit.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_126",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Naaman, a Syrian army commander, was cured of leprosy after dipping himself seven times in the River Jordan, as Elisha instructed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_127",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Elisha's servant Gehazi was struck with leprosy after he greedily took gifts from Naaman and lied about it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_128",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Religious Reform",
+      "fact": "During repairs to the temple in King Josiah's reign, the Book of the Law was found, sparking major religious reforms in Judah.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_129",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Religious Reform",
+      "fact": "King Hezekiah destroyed the bronze serpent made by Moses because the people had begun burning incense to it.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_130",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Exile",
+      "fact": "The northern kingdom of Israel fell to the Assyrians in about 722 BC, and Jerusalem was destroyed by the Babylonians in about 586 BC.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_131",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Return from Exile",
+      "fact": "Nehemiah, a cupbearer to the Persian king Artaxerxes, returned to Jerusalem to rebuild its broken walls.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_132",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Return from Exile",
+      "fact": "Despite opposition from Sanballat and Tobiah, the walls of Jerusalem were rebuilt under Nehemiah in fifty-two days.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_133",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Return from Exile",
+      "fact": "Ezra the scribe read the Law of Moses aloud to the people of Jerusalem, leading them to renew their commitment to God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_134",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The prophet Hosea's marriage to the unfaithful Gomer was used to picture Israel's unfaithfulness and God's enduring love.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_135",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The prophet Micah summed up what God requires as doing justice, loving mercy, and walking humbly with God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_136",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Isaiah received his call in a vision of God in the temple, where a seraph touched his lips with a burning coal.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_137",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "When God called Jeremiah to be a prophet, he protested that he was too young, but God promised to be with him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_138",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Ezekiel's vision of a valley of dry bones coming back to life symbolised God's promise to restore Israel.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_139",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The prophet Ezekiel taught individual responsibility, stressing that each person is accountable for their own sins.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_140",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "After Jonah finally preached in Nineveh, the people repented and God spared the city.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_141",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Daniel",
+      "fact": "Daniel and his friends refused to defile themselves with the Babylonian king's food and wine, and ate vegetables instead.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_142",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Daniel",
+      "fact": "Daniel's three friends, known in Babylon as Shadrach, Meshach, and Abednego, refused to bow down to King Nebuchadnezzar's golden image.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_143",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Daniel",
+      "fact": "Daniel interpreted the mysterious writing on the wall at King Belshazzar's feast, foretelling the end of his kingdom.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_144",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Esther",
+      "fact": "Queen Esther risked her life by approaching the Persian king uninvited in order to save the Jews from Haman's plot.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_145",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Job",
+      "fact": "The book of Job tells of a righteous man who remained faithful to God despite losing his wealth, his children, and his health.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_146",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Birth of Jesus",
+      "fact": "When the infant Jesus was presented in the temple, the devout Simeon and the prophetess Anna recognised him as the promised one.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_147",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Birth of Jesus",
+      "fact": "Warned in a dream, Joseph fled to Egypt with Mary and the infant Jesus to escape King Herod's order to kill the young boys of Bethlehem.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_148",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Life of Jesus",
+      "fact": "At the age of twelve, Jesus was found in the temple in Jerusalem, listening to the teachers and asking them questions.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_149",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Ministry of Jesus",
+      "fact": "In the wilderness, Jesus fasted for forty days and resisted three temptations from the devil.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_150",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Disciples",
+      "fact": "Jesus' first disciples included the fishermen Simon Peter, Andrew, James, and John, whom he called to become 'fishers of men'.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_151",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Disciples",
+      "fact": "Matthew, also called Levi, was a tax collector before Jesus called him to be a disciple.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_152",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Ministry of Jesus",
+      "fact": "At Caesarea Philippi, Peter confessed that Jesus was the Christ, the Son of the living God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_153",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Ministry of Jesus",
+      "fact": "At the Transfiguration, Peter, James, and John saw Jesus shining in glory while Moses and Elijah appeared and talked with him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_154",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Ministry of Jesus",
+      "fact": "Zacchaeus, a tax collector who was short in height, climbed a sycamore tree to see Jesus and later promised to repay anyone he had cheated.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_155",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "In the Sermon on the Mount, Jesus told his followers that they are the salt of the earth and the light of the world.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_156",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "The 'Golden Rule' taught by Jesus is to treat others the way you would want them to treat you.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_157",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "Jesus taught Nicodemus, a Pharisee who came to him at night, that a person must be born again to see the kingdom of God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_158",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "Jesus spoke with a Samaritan woman at a well, crossing the social barriers of his time, and many people from her town came to believe in him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_159",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Teachings",
+      "fact": "In John's Gospel, Jesus makes several 'I am' statements, such as 'I am the bread of life' and 'I am the good shepherd'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_160",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "In the parable of the talents, the servants who used their master's money wisely were rewarded, while the one who buried his was punished.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_161",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "The parable of the ten virgins, five wise and five foolish, teaches the importance of being ready for Christ's return.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_162",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "In the parable of the lost sheep, a shepherd leaves ninety-nine sheep to search for the one that has gone missing.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_163",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "The parable of the rich fool warns against storing up wealth for oneself without being rich towards God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_164",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "In the parable of the Pharisee and the tax collector, it is the humble tax collector who goes home justified before God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_165",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "In the parable of the unforgiving servant, a man forgiven a huge debt refuses to forgive a small one, teaching that those who are forgiven must forgive others.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_166",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Parables",
+      "fact": "Jesus compared the kingdom of God to a mustard seed, which starts tiny but grows into a large plant.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_167",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "Friends of a paralysed man lowered him through a roof to reach Jesus, who forgave his sins and healed him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_168",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "A woman who had suffered from bleeding for twelve years was healed after touching the edge of Jesus' cloak.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_169",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "Jesus raised the daughter of Jairus, a ruler of the synagogue, from the dead.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_170",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "Jesus walked on the water of the Sea of Galilee, and Peter briefly walked towards him before he began to sink.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_171",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "Of the ten lepers healed by Jesus, only one, a Samaritan, came back to thank him.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_172",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "Blind Bartimaeus cried out to Jesus near Jericho and received his sight because of his faith.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_173",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Miracles",
+      "fact": "Jesus healed the servant of a Roman centurion without going to his house, and praised the centurion's great faith.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_174",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "Jesus rode into Jerusalem on a donkey while crowds waved palm branches, an event remembered on Palm Sunday.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_175",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "Jesus drove the money changers and traders out of the temple, saying that it should be a house of prayer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_176",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Last Supper",
+      "fact": "At the Last Supper, Jesus washed his disciples' feet as an example of humble service.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_177",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "Jesus prayed in the Garden of Gethsemane shortly before he was arrested.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_178",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "Peter denied knowing Jesus three times before the cock crowed, just as Jesus had predicted.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_179",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "The Roman governor Pontius Pilate released a prisoner named Barabbas instead of Jesus, at the demand of the crowd.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_180",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "Simon of Cyrene was made to carry the cross of Jesus on the way to the crucifixion.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_181",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Passion",
+      "fact": "Joseph of Arimathea, a secret disciple of Jesus, asked Pilate for his body and laid it in a new tomb.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_182",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Resurrection",
+      "fact": "The disciple Thomas refused to believe in the resurrection until he saw the risen Jesus for himself.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_183",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Resurrection",
+      "fact": "Two disciples on the road to Emmaus walked with the risen Jesus but recognised him only when he broke bread with them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_184",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Ascension",
+      "fact": "According to Acts, Jesus appeared to his followers over forty days after his resurrection and then ascended into heaven.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_185",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "Matthias was chosen by casting lots to replace Judas Iscariot among the twelve apostles.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_186",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "After Peter's sermon on the day of Pentecost, about three thousand people were baptised.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_187",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "Ananias and his wife Sapphira died after lying about the money they gave from the sale of their land.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_188",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "Seven men, including Stephen and Philip, were chosen to oversee the daily distribution of food to widows, so that the apostles could focus on prayer and preaching.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_189",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "Philip explained a passage from Isaiah to an Ethiopian official travelling in his chariot, and then baptised him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_190",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "Peter's vision of a sheet filled with animals prepared him to accept Cornelius, a Roman centurion, showing that the gospel was for Gentiles too.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_191",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "The followers of Jesus were first called Christians in the city of Antioch.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_192",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Early Church",
+      "fact": "The Council of Jerusalem decided that Gentile converts did not need to be circumcised in order to become Christians.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_193",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Paul",
+      "fact": "Barnabas travelled with Paul on his first missionary journey.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_194",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Paul",
+      "fact": "Paul and Silas were singing hymns in prison at Philippi when an earthquake opened the doors, and the jailer and his household became believers.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_195",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Paul",
+      "fact": "In Athens, Paul preached at the Areopagus, referring to an altar he had seen inscribed 'to an unknown god'.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_196",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Paul",
+      "fact": "While being taken to Rome as a prisoner, Paul survived a shipwreck on the island of Malta.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_197",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "In his letter to the Romans, Paul teaches that people are justified, or made right with God, through faith.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_198",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "In Romans 13, Paul teaches that Christians should respect and obey the governing authorities.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_199",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "In 1 Corinthians 12, Paul compares the church to a body with many parts, each with its own spiritual gift.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_200",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "In Galatians, the fruit of the Spirit is listed as love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, and self-control.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_201",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "Paul taught that God loves a cheerful giver, encouraging Christians to give willingly rather than under pressure.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_202",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "Paul's letter to Philemon asks him to forgive and welcome back Onesimus, a runaway slave who had become a Christian.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_203",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "In Philippians, Paul urges believers to be humble, following the example of Christ, who humbled himself and became obedient to death.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_204",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "In 2 Thessalonians, Paul warned against idleness, teaching that anyone unwilling to work should not eat.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_205",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "In 1 Thessalonians, Paul comforted believers about the second coming of Christ, teaching that the dead in Christ will rise first.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_206",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "The letter of James teaches that faith without works is dead.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_207",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "The letter of James warns Christians against showing favouritism to the rich over the poor.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_208",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Epistles",
+      "fact": "Hebrews 11 is often called the 'faith chapter' because it lists heroes of faith such as Abel, Noah, and Abraham.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_209",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Christianity in Nigeria",
+      "fact": "Portuguese Catholic missionaries reached the Kingdom of Benin and Warri as early as the fifteenth and sixteenth centuries, but these early missions did not last.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_210",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Christianity in Nigeria",
+      "fact": "Christian missionary work in Nigeria took firm root in 1842, when the Methodist missionary Thomas Birch Freeman arrived in Badagry.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_211",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Christianity in Nigeria",
+      "fact": "Samuel Ajayi Crowther, a freed slave, became the first African Anglican bishop in 1864 and helped translate the Bible into Yoruba.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_212",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Christianity in Nigeria",
+      "fact": "Mary Slessor, a Scottish missionary in Calabar, is remembered for campaigning against the killing of twins.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "crk_213",
+      "subject": "Christian Religious Knowledge",
+      "topic": "Christianity in Nigeria",
+      "fact": "The first storey building in Nigeria was built in Badagry by Church Missionary Society missionaries in the 1840s.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
       "id": "irk_061",
       "subject": "Islamic Religious Knowledge",
       "topic": "The Quran",
@@ -14549,6 +17125,1126 @@
       "subject": "Islamic Religious Knowledge",
       "topic": "Community",
       "fact": "The worldwide community of Muslims is known as the Ummah.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_083",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The Quran is divided into 30 roughly equal parts called juz', which many Muslims use to complete a full reading during Ramadan.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_084",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surahs revealed in Mecca, called Makki surahs, focus mostly on faith, the oneness of God, and the Hereafter, while Madani surahs deal more with law and community life.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_085",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Compilation of the Quran",
+      "fact": "The Quran was first compiled into a single collection on the orders of Caliph Abu Bakr, after many of its memorisers were killed at the Battle of Yamamah.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_086",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Compilation of the Quran",
+      "fact": "Zayd ibn Thabit, one of the Prophet's scribes, led the task of gathering the Quran into a single written collection.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_087",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Compilation of the Quran",
+      "fact": "Caliph Uthman ibn Affan had standard copies of the Quran made and sent to major Muslim cities to preserve a single, uniform text.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_088",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Compilation of the Quran",
+      "fact": "The copy of the Quran compiled under Abu Bakr was later kept by Hafsah, a wife of the Prophet and daughter of Umar.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_089",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The first verses revealed to Prophet Muhammad are the opening verses of Surah Al-Alaq, the 96th chapter of the Quran.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_090",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "The last chapter of the Quran is Surah An-Nas, 'Mankind', which seeks God's protection from the whisperings of evil.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_091",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Kawthar is the shortest chapter of the Quran, with just three short verses.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_092",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah At-Tawbah, the ninth chapter, is the only surah of the Quran that does not begin with the Bismillah.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_093",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Ikhlas declares that God is One and Eternal, that He neither begets nor is begotten, and that nothing is equal to Him.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_094",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Ayat al-Kursi, the Verse of the Throne, is verse 255 of Surah Al-Baqarah and describes God's power and knowledge.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_095",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Fil, 'The Elephant', recalls how God destroyed an army that came with elephants to attack the Kaaba.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_096",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Asr teaches that people are in loss except those who believe, do good deeds, and encourage one another to truth and patience.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_097",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Falaq and Surah An-Nas are together called Al-Mu'awwidhatayn, the two chapters of seeking refuge in God.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_098",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Qadr describes the Night of Power as better than a thousand months.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_099",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Ma'un condemns those who push away orphans, fail to encourage feeding the poor, and pray only to be seen by others.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_100",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Humazah warns against slandering and mocking others and against hoarding wealth.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_101",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Kafirun ends by declaring to the disbelievers, 'For you is your religion, and for me is mine'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_102",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Luqman records the wise advice of Luqman to his son, including not to associate partners with God and to be grateful to his parents.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_103",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "The Quran",
+      "fact": "Surah Al-Hujurat forbids mockery, suspicion, and backbiting, and teaches that God made people into nations and tribes so that they may know one another.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_104",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Tafsir",
+      "fact": "Tafsir is the science of explaining and interpreting the meaning of the Quran.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_105",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "Every hadith has two parts: the isnad, which is the chain of narrators, and the matn, which is the actual text of the report.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_106",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "Hadith scholars grade narrations as sahih (authentic), hasan (good), or da'if (weak), based mainly on the reliability of their chains of narrators.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_107",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "Sahih al-Bukhari, compiled by Imam al-Bukhari, is regarded by Sunni Muslims as the most authentic collection of hadith.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_108",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "The six major Sunni hadith collections, known as Al-Kutub al-Sittah, include Sahih al-Bukhari and Sahih Muslim.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_109",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "Imam an-Nawawi's Forty Hadith is a popular collection of short hadith that summarise key teachings of Islam.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_110",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "A Hadith Qudsi is a report in which the Prophet relates a message from God, expressed in the Prophet's own words.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_111",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "Al-Muwatta, compiled by Imam Malik of Medina, is one of the earliest surviving collections of hadith and Islamic law.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_112",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hadith",
+      "fact": "A well-known hadith teaches that actions are judged by their intentions, making sincerity central to every act of worship.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_113",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Tawhid",
+      "fact": "Shirk, the associating of partners with God, is regarded in Islam as the gravest of all sins.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_114",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Twenty-five prophets are mentioned by name in the Quran.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_115",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Five prophets are honoured as Ulul Azm, 'those of great resolve': Nuh, Ibrahim, Musa, Isa, and Muhammad.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_116",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Articles of Faith",
+      "fact": "Muslims believe that the Zabur was revealed to Prophet Dawud and that scrolls, called Suhuf, were given to Prophet Ibrahim.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_117",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Angels",
+      "fact": "In Islamic teaching, angels were created from light, while the jinn were created from smokeless fire.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_118",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Angels",
+      "fact": "Mika'il is the angel associated with rain and provision, and the Angel of Death is commonly known as Izra'il.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_119",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Angels",
+      "fact": "Muslims believe two recording angels, the Kiraman Katibin, write down every person's good and bad deeds.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_120",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Last Day",
+      "fact": "Muslims believe that the angels Munkar and Nakir question each person in the grave about their faith.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_121",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Last Day",
+      "fact": "Barzakh is the intermediate state in which souls remain between death and the Day of Resurrection.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_122",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Last Day",
+      "fact": "In Islamic belief, Jannah is Paradise and Jahannam is Hell, the final destinations after the Day of Judgement.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_123",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Jinn",
+      "fact": "Iblis, who refused God's command to bow to Adam, is described in the Quran as being one of the jinn.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_124",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Articles of Faith",
+      "fact": "Belief in Qadar, divine decree, means accepting that God knows and has power over everything that happens.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_125",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Adam is regarded in Islam as the first human being and the first prophet.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_126",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "The Quran records that Prophet Nuh remained among his people calling them to God for 950 years.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_127",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "When Prophet Ibrahim was thrown into a fire for breaking his people's idols, God made the fire cool and safe for him.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_128",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Ibrahim is given the title Khalilullah, the Friend of God.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_129",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Musa is known as Kalimullah because God spoke to him directly.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_130",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Yunus was swallowed by a great fish after leaving his people, and was saved when he repented and glorified God.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_131",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Salih was sent to the people of Thamud, who were tested with a she-camel and destroyed after they killed it.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_132",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Hud was sent to the people of 'Ad, who were destroyed for their arrogance and their rejection of his message.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_133",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Shu'ayb was sent to the people of Madyan and warned them against cheating in weights and measures.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_134",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "According to the Quran, Prophet Sulaiman was given the ability to understand the speech of birds and ants.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_135",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "Prophet Ayyub is remembered in Islam as a model of patience in the face of severe suffering.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_136",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Prophets",
+      "fact": "According to the Quran, Dawud killed Jalut, known in English as Goliath, and was later given kingship and wisdom.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_137",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Prophet Muhammad's father, Abdullah, died before he was born, and his mother, Aminah, died when he was about six years old.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_138",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "After his mother's death, Muhammad was cared for by his grandfather Abdul Muttalib and then by his uncle Abu Talib.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_139",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "As an infant, Muhammad was nursed among the desert Bedouin by his foster mother, Halimah as-Sa'diyyah.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_140",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Muhammad married Khadijah when he was about twenty-five years old.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_141",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Prophet Muhammad received his first revelation when he was about forty years old.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_142",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Before his prophethood, Muhammad settled a dispute among the Quraysh over who should replace the Black Stone in the Kaaba, by having the clan leaders lift it together on a cloth.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_143",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Abu Bakr was the first free adult man to accept Islam, and Ali ibn Abi Talib was the first child to do so.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_144",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "To escape persecution in Mecca, a group of early Muslims migrated to Abyssinia, where the Christian king, the Negus, gave them protection.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_145",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "The year in which both Khadijah and Abu Talib died is remembered as the Year of Sorrow.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_146",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "When the Prophet went to preach in Ta'if, he was rejected and driven out of the town with stones.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_147",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "During the Isra and Mi'raj, the Prophet was taken by night from Mecca to Jerusalem and then ascended through the heavens.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_148",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "The five daily prayers were made obligatory during the Mi'raj, the Prophet's ascension through the heavens.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_149",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hijra",
+      "fact": "The Hijra took place in 622 CE, when the Prophet and his followers migrated from Mecca to Medina.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_150",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hijra",
+      "fact": "During the Hijra, the Prophet and Abu Bakr hid for three days in the cave of Thawr to escape the Quraysh who were pursuing them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_151",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Medina",
+      "fact": "Before the Prophet's arrival, the city of Medina was known as Yathrib.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_152",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Medina",
+      "fact": "Masjid Quba, on the outskirts of Medina, is regarded as the first mosque built in Islam.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_153",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Medina",
+      "fact": "The Muslims who migrated from Mecca were called the Muhajirun, and the people of Medina who welcomed and helped them were called the Ansar.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_154",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Medina",
+      "fact": "The Constitution of Medina was an agreement drawn up by the Prophet setting out the rights and duties of the Muslims, Jews, and other groups in the city.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_155",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Medina",
+      "fact": "The Qibla, the direction of prayer, was changed from Jerusalem to the Kaaba in Mecca during the Prophet's early years in Medina.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_156",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Battles",
+      "fact": "At the Battle of Badr in 624 CE, about 313 Muslims defeated a much larger army from Mecca.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_157",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Battles",
+      "fact": "The Muslims suffered a setback at the Battle of Uhud in 625 CE after archers left their posts, and the Prophet's uncle Hamzah was killed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_158",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Battles",
+      "fact": "At the Battle of the Trench in 627 CE, the Muslims defended Medina by digging a trench, an idea suggested by Salman al-Farisi.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_159",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Battles",
+      "fact": "The Treaty of Hudaybiyyah, agreed in 628 CE, established a truce between the Muslims and the Quraysh of Mecca.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_160",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "In 630 CE, the Prophet entered Mecca peacefully, removed the idols from the Kaaba, and pardoned most of his former enemies.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_161",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "The Prophet delivered his Farewell Sermon at the plain of Arafat during his final pilgrimage.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_162",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Life of the Prophet",
+      "fact": "Prophet Muhammad died in Medina in 632 CE and was buried there, in what is now part of the Prophet's Mosque.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_163",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Abu Bakr, the first caliph, is known by the title As-Siddiq, 'the Truthful'.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_164",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Abu Bakr fought the Ridda wars against tribes that rebelled or refused to pay Zakat after the Prophet's death.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_165",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Caliph Umar introduced the Hijri calendar, which counts its years from the Hijra.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_166",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Umar was the first caliph to take the title Amir al-Mu'minin, 'Commander of the Faithful'.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_167",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Uthman ibn Affan, the third caliph, was called Dhun-Nurayn, 'possessor of two lights', because he married two of the Prophet's daughters.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_168",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Caliphs",
+      "fact": "Ali ibn Abi Talib, the fourth caliph, was the Prophet's cousin and the husband of his daughter Fatimah.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_169",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islamic History",
+      "fact": "The Umayyad dynasty ruled the Muslim world from Damascus, while the Abbasids who followed them made Baghdad their capital.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_170",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islamic History",
+      "fact": "Under the Abbasids, the House of Wisdom in Baghdad became a great centre for translation, science, and learning.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_171",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sharia",
+      "fact": "The four main sources of Islamic law are the Quran, the Sunnah, Ijma (the consensus of scholars), and Qiyas (reasoning by analogy).",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_172",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sharia",
+      "fact": "The four major Sunni schools of law are the Hanafi, Maliki, Shafi'i, and Hanbali schools.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_173",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sharia",
+      "fact": "The Maliki school of law, based on the teachings of Imam Malik, is the most widely followed school in Nigeria and West Africa.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_174",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sharia",
+      "fact": "Islamic law places actions into five categories: obligatory (fard), recommended (mandub), permissible (mubah), disliked (makruh), and forbidden (haram).",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_175",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Taharah",
+      "fact": "Ghusl is the ritual washing of the whole body, which is required in certain situations before a Muslim can pray.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_176",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Taharah",
+      "fact": "When water is unavailable or cannot be used, Muslims may perform tayammum, a dry ablution using clean earth or dust.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_177",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "The five daily prayers contain seventeen obligatory rak'ahs in total: two at Fajr, four at Zuhr, four at Asr, three at Maghrib, and four at Isha.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_178",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "The person who calls the Adhan from the mosque is known as the muezzin.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_179",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "The Iqamah is a second call given just before the congregational prayer begins.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_180",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "On Fridays, the Jumu'ah prayer, which includes a sermon called the khutbah, takes the place of the midday Zuhr prayer.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_181",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "Salat al-Janazah, the funeral prayer, is offered standing, without bowing or prostration.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_182",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "In Salat, the bowing position is called ruku and the prostration is called sujud.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_183",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Salat",
+      "fact": "Salat al-Istisqa is a special prayer offered to ask God for rain.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_184",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "Fasting during Ramadan became obligatory for Muslims in the second year after the Hijra.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_185",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "People who are sick, travelling, pregnant, or breastfeeding may be excused from fasting in Ramadan and can make up the missed days later.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_186",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "Those who cannot fast at all, such as the very old or the chronically ill, may pay fidyah by feeding a poor person for each day missed.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_187",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "Taraweeh are special night prayers performed during the month of Ramadan.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_188",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Sawm",
+      "fact": "I'tikaf is the practice of staying in the mosque for worship, especially during the last ten days of Ramadan.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_189",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Zakat",
+      "fact": "Zakat al-Fitr is a charity given at the end of Ramadan, before the Eid prayer, so that the poor can also celebrate the festival.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_190",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Zakat",
+      "fact": "The Quran names eight categories of people who may receive Zakat, including the poor, the needy, and those in debt.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_191",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Zakat",
+      "fact": "Nisab is the minimum amount of wealth a Muslim must hold for a full lunar year before Zakat becomes due on it.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_192",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "Hajj takes place in Dhul Hijjah, the twelfth month of the Islamic calendar.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_193",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "During Hajj, pilgrims walk seven times between the hills of Safa and Marwah, recalling Hajar's search for water for her son Ismail.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_194",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "The Zamzam well in Mecca is believed to have sprung up to provide water for Hajar and her infant son Ismail.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_195",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "At Mina, pilgrims throw pebbles at stone pillars called the Jamarat, symbolising the rejection of Satan.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_196",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "Pilgrims spend a night in the open at Muzdalifah, where they collect pebbles for the stoning ritual.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_197",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "Umrah, the lesser pilgrimage to Mecca, can be performed at any time of the year, unlike Hajj.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_198",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Hajj",
+      "fact": "The Miqat are fixed boundary points around Mecca at which pilgrims must enter the state of ihram.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_199",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Festivals",
+      "fact": "Eid al-Adha falls on the tenth day of Dhul Hijjah, the day after pilgrims stand at Arafat.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_200",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islamic Calendar",
+      "fact": "Muharram is the first month of the Islamic calendar, and Ramadan is the ninth.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_201",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Marriage",
+      "fact": "In an Islamic marriage, the mahr is a gift from the groom that belongs to the bride alone.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_202",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Marriage",
+      "fact": "The walimah is the wedding feast, which the Prophet encouraged Muslims to hold after a marriage.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_203",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Marriage",
+      "fact": "Iddah is the waiting period a woman observes after a divorce or the death of her husband before she may remarry.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_204",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Inheritance",
+      "fact": "The Quran sets out fixed shares of inheritance for close relatives, mainly in Surah An-Nisa.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_205",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Akhlaq",
+      "fact": "Backbiting, speaking ill of someone in their absence, is called ghibah and is strongly condemned in Islam.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_206",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Akhlaq",
+      "fact": "Islam teaches great respect for parents, and the Quran forbids saying even 'uff', a word of irritation, to them.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_207",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Ethics",
+      "fact": "Islam forbids gambling, which the Quran condemns together with intoxicants as the work of Satan.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_208",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Ethics",
+      "fact": "Islam forbids cheating in trade, and the Quran warns those who give short measure and weight.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_209",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Etiquette",
+      "fact": "Muslims say 'Bismillah', meaning 'in the name of God', before eating and before beginning other good actions.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_210",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Etiquette",
+      "fact": "'Alhamdulillah' means 'all praise is due to God' and is said to express gratitude.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_211",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Etiquette",
+      "fact": "'Insha'Allah' means 'if God wills' and is said when speaking about plans for the future.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_212",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in West Africa",
+      "fact": "Islam spread into West Africa largely through trans-Saharan trade, carried by North African merchants and scholars.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_213",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in West Africa",
+      "fact": "Mansa Musa of Mali made a famous pilgrimage to Mecca in 1324, displaying great wealth along the way.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_214",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "Mai Umme Jilmi, who ruled in the late eleventh century, is regarded as the first Muslim ruler of Kanem-Borno.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_215",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "Mai Idris Alooma of Borno, who ruled in the late sixteenth century, was a devout ruler who promoted Islamic law and learning.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_216",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "In the fourteenth century, Wangara scholars and traders from Mali helped to spread Islam in Kano.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_217",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "The North African scholar Al-Maghili advised Muhammad Rumfa, ruler of Kano, on how to govern according to Islamic principles.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_218",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "Shehu Usman dan Fodio began his jihad in 1804, which led to the founding of the Sokoto Caliphate.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_219",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "After Usman dan Fodio, his son Muhammad Bello ruled from Sokoto, while his brother Abdullahi ruled the western part of the caliphate from Gwandu.",
+      "difficulty": "hard",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_220",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "Nana Asma'u, a daughter of Usman dan Fodio, was a poet and scholar who organised the education of women.",
+      "difficulty": "medium",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_221",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "The Sultan of Sokoto is widely regarded as the spiritual leader of Muslims in Nigeria.",
+      "difficulty": "easy",
+      "source": "general knowledge"
+    },
+    {
+      "id": "irk_222",
+      "subject": "Islamic Religious Knowledge",
+      "topic": "Islam in Nigeria",
+      "fact": "In Yorubaland, Islam spread mainly through traders and scholars, and the religion was traditionally known there as 'Imale'.",
       "difficulty": "medium",
       "source": "general knowledge"
     }
