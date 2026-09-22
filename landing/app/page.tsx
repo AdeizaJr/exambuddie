@@ -5,61 +5,67 @@ import { BillingSection } from "./components/BillingSection";
 import { FaqAccordion } from "./components/FaqAccordion";
 import { testimonials } from "./data/testimonials";
 import { getPricing } from "./lib/pricing";
-import { GraduationCapIcon, BrainIcon, TargetIcon, RepeatIcon, TrendDownIcon } from "./components/icons";
+import {
+  GraduationCapIcon, BrainIcon, TargetIcon, RepeatIcon, TrendDownIcon,
+  BookmarkIcon, ChartBarIcon, RulerIcon, CalendarIcon, LayersIcon, FlameIcon,
+  MedalIcon, ShareIcon, LinkIcon, BoltIcon, PhoneIcon, DevicesIcon, SyncIcon,
+  DnaIcon, FlaskIcon, AtomIcon, BookOpenIcon, GlobeIcon, ScrollIcon, CoinsIcon,
+  BookHeartIcon, LeafIcon, ColumnsIcon,
+} from "./components/icons";
 
 const BOT_URL = "https://t.me/ExamBuddieBot";
 const BOT_URL_LANDING = "https://t.me/ExamBuddieBot?start=from_landing";
 
 const subjects = [
-  { icon: "📐", name: "Mathematics", slug: "math" },
-  { icon: "🔬", name: "Biology", slug: "biology" },
-  { icon: "⚗️", name: "Chemistry", slug: "chemistry" },
-  { icon: "⚡", name: "Physics", slug: "physics" },
-  { icon: "📖", name: "English Language", slug: "english" },
-  { icon: "🌍", name: "Geography", slug: "geography" },
-  { icon: "📜", name: "History", slug: null },
-  { icon: "💰", name: "Economics", slug: "economics" },
-  { icon: "📊", name: "Accounts", slug: "accounts" },
-  { icon: "✝️", name: "CRK / IRK", slug: "crk" },
-  { icon: "🌱", name: "Agric Science", slug: "agric" },
-  { icon: "🏛️", name: "Government", slug: "government" },
+  { icon: RulerIcon, name: "Mathematics", slug: "math" },
+  { icon: DnaIcon, name: "Biology", slug: "biology" },
+  { icon: FlaskIcon, name: "Chemistry", slug: "chemistry" },
+  { icon: AtomIcon, name: "Physics", slug: "physics" },
+  { icon: BookOpenIcon, name: "English Language", slug: "english" },
+  { icon: GlobeIcon, name: "Geography", slug: "geography" },
+  { icon: ScrollIcon, name: "History", slug: null },
+  { icon: CoinsIcon, name: "Economics", slug: "economics" },
+  { icon: ChartBarIcon, name: "Accounts", slug: "accounts" },
+  { icon: BookHeartIcon, name: "CRK / IRK", slug: "crk" },
+  { icon: LeafIcon, name: "Agric Science", slug: "agric" },
+  { icon: ColumnsIcon, name: "Government", slug: "government" },
 ];
 
 const secondaryFeatures = [
-  { icon: "🔄", title: "Revision Mode", desc: "Practice only the questions you previously got wrong (/revision)" },
-  { icon: "⭐", title: "Bookmark Questions", desc: "Save any question mid-practice and drill your bookmarks later" },
-  { icon: "📊", title: "Progress Stats", desc: "Daily target, accuracy by topic, and exam countdown (/stats)" },
-  { icon: "📐", title: "Formula Sheets", desc: "Instant formula reference for Physics, Chemistry, Maths, Economics, Government (/formula)" },
-  { icon: "📅", title: "Exam Timetable", desc: "2026 WAEC/NECO/JAMB subject dates with countdown (/timetable)" },
-  { icon: "🏆", title: "Multi-Subject", desc: "Mix subjects in one practice session (Premium)" },
-  { icon: "🔥", title: "Study Streaks", desc: "Build a daily habit, freeze your streak once a week (Premium)" },
-  { icon: "🔁", title: "Spaced Repetition", desc: "Wrong answers resurface until you master them (/review)" },
-  { icon: "📅", title: "Daily Question", desc: "Question of the Day broadcast every morning with your exam type" },
-  { icon: "🏅", title: "Achievements & Ranks", desc: "Earn badges for streaks, accuracy, and milestones. Rise through 30 ranks, Rookie to Legend, based on questions answered." },
-  { icon: "📤", title: "Shareable Results", desc: "Share your quiz score card on WhatsApp after every CBT mock" },
-  { icon: "🎯", title: "Challenge Mode", desc: "Compete with friends in real-time" },
-  { icon: "🔗", title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
-  { icon: "⚡", title: "Works in Telegram", desc: "No app download, ever" },
+  { icon: RepeatIcon, title: "Revision Mode", desc: "Practice only the questions you previously got wrong (/revision)" },
+  { icon: BookmarkIcon, title: "Bookmark Questions", desc: "Save any question mid-practice and drill your bookmarks later" },
+  { icon: ChartBarIcon, title: "Progress Stats", desc: "Daily target, accuracy by topic, and exam countdown (/stats)" },
+  { icon: RulerIcon, title: "Formula Sheets", desc: "Instant formula reference for Physics, Chemistry, Maths, Economics, Government (/formula)" },
+  { icon: CalendarIcon, title: "Exam Timetable", desc: "2026 WAEC/NECO/JAMB subject dates with countdown (/timetable)" },
+  { icon: LayersIcon, title: "Multi-Subject", desc: "Mix subjects in one practice session (Premium)" },
+  { icon: FlameIcon, title: "Study Streaks", desc: "Build a daily habit, freeze your streak once a week (Premium)" },
+  { icon: RepeatIcon, title: "Spaced Repetition", desc: "Wrong answers resurface until you master them (/review)" },
+  { icon: CalendarIcon, title: "Daily Question", desc: "Question of the Day broadcast every morning with your exam type" },
+  { icon: MedalIcon, title: "Achievements & Ranks", desc: "Earn badges for streaks, accuracy, and milestones. Rise through 30 ranks, Rookie to Legend, based on questions answered." },
+  { icon: ShareIcon, title: "Shareable Results", desc: "Share your quiz score card on WhatsApp after every CBT mock" },
+  { icon: TargetIcon, title: "Challenge Mode", desc: "Compete with friends in real-time" },
+  { icon: LinkIcon, title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
+  { icon: BoltIcon, title: "Works in Telegram", desc: "No app download, ever" },
 ];
 
 const whyTelegram = [
   {
-    icon: "📲",
+    icon: PhoneIcon,
     title: "No download needed",
     desc: "If you have Telegram, you're ready. No app store, no install, no storage space used.",
   },
   {
-    icon: "📱",
+    icon: DevicesIcon,
     title: "Works on any device",
     desc: "Android, iPhone, or desktop, ExamBuddie works everywhere Telegram does.",
   },
   {
-    icon: "⚡",
+    icon: BoltIcon,
     title: "Zero setup",
     desc: "Tap Start, pick your subjects, and your first question arrives in under 30 seconds.",
   },
   {
-    icon: "🔄",
+    icon: SyncIcon,
     title: "Progress always synced",
     desc: "Switch devices and your stats, streak, and history are always up to date.",
   },
@@ -101,18 +107,18 @@ export default async function Home() {
       <Nav />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-brand-light/10 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
+      <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
             <div className="flex-1 text-center lg:text-left">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1.5 text-xs font-medium text-brand-dark sm:px-4 sm:text-sm dark:bg-brand/15 dark:text-brand-light">
-                <GraduationCapIcon className="h-4 w-4 shrink-0" />
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
+                <GraduationCapIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
                 WAEC, JAMB &amp; NECO Prep · Nigeria
               </div>
               <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 text-balance sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
                 Stop guessing. Start acing
                 <br />
-                <span className="text-brand-dark dark:text-brand-light">WAEC, JAMB &amp; NECO.</span>
+                <span className="text-blue-700 dark:text-blue-400">WAEC, JAMB &amp; NECO.</span>
               </h1>
               <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0 dark:text-slate-400">
                 Practice real past questions, get instant AI explanations, and improve faster
@@ -124,7 +130,7 @@ export default async function Home() {
                   href={BOT_URL_LANDING}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg bg-brand px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-brand/20 transition-colors hover:bg-brand-dark sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
+                  className="rounded-lg bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
                   Start Free · 14 Days Premium →
                 </a>
@@ -151,7 +157,7 @@ export default async function Home() {
       <div className="flex justify-center bg-gradient-to-b from-white to-transparent -mt-8 pb-4 dark:from-slate-950">
         <a
           href="#features"
-          className="flex animate-bounce flex-col items-center gap-1 text-slate-400 hover:text-brand dark:text-slate-500 dark:hover:text-brand-light transition-colors"
+          className="flex animate-bounce flex-col items-center gap-1 text-slate-400 hover:text-blue-700 dark:text-slate-500 dark:hover:text-blue-400 transition-colors"
           aria-label="Scroll to features"
         >
           <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -161,19 +167,19 @@ export default async function Home() {
       </div>
 
       {/* Stats bar */}
-      <section className="bg-brand-dark py-8 sm:py-10">
+      <section className="bg-blue-800 py-8 sm:py-10 dark:bg-blue-900">
         <div className="grid w-full grid-cols-2 gap-6 px-6 text-center text-white sm:gap-8 sm:px-10 md:grid-cols-4">
           {[
             { value: "41,000+", label: "Past Questions" },
             { value: "16", label: "Subjects Covered" },
-            { value: "WAEC · JAMB · NECO", label: "Exams Covered" },
+            { value: "3", label: "Exam Boards" },
             { value: "Free", label: "To Start" },
           ].map(({ value, label }) => (
             <div key={label}>
-              <div className="text-lg leading-tight font-extrabold sm:text-xl sm:whitespace-nowrap md:text-2xl">
+              <div className="text-lg leading-tight font-extrabold sm:text-xl md:text-2xl">
                 {value}
               </div>
-              <div className="mt-1 text-xs text-brand-light/80 sm:text-sm">{label}</div>
+              <div className="mt-1 text-xs text-blue-200/80 sm:text-sm">{label}</div>
             </div>
           ))}
         </div>
@@ -197,15 +203,15 @@ export default async function Home() {
             ].map(({ Icon, problem }) => (
               <div key={problem} className="rounded-xl border border-red-100 bg-white p-5 text-left dark:border-red-900/30 dark:bg-slate-950">
                 <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400">
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{problem}</p>
               </div>
             ))}
           </div>
-          <div className="mt-10 rounded-2xl bg-brand-dark px-6 py-6 text-white sm:px-10">
+          <div className="mt-10 rounded-2xl bg-blue-800 px-6 py-6 text-white sm:px-10 dark:bg-blue-900">
             <p className="text-base font-bold sm:text-lg">ExamBuddie fixes this.</p>
-            <p className="mt-2 text-sm text-brand-light/90 sm:text-base">
+            <p className="mt-2 text-sm text-blue-200/90 sm:text-base">
               Every question you answer becomes a learning step. ExamBuddie tracks your mistakes, explains them, and keeps drilling you on them until you get them right.
             </p>
           </div>
@@ -410,9 +416,9 @@ export default async function Home() {
           <div className="mt-20 sm:mt-24">
             <p className="mb-8 text-xs font-bold uppercase tracking-widest text-slate-400">Also included</p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              {secondaryFeatures.map(({ icon, title, desc }) => (
+              {secondaryFeatures.map(({ icon: Icon, title, desc }) => (
                 <div key={title} className="rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
-                  <div className="mb-2 text-2xl">{icon}</div>
+                  <Icon className="mb-2 h-6 w-6 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">{title}</p>
                   <p className="mt-0.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{desc}</p>
                 </div>
@@ -434,13 +440,13 @@ export default async function Home() {
             </p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
-            {whyTelegram.map(({ icon, title, desc }) => (
+            {whyTelegram.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
                 className="flex flex-col items-start gap-3 rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-2xl dark:bg-slate-800">
-                  {icon}
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <div>
                   <h3 className="mb-1 text-sm font-bold text-slate-900 sm:text-base dark:text-white">{title}</h3>
@@ -504,11 +510,11 @@ export default async function Home() {
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
-            {subjects.map(({ icon, name, slug }) => {
+            {subjects.map(({ icon: Icon, name, slug }) => {
               const className = "flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center transition-colors hover:bg-blue-50 sm:p-4 border border-slate-100 dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-800";
               const content = (
                 <>
-                  <span className="text-2xl sm:text-3xl">{icon}</span>
+                  <Icon className="h-7 w-7 text-blue-700 sm:h-8 sm:w-8 dark:text-blue-400" aria-hidden="true" />
                   <span className="text-xs font-medium text-slate-700 sm:text-sm dark:text-slate-300">{name}</span>
                 </>
               );
