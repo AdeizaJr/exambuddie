@@ -486,6 +486,9 @@ WHERE id = 116125`,
   // ── Activation nudge (one-time DM if a new user never answers a question) ──
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS activation_nudge_sent_at TIMESTAMPTZ DEFAULT NULL`,
 
+  // ── Onboarding nudge (one-time DM if a new user never finished picking exam_type) ──
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS onboarding_nudge_sent_at TIMESTAMPTZ DEFAULT NULL`,
+
   // ── In-house landing-page analytics (no third-party pixel/SDK) ────────────
   `CREATE TABLE IF NOT EXISTS page_views (
     id SERIAL PRIMARY KEY,

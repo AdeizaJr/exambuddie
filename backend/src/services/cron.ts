@@ -194,6 +194,42 @@ export default function startCrons(bot: any): void {
     }
   });
 
+  // ── Daily 11am UTC (12pm WAT) — nudge users who never finished onboarding ──
+  // A user without exam_type is excluded from every other broadcast cron (QOTD,
+  // weekly summary, did-you-know all filter on `exam_type IS NOT NULL`), so unlike
+  // activation-nudge (stalled at zero attempts, but still onboarded) this catches
+  // people who dropped mid-signup and would otherwise never hear from the bot again.
+  // One-shot: onboarding_nudge_sent_at gates re-sends.
+  safeCron('0 11 * * *', 'onboarding-nudge', async () => {
+    const { rows } = await db.query(
+      `SELECT telegram_id, first_name FROM users u
+       WHERE joined_at < NOW() - INTERVAL '20 hours'
+         AND exam_type IS NULL
+         AND onboarding_nudge_sent_at IS NULL
+         AND notifications_enabled = TRUE`
+    );
+
+    for (const user of rows) {
+      try {
+        await bot.telegram.sendMessage(
+          user.telegram_id,
+          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou started signing up for ExamBuddie but never finished picking your exam. Takes 10 seconds to wrap up, then you're straight into practice 👇`,
+          {
+            parse_mode: 'HTML',
+            reply_markup: { inline_keyboard: [[{ text: '✅ Finish Setup', callback_data: 'onboard:resume' }]] },
+          }
+        );
+      } catch { /* user blocked or unavailable */ }
+    }
+    if (rows.length > 0) {
+      await db.query(
+        `UPDATE users SET onboarding_nudge_sent_at = NOW() WHERE telegram_id = ANY($1)`,
+        [rows.map((u: any) => u.telegram_id)]
+      );
+      console.log(`[CRON] Sent onboarding nudge to ${rows.length} incomplete signups`);
+    }
+  });
+
   // ── Sunday 22:55 UTC (23:55 WAT) — snapshot leaderboard before weekly reset ──
   safeCron('55 22 * * 0', 'leaderboard-snapshot', async () => {
     console.log('[CRON] Snapshotting weekly leaderboard...');
