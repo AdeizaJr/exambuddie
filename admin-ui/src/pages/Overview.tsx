@@ -134,7 +134,7 @@ export default function Overview() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatCard label="Total Users" value={stats.total_users} sub={`+${stats.new_today} today`} icon={<Users size={18} />} trend="up" />
           <StatCard label="Premium Users" value={stats.premium_users} sub={`${premiumPct}% of total`} icon={<Star size={18} />} accent trend="up" />
-          <StatCard label="Attempts Today" value={stats.attempts_today} sub={`${stats.total_attempts.toLocaleString()} total`} icon={<PenLine size={18} />} />
+          <StatCard label="Questions Answered" value={Number(stats.total_attempts)} sub={`+${Number(stats.attempts_today).toLocaleString()} today`} icon={<PenLine size={18} />} trend="up" />
           <StatCard label="Pending Flags" value={stats.pending_flags} sub={`${stats.total_questions.toLocaleString()} questions`} icon={<Flag size={18} />} />
           <StatCard label="Active Alerts" value={activeAlerts} sub={activeAlerts > 0 ? "needs attention" : "all clear"} icon={<Bell size={18} />} trend={activeAlerts > 0 ? "down" : "neutral"} />
         </div>
