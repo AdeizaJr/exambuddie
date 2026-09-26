@@ -475,8 +475,15 @@ export default function createServer(bot: any) {
         (SELECT COUNT(*) FROM users) as total_users,
         (SELECT COUNT(*) FROM users WHERE plan = 'premium') as premium_users,
         (SELECT COUNT(*) FROM users WHERE joined_at > NOW() - INTERVAL '24 hours') as new_today,
-        (SELECT COUNT(*) FROM attempts WHERE attempted_at > NOW() - INTERVAL '24 hours') as attempts_today,
-        (SELECT COUNT(*) FROM attempts) as total_attempts,
+        -- Challenge-room answers never hit the attempts table, only room_participants'
+        -- per-player counter, so add them in. That counter has no per-answer timestamp;
+        -- a room lasts minutes, so its created_at stands in for "today".
+        (SELECT COUNT(*) FROM attempts WHERE attempted_at > NOW() - INTERVAL '24 hours')
+          + (SELECT COALESCE(SUM(rp.total_answered), 0) FROM room_participants rp
+             JOIN practice_rooms pr ON pr.id = rp.room_id
+             WHERE pr.created_at > NOW() - INTERVAL '24 hours') as attempts_today,
+        (SELECT COUNT(*) FROM attempts)
+          + (SELECT COALESCE(SUM(total_answered), 0) FROM room_participants) as total_attempts,
         (SELECT COUNT(*) FROM questions WHERE is_active = TRUE) as total_questions,
         (SELECT COUNT(*) FROM flagged_explanations WHERE resolved = false) as pending_flags,
         (SELECT COALESCE(SUM(amount_ngn), 0) FROM subscriptions WHERE status = 'active') as total_revenue_ngn
