@@ -613,11 +613,15 @@ export function formatExplanation(rawText: string, subject?: string): string {
   // source data occasionally wraps just the opening of the text in a curly or straight
   // quote with no matching close), not real formatting.
   const text = rawText.replace(/º/g, '°').replace(/^[“”‘’"']\s*/, '');
+  // Some AI-written explanations use Markdown bold ("**Net Debtors = ₦47,025**"), which
+  // Telegram HTML shows as literal asterisks. Same-line pairs only, so a stray "**" can't
+  // swallow a whole paragraph. Asterisks survive HTML-escaping, so this is safe in both paths.
+  const mdBold = (s: string) => s.replace(/\*\*([^*\n]+?)\*\*/g, '<b>$1</b>');
   // Pre-formatted HTML explanations (stored with <b>/<code> tags) bypass the regex chain.
   // Still sanitize any bare < or & that aren't part of a valid Telegram tag/entity — otherwise
   // Telegram's HTML parser rejects the whole message and the send throws.
   if (/<(?:b|i|code)>/.test(text)) {
-    return text
+    return mdBold(text)
       .replace(/&(?!(?:amp|lt|gt|quot|#39);)/g, '&amp;')
       .replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
   }
@@ -628,7 +632,7 @@ export function formatExplanation(rawText: string, subject?: string): string {
   // and practice results silently falling through to the generic bot-error handler. None of
   // the regexes below key off literal <, >, or & in the source text, so escaping first is safe.
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const preFormatted = escaped
+  const preFormatted = mdBold(escaped)
     // Bare-digit exponents with no markup at all — "πr2h", "(5)2", "cm2" meaning πr²h,
     // (5)², cm². Deliberately narrow rather than a general letter-digit-letter rule: that
     // would also match H2O/CO2-style chemistry subscripts, which look identical but mean
@@ -652,7 +656,10 @@ export function formatExplanation(rawText: string, subject?: string): string {
     // the previous line doesn't drag trailing prose into the equation-chain splitter below.
     .replace(/\\\)\s+(?=[A-Z])/g, '\\)\n\n')
     // Bold section headers: "Given:", "Find:", "Solution:", "Step N:", "Where:", "Note:"
-    .replace(/\b(Given|Find|Solution|Where|Note|Step\s*\d+)\s*:/gi, '\n\n<b>$1:</b>')
+    // Inside an open paren ("Answer A. (Note: ...)") the label is an aside, not a section —
+    // bold it in place. Breaking there stranded a lone "(" on its own line (97 rows).
+    .replace(/(\(\s*)(Given|Find|Solution|Where|Note|Step\s*\d+)\s*:/gi, '$1<b>$2:</b>')
+    .replace(/(?<!<b>)\b(Given|Find|Solution|Where|Note|Step\s*\d+)\s*:(?!<\/b>)/gi, '\n\n<b>$1:</b>')
     // Comma-separated variable assignments: ", WORD(optional) = value" → new line
     // e.g. "C = 0.25mol/dm3, volume = ?" → "C = 0.25mol/dm3\nvolume = ?"
     // Excludes phrases starting with an article/relative ("the frequency f =", "where v =") —
