@@ -133,6 +133,9 @@ export const api = {
   removeBookmark: (questionId: number) =>
     req<{ ok: boolean }>('DELETE', `/bookmarks/${questionId}`),
 
+  rateExplanation: (questionId: number, rating: 1 | -1) =>
+    req<{ ok: boolean }>('POST', `/explanation-feedback/${questionId}`, { rating }),
+
   getLeaderboard: () =>
     req<{ entries: LeaderboardEntry[]; myRank: number | null }>('GET', '/leaderboard'),
 };

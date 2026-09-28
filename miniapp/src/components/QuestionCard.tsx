@@ -1,7 +1,10 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import type { Question } from '../types';
+import { api } from '../api';
+import { haptic } from '../telegram';
+import ExplanationBody from './Explanation';
 
 function tryKatex(expr: string, display: boolean): string {
   try {
@@ -70,6 +73,34 @@ function renderMath(text: string): string {
   // *text* → underline
   result = result.replace(/\*([^*\n]+)\*/g, '<u>$1</u>');
   return result;
+}
+
+// Same 👍/👎 the bot shows under each explanation; writes to explanation_feedback.
+function ExplanationRating({ questionId }: { questionId: number }) {
+  // Keyed by question id so the choice doesn't carry over to the next question.
+  const [rated, setRated] = useState<{ id: number; rating: 1 | -1 } | null>(null);
+  const current = rated?.id === questionId ? rated.rating : null;
+
+  function rate(rating: 1 | -1) {
+    if (current === rating) return;
+    haptic('light');
+    setRated({ id: questionId, rating });
+    api.rateExplanation(questionId, rating).catch(() => {});
+  }
+
+  if (current) {
+    return <p className="mt-3 text-xs text-green-800">Thanks for your feedback!</p>;
+  }
+  return (
+    <div className="mt-3 flex gap-2">
+      <button onClick={() => rate(1)} className="flex-1 rounded-lg py-1.5 text-xs font-medium text-green-900 bg-white/70 border border-green-200">
+        👍 Good explanation
+      </button>
+      <button onClick={() => rate(-1)} className="flex-1 rounded-lg py-1.5 text-xs font-medium text-green-900 bg-white/70 border border-green-200">
+        👎 Poor explanation
+      </button>
+    </div>
+  );
 }
 
 interface Props {
@@ -228,16 +259,18 @@ function QuestionCard({ question, qNum, total, selected, revealed, onSelect, dis
       </div>
 
       {/* Explanation */}
-      {revealed && question.explanation && (
+      {revealed && (
         <div
           className="rounded-xl p-4 text-sm"
           style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}
         >
           <p className="font-bold text-green-800 mb-1">💡 Explanation</p>
-          <span
-            className="block overflow-x-auto text-green-900 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: renderMath(question.explanation || '') }}
+          <ExplanationBody
+            html={question.explanation_html}
+            raw={question.explanation}
+            className="overflow-x-auto text-green-900 leading-relaxed"
           />
+          {question.explanation && <ExplanationRating questionId={question.id} />}
         </div>
       )}
     </div>

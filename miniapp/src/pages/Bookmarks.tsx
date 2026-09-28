@@ -4,11 +4,13 @@ import { api } from '../api';
 import type { Question } from '../types';
 import LoadingScreen from '../components/LoadingScreen';
 import { haptic } from '../telegram';
+import ExplanationBody from '../components/Explanation';
 
 export default function Bookmarks() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [removing, setRemoving] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const nav = useNavigate();
 
   useEffect(() => {
@@ -26,6 +28,15 @@ export default function Bookmarks() {
     } finally {
       setRemoving(null);
     }
+  }
+
+  function toggleExpanded(id: number) {
+    haptic('light');
+    setExpanded(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
   }
 
   if (loading) return <LoadingScreen />;
@@ -78,7 +89,23 @@ export default function Bookmarks() {
                 <span className="text-xs text-[var(--tg-hint)]">correct answer</span>
               </div>
               {q.explanation && (
-                <p className="mt-2 text-xs text-[var(--tg-hint)] leading-relaxed line-clamp-2 italic">{q.explanation}</p>
+                <>
+                  <button
+                    onClick={() => toggleExpanded(q.id)}
+                    className="mt-2 text-xs font-medium text-blue-600"
+                  >
+                    {expanded.has(q.id) ? 'Hide explanation ▴' : '💡 Show explanation ▾'}
+                  </button>
+                  {expanded.has(q.id) && (
+                    <div className="mt-2 rounded-xl p-3 text-xs" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
+                      <ExplanationBody
+                        html={q.explanation_html}
+                        raw={q.explanation}
+                        className="overflow-x-auto text-green-900 leading-relaxed"
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </div>
           ))}

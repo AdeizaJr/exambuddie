@@ -23,6 +23,9 @@ export interface Question {
   option_e?: string;
   correct_option: string;
   explanation?: string;
+  // Server-formatted copy of `explanation` (same output the bot sends). Safe subset of
+  // HTML: only <b>, <i>, <u>, <code>, with line breaks as \n.
+  explanation_html?: string | null;
   has_diagram?: boolean;
   image_url?: string;
 }
