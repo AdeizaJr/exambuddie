@@ -3,8 +3,15 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
 import * as redis from '../services/redis';
+import { formatExplanation } from '../bot/formatter';
 
 const router = Router();
+
+// Run the bot's explanation formatter server-side so the mini app shows the exact same
+// step-split, bolded, LaTeX-converted text bot users see, instead of the raw DB string.
+function withExplanationHtml<T extends { explanation?: string | null; subject?: string }>(q: T): T & { explanation_html: string | null } {
+  return { ...q, explanation_html: q.explanation ? formatExplanation(q.explanation, q.subject) : null };
+}
 
 // ── Auth middleware ────────────────────────────────────────────────────────────
 function validateInitData(initData: string): { id: number } | null {
@@ -101,7 +108,7 @@ router.get('/question', requireAuth, async (req: Request, res: Response) => {
     topic && topic !== '__all__' ? String(topic) : null,
   );
 
-  res.json(q || null);
+  res.json(q ? withExplanationHtml(q) : null);
 });
 
 // ── POST /api/miniapp/answer ───────────────────────────────────────────────────
@@ -166,7 +173,7 @@ router.post('/quiz/start', requireAuth, async (req: Request, res: Response) => {
   const sessionId = uuidv4();
   await db.updateStreak((req as any).telegramId);
 
-  res.json({ questions, sessionId });
+  res.json({ questions: questions.map(withExplanationHtml), sessionId });
 });
 
 // ── POST /api/miniapp/quiz/complete ───────────────────────────────────────────
@@ -223,14 +230,14 @@ router.get('/drill', requireAuth, async (req: Request, res: Response) => {
 
   const user = (req as any).user;
   const questions = await db.getQuestionsByTopic(user.exam_type || '', String(subject), String(topic), 10);
-  res.json(questions);
+  res.json(questions.map(withExplanationHtml));
 });
 
 // ── GET /api/miniapp/bookmarks ────────────────────────────────────────────────
 router.get('/bookmarks', requireAuth, async (req: Request, res: Response) => {
   const user = (req as any).user;
   const questions = await db.getUserBookmarks(user.id);
-  res.json(questions);
+  res.json(questions.map(withExplanationHtml));
 });
 
 // ── POST /api/miniapp/bookmarks/:questionId ───────────────────────────────────
@@ -244,6 +251,16 @@ router.post('/bookmarks/:questionId', requireAuth, async (req: Request, res: Res
 router.delete('/bookmarks/:questionId', requireAuth, async (req: Request, res: Response) => {
   const user = (req as any).user;
   await db.removeBookmark(user.id, parseInt(String(req.params.questionId)));
+  res.json({ ok: true });
+});
+
+// ── POST /api/miniapp/explanation-feedback/:questionId ────────────────────────
+router.post('/explanation-feedback/:questionId', requireAuth, async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const questionId = parseInt(String(req.params.questionId), 10);
+  const { rating } = req.body;
+  if (!questionId || (rating !== 1 && rating !== -1)) return res.status(400).json({ error: 'questionId and rating (1 or -1) required' });
+  await db.saveExplanationFeedback(user.id, questionId, rating);
   res.json({ ok: true });
 });
 
