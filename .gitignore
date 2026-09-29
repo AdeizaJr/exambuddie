@@ -27,3 +27,6 @@ landing/.env.*
 .DS_Store
 Thumbs.db
 *.pem
+
+# ── Database dumps ────────────────────────────────────────────────────────────
+*.dump
