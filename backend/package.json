@@ -44,7 +44,7 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.4.0",
     "node-cron": "^3.0.3",
-    "nodemailer": "^9.1.1",
+    "nodemailer": "^10.0.12",
     "opentype.js": "^2.0.0",
     "pg": "^8.11.3",
     "redis": "^4.6.12",
