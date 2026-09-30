@@ -66,6 +66,7 @@ export interface BugReport {
   telegram_id: string;
   name: string | null;
   message: string;
+  photo_count: number;
   resolved: boolean;
   created_at: string;
 }

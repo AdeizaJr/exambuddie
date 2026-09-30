@@ -144,6 +144,10 @@ export const getSupportStep = async (telegramId: number | string): Promise<strin
 export const clearSupportStep = async (telegramId: number | string): Promise<void> => {
   await client.del(`support_step:${telegramId}`);
 };
+// True only for the first caller per key within ttl — e.g. reply once per photo album.
+export const claimOnce = async (key: string, ttlSeconds: number): Promise<boolean> => {
+  return (await client.set(key, '1', { NX: true, EX: ttlSeconds })) === 'OK';
+};
 
 const QUIZ_RESULT_TTL = 60 * 60; // 1 hour
 

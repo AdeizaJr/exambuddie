@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getBugReports, setBugReportResolved, invalidateCache } from "../api";
+import { getBugReports, getBugReportPhotoUrl, setBugReportResolved, invalidateCache } from "../api";
 import type { BugReport } from "../types";
 import Spinner from "../components/Spinner";
 
@@ -11,6 +11,36 @@ function formatDate(dateStr: string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+function Screenshot({ reportId, index }: { reportId: number; index: number }) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    getBugReportPhotoUrl(reportId, index)
+      .then((u) => {
+        objectUrl = u;
+        if (cancelled) URL.revokeObjectURL(u);
+        else setUrl(u);
+      })
+      .catch(() => !cancelled && setFailed(true));
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [reportId, index]);
+
+  const box = "flex h-28 w-28 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface2";
+  if (failed) return <div className={`${box} text-xs text-muted`}>Failed to load</div>;
+  if (!url) return <div className={box}><Spinner size="sm" /></div>;
+  return (
+    <a href={url} target="_blank" rel="noreferrer" className={`${box} transition-opacity hover:opacity-80`}>
+      <img src={url} alt={`Screenshot ${index + 1}`} className="h-full w-full object-cover" />
+    </a>
+  );
 }
 
 interface BugCardProps {
@@ -43,7 +73,18 @@ function BugCard({ report, onToggled }: BugCardProps) {
         </div>
         <span className="text-xs text-muted">{formatDate(report.created_at)}</span>
       </div>
-      <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-white">{report.message}</p>
+      {report.message ? (
+        <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-white">{report.message}</p>
+      ) : (
+        <p className="text-sm italic text-muted">No description, screenshot only</p>
+      )}
+      {report.photo_count > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: report.photo_count }, (_, i) => (
+            <Screenshot key={i} reportId={report.id} index={i} />
+          ))}
+        </div>
+      )}
       <div className="flex justify-end">
         <button
           onClick={handleToggle}

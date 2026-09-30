@@ -562,6 +562,11 @@ WHERE id = 116125`,
     created_at TIMESTAMPTZ DEFAULT NOW()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_bug_reports_resolved ON bug_reports(resolved, created_at DESC)`,
+  // Screenshots: Telegram file_ids (Telegram hosts the files). media_group_id lets the
+  // photos of one album land in a single report even though they arrive as separate updates.
+  `ALTER TABLE bug_reports ADD COLUMN IF NOT EXISTS photo_file_ids TEXT[] NOT NULL DEFAULT '{}'`,
+  `ALTER TABLE bug_reports ADD COLUMN IF NOT EXISTS media_group_id TEXT`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS idx_bug_reports_media_group ON bug_reports(media_group_id) WHERE media_group_id IS NOT NULL`,
 ];
 
 async function migrate(): Promise<void> {
