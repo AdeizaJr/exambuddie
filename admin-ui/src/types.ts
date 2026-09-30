@@ -61,6 +61,15 @@ export interface SystemAlert {
   created_at: string;
 }
 
+export interface BugReport {
+  id: number;
+  telegram_id: string;
+  name: string | null;
+  message: string;
+  resolved: boolean;
+  created_at: string;
+}
+
 export interface AuditLogEntry {
   id: number;
   admin_username: string;

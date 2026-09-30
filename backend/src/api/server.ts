@@ -575,6 +575,20 @@ export default function createServer(bot: any) {
     res.json({ ok: true });
   });
 
+  // ── GET /api/admin/bug-reports?resolved=true|false ───────────────────────────
+  app.get('/api/admin/bug-reports', adminAuth, async (req: Request, res: Response) => {
+    const rows = await db.getBugReports(req.query.resolved === 'true');
+    res.json(rows);
+  });
+
+  // ── POST /api/admin/bug-reports/:id/resolve  (body: { resolved?: boolean }) ─
+  app.post('/api/admin/bug-reports/:id/resolve', adminAuth, async (req: Request, res: Response) => {
+    const resolved = req.body?.resolved !== false;
+    await db.setBugReportResolved(Number(req.params.id), resolved);
+    await db.logAudit((req as any).admin.username, resolved ? 'bug_report.resolve' : 'bug_report.reopen', { targetType: 'bug_report', targetId: String(req.params.id), ip: req.ip }).catch(() => {});
+    res.json({ ok: true });
+  });
+
   // ── GET /api/admin/audit-logs ────────────────────────────────────────────────
   app.get('/api/admin/audit-logs', adminAuth, async (req: Request, res: Response) => {
     const limit = Math.min(200, Math.max(1, parseInt(req.query.limit as string) || 100));

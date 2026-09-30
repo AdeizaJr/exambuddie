@@ -1684,6 +1684,38 @@ export async function resolveAlert(id: number): Promise<void> {
   await pool.query(`UPDATE system_alerts SET resolved = true WHERE id = $1`, [id]);
 }
 
+// ── Bug reports (from the bot's "Report a Bug" flow) ─────────────────────────
+
+export interface BugReport {
+  id: number;
+  telegram_id: string;
+  name: string | null;
+  message: string;
+  resolved: boolean;
+  created_at: string;
+}
+
+export async function createBugReport(telegramId: number, name: string, message: string): Promise<void> {
+  await pool.query(
+    `INSERT INTO bug_reports (telegram_id, name, message) VALUES ($1, $2, $3)`,
+    [telegramId, name || null, message]
+  );
+}
+
+export async function getBugReports(resolved: boolean): Promise<BugReport[]> {
+  const { rows } = await pool.query<BugReport>(
+    `SELECT id, telegram_id, name, message, resolved, created_at
+     FROM bug_reports WHERE resolved = $1
+     ORDER BY created_at DESC LIMIT 200`,
+    [resolved]
+  );
+  return rows;
+}
+
+export async function setBugReportResolved(id: number, resolved: boolean): Promise<void> {
+  await pool.query(`UPDATE bug_reports SET resolved = $2 WHERE id = $1`, [id, resolved]);
+}
+
 // ── Audit logs (admin actions) — table is append-only, see migrate.ts trigger ──
 
 export async function logAudit(

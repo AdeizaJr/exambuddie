@@ -13,7 +13,8 @@ import LeaderboardPage from "./pages/Leaderboard";
 import QOTDPage from "./pages/QOTD";
 import Pricing from "./pages/Pricing";
 import AuditLog from "./pages/AuditLog";
-import { getFlags, getAlerts, loginAdmin } from "./api";
+import BugReports from "./pages/BugReports";
+import { getFlags, getAlerts, getBugReports, loginAdmin } from "./api";
 
 // ── Login page ──────────────────────────────────────────────────────────────
 function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
@@ -101,15 +102,17 @@ function ProtectedLayout({
   secret,
   pendingFlags,
   pendingAlerts,
+  pendingBugs,
   onLogout,
 }: {
   secret: string;
   pendingFlags: number;
   pendingAlerts: number;
+  pendingBugs: number;
   onLogout: () => void;
 }) {
   if (!secret) return <Navigate to="/login" replace />;
-  return <Layout pendingFlags={pendingFlags} pendingAlerts={pendingAlerts} onLogout={onLogout} />;
+  return <Layout pendingFlags={pendingFlags} pendingAlerts={pendingAlerts} pendingBugs={pendingBugs} onLogout={onLogout} />;
 }
 
 // ── Root app ────────────────────────────────────────────────────────────────
@@ -117,6 +120,7 @@ export default function App() {
   const [secret, setSecret] = useState<string | null>(() => localStorage.getItem("admin_token"));
   const [pendingFlags, setPendingFlags] = useState(0);
   const [pendingAlerts, setPendingAlerts] = useState(0);
+  const [pendingBugs, setPendingBugs] = useState(0);
 
   const loadFlagCount = useCallback(async () => {
     try {
@@ -136,14 +140,24 @@ export default function App() {
     }
   }, []);
 
+  const loadBugCount = useCallback(async () => {
+    try {
+      const bugs = await getBugReports(false);
+      setPendingBugs(bugs.length);
+    } catch {
+      // non-fatal
+    }
+  }, []);
+
   useEffect(() => {
     if (secret) {
       loadFlagCount();
       loadAlertCount();
-      const interval = setInterval(() => { loadFlagCount(); loadAlertCount(); }, 60_000);
+      loadBugCount();
+      const interval = setInterval(() => { loadFlagCount(); loadAlertCount(); loadBugCount(); }, 60_000);
       return () => clearInterval(interval);
     }
-  }, [secret, loadFlagCount, loadAlertCount]);
+  }, [secret, loadFlagCount, loadAlertCount, loadBugCount]);
 
   function handleLogout() {
     localStorage.removeItem("admin_token");
@@ -162,6 +176,7 @@ export default function App() {
             secret={secret ?? ""}
             pendingFlags={pendingFlags}
             pendingAlerts={pendingAlerts}
+            pendingBugs={pendingBugs}
             onLogout={handleLogout}
           />
         }
@@ -172,6 +187,7 @@ export default function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/flags" element={<Flags onFlagsResolved={loadFlagCount} />} />
         <Route path="/alerts" element={<Alerts onAlertsResolved={loadAlertCount} />} />
+        <Route path="/bug-reports" element={<BugReports onChanged={loadBugCount} />} />
         <Route path="/subscriptions" element={<Subscriptions />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />

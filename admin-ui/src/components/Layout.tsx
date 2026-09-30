@@ -18,6 +18,7 @@ import {
   CalendarDays,
   Tag,
   ScrollText,
+  Bug,
 } from "lucide-react";
 import Modal from "./Modal";
 import { changePassword } from "../api";
@@ -31,6 +32,7 @@ interface NavItem {
 interface LayoutProps {
   pendingFlags: number;
   pendingAlerts: number;
+  pendingBugs: number;
   onLogout: () => void;
 }
 
@@ -40,6 +42,7 @@ const NAV_ITEMS: NavItem[] = [
   { path: "/users",         label: "Users",         icon: <Users size={16} />           },
   { path: "/flags",         label: "Flags",         icon: <Flag size={16} />            },
   { path: "/alerts",        label: "Alerts",        icon: <Bell size={16} />            },
+  { path: "/bug-reports",   label: "Bug Reports",   icon: <Bug size={16} />             },
   { path: "/subscriptions", label: "Subscriptions", icon: <CreditCard size={16} />      },
   { path: "/analytics",     label: "Analytics",     icon: <BarChart2 size={16} />       },
   { path: "/leaderboard",   label: "Leaderboard",   icon: <Trophy size={16} />          },
@@ -132,7 +135,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default function Layout({ pendingFlags, pendingAlerts, onLogout }: LayoutProps) {
+export default function Layout({ pendingFlags, pendingAlerts, pendingBugs, onLogout }: LayoutProps) {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -173,7 +176,8 @@ export default function Layout({ pendingFlags, pendingAlerts, onLogout }: Layout
         {NAV_ITEMS.map((item) => {
           const badge =
             item.path === "/flags" && pendingFlags > 0 ? pendingFlags :
-            item.path === "/alerts" && pendingAlerts > 0 ? pendingAlerts : 0;
+            item.path === "/alerts" && pendingAlerts > 0 ? pendingAlerts :
+            item.path === "/bug-reports" && pendingBugs > 0 ? pendingBugs : 0;
           return (
             <NavLink
               key={item.path}
@@ -239,9 +243,9 @@ export default function Layout({ pendingFlags, pendingAlerts, onLogout }: Layout
           </div>
           <p className="font-display text-sm font-bold text-white">ExamBuddie Admin</p>
         </div>
-        {pendingFlags + pendingAlerts > 0 && (
+        {pendingFlags + pendingAlerts + pendingBugs > 0 && (
           <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-            {pendingFlags + pendingAlerts > 9 ? "9+" : pendingFlags + pendingAlerts}
+            {pendingFlags + pendingAlerts + pendingBugs > 9 ? "9+" : pendingFlags + pendingAlerts + pendingBugs}
           </span>
         )}
       </div>

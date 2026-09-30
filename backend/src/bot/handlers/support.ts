@@ -1,4 +1,5 @@
 // handlers/support.ts — /support command and contact/help flows
+import * as db from '../../db';
 import * as redis from '../../services/redis';
 import { sendSupportEmail } from '../../services/email';
 import { escHtml } from '../formatter';
@@ -64,6 +65,13 @@ export async function handleBugReport(ctx: any, bot: any): Promise<void> {
   await redis.clearSupportStep(ctx.from.id);
 
   const name = `${ctx.from.first_name ?? ''}${ctx.from.username ? ' (@' + ctx.from.username + ')' : ''}`;
+
+  // Save first — the Telegram/email forwards below fail silently when unconfigured
+  if (text) {
+    await db.createBugReport(ctx.from.id, name, text).catch((err) =>
+      console.error('Failed to save bug report:', err.message)
+    );
+  }
 
   // Forward to Telegram support chat if configured
   if (SUPPORT_CHAT_ID) {
