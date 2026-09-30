@@ -1751,6 +1751,37 @@ export async function setBugReportResolved(id: number, resolved: boolean): Promi
   await pool.query(`UPDATE bug_reports SET resolved = $2 WHERE id = $1`, [id, resolved]);
 }
 
+// Claims the one-time "fixed" DM for a resolved report. Returns null if already sent
+// (or not resolved), so a reopen + re-resolve never messages the user twice.
+export async function claimBugReportFixedNotice(id: number): Promise<{ telegram_id: number; message: string } | null> {
+  const { rows } = await pool.query<{ telegram_id: number; message: string }>(
+    `UPDATE bug_reports SET notified_at = NOW()
+     WHERE id = $1 AND resolved AND notified_at IS NULL
+     RETURNING telegram_id, message`,
+    [id]
+  );
+  return rows[0] ?? null;
+}
+
+// Same idea for question flags; joins users because flags store the internal user id.
+export async function claimFlagFixedNotice(
+  id: number
+): Promise<{ telegram_id: number; subject: string; question_text: string } | null> {
+  const { rows } = await pool.query<{ telegram_id: number; subject: string; question_text: string }>(
+    `WITH claimed AS (
+       UPDATE flagged_explanations SET notified_at = NOW()
+       WHERE id = $1 AND resolved AND notified_at IS NULL
+       RETURNING question_id, user_id
+     )
+     SELECT u.telegram_id, q.subject, q.question_text
+     FROM claimed c
+     JOIN users u ON u.id = c.user_id
+     JOIN questions q ON q.id = c.question_id`,
+    [id]
+  );
+  return rows[0] ?? null;
+}
+
 // ── Audit logs (admin actions) — table is append-only, see migrate.ts trigger ──
 
 export async function logAudit(

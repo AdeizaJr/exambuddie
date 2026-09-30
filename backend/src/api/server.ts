@@ -51,6 +51,43 @@ const diagramUpload = multer({
 });
 
 export default function createServer(bot: any) {
+  // ── "Your report was fixed" DMs ──────────────────────────────────────────────
+  // Sent after the admin response so a slow or blocked Telegram chat never stalls
+  // the dashboard. Each report/flag is claimed once in the DB, so no repeat messages.
+  const snippet = (text: string, max = 80) => {
+    const flat = text.replace(/\s+/g, ' ').trim();
+    return fmt.escHtml(flat.length > max ? flat.slice(0, max - 1) + '…' : flat);
+  };
+
+  async function notifyBugReportFixed(id: number) {
+    try {
+      const report = await db.claimBugReportFixedNotice(id);
+      if (!report) return;
+      const quote = report.message ? `\n\n<i>"${snippet(report.message)}"</i>` : '';
+      await bot.telegram.sendMessage(
+        report.telegram_id,
+        `✅ <b>Fixed!</b> The bug you reported has been resolved.${quote}\n\nThanks for helping us make ExamBuddie better. Keep the reports coming!`,
+        { parse_mode: 'HTML' }
+      );
+    } catch (err: any) {
+      console.error(`Bug report ${id} fixed-notice failed:`, err.message); // user may have blocked the bot
+    }
+  }
+
+  async function notifyFlagFixed(id: number) {
+    try {
+      const flag = await db.claimFlagFixedNotice(id);
+      if (!flag) return;
+      await bot.telegram.sendMessage(
+        flag.telegram_id,
+        `✅ <b>Fixed!</b> We reviewed the ${fmt.escHtml(fmt.SUBJECT_MAP[flag.subject] ?? flag.subject)} question you flagged and corrected it:\n\n<i>"${snippet(flag.question_text)}"</i>\n\nThanks for looking out for other students!`,
+        { parse_mode: 'HTML' }
+      );
+    } catch (err: any) {
+      console.error(`Flag ${id} fixed-notice failed:`, err.message); // user may have blocked the bot
+    }
+  }
+
   const app = express();
 
   // Railway's edge proxy sits in front of us (one hop). Without this, req.ip is the proxy's
@@ -561,6 +598,7 @@ export default function createServer(bot: any) {
     }
     await db.query(`UPDATE flagged_explanations SET resolved = true WHERE id = $1`, [req.params.id]);
     res.json({ ok: true });
+    notifyFlagFixed(Number(req.params.id));
   });
 
   // ── GET /api/admin/alerts ────────────────────────────────────────────────────
@@ -610,6 +648,7 @@ export default function createServer(bot: any) {
     await db.setBugReportResolved(Number(req.params.id), resolved);
     await db.logAudit((req as any).admin.username, resolved ? 'bug_report.resolve' : 'bug_report.reopen', { targetType: 'bug_report', targetId: String(req.params.id), ip: req.ip }).catch(() => {});
     res.json({ ok: true });
+    if (resolved) notifyBugReportFixed(Number(req.params.id));
   });
 
   // ── GET /api/admin/audit-logs ────────────────────────────────────────────────

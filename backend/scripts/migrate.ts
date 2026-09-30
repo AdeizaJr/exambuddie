@@ -567,6 +567,13 @@ WHERE id = 116125`,
   `ALTER TABLE bug_reports ADD COLUMN IF NOT EXISTS photo_file_ids TEXT[] NOT NULL DEFAULT '{}'`,
   `ALTER TABLE bug_reports ADD COLUMN IF NOT EXISTS media_group_id TEXT`,
   `CREATE UNIQUE INDEX IF NOT EXISTS idx_bug_reports_media_group ON bug_reports(media_group_id) WHERE media_group_id IS NOT NULL`,
+
+  // ── "Your report was fixed" DMs: stamped when sent so a reopen + re-resolve doesn't message twice.
+  // Rows resolved before this shipped are stamped too, so nobody gets a late message for them.
+  `ALTER TABLE bug_reports ADD COLUMN IF NOT EXISTS notified_at TIMESTAMPTZ`,
+  `ALTER TABLE flagged_explanations ADD COLUMN IF NOT EXISTS notified_at TIMESTAMPTZ`,
+  `UPDATE bug_reports SET notified_at = NOW() WHERE resolved AND notified_at IS NULL`,
+  `UPDATE flagged_explanations SET notified_at = NOW() WHERE resolved AND notified_at IS NULL`,
 ];
 
 async function migrate(): Promise<void> {
