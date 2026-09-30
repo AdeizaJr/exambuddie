@@ -1686,30 +1686,65 @@ export async function resolveAlert(id: number): Promise<void> {
 
 // ── Bug reports (from the bot's "Report a Bug" flow) ─────────────────────────
 
+export const MAX_BUG_REPORT_PHOTOS = 10;
+
 export interface BugReport {
   id: number;
   telegram_id: string;
   name: string | null;
   message: string;
+  photo_count: number;
   resolved: boolean;
   created_at: string;
 }
 
-export async function createBugReport(telegramId: number, name: string, message: string): Promise<void> {
-  await pool.query(
-    `INSERT INTO bug_reports (telegram_id, name, message) VALUES ($1, $2, $3)`,
-    [telegramId, name || null, message]
+// For an album, every photo calls this with the same mediaGroupId; the unique index
+// folds them into one row, so concurrent updates can't split an album across reports.
+export async function createBugReport(
+  telegramId: number,
+  name: string,
+  message: string,
+  photoFileIds: string[] = [],
+  mediaGroupId: string | null = null
+): Promise<number> {
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO bug_reports (telegram_id, name, message, photo_file_ids, media_group_id)
+     VALUES ($1, $2, $3, $4, $5)
+     ON CONFLICT (media_group_id) WHERE media_group_id IS NOT NULL DO UPDATE SET
+       photo_file_ids = (bug_reports.photo_file_ids || EXCLUDED.photo_file_ids)[1:${MAX_BUG_REPORT_PHOTOS}],
+       message = CASE WHEN bug_reports.message = '' THEN EXCLUDED.message ELSE bug_reports.message END
+     RETURNING id`,
+    [telegramId, name || null, message, photoFileIds, mediaGroupId]
   );
+  return rows[0].id;
+}
+
+// Returns false when the report is full (or isn't this user's).
+export async function addBugReportPhoto(id: number, telegramId: number, fileId: string): Promise<boolean> {
+  const { rowCount } = await pool.query(
+    `UPDATE bug_reports SET photo_file_ids = array_append(photo_file_ids, $3)
+     WHERE id = $1 AND telegram_id = $2 AND cardinality(photo_file_ids) < $4`,
+    [id, telegramId, fileId, MAX_BUG_REPORT_PHOTOS]
+  );
+  return (rowCount ?? 0) > 0;
 }
 
 export async function getBugReports(resolved: boolean): Promise<BugReport[]> {
   const { rows } = await pool.query<BugReport>(
-    `SELECT id, telegram_id, name, message, resolved, created_at
+    `SELECT id, telegram_id, name, message, cardinality(photo_file_ids) AS photo_count, resolved, created_at
      FROM bug_reports WHERE resolved = $1
      ORDER BY created_at DESC LIMIT 200`,
     [resolved]
   );
   return rows;
+}
+
+export async function getBugReportPhotoFileId(id: number, index: number): Promise<string | null> {
+  const { rows } = await pool.query<{ file_id: string | null }>(
+    `SELECT photo_file_ids[$2 + 1] AS file_id FROM bug_reports WHERE id = $1`,
+    [id, index]
+  );
+  return rows[0]?.file_id ?? null;
 }
 
 export async function setBugReportResolved(id: number, resolved: boolean): Promise<void> {

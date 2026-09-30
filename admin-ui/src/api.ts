@@ -144,6 +144,15 @@ export async function getBugReports(resolved = false): Promise<BugReport[]> {
   return cachedReq<BugReport[]>("/bug-reports", { resolved: String(resolved) }, 30_000);
 }
 
+// Returns an object URL; <img src> can't send the admin Authorization header.
+export async function getBugReportPhotoUrl(id: number, index: number): Promise<string> {
+  const res = await fetch(`${BASE}/bug-reports/${id}/photos/${index}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  if (!res.ok) throw new Error(`Failed to load screenshot (${res.status})`);
+  return URL.createObjectURL(await res.blob());
+}
+
 export async function setBugReportResolved(id: number, resolved: boolean): Promise<{ ok: boolean }> {
   return req<{ ok: boolean }>("POST", `/bug-reports/${id}/resolve`, { resolved });
 }

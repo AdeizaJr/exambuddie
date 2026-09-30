@@ -581,6 +581,29 @@ export default function createServer(bot: any) {
     res.json(rows);
   });
 
+  // ── GET /api/admin/bug-reports/:id/photos/:index ─────────────────────────────
+  // Proxied, not redirected: Telegram's file URL embeds the bot token.
+  app.get('/api/admin/bug-reports/:id/photos/:index', adminAuth, async (req: Request, res: Response) => {
+    const index = Number(req.params.index);
+    if (!Number.isInteger(index) || index < 0) return res.status(400).json({ error: 'Bad index' });
+    const fileId = await db.getBugReportPhotoFileId(Number(req.params.id), index);
+    if (!fileId) return res.status(404).json({ error: 'Not found' });
+    try {
+      const link = await bot.telegram.getFileLink(fileId);
+      const upstream = await fetch(link.toString());
+      if (!upstream.ok) return res.status(502).json({ error: 'Telegram fetch failed' });
+      // Telegram serves files as application/octet-stream; derive the type from the path
+      const ext = link.pathname.split('.').pop()?.toLowerCase();
+      const type = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'gif' ? 'image/gif' : 'image/jpeg';
+      res.setHeader('Content-Type', type);
+      res.setHeader('Cache-Control', 'private, max-age=86400');
+      res.send(Buffer.from(await upstream.arrayBuffer()));
+    } catch (err: any) {
+      console.error('Bug report photo fetch failed:', err.message);
+      res.status(502).json({ error: 'Telegram fetch failed' });
+    }
+  });
+
   // ── POST /api/admin/bug-reports/:id/resolve  (body: { resolved?: boolean }) ─
   app.post('/api/admin/bug-reports/:id/resolve', adminAuth, async (req: Request, res: Response) => {
     const resolved = req.body?.resolved !== false;

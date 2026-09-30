@@ -385,6 +385,11 @@ bot.on('callback_query', async (ctx: any) => {
 // ── Contact handler (phone number shared during onboarding) ───────────────────
 bot.on('message', async (ctx: any, next: any) => {
   if (ctx.message?.contact) return onboarding.handleContact(ctx);
+  // Screenshot for a bug report — only while the user is in the Report a Bug flow
+  if (support.bugScreenshot(ctx.message)) {
+    const step = await redis.getSupportStep(ctx.from.id);
+    if (step === 'bug' || step?.startsWith('bug_photo:')) return support.handleBugPhoto(ctx, bot, step);
+  }
   return next();
 });
 
