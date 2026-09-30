@@ -90,7 +90,6 @@ async function main() {
 
     if (existing.length > 0) {
       skipped++;
-      console.log(`  Skip (exists): ${fact.id}`);
       continue;
     }
 
