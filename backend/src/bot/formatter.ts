@@ -85,6 +85,15 @@ function fracWrap(s: string): string {
   return needsParens ? `(${s})` : s;
 }
 
+// Denominator needs parens when it's more than one number or one letter — otherwise
+// \frac{5}{6x} flattens to "5/6x", which the numeric-fraction rule below then turns into
+// "⅚x" (reads as (5/6)·x, not 5/(6x)) and silently changes the maths.
+function fracDen(d: string): string {
+  const wrapped = fracWrap(d);
+  if (wrapped !== d) return wrapped;
+  return /^\d+$/.test(d) || /^[a-zA-Z]$/.test(d) ? d : `(${d})`;
+}
+
 // Convert LaTeX math notation to readable plain text for Telegram.
 function convertLatex(text: string, subject?: string): string {
   const chemLike = subject === 'chemistry' || subject === 'biology';
@@ -101,14 +110,14 @@ function convertLatex(text: string, subject?: string): string {
       const n = num.trim(); const d = den.trim();
       const unicode = UNICODE_FRACS[`${n}/${d}`] ?? toFracGlyph(n, d);
       if (unicode) return unicode;
-      return `${fracWrap(n)}/${fracWrap(d)}`;
+      return `${fracWrap(n)}/${fracDen(d)}`;
     })
     // general fraction with Unicode shorthand for common ones (with or without backslash)
     .replace(/\\?frac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, num, den) => {
       const n = num.trim(); const d = den.trim();
       const unicode = UNICODE_FRACS[`${n}/${d}`] ?? toFracGlyph(n, d);
       if (unicode) return unicode;
-      return `${fracWrap(n)}/${fracWrap(d)}`;
+      return `${fracWrap(n)}/${fracDen(d)}`;
     })
     // sqrt — single token: √5, multi-term: √(x + 1)
     .replace(/\\sqrt\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, (_, inner) =>
@@ -622,6 +631,10 @@ export function formatExplanation(rawText: string, subject?: string): string {
   // Telegram's HTML parser rejects the whole message and the send throws.
   if (/<(?:b|i|code)>/.test(text)) {
     return mdBold(text)
+      // "(6+8−5)/6x" — a "/" right after a non-alphanumeric reaches Telegram as a bot
+      // command and renders as a blue link. Swap for the look-alike fraction slash. The
+      // lookbehind skips closing tags ("</b>") and URL "//".
+      .replace(/(?<![A-Za-z0-9<\/:])\/(?=[A-Za-z0-9])/g, '⁄')
       .replace(/&(?!(?:amp|lt|gt|quot|#39);)/g, '&amp;')
       .replace(/<(?!\/?(?:b|i|u|code)\b)/g, '&lt;');
   }
