@@ -53,6 +53,10 @@ const diagramUpload = multer({
 export default function createServer(bot: any) {
   const app = express();
 
+  // Railway's edge proxy sits in front of us (one hop). Without this, req.ip is the proxy's
+  // address, so every user shares one rate-limit bucket and audit logs record Railway's IP.
+  app.set('trust proxy', 1);
+
   // CORS — allow admin-ui and miniapp origins
   const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
     .split(',')
