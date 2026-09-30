@@ -551,6 +551,17 @@ WHERE id = 116125`,
   `INSERT INTO trial_grants (telegram_id)
    SELECT telegram_id FROM users WHERE trial_used = TRUE
    ON CONFLICT (telegram_id) DO NOTHING`,
+
+  // ── Bug reports (saved so they survive a missing SUPPORT_CHAT_ID / email) ──
+  `CREATE TABLE IF NOT EXISTS bug_reports (
+    id SERIAL PRIMARY KEY,
+    telegram_id BIGINT NOT NULL,
+    name TEXT,
+    message TEXT NOT NULL,
+    resolved BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_bug_reports_resolved ON bug_reports(resolved, created_at DESC)`,
 ];
 
 async function migrate(): Promise<void> {

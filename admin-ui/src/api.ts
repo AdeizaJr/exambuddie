@@ -2,6 +2,7 @@ import type {
   Stats,
   Flag,
   SystemAlert,
+  BugReport,
   Question,
   User,
   UserActivity,
@@ -137,6 +138,14 @@ export async function getAlerts(): Promise<SystemAlert[]> {
 
 export async function resolveAlert(id: number): Promise<{ ok: boolean }> {
   return req<{ ok: boolean }>("POST", `/alerts/${id}/resolve`);
+}
+
+export async function getBugReports(resolved = false): Promise<BugReport[]> {
+  return cachedReq<BugReport[]>("/bug-reports", { resolved: String(resolved) }, 30_000);
+}
+
+export async function setBugReportResolved(id: number, resolved: boolean): Promise<{ ok: boolean }> {
+  return req<{ ok: boolean }>("POST", `/bug-reports/${id}/resolve`, { resolved });
 }
 
 export interface QuestionsFilter {
