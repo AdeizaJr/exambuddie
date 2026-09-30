@@ -73,22 +73,6 @@ export async function handleBugReport(ctx: any, bot: any): Promise<void> {
     );
   }
 
-  // Forward to Telegram support chat if configured
-  if (SUPPORT_CHAT_ID) {
-    const msg =
-      `🐛 <b>Bug Report</b>\n` +
-      `From: ${escHtml(name)}\n` +
-      `ID: <code>${ctx.from.id}</code>\n\n` +
-      `<b>Message:</b>\n${escHtml(text)}`;
-    await bot.telegram.sendMessage(SUPPORT_CHAT_ID, msg, { parse_mode: 'HTML' }).catch(() => {});
-  }
-
-  // Send via Zoho Mail
-  await sendSupportEmail({
-    subject: `[ExamBuddie] Bug Report from ${name}`,
-    html: `<p><b>From:</b> ${escHtml(name)} (Telegram ID: ${ctx.from.id})</p><p><b>Message:</b></p><pre>${escHtml(text)}</pre>`,
-  }).catch(() => {});
-
   await ctx.reply(
     '✅ <b>Thanks!</b> Your report has been received. We\'ll look into it and follow up if we need more details.',
     {
@@ -96,4 +80,26 @@ export async function handleBugReport(ctx: any, bot: any): Promise<void> {
       reply_markup: { inline_keyboard: [[{ text: '🏠 Main Menu', callback_data: 'menu:main' }]] },
     }
   );
+
+  // Forwards run in the background, after the user has their reply: if SMTP or the
+  // support chat hangs, awaiting them here blew Telegraf's 90s handler timeout — the
+  // user got "Oops!" and Telegram re-delivered the message, which fell through to the menu.
+  const forwards: Promise<unknown>[] = [];
+  if (SUPPORT_CHAT_ID) {
+    const msg =
+      `🐛 <b>Bug Report</b>\n` +
+      `From: ${escHtml(name)}\n` +
+      `ID: <code>${ctx.from.id}</code>\n\n` +
+      `<b>Message:</b>\n${escHtml(text)}`;
+    forwards.push(bot.telegram.sendMessage(SUPPORT_CHAT_ID, msg, { parse_mode: 'HTML' }));
+  }
+  forwards.push(sendSupportEmail({
+    subject: `[ExamBuddie] Bug Report from ${name}`,
+    html: `<p><b>From:</b> ${escHtml(name)} (Telegram ID: ${ctx.from.id})</p><p><b>Message:</b></p><pre>${escHtml(text)}</pre>`,
+  }));
+  void Promise.allSettled(forwards).then((results) => {
+    for (const r of results) {
+      if (r.status === 'rejected') console.error('Bug report forward failed:', r.reason?.message ?? r.reason);
+    }
+  });
 }

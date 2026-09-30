@@ -9,6 +9,10 @@ const transporter = nodemailer.createTransport({
     user: process.env.ZOHO_SMTP_USER,
     pass: process.env.ZOHO_SMTP_PASS,
   },
+  // Nodemailer's defaults wait minutes on an unreachable/blocked SMTP host; fail fast instead.
+  connectionTimeout: 10_000,
+  greetingTimeout: 10_000,
+  socketTimeout: 15_000,
 });
 
 export async function sendSupportEmail(opts: {
