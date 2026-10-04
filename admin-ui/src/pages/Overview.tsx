@@ -48,7 +48,14 @@ const EXAM_COLORS: Record<string, string> = {
   WAEC: SERIES_COLORS[0],
   JAMB: SERIES_COLORS[1],
   NECO: SERIES_COLORS[2],
+  ALL: SERIES_COLORS[3],
   unset: NEUTRAL_COLOR,
+};
+// Slice order around the ring is fixed so neighbouring colours stay easy to tell apart
+const EXAM_ORDER = Object.keys(EXAM_COLORS);
+const examRank = (examType: string) => {
+  const i = EXAM_ORDER.indexOf(examType);
+  return i === -1 ? EXAM_ORDER.length : i;
 };
 
 export default function Overview() {
@@ -56,6 +63,7 @@ export default function Overview() {
   const [recentUsers, setRecentUsers] = useState<User[]>([]);
   const [growth, setGrowth] = useState<GrowthAnalytics | null>(null);
   const [activeAlerts, setActiveAlerts] = useState(0);
+  const [selectedExam, setSelectedExam] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -176,27 +184,40 @@ export default function Overview() {
               <DonutChart
                 legend={false}
                 centerLabel="users"
-                slices={growth.examBreakdown.map((e) => ({
-                  label: e.exam_type,
-                  value: Number(e.users),
-                  color: EXAM_COLORS[e.exam_type] ?? NEUTRAL_COLOR,
-                }))}
+                selected={selectedExam}
+                onSelect={setSelectedExam}
+                slices={[...growth.examBreakdown]
+                  .sort((a, b) => examRank(a.exam_type) - examRank(b.exam_type))
+                  .map((e) => ({
+                    label: e.exam_type,
+                    value: Number(e.users),
+                    color: EXAM_COLORS[e.exam_type] ?? NEUTRAL_COLOR,
+                  }))}
               />
             </div>
-            <div className="space-y-2.5">
+            <div className="-mx-2 space-y-1">
               {growth.examBreakdown.map((e) => {
                 const pct = Math.round((Number(e.users) / totalExamUsers) * 100);
                 const color = EXAM_COLORS[e.exam_type] ?? NEUTRAL_COLOR;
+                const isSelected = selectedExam === e.exam_type;
                 return (
-                  <div key={e.exam_type}>
+                  <button
+                    key={e.exam_type}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setSelectedExam(isSelected ? null : e.exam_type)}
+                    className={`block w-full rounded-lg px-2 py-1.5 text-left transition ${
+                      isSelected ? "bg-surface2 ring-1 ring-border" : "hover:bg-surface2/60"
+                    } ${selectedExam && !isSelected ? "opacity-40" : ""}`}
+                  >
                     <div className="flex justify-between text-xs mb-1">
                       <span className="font-medium text-white">{e.exam_type}</span>
                       <span className="text-muted">{Number(e.users).toLocaleString()} ({pct}%)</span>
                     </div>
-                    <div className="h-1.5 w-full rounded-full bg-surface2">
+                    <div className={`h-1.5 w-full rounded-full ${isSelected ? "bg-surface3" : "bg-surface2"}`}>
                       <div className="h-1.5 rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>

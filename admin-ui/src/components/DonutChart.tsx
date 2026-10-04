@@ -49,10 +49,15 @@ interface DonutChartProps {
   centerLabel: string;
   /** Hide the built-in legend when the surrounding card already lists the slices */
   legend?: boolean;
+  /** Label of the pinned slice. Pass with onSelect to share the selection with the surrounding card */
+  selected?: string | null;
+  onSelect?: (label: string | null) => void;
 }
 
-export default function DonutChart({ slices, centerLabel, legend = true }: DonutChartProps) {
-  const [active, setActive] = useState<number | null>(null);
+export default function DonutChart({ slices, centerLabel, legend = true, selected, onSelect }: DonutChartProps) {
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [ownSelected, setOwnSelected] = useState<string | null>(null);
+  const pinned = onSelect ? selected ?? null : ownSelected;
   const visible = slices.filter((s) => s.value > 0);
   const total = visible.reduce((sum, s) => sum + s.value, 0);
 
@@ -75,6 +80,15 @@ export default function DonutChart({ slices, centerLabel, legend = true }: Donut
     return arcPath(start, start + sweep);
   });
 
+  // Clicking a slice pins it; clicking it again lets go
+  const toggle = (label: string) => {
+    const next = pinned === label ? null : label;
+    if (onSelect) onSelect(next);
+    else setOwnSelected(next);
+  };
+
+  const pinnedIndex = visible.findIndex((s) => s.label === pinned);
+  const active = hovered ?? (pinnedIndex >= 0 ? pinnedIndex : null);
   const focused = active !== null ? visible[active] : null;
   const summary = visible.map((s) => `${s.label} ${pct(s.value)}%`).join(", ");
 
@@ -91,9 +105,10 @@ export default function DonutChart({ slices, centerLabel, legend = true }: Donut
               strokeWidth={visible.length > 1 ? 2 : 0}
               strokeLinejoin="round"
               opacity={active === null || active === i ? 1 : 0.3}
-              className="cursor-default transition-opacity"
-              onMouseEnter={() => setActive(i)}
-              onMouseLeave={() => setActive(null)}
+              className="cursor-pointer transition-opacity"
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => toggle(s.label)}
             >
               <title>{`${s.label}: ${s.value.toLocaleString()} (${pct(s.value)}%)`}</title>
             </path>
@@ -114,9 +129,10 @@ export default function DonutChart({ slices, centerLabel, legend = true }: Donut
           {visible.map((s, i) => (
             <li
               key={s.label}
-              onMouseEnter={() => setActive(i)}
-              onMouseLeave={() => setActive(null)}
-              className={`flex items-center gap-2 text-xs transition-opacity ${active === null || active === i ? "" : "opacity-40"}`}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => toggle(s.label)}
+              className={`flex cursor-pointer items-center gap-2 text-xs transition-opacity ${active === null || active === i ? "" : "opacity-40"}`}
             >
               <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ backgroundColor: s.color }} />
               <span className="min-w-0 flex-1 truncate text-white">{s.label}</span>
