@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { broadcast, getStats, searchUsers, sendDM, getBroadcastHistory } from "../api";
+import { broadcast, getStats, searchUsers, sendDM, getBroadcastHistory, MAX_DM_RECIPIENTS } from "../api";
 import type { BroadcastTarget, UserSearchResult } from "../api";
 import type { Stats, BroadcastLog } from "../types";
 import Spinner from "../components/Spinner";
@@ -32,17 +32,20 @@ function DirectMessage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<UserSearchResult[]>([]);
   const [searching, setSearching] = useState(false);
-  const [selected, setSelected] = useState<UserSearchResult | null>(null);
+  const [selected, setSelected] = useState<UserSearchResult[]>([]);
   const [dmMessage, setDmMessage] = useState("");
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [sentCount, setSentCount] = useState<number | null>(null);
+  const [failedNames, setFailedNames] = useState<string[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const atLimit = selected.length >= MAX_DM_RECIPIENTS;
 
   function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
     const q = e.target.value;
     setQuery(q);
-    setSelected(null);
-    setSent(false);
+    setSentCount(null);
+    setFailedNames([]);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (q.trim().length < 2) { setResults([]); return; }
     debounceRef.current = setTimeout(async () => {
@@ -55,15 +58,31 @@ function DirectMessage() {
     }, 300);
   }
 
+  function addUser(u: UserSearchResult) {
+    if (atLimit) return;
+    setSelected((prev) => (prev.some((s) => s.telegram_id === u.telegram_id) ? prev : [...prev, u]));
+    setQuery("");
+    setResults([]);
+  }
+
+  function removeUser(telegramId: number) {
+    setSelected((prev) => prev.filter((s) => s.telegram_id !== telegramId));
+  }
+
   async function handleSend() {
-    if (!selected || !dmMessage.trim()) return;
+    if (!selected.length || !dmMessage.trim()) return;
     setSending(true);
     try {
-      await sendDM(selected.telegram_id, dmMessage.trim());
-      setSent(true);
-      setDmMessage("");
+      const r = await sendDM(selected.map((s) => s.telegram_id), dmMessage.trim());
+      // Number(): Postgres bigint ids can arrive as strings
+      const failedIds = new Set(r.failed.map((f) => Number(f.telegram_id)));
+      const stillFailed = selected.filter((s) => failedIds.has(Number(s.telegram_id)));
+      setSentCount(r.sent);
+      setFailedNames(stillFailed.map((s) => s.first_name));
+      // Keep failed recipients + message so the admin can retry just those
+      setSelected(stillFailed);
+      if (!stillFailed.length) setDmMessage("");
       setQuery("");
-      setSelected(null);
       setResults([]);
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to send");
@@ -77,19 +96,48 @@ function DirectMessage() {
       ? "text-accent border-accent/30 bg-accent/10"
       : "text-muted border-border bg-surface2";
 
+  const visibleResults = results.filter((u) => !selected.some((s) => s.telegram_id === u.telegram_id));
+
   return (
     <div className="rounded-xl border border-border bg-surface p-5 space-y-4">
       <div>
         <h2 className="font-medium text-white">Direct Message</h2>
-        <p className="text-xs text-muted mt-0.5">Send a message to one specific user</p>
+        <p className="text-xs text-muted mt-0.5">Send a message to up to {MAX_DM_RECIPIENTS} specific users</p>
       </div>
 
-      {sent && (
+      {sentCount !== null && (
         <div className="rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm text-accent">
-          ✓ Message sent!{" "}
-          <button onClick={() => setSent(false)} className="underline text-xs opacity-70 hover:opacity-100">
-            Send another
+          ✓ Sent to {sentCount} user{sentCount === 1 ? "" : "s"}!{" "}
+          <button onClick={() => { setSentCount(null); setFailedNames([]); }} className="underline text-xs opacity-70 hover:opacity-100">
+            Dismiss
           </button>
+        </div>
+      )}
+      {failedNames.length > 0 && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+          Failed to reach: {failedNames.join(", ")}. They are still selected, press send to retry.
+        </div>
+      )}
+
+      {/* Selected recipients */}
+      {selected.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {selected.map((u) => (
+            <span
+              key={u.telegram_id}
+              className="flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 py-0.5 pl-2.5 pr-1 text-xs text-white"
+            >
+              {u.first_name}
+              {u.username && <span className="text-muted">@{u.username}</span>}
+              <button
+                onClick={() => removeUser(u.telegram_id)}
+                aria-label={`Remove ${u.first_name}`}
+                className="rounded-full px-1 text-muted hover:text-white"
+              >
+                ✕
+              </button>
+            </span>
+          ))}
         </div>
       )}
 
@@ -97,31 +145,23 @@ function DirectMessage() {
       <div className="relative">
         <input
           type="text"
-          value={selected ? `${selected.first_name}${selected.username ? ` (@${selected.username})` : ""}` : query}
-          onChange={selected ? undefined : handleQueryChange}
-          readOnly={!!selected}
-          placeholder="Type a name or username..."
-          className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
+          value={query}
+          onChange={handleQueryChange}
+          disabled={atLimit}
+          placeholder={atLimit ? `Limit of ${MAX_DM_RECIPIENTS} users reached` : selected.length ? "Add another user..." : "Type a name or username..."}
+          className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white placeholder-muted focus:border-accent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         />
-        {selected && (
-          <button
-            onClick={() => { setSelected(null); setQuery(""); setResults([]); }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted hover:text-white px-1"
-          >
-            ✕
-          </button>
-        )}
         {searching && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
             <Spinner size="sm" />
           </div>
         )}
-        {!selected && results.length > 0 && (
+        {!atLimit && visibleResults.length > 0 && (
           <div className="absolute z-10 mt-1 w-full rounded-lg border border-border bg-surface shadow-lg">
-            {results.map((u) => (
+            {visibleResults.map((u) => (
               <button
                 key={u.telegram_id}
-                onClick={() => { setSelected(u); setResults([]); }}
+                onClick={() => addUser(u)}
                 className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-surface2 first:rounded-t-lg last:rounded-b-lg"
               >
                 <div>
@@ -137,17 +177,13 @@ function DirectMessage() {
           </div>
         )}
       </div>
+      <p className="text-xs text-muted">
+        {selected.length}/{MAX_DM_RECIPIENTS} selected
+      </p>
 
-      {/* Message input — only show once user selected */}
-      {selected && (
+      {/* Message input — only show once at least one user selected */}
+      {selected.length > 0 && (
         <>
-          <div className="rounded-lg border border-border bg-surface2 px-3 py-2 text-xs text-muted">
-            To: <strong className="text-white">{selected.first_name}</strong>
-            {selected.username && <span> (@{selected.username})</span>}
-            {" · "}
-            <span className={`font-medium ${selected.plan === "premium" ? "text-accent" : ""}`}>{selected.plan}</span>
-            {selected.streak > 0 && <span> · 🔥 {selected.streak} streak</span>}
-          </div>
           <textarea
             rows={5}
             value={dmMessage}
@@ -160,7 +196,13 @@ function DirectMessage() {
             disabled={!dmMessage.trim() || sending}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {sending ? <><Spinner size="sm" /> Sending...</> : "Send Message"}
+            {sending ? (
+              <><Spinner size="sm" /> Sending...</>
+            ) : selected.length === 1 ? (
+              "Send Message"
+            ) : (
+              `Send to ${selected.length} users`
+            )}
           </button>
         </>
       )}

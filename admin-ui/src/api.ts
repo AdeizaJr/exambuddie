@@ -310,8 +310,15 @@ export async function searchUsers(query: string): Promise<UserSearchResult[]> {
   return data.data ?? [];
 }
 
-export async function sendDM(telegramId: number, message: string): Promise<void> {
-  await req<{ ok: boolean }>("POST", "/dm", { telegram_id: telegramId, message });
+export const MAX_DM_RECIPIENTS = 5;
+
+export interface DMResult {
+  sent: number;
+  failed: { telegram_id: number; error: string }[];
+}
+
+export async function sendDM(telegramIds: number[], message: string): Promise<DMResult> {
+  return req<DMResult>("POST", "/dm", { telegram_ids: telegramIds, message });
 }
 
 export async function getGrowthAnalytics(): Promise<GrowthAnalytics> {
