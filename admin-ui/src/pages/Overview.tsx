@@ -5,6 +5,7 @@ import type { Stats, User, GrowthAnalytics } from "../types";
 import StatCard from "../components/StatCard";
 import Badge from "../components/Badge";
 import Spinner from "../components/Spinner";
+import DonutChart, { SERIES_COLORS, NEUTRAL_COLOR } from "../components/DonutChart";
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-NG", {
@@ -44,10 +45,10 @@ function Sparkline({ data, color = "bg-accent" }: { data: number[]; color?: stri
 }
 
 const EXAM_COLORS: Record<string, string> = {
-  WAEC: "bg-blue-500",
-  JAMB: "bg-violet-500",
-  NECO: "bg-emerald-500",
-  unset: "bg-slate-500",
+  WAEC: SERIES_COLORS[0],
+  JAMB: SERIES_COLORS[1],
+  NECO: SERIES_COLORS[2],
+  unset: NEUTRAL_COLOR,
 };
 
 export default function Overview() {
@@ -171,10 +172,21 @@ export default function Overview() {
 
           <div className="rounded-xl border border-border bg-surface p-5">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-3">Users by Exam Type</p>
+            <div className="mb-4">
+              <DonutChart
+                legend={false}
+                centerLabel="users"
+                slices={growth.examBreakdown.map((e) => ({
+                  label: e.exam_type,
+                  value: Number(e.users),
+                  color: EXAM_COLORS[e.exam_type] ?? NEUTRAL_COLOR,
+                }))}
+              />
+            </div>
             <div className="space-y-2.5">
               {growth.examBreakdown.map((e) => {
                 const pct = Math.round((Number(e.users) / totalExamUsers) * 100);
-                const color = EXAM_COLORS[e.exam_type] ?? "bg-slate-500";
+                const color = EXAM_COLORS[e.exam_type] ?? NEUTRAL_COLOR;
                 return (
                   <div key={e.exam_type}>
                     <div className="flex justify-between text-xs mb-1">
@@ -182,7 +194,7 @@ export default function Overview() {
                       <span className="text-muted">{Number(e.users).toLocaleString()} ({pct}%)</span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-surface2">
-                      <div className={`h-1.5 rounded-full ${color}`} style={{ width: `${pct}%` }} />
+                      <div className="h-1.5 rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
                     </div>
                   </div>
                 );
