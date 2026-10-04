@@ -1210,17 +1210,37 @@ export default function createServer(bot: any) {
   });
 
   // ── POST /api/admin/dm ──────────────────────────────────────────────────────
+  const MAX_DM_RECIPIENTS = 5;
   app.post('/api/admin/dm', adminAuth, async (req: Request, res: Response) => {
-    const { telegram_id, message } = req.body;
-    if (!telegram_id || !message) {
-      return res.status(400).json({ error: 'telegram_id and message are required' });
+    const { telegram_id, telegram_ids, message } = req.body;
+    // Accepts a single telegram_id or a telegram_ids array (max MAX_DM_RECIPIENTS)
+    const raw: unknown[] = Array.isArray(telegram_ids) ? telegram_ids : telegram_id ? [telegram_id] : [];
+    const ids = [...new Set(raw.map(Number))];
+    if (!ids.length || typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ error: 'telegram_id(s) and message are required' });
     }
-    try {
-      await bot.telegram.sendMessage(telegram_id, message, { parse_mode: 'HTML' });
-      res.json({ ok: true });
-    } catch (err: any) {
-      res.status(500).json({ error: err.message || 'Failed to send message' });
+    if (ids.some((id) => !Number.isSafeInteger(id) || id <= 0)) {
+      return res.status(400).json({ error: 'telegram_ids must be valid Telegram ids' });
     }
+    if (ids.length > MAX_DM_RECIPIENTS) {
+      return res.status(400).json({ error: `You can message at most ${MAX_DM_RECIPIENTS} users at once` });
+    }
+
+    const failed: { telegram_id: number; error: string }[] = [];
+    for (const id of ids) {
+      try {
+        await bot.telegram.sendMessage(id, message, { parse_mode: 'HTML' });
+      } catch (err: any) {
+        console.error(`[DM] Failed to send to ${id}:`, err.message);
+        failed.push({ telegram_id: id, error: err.message || 'Failed to send message' });
+      }
+    }
+
+    const sent = ids.length - failed.length;
+    if (sent === 0) {
+      return res.status(500).json({ error: failed[0].error, sent, failed });
+    }
+    res.json({ ok: true, sent, failed });
   });
 
   // ── POST /api/admin/broadcast ───────────────────────────────────────────────
