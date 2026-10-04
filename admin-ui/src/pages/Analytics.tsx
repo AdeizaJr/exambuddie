@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { getAnalytics, getRetention, getFunnel, getPageViewAnalytics } from "../api";
 import type { Analytics, DailyData, SubjectData, WeakTopicData, RetentionData, FunnelData, PageViewAnalytics } from "../types";
 import Spinner from "../components/Spinner";
+import DonutChart, { foldSlices, NEUTRAL_COLOR } from "../components/DonutChart";
 
 function accuracyColor(acc: number): string {
   if (acc >= 70) return "text-accent";
@@ -121,6 +122,31 @@ export default function AnalyticsPage() {
   if (!analytics) return null;
 
   const totalAttempts = analytics.subjects.reduce((sum, s) => sum + Number(s.attempts), 0);
+  const subjectSlices = foldSlices(analytics.subjects.map((s) => ({ label: s.subject, value: Number(s.attempts) })));
+
+  const listedSourceViews = pageViews?.topSources.reduce((sum, s) => sum + Number(s.views), 0) ?? 0;
+  const sourceSlices = pageViews
+    ? foldSlices(
+        pageViews.topSources.map((s) => ({ label: s.source, value: Number(s.views) })),
+        undefined,
+        pageViews.totalViews - listedSourceViews
+      )
+    : [];
+  const sourceColor = (source: string) =>
+    sourceSlices.find((s) => s.label === source)?.color ?? NEUTRAL_COLOR;
+
+  const funnelPremium = Number(funnel?.premium_users ?? 0);
+  const funnelActiveFree = Number(funnel?.active_free ?? 0);
+  const funnelSlices = [
+    { label: "Premium", value: funnelPremium, color: "#25A865" },
+    { label: "Active free", value: funnelActiveFree, color: "#c98500" },
+    {
+      label: "Inactive",
+      value: Math.max(Number(funnel?.total_users ?? 0) - funnelPremium - funnelActiveFree, 0),
+      color: NEUTRAL_COLOR,
+    },
+  ];
+
   const conversionRate = funnel ? Math.round((Number(funnel.premium_users) / Math.max(Number(funnel.total_users), 1)) * 100) : 0;
 
   return (
@@ -209,16 +235,8 @@ export default function AnalyticsPage() {
               <p className="text-xs text-muted mt-0.5">MRR: ₦{Number(funnel.mrr).toLocaleString()}</p>
             </div>
           </div>
-          <div className="mt-4">
-            <div className="flex h-2 w-full overflow-hidden rounded-full bg-surface2">
-              <div className="bg-accent" style={{ width: `${conversionRate}%` }} title={`${conversionRate}% premium`} />
-              <div className="bg-amber-400/60" style={{ width: `${Math.round((Number(funnel.active_free) / Math.max(Number(funnel.total_users), 1)) * 100)}%` }} title="active free" />
-            </div>
-            <div className="mt-1 flex gap-4 text-xs text-muted">
-              <span><span className="inline-block h-2 w-2 rounded-sm bg-accent mr-1" />Premium {conversionRate}%</span>
-              <span><span className="inline-block h-2 w-2 rounded-sm bg-amber-400/60 mr-1" />Active free</span>
-              <span><span className="inline-block h-2 w-2 rounded-sm bg-surface2 mr-1" />Inactive</span>
-            </div>
+          <div className="mt-5 border-t border-border pt-5">
+            <DonutChart slices={funnelSlices} centerLabel="users" />
           </div>
         </div>
       )}
@@ -270,6 +288,9 @@ export default function AnalyticsPage() {
                 <p className="text-xs text-muted">No data yet</p>
               ) : (
                 <div className="space-y-1.5">
+                  <div className="mb-3">
+                    <DonutChart slices={sourceSlices} centerLabel="views" legend={false} />
+                  </div>
                   {pageViews.topSources.map((s) => {
                     const pct = Math.round((s.views / Math.max(pageViews.totalViews, 1)) * 100);
                     return (
@@ -279,7 +300,7 @@ export default function AnalyticsPage() {
                           <span className="font-medium text-white">{s.views} ({pct}%)</span>
                         </div>
                         <div className="mt-1 h-1.5 w-full rounded-full bg-surface2">
-                          <div className="h-1.5 rounded-full bg-accent" style={{ width: `${pct}%` }} />
+                          <div className="h-1.5 rounded-full" style={{ width: `${pct}%`, backgroundColor: sourceColor(s.source) }} />
                         </div>
                       </div>
                     );
@@ -358,6 +379,12 @@ export default function AnalyticsPage() {
             {totalAttempts.toLocaleString()} total attempts
           </span>
         </div>
+        {subjectSlices.length > 0 && (
+          <div className="border-b border-border px-5 py-5">
+            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted">Share of attempts</p>
+            <DonutChart slices={subjectSlices} centerLabel="attempts" />
+          </div>
+        )}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
