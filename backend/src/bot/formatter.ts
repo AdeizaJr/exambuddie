@@ -196,11 +196,34 @@ function convertLatex(text: string, subject?: string): string {
     // chemistry state symbols: Zn_(s) → Zn(s), H2O_(l) → H₂O(l)
     .replace(/_\(([slgaq]+)\)/gi, '($1)')
     // subscripts
-    .replace(/_\{([^}]+)\}/g, (_, e) => toSub(e))
+    // A state symbol riding inside the braces stays full size and loses the underscore:
+    // H_2O_{(g)} → H₂O(g), CuSO_{4(aq)} → CuSO₄(aq) (not "(ₐq)" / a stray "_(g)").
+    .replace(/_\{([^}]+)\}/g, (_, e: string) => {
+      const state = e.match(/\((?:s|l|g|aq)\)$/i)?.[0] ?? '';
+      const body = e.slice(0, e.length - state.length);
+      return (body ? toSub(body) : '') + state;
+    })
     // fill-in-the-blank runs of underscores ("not_________hot") aren't LaTeX subscript
     // notation — require a single underscore, not part of a longer underscore run, so
     // the word right after a blank line doesn't get partially converted to subscript glyphs.
-    .replace(/(?<!_)_(?!_)(\w+)/g, (_, e) => toSub(e))
+    // Only genuine math subscripts get glyphs. Unicode has subscript forms for just a handful
+    // of letters (a e i o u n x), so blindly converting whatever follows an underscore turned
+    // snake_case identifiers and transliterated words into half-converted garbage
+    // ("my_variable" → "myvₐrᵢₐblₑ", "an_Nawawi" → "anNₐwₐwᵢ") and ate the underscore.
+    //  - leading digits always subscript, the rest is left alone: H_2O → H₂O, m_1g → m₁g
+    //  - a single letter subscripts if a glyph exists: x_n → xₙ, log_a → logₐ, C_nH → CₙH
+    //  - a multi-letter subscript needs a single-letter base and a glyph for every letter;
+    //    anything else (identifiers, _italic_ markers, V_faster) is kept exactly as written
+    .replace(/(?<![_\\])_(?!_)([A-Za-z0-9]+)(?!_)/g, (m, e: string, offset: number, src: string) => {
+      const digits = e.match(/^\d+/)?.[0];
+      if (digits) return toSub(digits).replace(/^_/, '') + e.slice(digits.length);
+      if (e.length === 1) return toSub(e);
+      // general-formula index running straight into the next element: C_nH_{2n+2} → CₙH₂ₙ₊₂
+      if (/^[a-z][A-Z]/.test(e) && SUB_MAP[e[0]]) return SUB_MAP[e[0]] + e.slice(1);
+      const base = src.slice(0, offset).match(/[A-Za-z]+$/)?.[0] ?? '';
+      if (base.length !== 1 || ![...e].every(c => SUB_MAP[c])) return m;
+      return toSub(e);
+    })
     // operators
     .replace(/\\times/g, '×').replace(/\\div/g, '÷')
     .replace(/\\pm/g, '±').replace(/\\mp/g, '∓')
@@ -270,8 +293,15 @@ function convertLatex(text: string, subject?: string): string {
       return `${open}${rows.join(isColumnVector ? ', ' : '; ')}${close}`;
     })
     // strip remaining LaTeX delimiters
-    .replace(/\$\$/g, '').replace(/\$/g, '')
+    // Only strip "$" when it is acting as a math delimiter: "$$", or a "$...$" pair hugging
+    // something that actually looks like math. A lone "$" is real content (currency "$20
+    // million", a spreadsheet reference "$G$5", an invalid identifier "my_variable$") and
+    // stripping it changed the meaning of the question.
+    .replace(/\$\$/g, '')
+    .replace(/(?<![A-Za-z0-9$])\$(?=\S)([^$\n]*?[\\^_{}=/⁄][^$\n]*?)(?<=\S)\$(?![A-Za-z0-9$])/g, '$1')
     .replace(/\\\(|\\\)/g, '').replace(/\\\[|\\\]/g, '')
+    // state symbol written with the underscore inside the brackets: PCl_5(_g) → PCl₅(g)
+    .replace(/\(_(s|l|g|aq)\)/gi, '($1)').replace(/_\((s|l|g|aq)\)/gi, '($1)')
     // strip remaining backslash commands (unwrap content from braces)
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')
     .replace(/\\[a-zA-Z]+/g, '')
@@ -337,7 +367,9 @@ function md(text: string | null | undefined, subject?: string): string {
     // _word_ → italic, for "word or phrase in italics" questions. Safe against fill-in-the-blank
     // underscore runs ("________") since those never contain a non-underscore char between two
     // underscores, so the [^_\n]+ requirement never matches inside a blank.
-    .replace(/_([^_\n]+)_/g, '<i>$1</i>')
+    // The markers must sit on the outside of the phrase, not inside a word, so two snake_case
+    // identifiers on one line ("my_variable and 1my_variable") don't italicize the gap.
+    .replace(/(?<![\p{L}\p{N}_])_(?=\S)([^_\n]+)(?<=\S)_(?![\p{L}\p{N}_])/gu, '<i>$1</i>')
     // Wrap IP addresses in <code> so Telegram doesn't auto-link them
     .replace(/\b(\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?)\b/g, '<code>$1</code>');
 }
