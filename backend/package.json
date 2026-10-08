@@ -23,6 +23,7 @@
     "generate-explanations-to-json": "NODE_OPTIONS='--dns-result-order=ipv4first' ts-node scripts/generateExplanationsToJson.ts",
     "generate-explanations-cli": "ts-node scripts/generateExplanationsCLI.ts",
     "migrate": "ts-node scripts/migrate.ts",
+    "db:sync-check": "ts-node scripts/checkDbSync.ts",
     "format-explanations": "ts-node scripts/format-explanations.ts",
     "mark-underlined": "ts-node scripts/markUnderlinedWords.ts",
     "generate-daily-flyer": "ts-node scripts/generateDailyFlyer.ts",
