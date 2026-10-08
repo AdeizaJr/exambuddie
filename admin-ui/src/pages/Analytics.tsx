@@ -5,13 +5,13 @@ import Spinner from "../components/Spinner";
 import DonutChart, { foldSlices, NEUTRAL_COLOR } from "../components/DonutChart";
 
 function accuracyColor(acc: number): string {
-  if (acc >= 70) return "text-accent";
+  if (acc >= 70) return "text-success";
   if (acc >= 50) return "text-amber-400";
   return "text-red-400";
 }
 
 function accuracyBg(acc: number): string {
-  if (acc >= 70) return "bg-accent";
+  if (acc >= 70) return "bg-success";
   if (acc >= 50) return "bg-amber-400";
   return "bg-red-400";
 }
@@ -188,16 +188,16 @@ export default function AnalyticsPage() {
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
-              { label: "D1 Retention", rate: retention.d1_rate, count: retention.d1, color: retention.d1_rate >= 20 ? "text-accent" : retention.d1_rate >= 10 ? "text-amber-400" : "text-red-400" },
-              { label: "D7 Retention", rate: retention.d7_rate, count: retention.d7, color: retention.d7_rate >= 10 ? "text-accent" : retention.d7_rate >= 5 ? "text-amber-400" : "text-red-400" },
-              { label: "D30 Retention", rate: retention.d30_rate, count: retention.d30, color: retention.d30_rate >= 5 ? "text-accent" : retention.d30_rate >= 2 ? "text-amber-400" : "text-red-400" },
+              { label: "D1 Retention", rate: retention.d1_rate, count: retention.d1, color: retention.d1_rate >= 20 ? "text-success" : retention.d1_rate >= 10 ? "text-amber-400" : "text-red-400" },
+              { label: "D7 Retention", rate: retention.d7_rate, count: retention.d7, color: retention.d7_rate >= 10 ? "text-success" : retention.d7_rate >= 5 ? "text-amber-400" : "text-red-400" },
+              { label: "D30 Retention", rate: retention.d30_rate, count: retention.d30, color: retention.d30_rate >= 5 ? "text-success" : retention.d30_rate >= 2 ? "text-amber-400" : "text-red-400" },
             ].map(({ label, rate, count, color }) => (
               <div key={label} className="text-center">
                 <p className="text-xs text-muted mb-1">{label}</p>
                 <p className={`font-display text-3xl font-bold ${color}`}>{rate}%</p>
                 <p className="text-xs text-muted mt-1">{count} / {retention.total_users} users</p>
                 <div className="mt-2 h-1.5 w-full rounded-full bg-surface2">
-                  <div className={`h-1.5 rounded-full ${rate >= 10 ? "bg-accent" : rate >= 5 ? "bg-amber-400" : "bg-red-400"}`} style={{ width: `${Math.min(rate * 3, 100)}%` }} />
+                  <div className={`h-1.5 rounded-full ${rate >= 10 ? "bg-success" : rate >= 5 ? "bg-amber-400" : "bg-red-400"}`} style={{ width: `${Math.min(rate * 3, 100)}%` }} />
                 </div>
               </div>
             ))}
@@ -229,7 +229,7 @@ export default function AnalyticsPage() {
             </div>
             <div>
               <p className="text-xs text-muted mb-1">Churned (30d)</p>
-              <p className={`font-display text-2xl font-bold ${Number(funnel.churned_30d) > 0 ? "text-red-400" : "text-accent"}`}>
+              <p className={`font-display text-2xl font-bold ${Number(funnel.churned_30d) > 0 ? "text-red-400" : "text-success"}`}>
                 {Number(funnel.churned_30d).toLocaleString()}
               </p>
               <p className="text-xs text-muted mt-0.5">MRR: ₦{Number(funnel.mrr).toLocaleString()}</p>
@@ -319,7 +319,7 @@ export default function AnalyticsPage() {
             Missing Explanations
           </p>
           <p
-            className={`font-display text-2xl font-bold ${analytics.contentHealth.missing_explanations > 0 ? "text-amber-400" : "text-accent"}`}
+            className={`font-display text-2xl font-bold ${analytics.contentHealth.missing_explanations > 0 ? "text-amber-400" : "text-success"}`}
           >
             {analytics.contentHealth.missing_explanations.toLocaleString()}
           </p>
@@ -330,7 +330,7 @@ export default function AnalyticsPage() {
             Flagged Questions
           </p>
           <p
-            className={`font-display text-2xl font-bold ${analytics.contentHealth.flagged_questions > 0 ? "text-red-400" : "text-accent"}`}
+            className={`font-display text-2xl font-bold ${analytics.contentHealth.flagged_questions > 0 ? "text-red-400" : "text-success"}`}
           >
             {analytics.contentHealth.flagged_questions.toLocaleString()}
           </p>

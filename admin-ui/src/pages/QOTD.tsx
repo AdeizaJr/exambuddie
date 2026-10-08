@@ -85,7 +85,7 @@ export default function QOTDPage() {
                 <span className="rounded bg-surface2 px-2 py-0.5 text-xs font-mono text-muted">{q.exam_type}</span>
                 <span className="text-xs text-muted capitalize">{q.subject.replace(/-/g, " ")}</span>
                 <span className="text-xs text-muted">{q.year}</span>
-                <span className="ml-auto rounded bg-accent/20 px-2 py-0.5 text-xs font-bold text-accent">Ans: {q.correct_option}</span>
+                <span className="ml-auto rounded bg-success/20 px-2 py-0.5 text-xs font-bold text-success">Ans: {q.correct_option}</span>
               </div>
               <p className="text-sm text-white">{q.question_preview}{q.question_preview?.length >= 120 ? "…" : ""}</p>
             </div>

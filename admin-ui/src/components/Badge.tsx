@@ -8,7 +8,7 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  green: "bg-accent/20 text-accent border border-accent/30",
+  green: "bg-success/20 text-success border border-success/30",
   amber: "bg-amber-500/20 text-amber-400 border border-amber-500/30",
   red: "bg-red-500/20 text-red-400 border border-red-500/30",
   blue: "bg-blue-500/20 text-blue-400 border border-blue-500/30",

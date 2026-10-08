@@ -101,12 +101,22 @@ export async function loginAdmin(username: string, password: string): Promise<{ 
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
+  }).catch(() => {
+    throw new LoginUnavailableError();
   });
   if (!res.ok) {
+    // 5xx means the backend is down or unreachable, not that the password is wrong
+    if (res.status >= 500) throw new LoginUnavailableError();
     const err = await res.json().catch(() => ({ error: res.statusText }));
     throw new Error(err.error || `HTTP ${res.status}`);
   }
   return res.json();
+}
+
+export class LoginUnavailableError extends Error {
+  constructor() {
+    super("Server unreachable");
+  }
 }
 
 export async function changePassword(

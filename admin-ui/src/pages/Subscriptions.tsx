@@ -81,7 +81,7 @@ export default function Subscriptions() {
           <p className="mt-0.5 text-sm text-muted">
             {filtered.length} subscription{filtered.length !== 1 ? "s" : ""}
             {statusFilter ? ` (${statusFilter})` : ""} · Active revenue:{" "}
-            <span className="font-medium text-accent">₦{totalRevenue.toLocaleString()}</span>
+            <span className="font-medium text-success">₦{totalRevenue.toLocaleString()}</span>
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-3">
@@ -155,7 +155,7 @@ export default function Subscriptions() {
                       </div>
                     </td>
                     <td className="px-4 py-3 capitalize text-muted">{s.plan}</td>
-                    <td className="px-4 py-3 font-medium text-accent">
+                    <td className="px-4 py-3 font-medium text-success">
                       ₦{Number(s.amount_ngn).toLocaleString()}
                     </td>
                     <td className="px-4 py-3">

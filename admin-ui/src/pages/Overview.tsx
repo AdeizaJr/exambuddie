@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp } from "lucide-react";
+import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp, Banknote, Flame } from "lucide-react";
 import { getStats, getUsers, getGrowthAnalytics, getAlerts } from "../api";
 import type { Stats, User, GrowthAnalytics } from "../types";
 import StatCard from "../components/StatCard";
@@ -155,12 +155,12 @@ export default function Overview() {
           <div className="rounded-xl border border-border bg-surface p-5">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted">New Users (14d)</p>
+                <p className="text-sm text-muted">New Users (14d)</p>
                 <p className="font-display text-2xl font-bold text-white mt-0.5">
                   {userSpark.reduce((a, b) => a + b, 0).toLocaleString()}
                 </p>
               </div>
-              <TrendingUp size={18} className="text-accent" />
+              <TrendingUp size={18} className="text-success" />
             </div>
             <Sparkline data={userSpark} color="bg-accent" />
           </div>
@@ -168,18 +168,18 @@ export default function Overview() {
           <div className="rounded-xl border border-border bg-surface p-5">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted">Revenue (14d)</p>
-                <p className="font-display text-2xl font-bold text-accent-light mt-0.5">
+                <p className="text-sm text-muted">Revenue (14d)</p>
+                <p className="font-display text-2xl font-bold text-success-light mt-0.5">
                   ₦{revSpark.reduce((a, b) => a + b, 0).toLocaleString()}
                 </p>
               </div>
-              <span className="text-lg">💰</span>
+              <Banknote size={18} className="text-success" />
             </div>
             <Sparkline data={revSpark} color="bg-amber-400" />
           </div>
 
           <div className="rounded-xl border border-border bg-surface p-5">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-3">Users by Exam Type</p>
+            <p className="text-sm text-muted mb-3">Users by Exam Type</p>
             <div className="mb-4">
               <DonutChart
                 legend={false}
@@ -258,7 +258,7 @@ export default function Overview() {
                   </td>
                   <td className="px-5 py-3">
                     <span className="flex items-center gap-1 text-muted">
-                      {u.streak > 0 && <span className="text-orange-400">🔥</span>}
+                      {u.streak > 0 && <Flame size={14} className="text-orange-400" />}
                       <span className={u.streak > 0 ? "text-white" : ""}>{u.streak}</span>
                     </span>
                   </td>
@@ -278,15 +278,15 @@ export default function Overview() {
       {/* Bottom stat pair */}
       {stats && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="rounded-xl border border-border bg-gradient-card p-5 shadow-card">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted">Total Questions</p>
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <p className="mb-1 text-sm text-muted">Total Questions</p>
             <p className="font-display text-3xl font-bold tracking-tight text-white">
               {stats.total_questions.toLocaleString()}
             </p>
           </div>
-          <div className="rounded-xl border border-border bg-gradient-card p-5 shadow-card">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted">Revenue (Active Subs)</p>
-            <p className="font-display text-3xl font-bold tracking-tight text-accent-light">
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <p className="mb-1 text-sm text-muted">Revenue (Active Subs)</p>
+            <p className="font-display text-3xl font-bold tracking-tight text-success-light">
               ₦{Number(stats.total_revenue_ngn).toLocaleString()}
             </p>
           </div>

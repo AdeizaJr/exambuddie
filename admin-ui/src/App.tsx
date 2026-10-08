@@ -14,7 +14,7 @@ import QOTDPage from "./pages/QOTD";
 import Pricing from "./pages/Pricing";
 import AuditLog from "./pages/AuditLog";
 import BugReports from "./pages/BugReports";
-import { getFlags, getAlerts, getBugReports, loginAdmin } from "./api";
+import { getFlags, getAlerts, getBugReports, loginAdmin, LoginUnavailableError } from "./api";
 
 // ── Login page ──────────────────────────────────────────────────────────────
 function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
@@ -34,8 +34,12 @@ function LoginPage({ onLogin }: { onLogin: (token: string) => void }) {
       localStorage.setItem("admin_token", token);
       onLogin(token);
       navigate("/overview", { replace: true });
-    } catch {
-      setError("Invalid username or password. Please try again.");
+    } catch (err) {
+      setError(
+        err instanceof LoginUnavailableError
+          ? "Can't reach the server right now. Check that the backend is running, then try again."
+          : "Invalid username or password. Please try again."
+      );
     } finally {
       setLoading(false);
     }
