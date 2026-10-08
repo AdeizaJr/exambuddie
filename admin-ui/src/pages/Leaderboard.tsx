@@ -105,7 +105,7 @@ export default function Leaderboard() {
           onClick={() => setSelectedWeek(null)}
           className={`w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors ${
             selectedWeek === null
-              ? "bg-accent text-white"
+              ? "bg-accent-dark text-white"
               : "text-muted hover:bg-surface2 hover:text-white"
           }`}
         >
@@ -137,7 +137,7 @@ export default function Leaderboard() {
                       onClick={() => setSelectedWeek(w)}
                       className={`w-full rounded-lg px-3 py-1.5 text-left text-xs transition-colors ${
                         selectedWeek === w
-                          ? "bg-accent text-white"
+                          ? "bg-accent-dark text-white"
                           : "text-muted hover:bg-surface2 hover:text-white"
                       }`}
                     >

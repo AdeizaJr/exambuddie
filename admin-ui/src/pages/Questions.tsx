@@ -256,10 +256,10 @@ export default function Questions() {
               type="file"
               accept=".csv"
               onChange={(e) => setImportFile(e.target.files?.[0] ?? null)}
-              className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white file:mr-3 file:rounded file:border-0 file:bg-accent file:px-2 file:py-1 file:text-xs file:text-white"
+              className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white file:mr-3 file:rounded file:border-0 file:bg-accent-dark file:px-2 file:py-1 file:text-xs file:text-white"
             />
             {importResult && (
-              <div className={`rounded-lg border p-3 text-sm ${importResult.skipped > 0 ? "border-amber-500/30 bg-amber-500/10" : "border-accent/30 bg-accent/10"}`}>
+              <div className={`rounded-lg border p-3 text-sm ${importResult.skipped > 0 ? "border-amber-500/30 bg-amber-500/10" : "border-success/30 bg-success/10"}`}>
                 <p className="font-medium text-white">Import complete</p>
                 <p className="text-xs text-muted mt-1">✅ {importResult.inserted} inserted · ⚠ {importResult.skipped} skipped</p>
                 {importResult.errors.length > 0 && (
@@ -293,7 +293,7 @@ export default function Questions() {
                   }
                 }}
                 disabled={!importFile || importing}
-                className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+                className="flex items-center gap-2 rounded-lg bg-accent-dark px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
               >
                 {importing ? <><Spinner size="sm" /> Importing...</> : "Import"}
               </button>
@@ -465,7 +465,7 @@ export default function Questions() {
                       <td className="px-4 py-3 font-bold text-white">{q.correct_option}</td>
                       <td className="px-4 py-3">
                         {q.explanation ? (
-                          <span className="text-accent">✓</span>
+                          <span className="text-success">✓</span>
                         ) : (
                           <span className="text-muted">✗</span>
                         )}
@@ -666,7 +666,7 @@ export default function Questions() {
                   <button
                     onClick={handleImageUpload}
                     disabled={imageUploading}
-                    className="flex items-center gap-1 rounded-lg bg-accent px-3 py-1.5 text-xs text-white disabled:opacity-50"
+                    className="flex items-center gap-1 rounded-lg bg-accent-dark px-3 py-1.5 text-xs text-white disabled:opacity-50"
                   >
                     {imageUploading ? "Uploading…" : "Upload"}
                   </button>
@@ -684,7 +684,7 @@ export default function Questions() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-accent-dark px-4 py-2 text-sm text-white transition-colors hover:bg-accent-deep disabled:opacity-50"
               >
                 {saving && <Spinner size="sm" />}
                 Save Changes

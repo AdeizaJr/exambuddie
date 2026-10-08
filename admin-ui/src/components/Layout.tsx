@@ -36,20 +36,50 @@ interface LayoutProps {
   onLogout: () => void;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { path: "/overview",      label: "Overview",      icon: <LayoutDashboard size={16} /> },
-  { path: "/questions",     label: "Questions",     icon: <HelpCircle size={16} />     },
-  { path: "/users",         label: "Users",         icon: <Users size={16} />           },
-  { path: "/flags",         label: "Flags",         icon: <Flag size={16} />            },
-  { path: "/alerts",        label: "Alerts",        icon: <Bell size={16} />            },
-  { path: "/bug-reports",   label: "Bug Reports",   icon: <Bug size={16} />             },
-  { path: "/subscriptions", label: "Subscriptions", icon: <CreditCard size={16} />      },
-  { path: "/analytics",     label: "Analytics",     icon: <BarChart2 size={16} />       },
-  { path: "/leaderboard",   label: "Leaderboard",   icon: <Trophy size={16} />          },
-  { path: "/broadcast",     label: "Broadcast",     icon: <Megaphone size={16} />       },
-  { path: "/qotd",          label: "QOTD",          icon: <CalendarDays size={16} />     },
-  { path: "/pricing",       label: "Pricing",       icon: <Tag size={16} />             },
-  { path: "/audit-log",     label: "Audit Log",     icon: <ScrollText size={16} />      },
+interface NavGroup {
+  title: string | null;
+  items: NavItem[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    title: null,
+    items: [
+      { path: "/overview",  label: "Overview",  icon: <LayoutDashboard size={16} /> },
+      { path: "/analytics", label: "Analytics", icon: <BarChart2 size={16} />       },
+    ],
+  },
+  {
+    title: "Content",
+    items: [
+      { path: "/questions", label: "Questions", icon: <HelpCircle size={16} />   },
+      { path: "/qotd",      label: "QOTD",      icon: <CalendarDays size={16} /> },
+      { path: "/flags",     label: "Flags",     icon: <Flag size={16} />         },
+    ],
+  },
+  {
+    title: "People",
+    items: [
+      { path: "/users",         label: "Users",         icon: <Users size={16} />      },
+      { path: "/subscriptions", label: "Subscriptions", icon: <CreditCard size={16} /> },
+      { path: "/leaderboard",   label: "Leaderboard",   icon: <Trophy size={16} />     },
+    ],
+  },
+  {
+    title: "Comms",
+    items: [
+      { path: "/broadcast",   label: "Broadcast",   icon: <Megaphone size={16} /> },
+      { path: "/alerts",      label: "Alerts",      icon: <Bell size={16} />      },
+      { path: "/bug-reports", label: "Bug Reports", icon: <Bug size={16} />       },
+    ],
+  },
+  {
+    title: "System",
+    items: [
+      { path: "/pricing",   label: "Pricing",   icon: <Tag size={16} />        },
+      { path: "/audit-log", label: "Audit Log", icon: <ScrollText size={16} /> },
+    ],
+  },
 ];
 
 function ChangePasswordModal({ onClose }: { onClose: () => void }) {
@@ -82,10 +112,10 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
     return (
       <Modal title="Change Password" onClose={onClose}>
         <div className="space-y-4 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent/20">
-            <Zap size={20} className="text-accent" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/20">
+            <Zap size={20} className="text-success" />
           </div>
-          <p className="font-medium text-accent">Password updated successfully.</p>
+          <p className="font-medium text-success">Password updated successfully.</p>
           <button onClick={onClose} className="rounded-lg bg-gradient-accent px-4 py-2 text-sm font-medium text-white">
             Done
           </button>
@@ -172,44 +202,51 @@ export default function Layout({ pendingFlags, pendingAlerts, pendingBugs, onLog
       <div className="mx-4 mb-3 h-px bg-border" />
 
       {/* Nav */}
-      <nav className="flex-1 space-y-0.5 overflow-y-auto px-2">
-        {NAV_ITEMS.map((item) => {
-          const badge =
-            item.path === "/flags" && pendingFlags > 0 ? pendingFlags :
-            item.path === "/alerts" && pendingAlerts > 0 ? pendingAlerts :
-            item.path === "/bug-reports" && pendingBugs > 0 ? pendingBugs : 0;
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={closeMobile}
-              className={({ isActive }) =>
-                `group relative flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
-                  isActive
-                    ? "bg-accent/10 text-accent before:absolute before:left-0 before:top-1/2 before:h-4 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:bg-accent"
-                    : "text-muted hover:bg-surface2 hover:text-white"
-                }`
-              }
-            >
-              <span className="flex items-center gap-3">
-                <span className="flex-shrink-0">{item.icon}</span>
-                <span>{item.label}</span>
-              </span>
-              {badge > 0 && (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
-                  {badge > 9 ? "9+" : badge}
-                </span>
-              )}
-            </NavLink>
-          );
-        })}
+      <nav className="flex-1 space-y-4 overflow-y-auto px-2 pb-2">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.title ?? "main"} className="space-y-0.5">
+            {group.title && (
+              <p className="px-3 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted/70">{group.title}</p>
+            )}
+            {group.items.map((item) => {
+              const badge =
+                item.path === "/flags" && pendingFlags > 0 ? pendingFlags :
+                item.path === "/alerts" && pendingAlerts > 0 ? pendingAlerts :
+                item.path === "/bug-reports" && pendingBugs > 0 ? pendingBugs : 0;
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={closeMobile}
+                  className={({ isActive }) =>
+                    `group relative flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-accent/10 text-accent-light before:absolute before:left-0 before:top-1/2 before:h-4 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:bg-accent"
+                        : "text-muted hover:bg-surface2 hover:text-white"
+                    }`
+                  }
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex-shrink-0">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </span>
+                  {badge > 0 && (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                      {badge > 9 ? "9+" : badge}
+                    </span>
+                  )}
+                </NavLink>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
       <div className="mx-4 mt-3 h-px bg-border" />
       <div className="space-y-0.5 px-2 py-3">
         <div className="flex items-center gap-2 px-3 py-1.5">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
           <span className="text-xs text-muted">Live · v1.0.0</span>
         </div>
         <button

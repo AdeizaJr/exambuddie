@@ -11,21 +11,21 @@ interface StatCardProps {
 
 export default function StatCard({ label, value, sub, icon, accent = false, trend }: StatCardProps) {
   const trendColor =
-    trend === "up" ? "text-accent" : trend === "down" ? "text-red-400" : "text-muted";
+    trend === "up" ? "text-success" : trend === "down" ? "text-red-400" : "text-muted";
   const trendArrow = trend === "up" ? "↑" : trend === "down" ? "↓" : "";
 
   return (
-    <div className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-border bg-gradient-card p-5 shadow-card transition-shadow hover:shadow-card-hover">
+    <div className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-border bg-surface p-5 transition-colors hover:border-surface3">
       {/* Subtle top-right glow for accent cards */}
       {accent && (
         <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-accent/10 blur-2xl" />
       )}
 
       <div className="flex items-start justify-between">
-        <span className="text-xs font-semibold uppercase tracking-widest text-muted">{label}</span>
+        <span className="text-sm text-muted">{label}</span>
         <span
           className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-            accent ? "bg-accent/20 text-accent" : "bg-surface3 text-muted"
+            accent ? "bg-accent/15 text-accent" : "bg-surface2 text-muted"
           }`}
         >
           {icon}

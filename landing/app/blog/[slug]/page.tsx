@@ -42,7 +42,7 @@ function formatDate(iso: string) {
 function renderBlock(block: Block, i: number) {
   switch (block.type) {
     case "h2":
-      return <h2 key={i} className="mt-10 mb-4 text-xl font-extrabold text-slate-900 sm:text-2xl dark:text-white">{block.text}</h2>;
+      return <h2 key={i} className="mt-10 mb-4 text-xl font-bold text-slate-900 sm:text-2xl dark:text-white">{block.text}</h2>;
     case "h3":
       return <h3 key={i} className="mt-7 mb-3 text-lg font-bold text-slate-900 dark:text-white">{block.text}</h3>;
     case "p":
@@ -148,7 +148,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   };
 
   return (
-    <div className="font-[var(--font-geist)]">
+    <div className="font-sans">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
@@ -173,7 +173,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           </div>
 
           {/* Title */}
-          <h1 className="mb-6 text-2xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+          <h1 className="mb-6 text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl dark:text-white">
             {post.title}
           </h1>
 

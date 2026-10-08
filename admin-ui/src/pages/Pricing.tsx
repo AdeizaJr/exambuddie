@@ -142,7 +142,7 @@ export default function Pricing() {
           </p>
         )}
         {success && (
-          <p className="rounded-lg bg-accent/10 px-3 py-2 text-xs text-accent sm:col-span-2">
+          <p className="rounded-lg bg-success/10 px-3 py-2 text-xs text-success sm:col-span-2">
             Pricing updated.
           </p>
         )}
@@ -181,7 +181,7 @@ export default function Pricing() {
                   <tr key={i} className="transition-colors hover:bg-surface2">
                     <td className="px-4 py-3 text-white">{KEY_LABEL[h.key] ?? h.key}</td>
                     <td className="px-4 py-3 text-muted">{h.old_value ?? "—"}</td>
-                    <td className="px-4 py-3 font-medium text-accent">{h.new_value}</td>
+                    <td className="px-4 py-3 font-medium text-success">{h.new_value}</td>
                     <td className="px-4 py-3 text-muted">{h.updated_by ?? "—"}</td>
                     <td className="px-4 py-3 text-xs text-muted">{formatDateTime(h.updated_at)}</td>
                   </tr>

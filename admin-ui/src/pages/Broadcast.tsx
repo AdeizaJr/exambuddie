@@ -106,7 +106,7 @@ function DirectMessage() {
       </div>
 
       {sentCount !== null && (
-        <div className="rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm text-accent">
+        <div className="rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
           ✓ Sent to {sentCount} user{sentCount === 1 ? "" : "s"}!{" "}
           <button onClick={() => { setSentCount(null); setFailedNames([]); }} className="underline text-xs opacity-70 hover:opacity-100">
             Dismiss
@@ -194,7 +194,7 @@ function DirectMessage() {
           <button
             onClick={handleSend}
             disabled={!dmMessage.trim() || sending}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent-dark py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-deep disabled:cursor-not-allowed disabled:opacity-40"
           >
             {sending ? (
               <><Spinner size="sm" /> Sending...</>
@@ -307,11 +307,11 @@ export default function Broadcast() {
         )}
 
       {result && (
-        <div className="rounded-xl border border-accent/30 bg-accent/10 p-4">
-          <p className="text-sm font-medium text-accent">Broadcast sent successfully</p>
+        <div className="rounded-xl border border-success/30 bg-success/10 p-4">
+          <p className="text-sm font-medium text-success">Broadcast sent successfully</p>
           <div className="mt-2 flex gap-6">
             <span className="text-xs text-muted">
-              Sent: <strong className="text-accent">{result.sent}</strong>
+              Sent: <strong className="text-success">{result.sent}</strong>
             </span>
             <span className="text-xs text-muted">
               Failed: <strong className="text-red-400">{result.failed}</strong>
@@ -401,7 +401,7 @@ export default function Broadcast() {
       <button
         onClick={() => setShowConfirm(true)}
         disabled={!message.trim() || sending}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-3 font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-40"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent-dark py-3 font-medium text-white transition-colors hover:bg-accent-deep disabled:cursor-not-allowed disabled:opacity-40"
       >
         {sending ? (
           <>
@@ -443,7 +443,7 @@ export default function Broadcast() {
               </button>
               <button
                 onClick={handleSend}
-                className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm text-white transition-colors hover:bg-accent-dark"
+                className="flex items-center gap-2 rounded-lg bg-accent-dark px-4 py-2 text-sm text-white transition-colors hover:bg-accent-deep"
               >
                 Yes, Send Now
               </button>

@@ -155,7 +155,7 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
         <button
           onClick={handleSaveAndResolve}
           disabled={saving || deactivating}
-          className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-accent-dark px-3 py-2 text-sm text-white transition-colors hover:bg-accent-deep disabled:opacity-50"
         >
           {saving && <Spinner size="sm" />}
           {isUnderline ? "Fix & Resolve" : "Save & Resolve"}
@@ -241,7 +241,7 @@ export default function Flags({ onFlagsResolved }: FlagsProps) {
             key={tab.value}
             onClick={() => setStatus(tab.value)}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-              status === tab.value ? "bg-accent text-white" : "text-muted hover:text-white"
+              status === tab.value ? "bg-accent-dark text-white" : "text-muted hover:text-white"
             }`}
           >
             {tab.label}

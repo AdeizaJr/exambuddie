@@ -131,7 +131,7 @@ export default async function JambSubjectPage({
   };
 
   return (
-    <div className="font-[var(--font-geist)]">
+    <div className="font-sans">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -152,7 +152,7 @@ export default async function JambSubjectPage({
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
             🎓 JAMB UTME Past Questions · {s.displayName}
           </div>
-          <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
+          <h1 className="mb-5 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
             JAMB {s.displayName} Past Questions
             <br />
             <span className="text-blue-700 dark:text-blue-400">2010–2025, Free on Telegram.</span>
@@ -185,7 +185,7 @@ export default async function JambSubjectPage({
             { value: "Free", label: "To Start" },
           ].map(({ value, label }) => (
             <div key={label}>
-              <div className="text-lg leading-tight font-extrabold sm:text-xl md:text-2xl">{value}</div>
+              <div className="text-lg leading-tight font-bold sm:text-xl md:text-2xl">{value}</div>
               <div className="mt-1 text-xs text-blue-200 sm:text-sm">{label}</div>
             </div>
           ))}
@@ -194,7 +194,7 @@ export default async function JambSubjectPage({
 
       <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-4 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
             Topics covered in JAMB {s.displayName}
           </h2>
           <p className="mb-10 text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -215,7 +215,7 @@ export default async function JambSubjectPage({
 
       <section className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-4 text-center text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+          <h2 className="mb-4 text-center text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
             Built for JAMB {s.displayName} success
           </h2>
           <p className="mb-12 text-center text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -267,7 +267,7 @@ export default async function JambSubjectPage({
       {(s.waec || s.neco) && (
         <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
           <div className="mx-auto max-w-4xl text-center">
-            <h2 className="mb-4 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+            <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
               Also practise {s.displayName} for other exams
             </h2>
             <p className="mb-10 text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -297,7 +297,7 @@ export default async function JambSubjectPage({
 
       <section className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-10 text-center text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+          <h2 className="mb-10 text-center text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
             Frequently Asked Questions
           </h2>
           <div className="space-y-3">
@@ -319,7 +319,7 @@ export default async function JambSubjectPage({
 
       <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24 dark:bg-blue-900">
         <div className="mx-auto max-w-2xl">
-          <h2 className="mb-3 text-2xl font-extrabold sm:mb-4 sm:text-3xl md:text-4xl">
+          <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl">
             Start JAMB {s.displayName} practice today
           </h2>
           <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">

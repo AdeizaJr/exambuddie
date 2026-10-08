@@ -110,10 +110,15 @@ npm run dev          # runs at localhost:5173/app
 ```bash
 cd admin-ui
 npm install
-npm run dev          # runs at localhost:5174
+npm run dev          # runs at localhost:5173 (next free port if taken)
 ```
 
-Point `VITE_API_URL` in `admin-ui/.env.local` to your backend URL.
+The admin UI is only the screen. It needs the backend running to log in or load data:
+
+- Leave `VITE_API_URL` empty in `admin-ui/.env.local` for local work. Requests to `/api` are then proxied to the backend at `localhost:3001`, so start it first (`cd backend && npm run dev`).
+- Set `VITE_API_URL` to a backend URL to point at a remote backend instead.
+
+If login says it can't reach the server, the backend is not running. The first admin account is created from `ADMIN_USERNAME` / `ADMIN_PASSWORD` in `backend/.env`.
 
 ---
 
@@ -276,11 +281,17 @@ Landing page deploys separately on Railway (same process — connect repo, set b
 | Database | PostgreSQL |
 | Cache / Sessions | Redis |
 | Miniapp | React + Vite + Tailwind CSS |
-| Admin UI | React + Vite |
-| Landing | Next.js |
+| Admin UI | React + Vite + Tailwind CSS 3, Lucide icons, Inter font |
+| Landing | Next.js + Tailwind CSS 4, Geist font |
 | AI Explanations | Anthropic Claude API |
 | Payments | Paystack |
 | Hosting | Railway (backend) |
+
+### UI conventions
+
+- **Brand color is blue.** Landing uses Tailwind `blue-700` for primary actions. Admin uses the `accent` tokens in `admin-ui/tailwind.config.js`.
+- **Green means good news only**: success messages, revenue, healthy metrics, correct answers. In admin that is the `success` token, not `accent`.
+- Landing font is set once through `--font-sans` in `landing/app/globals.css`. Use the `font-sans` class, not `font-[var(--font-geist)]` (Tailwind 4 reads that as a font weight and the font silently fails to load).
 
 ---
 

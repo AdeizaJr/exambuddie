@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router";
+import { Flame } from "lucide-react";
 import { getUsers, updateUserPlan, deleteUsers, getUserActivity, exportUsersCSV } from "../api";
 import type { User, UserActivity, UserWeakTopic, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
@@ -238,7 +239,7 @@ export default function Users() {
             onClick={() => setFilter("plan", p === "all" ? "" : p)}
             className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
               planFilter === p
-                ? "bg-accent text-white"
+                ? "bg-accent-dark text-white"
                 : "text-muted hover:text-white"
             }`}
           >
@@ -256,7 +257,7 @@ export default function Users() {
               onClick={() => setFilter("sent", s)}
               className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                 sentFilter === s
-                  ? "bg-accent text-white"
+                  ? "bg-accent-dark text-white"
                   : "text-muted hover:text-white"
               }`}
             >
@@ -432,7 +433,12 @@ export default function Users() {
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-muted">{u.streak} 🔥</td>
+                      <td className="px-4 py-3 text-muted">
+                        <span className="inline-flex items-center gap-1">
+                          {u.streak}
+                          <Flame size={13} className={u.streak > 0 ? "text-orange-400" : "text-muted"} />
+                        </span>
+                      </td>
                       <td className="px-4 py-3 font-mono text-xs text-muted">
                         {u.phone_number ?? <span className="text-muted/40">—</span>}
                       </td>
@@ -531,7 +537,7 @@ export default function Users() {
               {/* User meta */}
               <div className="flex flex-wrap gap-4 text-xs text-muted">
                 <span>📱 <span className="text-white">{activityUser.phone_number ?? "Not provided"}</span></span>
-                <span>🔥 <span className="text-white">{activityUser.streak}-day streak</span></span>
+                <span className="inline-flex items-center gap-1"><Flame size={13} className="text-orange-400" /> <span className="text-white">{activityUser.streak}-day streak</span></span>
                 <span>📅 Joined <span className="text-white">{formatDate(activityUser.joined_at)}</span></span>
               </div>
               {/* Summary stats */}
@@ -695,7 +701,7 @@ export default function Users() {
               <button
                 onClick={() => handlePlanChange(grantTarget, "premium", months)}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm text-white transition-colors hover:bg-accent-dark disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-accent-dark px-4 py-2 text-sm text-white transition-colors hover:bg-accent-deep disabled:opacity-50"
               >
                 {saving && <Spinner size="sm" />}
                 Grant {months} Month{months > 1 ? "s" : ""}

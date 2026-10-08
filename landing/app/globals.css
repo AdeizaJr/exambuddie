@@ -2,14 +2,58 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Brand tokens — matches the product's own established identity (admin dashboard
-   accent green, Telegram share-card colors) rather than an unrelated generic blue. */
+@theme inline {
+  /* `inline` is required: --font-geist is set on <html> by next/font at runtime,
+     so the value must be written into each rule rather than resolved at :root. */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Brand tokens. Blue is the ExamBuddie brand color (same family as the blue-700
+   used across the pages). Green is only for "correct / success" states. */
 @theme {
-  --color-brand: #25a865;
-  --color-brand-dark: #1a7a4a;
-  --color-brand-light: #3dd68c;
+  --color-brand: #1d4ed8;
+  --color-brand-dark: #1e40af;
+  --color-brand-light: #3b82f6;
   --color-gold: #b9862a;
   --color-gold-light: #dcae57;
+}
+
+@layer base {
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Faint grid behind the hero, fading out toward the edges */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(29 78 216 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(29 78 216 / 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+.dark .hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(148 163 184 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(148 163 184 / 0.07) 1px, transparent 1px);
+}
+
+/* Sections ease in as they scroll into view. Browsers without scroll-driven
+   animations just show the content normally. */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 200px;
+    }
+  }
 }
 
 html {
