@@ -86,12 +86,32 @@ export const acquireActionLock = async (telegramId: number | string, action: str
   return result === 'OK';
 };
 
-// Returns true when the user has exceeded BURST_MAX_ACTIONS within BURST_WINDOW_SECS
-export const checkBurst = async (telegramId: number | string): Promise<boolean> => {
+// 'ok' while the user is under BURST_MAX_ACTIONS within BURST_WINDOW_SECS. The first
+// action over the limit returns 'first_over' (so the caller can warn them once), and
+// anything after that in the same window returns 'over'.
+export const checkBurst = async (telegramId: number | string): Promise<'ok' | 'first_over' | 'over'> => {
   const key = `burst:${telegramId}`;
   const count = await client.incr(key);
   if (count === 1) await client.expire(key, BURST_WINDOW_SECS);
-  return count > BURST_MAX_ACTIONS;
+  if (count <= BURST_MAX_ACTIONS) return 'ok';
+  return count === BURST_MAX_ACTIONS + 1 ? 'first_over' : 'over';
+};
+
+// ── Daily cap on unprompted bot messages (see services/outreach.ts) ──────────
+// Reserve one of today's slots. Returns false when the user is already at `cap`.
+export const claimOutreachSlot = async (telegramId: number | string, watDate: string, cap: number): Promise<boolean> => {
+  const key = `outreach:${telegramId}:${watDate}`;
+  const count = await client.incr(key);
+  if (count === 1) await client.expire(key, 26 * 3600);
+  if (count > cap) {
+    await client.decr(key);
+    return false;
+  }
+  return true;
+};
+
+export const releaseOutreachSlot = async (telegramId: number | string, watDate: string): Promise<void> => {
+  await client.decr(`outreach:${telegramId}:${watDate}`);
 };
 
 export const saveQuizState = async (telegramId: number | string, quizData: any): Promise<void> => {

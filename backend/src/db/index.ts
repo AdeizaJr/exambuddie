@@ -33,6 +33,24 @@ export async function getUser(telegramId: number | string): Promise<User | null>
   return user;
 }
 
+// Set when Telegram tells us the user blocked the bot (or deleted their account).
+// Proactive sends skip these users; any fresh /start or unblock clears it again.
+export async function markUserBlocked(telegramId: number | string): Promise<void> {
+  await pool.query(
+    'UPDATE users SET blocked_at = NOW() WHERE telegram_id = $1 AND blocked_at IS NULL',
+    [telegramId]
+  );
+  clearCachedUser(telegramId).catch(() => {});
+}
+
+export async function clearUserBlocked(telegramId: number | string): Promise<void> {
+  await pool.query(
+    'UPDATE users SET blocked_at = NULL WHERE telegram_id = $1 AND blocked_at IS NOT NULL',
+    [telegramId]
+  );
+  clearCachedUser(telegramId).catch(() => {});
+}
+
 export async function getUserById(id: number): Promise<User | null> {
   const { rows } = await pool.query<User>('SELECT * FROM users WHERE id = $1', [id]);
   return rows[0] || null;
@@ -53,6 +71,7 @@ export async function upsertUser(ctx: any): Promise<User> {
      VALUES ($1, $2, $3, $4)
      ON CONFLICT (telegram_id) DO UPDATE
        SET username = $2, first_name = $3, updated_at = NOW(),
+           blocked_at = NULL,
            referral_code = COALESCE(users.referral_code, EXCLUDED.referral_code)
      RETURNING *`,
     [id, username || null, first_name || 'Student', code]

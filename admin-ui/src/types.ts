@@ -101,6 +101,7 @@ export interface Subscription {
 export interface Stats {
   total_users: number;
   premium_users: number;
+  blocked_users?: number;
   new_today: number;
   attempts_today: number;
   total_attempts: number;

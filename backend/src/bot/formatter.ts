@@ -507,7 +507,7 @@ export function askSubjects(examType: string): string {
 📚 <b>Step 3 of 3:</b> Choose your subjects. You can pick multiple — I'll prepare questions for each one.`;
 }
 
-export function profileComplete(user: User): string {
+export function profileComplete(user: User, closing = 'What would you like to do?'): string {
   const subjects = user.subjects.map(s => SUBJECT_MAP[s] || s).join(', ');
   const yearLabel = user.target_year ? `<b>${user.target_year}</b>` : '<b>Any Year</b>';
   return `🎉 <b>${timeGreeting()}, ${escHtml(user.first_name)}! You're all set.</b>
@@ -517,20 +517,56 @@ export function profileComplete(user: User): string {
 • 📋 Exam: <b>${user.exam_type || 'Not set'}</b>
 • 📚 Subjects: ${subjects}
 
-What would you like to do?`;
+${closing}`;
 }
 
+// Label of the reply-keyboard button that opens the secondary menu
+export const MORE_BUTTON = '☰ More';
+
+// The always-visible keyboard. Kept to the three things students do every day plus
+// one door to everything else, so it doesn't swallow half a small phone screen.
+// (Older 10-button keyboards still on people's phones keep working: the text handler
+// in index.ts still recognises every old label.)
 export function persistentMenuKeyboard() {
   return {
     keyboard: [
       [{ text: '📚 Practice' }, { text: '📋 CBT' }],
-      [{ text: '🎯 Challenge' }, { text: '🏆 Leaderboard' }],
-      [{ text: '📖 Review' }, { text: '🎓 Mock Exam' }],
-      [{ text: '🏅 Badges' }, { text: '📊 My Stats' }],
-      [{ text: '📐 Formulas' }, { text: '⚙️ Settings' }],
+      [{ text: '📖 Review' }, { text: MORE_BUTTON }],
     ],
     resize_keyboard: true,
     is_persistent: true,
+  };
+}
+
+// Everything that used to sit on the main keyboard, shown on demand under "More"
+export function moreMenuKeyboard(isPremium: boolean) {
+  return {
+    inline_keyboard: [
+      [
+        { text: '🎯 Challenge', callback_data: 'challenge:pick' },
+        { text: '🏆 Leaderboard', callback_data: 'more:leaderboard' },
+      ],
+      [
+        { text: '🎓 Mock Exam', callback_data: 'more:mock' },
+        { text: '📊 My Stats', callback_data: 'stats:show' },
+      ],
+      [
+        { text: '🔄 Revise Mistakes', callback_data: 'revision:start_fresh' },
+        { text: '⭐ Bookmarks', callback_data: 'bookmarks:show' },
+      ],
+      [
+        { text: '📐 Formulas', callback_data: 'formula:pick' },
+        { text: '🏅 Badges', callback_data: 'badges:show' },
+      ],
+      [
+        { text: '🔗 Invite Friends', callback_data: 'invite:link' },
+        ...(isPremium ? [] : [{ text: '💎 Subscribe', callback_data: 'menu:subscribe' }]),
+      ],
+      [
+        { text: '⚙️ Settings', callback_data: 'more:settings' },
+        { text: '🛟 Help', callback_data: 'more:help' },
+      ],
+    ],
   };
 }
 
