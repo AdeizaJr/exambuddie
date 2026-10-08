@@ -48,6 +48,10 @@ const secondaryFeatures = [
   { icon: BoltIcon, title: "Works in Telegram", desc: "No app download, ever" },
 ];
 
+// Bento layout for the "Also included" grid: these cards take half the row on
+// desktop, the rest take a third, giving rows of 2, 3, 2, 3, 2.
+const BENTO_WIDE = new Set([0, 1, 5, 6, 10, 11]);
+
 const whyTelegram = [
   {
     icon: PhoneIcon,
@@ -96,7 +100,7 @@ const reviewJsonLd = {
 export default async function Home() {
   const pricing = await getPricing();
   return (
-    <div className="font-[var(--font-geist)]">
+    <div className="font-sans">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewJsonLd) }}
@@ -107,18 +111,27 @@ export default async function Home() {
       <Nav />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 dark:from-slate-900 dark:to-slate-950">
+      <section className="relative isolate overflow-hidden px-4 pt-28 pb-16 sm:px-6 sm:pt-36 sm:pb-24">
+        {/* Decorative backdrop: soft wash, faint grid, brand glow behind the phone */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-50 via-white to-white dark:from-slate-900 dark:via-slate-950 dark:to-slate-950" />
+          <div className="hero-grid absolute inset-0" />
+          <div className="absolute -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-blue-400/25 blur-3xl lg:left-[72%] dark:bg-blue-600/20" />
+        </div>
+
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
             <div className="flex-1 text-center lg:text-left">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 sm:px-4 sm:text-sm dark:bg-blue-950 dark:text-blue-300">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/70 px-3 py-1.5 text-xs font-medium text-blue-700 backdrop-blur sm:px-4 sm:text-sm dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300">
                 <GraduationCapIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
                 WAEC, JAMB &amp; NECO Prep · Nigeria
               </div>
-              <h1 className="mb-5 text-3xl leading-tight font-extrabold tracking-tight text-slate-900 text-balance sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
+              <h1 className="mb-5 text-4xl leading-[1.08] font-bold text-slate-900 text-balance sm:mb-6 sm:text-5xl md:text-6xl dark:text-white">
                 Stop guessing. Start acing
                 <br />
-                <span className="text-blue-700 dark:text-blue-400">WAEC, JAMB &amp; NECO.</span>
+                <span className="bg-gradient-to-r from-blue-700 to-sky-500 bg-clip-text text-transparent dark:from-blue-400 dark:to-sky-300">
+                  WAEC, JAMB &amp; NECO.
+                </span>
               </h1>
               <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-600 sm:mb-10 sm:text-lg md:text-xl lg:mx-0 dark:text-slate-400">
                 Practice real past questions, get instant AI explanations, and improve faster
@@ -130,13 +143,13 @@ export default async function Home() {
                   href={BOT_URL_LANDING}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg bg-blue-700 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
+                  className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl hover:shadow-blue-600/30 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
                   Start Free · 14 Days Premium →
                 </a>
                 <a
                   href="#features"
-                  className="rounded-lg border border-slate-200 px-6 py-3.5 text-base font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:px-8 sm:py-4 sm:text-lg dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+                  className="rounded-full border border-slate-200 bg-white/70 px-6 py-3.5 text-base font-semibold text-slate-700 backdrop-blur transition-colors hover:border-slate-300 hover:bg-white sm:px-8 sm:py-4 sm:text-lg dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
                 >
                   See how it works
                 </a>
@@ -150,45 +163,30 @@ export default async function Home() {
               <BotMockup />
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Scroll hint */}
-      <div className="flex justify-center bg-gradient-to-b from-white to-transparent -mt-8 pb-4 dark:from-slate-950">
-        <a
-          href="#features"
-          className="flex animate-bounce flex-col items-center gap-1 text-slate-400 hover:text-blue-700 dark:text-slate-500 dark:hover:text-blue-400 transition-colors"
-          aria-label="Scroll to features"
-        >
-          <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </a>
-      </div>
-
-      {/* Stats bar */}
-      <section className="bg-blue-800 py-8 sm:py-10 dark:bg-blue-900">
-        <div className="grid w-full grid-cols-2 gap-6 px-6 text-center text-white sm:gap-8 sm:px-10 md:grid-cols-4">
-          {[
-            { value: "41,000+", label: "Past Questions" },
-            { value: "16", label: "Subjects Covered" },
-            { value: "3", label: "Exam Boards" },
-            { value: "Free", label: "To Start" },
-          ].map(({ value, label }) => (
-            <div key={label}>
-              <div className="text-lg leading-tight font-extrabold sm:text-xl md:text-2xl">
-                {value}
+          {/* Stats */}
+          <dl className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:mt-20 md:grid-cols-4 dark:border-slate-800 dark:bg-slate-800">
+            {[
+              { value: "41,000+", label: "Past Questions" },
+              { value: "16", label: "Subjects Covered" },
+              { value: "3", label: "Exam Boards" },
+              { value: "Free", label: "To Start" },
+            ].map(({ value, label }) => (
+              <div key={label} className="flex flex-col-reverse bg-white px-4 py-5 text-center sm:py-6 dark:bg-slate-950">
+                <dt className="mt-1 text-xs text-slate-500 sm:text-sm dark:text-slate-400">{label}</dt>
+                <dd className="text-2xl font-bold tracking-tight text-slate-900 tabular-nums sm:text-3xl dark:text-white">
+                  {value}
+                </dd>
               </div>
-              <div className="mt-1 text-xs text-blue-200/80 sm:text-sm">{label}</div>
-            </div>
-          ))}
+            ))}
+          </dl>
         </div>
       </section>
 
       {/* Problem section */}
       <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20 dark:bg-slate-900">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-4 text-2xl font-extrabold text-slate-900 text-balance sm:text-3xl md:text-4xl dark:text-white">
+        <div className="mx-auto max-w-4xl reveal text-center">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 text-balance sm:text-3xl md:text-4xl dark:text-white">
             Studying hard but scores aren&apos;t improving?
           </h2>
           <p className="mb-10 text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -220,10 +218,10 @@ export default async function Home() {
 
       {/* Features */}
       <section id="features" className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-6xl reveal">
           <div className="mb-16 sm:mb-20">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">What you get</span>
-            <h2 className="mt-2 max-w-2xl text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl dark:text-white">
+            <h2 className="mt-2 max-w-2xl text-3xl font-bold text-slate-900 sm:text-4xl md:text-5xl dark:text-white">
               Built to get you <span className="text-blue-700 dark:text-blue-400">past the exam</span>
             </h2>
           </div>
@@ -233,7 +231,7 @@ export default async function Home() {
             <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-20">
               <div className="flex-1">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">📚 Practice Mode</span>
-                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                <h3 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
                   41,000 past questions.<br />Every answer explained.
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
@@ -293,7 +291,7 @@ export default async function Home() {
               </div>
               <div className="flex-1">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">📋 Timed Quiz</span>
-                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                <h3 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
                   Exam pressure.<br />Without the exam.
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
@@ -316,7 +314,7 @@ export default async function Home() {
             <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-20">
               <div className="flex-1">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">🎯 Drill Mode</span>
-                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                <h3 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
                   Knows exactly where<br />you&apos;re losing marks.
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
@@ -387,7 +385,7 @@ export default async function Home() {
               </div>
               <div className="flex-1">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">🎯 Challenge Mode</span>
-                <h3 className="mt-3 text-2xl font-extrabold text-slate-900 sm:text-3xl dark:text-white">
+                <h3 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
                   Study alone no more.<br />Challenge your friends.
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
@@ -415,12 +413,19 @@ export default async function Home() {
           {/* Secondary features */}
           <div className="mt-20 sm:mt-24">
             <p className="mb-8 text-xs font-bold uppercase tracking-widest text-slate-400">Also included</p>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              {secondaryFeatures.map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
-                  <Icon className="mb-2 h-6 w-6 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">{title}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{desc}</p>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-6">
+              {secondaryFeatures.map(({ icon: Icon, title, desc }, i) => (
+                <div
+                  key={title}
+                  className={`group rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-800 ${
+                    BENTO_WIDE.has(i) ? "lg:col-span-3" : "lg:col-span-2"
+                  }`}
+                >
+                  <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700 transition-colors group-hover:bg-blue-700 group-hover:text-white dark:bg-blue-950 dark:text-blue-300">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <p className="text-sm font-semibold text-slate-900 sm:text-base dark:text-white">{title}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm dark:text-slate-400">{desc}</p>
                 </div>
               ))}
             </div>
@@ -430,9 +435,9 @@ export default async function Home() {
 
       {/* Zero friction */}
       <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-6xl reveal">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
+            <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               No setup. No excuses.
             </h2>
             <p className="mx-auto max-w-xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -443,7 +448,7 @@ export default async function Home() {
             {whyTelegram.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
-                className="flex flex-col items-start gap-3 rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950"
+                className="flex flex-col items-start gap-3 rounded-2xl border border-slate-200 bg-white p-6 transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-blue-800"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
                   <Icon className="h-5 w-5" aria-hidden="true" />
@@ -459,34 +464,39 @@ export default async function Home() {
       </section>
 
       {/* How it works */}
-      <section className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
+      <section className="relative isolate overflow-hidden bg-slate-950 px-4 py-16 text-white sm:px-6 sm:py-24">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-48 left-1/2 h-[28rem] w-[48rem] max-w-none -translate-x-1/2 rounded-full bg-blue-600/25 blur-3xl" />
+        </div>
+        <div className="mx-auto max-w-4xl text-center reveal">
+          <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl">
             Up and running in 30 seconds
           </h2>
-          <p className="mb-12 text-base text-slate-600 sm:mb-16 sm:text-lg dark:text-slate-400">
+          <p className="mb-12 text-base text-slate-400 sm:mb-16 sm:text-lg">
             No sign-up forms. No app stores. Just Telegram.
           </p>
-          <div className="grid gap-8 sm:grid-cols-3 sm:gap-10">
+          <ol className="relative grid gap-8 sm:grid-cols-3 sm:gap-10">
+            {/* Line joining the three step circles on wider screens */}
+            <li aria-hidden="true" className="absolute top-7 right-[16.67%] left-[16.67%] hidden h-px bg-gradient-to-r from-blue-500/0 via-blue-500/60 to-blue-500/0 sm:block" />
             {[
               { step: "1", title: "Open Telegram", desc: "Search for @ExamBuddieBot or tap the button below." },
               { step: "2", title: "Pick your subjects", desc: "Choose WAEC, JAMB or NECO and the subjects you're studying." },
               { step: "3", title: "Start practising", desc: "Practice, quiz, or drill, your progress saves automatically." },
             ].map(({ step, title, desc }) => (
-              <div key={step} className="flex flex-col items-center">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-700 text-xl font-extrabold text-white shadow-lg shadow-blue-200 sm:h-14 sm:w-14 sm:text-2xl dark:shadow-none">
+              <li key={step} className="relative flex flex-col items-center">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-xl font-bold text-white ring-8 ring-slate-950 sm:h-14 sm:w-14 sm:text-2xl">
                   {step}
                 </div>
-                <h3 className="mb-2 text-base font-bold text-slate-900 sm:text-lg dark:text-white">{title}</h3>
-                <p className="text-sm text-slate-600 sm:text-base dark:text-slate-400">{desc}</p>
-              </div>
+                <h3 className="mb-2 text-base font-semibold sm:text-lg">{title}</h3>
+                <p className="text-sm text-slate-400 sm:text-base">{desc}</p>
+              </li>
             ))}
-          </div>
+          </ol>
           <a
             href={BOT_URL_LANDING}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-10 inline-block rounded-full bg-blue-700 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-800 sm:mt-12 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
+            className="mt-10 inline-block rounded-full bg-white px-7 py-3.5 text-base font-semibold text-blue-700 transition hover:-translate-y-0.5 hover:bg-blue-50 sm:mt-12 sm:px-8 sm:py-4 sm:text-lg"
           >
             Open ExamBuddie →
           </a>
@@ -495,10 +505,10 @@ export default async function Home() {
 
       {/* Subjects */}
       <section id="subjects" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-6xl reveal">
           <div className="mb-10 text-center sm:mb-16">
             <div className="mb-3 flex items-center justify-center gap-3">
-              <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+              <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
                 All major subjects covered
               </h2>
               <span className="shrink-0 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
@@ -511,7 +521,7 @@ export default async function Home() {
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
             {subjects.map(({ icon: Icon, name, slug }) => {
-              const className = "flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center transition-colors hover:bg-blue-50 sm:p-4 border border-slate-100 dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-800";
+              const className = "flex flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5 sm:p-4 border border-slate-200 dark:bg-slate-950 dark:border-slate-800 dark:hover:border-blue-800";
               const content = (
                 <>
                   <Icon className="h-7 w-7 text-blue-700 sm:h-8 sm:w-8 dark:text-blue-400" aria-hidden="true" />
@@ -530,7 +540,7 @@ export default async function Home() {
 
       {/* Pricing */}
       <section id="pricing" className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-5xl reveal">
           <BillingSection pricing={pricing} />
         </div>
       </section>
@@ -541,9 +551,9 @@ export default async function Home() {
 
       {/* Compare */}
       <section className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-4xl reveal">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
+            <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Why ExamBuddie beats the alternatives
             </h2>
             <p className="text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -555,7 +565,7 @@ export default async function Home() {
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6 dark:text-slate-400">Feature</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-blue-700 sm:px-6 dark:text-blue-400">ExamBuddie</th>
+                  <th className="bg-blue-50 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-blue-700 sm:px-6 dark:bg-blue-950/50 dark:text-blue-400">ExamBuddie</th>
                   <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6 dark:text-slate-400">Textbooks</th>
                   <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:px-6 dark:text-slate-400">YouTube</th>
                 </tr>
@@ -578,7 +588,7 @@ export default async function Home() {
                 ].map(([feature, eb, tb, yt]) => (
                   <tr key={String(feature)} className="hover:bg-slate-50 dark:hover:bg-slate-900 dark:bg-slate-950">
                     <td className="px-4 py-3.5 font-medium text-slate-700 sm:px-6 dark:text-slate-300">{feature}</td>
-                    <td className="px-4 py-3.5 text-center sm:px-6">
+                    <td className="bg-blue-50/60 px-4 py-3.5 text-center sm:px-6 dark:bg-blue-950/30">
                       {eb ? <span className="text-green-500 font-bold text-base">✓</span> : <span className="text-slate-300 dark:text-slate-700">—</span>}
                     </td>
                     <td className="px-4 py-3.5 text-center sm:px-6">
@@ -597,14 +607,23 @@ export default async function Home() {
 
       {/* Origin Story */}
       <section className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-3xl">
-          <div className="mb-10 text-center sm:mb-12">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16 reveal">
+          <div className="lg:sticky lg:top-28 lg:self-start">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">Our story</span>
-            <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+            <h2 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
               How ExamBuddie started
             </h2>
+            <div className="mt-6 flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                A
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">Alhassan Adeiza Hassan</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Founder, ExamBuddie</p>
+              </div>
+            </div>
           </div>
-          <div className="space-y-5 text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
+          <div className="space-y-5 border-l-2 border-blue-200 pl-6 text-base leading-relaxed text-slate-600 sm:text-lg dark:border-blue-900 dark:text-slate-400">
             <p>
               I served my NYSC year teaching Basic Science, Technology, and Physics at a secondary
               school. When exam season came around, I got to see up close how my students actually
@@ -628,15 +647,6 @@ export default async function Home() {
               a random forum told them.
             </p>
           </div>
-          <div className="mt-8 flex items-center justify-end gap-3">
-            <div className="text-right">
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">Alhassan Adeiza Hassan</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Founder, ExamBuddie</p>
-            </div>
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-              A
-            </div>
-          </div>
         </div>
       </section>
 
@@ -644,7 +654,7 @@ export default async function Home() {
       <section id="faq" className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 text-center sm:mb-16">
-            <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
+            <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
               Frequently asked questions
             </h2>
           </div>
@@ -654,10 +664,10 @@ export default async function Home() {
 
       {/* Testimonials */}
       <section className="px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-6xl reveal">
           <div className="mb-10 text-center sm:mb-16">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">What people say</span>
-            <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
+            <h2 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
               Real results from Parents, Students &amp; Teachers
             </h2>
           </div>
@@ -689,25 +699,28 @@ export default async function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section className="bg-blue-700 px-4 py-16 text-center text-white sm:px-6 sm:py-24 dark:bg-blue-900">
-        <div className="mx-auto max-w-2xl">
-          <h2 className="mb-3 text-2xl font-extrabold sm:mb-4 sm:text-3xl md:text-4xl">
-            Ready to improve your exam score?
-          </h2>
-          <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">
-            Start free today, 14 days Premium included, no card needed.
-          </p>
-          <a
-            href={BOT_URL_LANDING}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block rounded-full bg-white px-8 py-3.5 text-base font-bold text-blue-700 shadow-xl transition-colors hover:bg-blue-50 sm:px-10 sm:py-4 sm:text-lg"
-          >
-            Start Free on Telegram →
-          </a>
-          <p className="mt-4 text-xs text-blue-200 sm:text-sm">
-            No download. No sign-up. Open Telegram and go.
-          </p>
+      <section className="px-4 pb-16 sm:px-6 sm:pb-24">
+        <div className="relative isolate mx-auto max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-br from-blue-700 to-blue-900 px-6 py-14 text-center text-white sm:px-10 sm:py-20 reveal">
+          <div aria-hidden="true" className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-80 w-[40rem] max-w-none -translate-x-1/2 rounded-full bg-sky-400/30 blur-3xl" />
+          <div className="mx-auto max-w-2xl">
+            <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl">
+              Ready to improve your exam score?
+            </h2>
+            <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">
+              Start free today, 14 days Premium included, no card needed.
+            </p>
+            <a
+              href={BOT_URL_LANDING}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-full bg-white px-8 py-3.5 text-base font-bold text-blue-700 shadow-xl transition-colors hover:bg-blue-50 sm:px-10 sm:py-4 sm:text-lg"
+            >
+              Start Free on Telegram →
+            </a>
+            <p className="mt-4 text-xs text-blue-200 sm:text-sm">
+              No download. No sign-up. Open Telegram and go.
+            </p>
+          </div>
         </div>
       </section>
 

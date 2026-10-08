@@ -30,7 +30,7 @@ function formatDate(iso: string) {
 
 export default function BlogIndex() {
   return (
-    <div className="font-[var(--font-geist)]">
+    <div className="font-sans">
       <Nav />
 
       <section className="bg-gradient-to-b from-blue-50 to-white px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20 dark:from-slate-900 dark:to-slate-950">
@@ -38,7 +38,7 @@ export default function BlogIndex() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
             📚 Exam Prep
           </div>
-          <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
             Study guides for WAEC, JAMB &amp; NECO
           </h1>
           <p className="text-base text-slate-600 sm:text-lg dark:text-slate-400">

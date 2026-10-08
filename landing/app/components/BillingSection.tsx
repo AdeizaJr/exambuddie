@@ -78,7 +78,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
   return (
     <>
       <div className="mb-10 text-center sm:mb-16">
-        <h2 className="mb-3 text-2xl font-extrabold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
+        <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:mb-4 sm:text-3xl md:text-4xl dark:text-white">
           Simple pricing
         </h2>
         <p className="mb-6 text-base text-slate-600 sm:text-lg dark:text-slate-400">
@@ -133,7 +133,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
                 {name}
               </div>
               <div className="mb-1 flex items-end gap-1">
-                <span className={`text-3xl font-extrabold sm:text-4xl ${highlight ? "text-white" : "text-slate-900 dark:text-white"}`}>
+                <span className={`text-3xl font-bold sm:text-4xl ${highlight ? "text-white" : "text-slate-900 dark:text-white"}`}>
                   {price}
                 </span>
                 {period && (
