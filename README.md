@@ -272,6 +272,21 @@ Landing page deploys separately on Railway (same process — connect repo, set b
 
 ---
 
+### Checking local and prod databases match
+
+Content fixes (explanations, answer keys, topics, deactivations) must land on both the local and the production database. After any such job, run the read-only check:
+
+```bash
+cd backend
+PROD_DATABASE_URL="postgresql://...proxy.rlwy.net:PORT/railway" npm run db:sync-check
+# leave a table out, e.g. one that is only filled locally for now:
+# npm run db:sync-check -- --skip theory_questions
+```
+
+Use the Railway **public** proxy URL (Postgres → Connect → Public Network), not the `.railway.internal` one. The script never writes to either database. It compares schema plus the content of `questions`, `theory_questions`, `did_you_know` and `subjects`, lists what differs, and exits non-zero if anything does.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
