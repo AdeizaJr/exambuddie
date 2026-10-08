@@ -2,6 +2,8 @@
 import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
+import * as practice from './practice';
+import { maybeAskPhone } from './phone';
 
 export async function handleStart(ctx: any): Promise<void> {
   const user = await db.upsertUser(ctx);
@@ -22,25 +24,8 @@ export async function handleStart(ctx: any): Promise<void> {
       { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() }
     );
 
-    // One-time nudge for existing users without a phone number
-    if (!user.phone_number && !(await redis.hasSeenPhoneNudge(ctx.from.id))) {
-      await redis.markPhoneNudgeSent(ctx.from.id);
-      await redis.setPhonePending(ctx.from.id);
-      await ctx.reply(
-        '📱 <b>Quick one!</b> Share your phone number so we can reach you about your subscription and account.\n\n<i>Optional — tap Skip if you prefer not to.</i>',
-        {
-          parse_mode: 'HTML',
-          reply_markup: {
-            keyboard: [
-              [{ text: '📱 Share Phone Number', request_contact: true }],
-              [{ text: 'Skip for now →' }],
-            ],
-            resize_keyboard: true,
-            one_time_keyboard: true,
-          },
-        }
-      );
-    }
+    // Optional phone ask, only once they have answered enough questions to care
+    await maybeAskPhone(ctx, user, total);
     return;
   }
 
@@ -207,36 +192,44 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
   });
 
   await redis.clearSession(ctx.from.id);
-  await redis.setPhonePending(ctx.from.id);
 
-  await ctx.editMessageText(fmt.profileComplete(user), { parse_mode: 'HTML' });
-
-  // Grant 14-day Premium trial to new users completing onboarding for the first time
-  if (session.step === 'subjects' && !user.trial_used && user.plan === 'free') {
-    const trialUser = await db.grantTrial(ctx.from.id);
-    const expiryLine = trialUser?.plan_expires_at
-      ? `\n📅 Expires: <b>${new Date(trialUser.plan_expires_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</b>\n`
-      : '';
-    await ctx.reply(
-      `🎁 <b>Welcome Gift!</b>\n\nWe're giving you <b>14 days of Premium free</b> to get started!\n${expiryLine}\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nEnjoy — and subscribe when it expires to keep going! /subscribe`,
-      { parse_mode: 'HTML' }
-    );
+  // Settings → "Change Subjects" lands here too: just confirm and hand the menu back.
+  if (session.step !== 'subjects') {
+    await ctx.editMessageText(fmt.profileComplete(user), { parse_mode: 'HTML' });
+    await ctx.reply('✅ Subjects updated.', { reply_markup: fmt.persistentMenuKeyboard() });
+    return;
   }
 
-  await ctx.reply(
-    '📱 <b>One last thing!</b>\n\nShare your phone number so we can send you important updates about your subscription and account.\n\n<i>This is optional — tap Skip if you prefer not to.</i>',
-    {
-      parse_mode: 'HTML',
-      reply_markup: {
-        keyboard: [
-          [{ text: '📱 Share Phone Number', request_contact: true }],
-          [{ text: 'Skip for now →' }],
-        ],
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    }
-  );
+  // ── First-time signup: get them answering straight away ─────────────────────
+  // The old flow stopped here to ask for a phone number and list every command, leaving
+  // the student to find Practice on their own. Now the first question arrives right
+  // after the welcome, and the phone ask waits until they have used the bot (phone.ts).
+  await ctx.editMessageText(fmt.profileComplete(user, "Let's get you started 👇"), { parse_mode: 'HTML' });
+
+  // Grant 14-day Premium trial to new users completing onboarding for the first time
+  let current = user;
+  let welcome = `✅ <b>You're in!</b>\n\nHere's your first question 👇`;
+  if (!user.trial_used && user.plan === 'free') {
+    const trialUser = await db.grantTrial(ctx.from.id);
+    if (trialUser) current = trialUser;
+    const expiryLine = trialUser?.plan_expires_at
+      ? ` (until <b>${new Date(trialUser.plan_expires_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</b>)`
+      : '';
+    welcome = `🎁 <b>Welcome gift: 14 days of Premium, free</b>${expiryLine}\n\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nHere's your first question 👇`;
+  }
+  await ctx.reply(welcome, { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() });
+
+  await maybeSendBeatYourInviter(ctx, current);
+
+  // Start with a subject they chose themselves where possible; English is always there
+  // as the fallback. Any year, no topic picker — nothing between them and question 1.
+  const firstSubject = subjects.find((sub) => sub !== 'english') || 'english';
+  try {
+    await practice.startPractice(ctx, current, firstSubject, null, 0, current.exam_type || undefined, '__all__');
+  } catch (err) {
+    console.error(`[onboarding] could not start first question for ${ctx.from.id}:`, (err as Error).message);
+    await ctx.reply('Tap 📚 Practice below to answer your first question.').catch(() => {});
+  }
 }
 
 async function maybeSendBeatYourInviter(ctx: any, user: any): Promise<void> {
@@ -262,33 +255,22 @@ export async function handleContact(ctx: any): Promise<void> {
 
   if (!(await redis.getPhonePending(ctx.from.id))) return;
 
-  const user = await db.updateUser(ctx.from.id, { phone_number: phone });
+  await db.updateUser(ctx.from.id, { phone_number: phone });
   await redis.clearPhonePending(ctx.from.id);
   await redis.markPhoneNudgeSent(ctx.from.id);
 
   await ctx.reply('✅ Phone number saved!', {
-    reply_markup: { remove_keyboard: true },
-  });
-  await ctx.reply('Use the menu below to get started 👇', {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
-  await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
-  if (user) await maybeSendBeatYourInviter(ctx, user);
 }
 
 export async function handlePhoneSkip(ctx: any): Promise<void> {
   await redis.clearPhonePending(ctx.from.id);
   await redis.snoozePhoneNudge(ctx.from.id); // re-show after 7 days
 
-  const user = await db.getUser(ctx.from.id);
   await ctx.reply('No problem! You can always add it later in Settings.', {
-    reply_markup: { remove_keyboard: true },
-  });
-  await ctx.reply('Use the menu below to get started 👇', {
     reply_markup: fmt.persistentMenuKeyboard(),
   });
-  await ctx.reply(fmt.onboardingGuide(), { parse_mode: 'HTML' });
-  if (user) await maybeSendBeatYourInviter(ctx, user);
 }
 
 // /settings command

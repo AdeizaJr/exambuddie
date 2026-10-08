@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
 import * as redis from './redis';
 import * as payments from './payments';
+import * as outreach from './outreach';
 import { refreshPricing } from './pricing';
 import * as fmt from '../bot/formatter';
 import { SUBJECT_MAP, SUBJECT_EMOJI, examCountdown } from '../bot/formatter';
@@ -130,8 +131,8 @@ export default function startCrons(bot: any): void {
           `⏰ <b>Your ExamBuddie Premium has expired, ${fmt.escHtml(user.first_name)}!</b>\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
           { parse_mode: 'HTML' }
         );
-      } catch {
-        /* user may have blocked the bot */
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
       }
     }
     if (expired.length > 0)
@@ -145,7 +146,7 @@ export default function startCrons(bot: any): void {
        FROM users
        WHERE plan = 'premium'
        AND plan_expires_at BETWEEN NOW() AND NOW() + INTERVAL '3 days'
-       AND notifications_enabled = true`
+       AND notifications_enabled = true AND blocked_at IS NULL`
     );
 
     for (const user of rows) {
@@ -156,7 +157,9 @@ export default function startCrons(bot: any): void {
           `⚠️ <b>Reminder, ${fmt.escHtml(user.first_name)}!</b>\n\nYour ExamBuddie Premium expires on <b>${expiryDate}</b>. Renew now to keep uninterrupted access to unlimited questions.\n\n/subscribe`,
           { parse_mode: 'HTML' }
         );
-      } catch { /* user blocked or unavailable */ }
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
     }
   });
 
@@ -169,12 +172,13 @@ export default function startCrons(bot: any): void {
       `SELECT telegram_id, first_name FROM users u
        WHERE joined_at < NOW() - INTERVAL '20 hours'
          AND activation_nudge_sent_at IS NULL
-         AND notifications_enabled = TRUE
+         AND notifications_enabled = TRUE AND blocked_at IS NULL
          AND NOT EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)`
     );
 
     for (const user of rows) {
       try {
+        await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
         await bot.telegram.sendMessage(
           user.telegram_id,
           `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou joined ExamBuddie but haven't answered your first question yet. It only takes 30 seconds — tap below and give one a shot 👇`,
@@ -183,7 +187,9 @@ export default function startCrons(bot: any): void {
             reply_markup: { inline_keyboard: [[{ text: '📚 Try a Question', callback_data: 'practice:pick' }]] },
           }
         );
-      } catch { /* user blocked or unavailable */ }
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
     }
     if (rows.length > 0) {
       await db.query(
@@ -206,11 +212,12 @@ export default function startCrons(bot: any): void {
        WHERE joined_at < NOW() - INTERVAL '20 hours'
          AND exam_type IS NULL
          AND onboarding_nudge_sent_at IS NULL
-         AND notifications_enabled = TRUE`
+         AND notifications_enabled = TRUE AND blocked_at IS NULL`
     );
 
     for (const user of rows) {
       try {
+        await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
         await bot.telegram.sendMessage(
           user.telegram_id,
           `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou started signing up for ExamBuddie but never finished picking your exam. Takes 10 seconds to wrap up, then you're straight into practice 👇`,
@@ -219,7 +226,9 @@ export default function startCrons(bot: any): void {
             reply_markup: { inline_keyboard: [[{ text: '✅ Finish Setup', callback_data: 'onboard:resume' }]] },
           }
         );
-      } catch { /* user blocked or unavailable */ }
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
     }
     if (rows.length > 0) {
       await db.query(
@@ -243,7 +252,7 @@ export default function startCrons(bot: any): void {
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan, u.last_active_date
        FROM users u
-       WHERE u.notifications_enabled = TRUE
+       WHERE u.notifications_enabled = TRUE AND blocked_at IS NULL
          AND (u.last_report_sent_at IS NULL OR u.last_report_sent_at < NOW() - INTERVAL '6 days')
          AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id AND a.attempted_at > NOW() - INTERVAL '7 days')
          AND COALESCE(
@@ -267,21 +276,24 @@ export default function startCrons(bot: any): void {
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.subjects, u.streak, u.plan, u.last_active_date
        FROM users u
-       WHERE u.notifications_enabled = TRUE
+       WHERE u.notifications_enabled = TRUE AND blocked_at IS NULL
          AND (u.last_report_sent_at IS NULL OR u.last_report_sent_at < NOW() - INTERVAL '6 days')
          AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id AND a.attempted_at > NOW() - INTERVAL '7 days')`
     );
     await sendWeeklySummaries(users, bot, 'evening');
   });
 
-  // ── Daily 7am UTC (8am WAT) — Did You Know ───────────────────────────────
-  safeCron('0 7 * * *', 'did-you-know', async () => {
+  // ── 7am UTC (8am WAT), Mon-Thu + Sat — Did You Know ──────────────────────
+  // Skips Friday and Sunday: those days already carry the weekend nudge / weekly
+  // summary on top of QOTD, and the daily cap (outreach.DAILY_UNPROMPTED_CAP) would
+  // otherwise spend a slot on a fact and drop the more useful message later.
+  safeCron('0 7 * * 1-4,6', 'did-you-know', async () => {
     console.log('[CRON] Sending Did You Know facts...');
 
     const { rows: users } = await db.query(
       `SELECT u.id, u.telegram_id, u.first_name, u.subjects
        FROM users u
-       WHERE u.notifications_enabled = TRUE
+       WHERE u.notifications_enabled = TRUE AND blocked_at IS NULL
          AND u.subjects IS NOT NULL AND array_length(u.subjects, 1) > 0
          AND EXISTS (
            SELECT 1 FROM attempts a WHERE a.user_id = u.id AND a.attempted_at > NOW() - INTERVAL '30 days'
@@ -314,6 +326,7 @@ export default function startCrons(bot: any): void {
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user: any) => {
+        let claimed = false;
         try {
           const subjects: string[] = user.subjects || [];
           // Rotate which subject the user sees today
@@ -332,11 +345,16 @@ export default function startCrons(bot: any): void {
           const topicLabel = fact.topic ? ` · ${fmt.escHtml(fact.topic)}` : '';
 
           const msg = `💡 <b>Did You Know?</b>\n\n${fact.fact_text}\n\n<i>📚 ${subjectLabel}${topicLabel}</i>`;
+          if (!(await outreach.claimBudget(user.telegram_id))) return;
+          claimed = true;
           await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
           usedFactIds.add(fact.id);
           sentUserIds.push(user.id);
           sent++;
-        } catch { /* blocked or unavailable */ }
+        } catch (err) {
+          if (claimed) await outreach.refundBudget(user.telegram_id);
+          await outreach.noteSendFailure(user.telegram_id, err);
+        }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
@@ -356,7 +374,7 @@ export default function startCrons(bot: any): void {
     const { rows: users } = await db.query(
       `SELECT telegram_id, first_name, streak
        FROM users
-       WHERE notifications_enabled = TRUE
+       WHERE notifications_enabled = TRUE AND blocked_at IS NULL
          AND last_active_date = $1`,
       [threeDaysAgoWAT]
     );
@@ -366,7 +384,10 @@ export default function startCrons(bot: any): void {
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
+        let claimed = false;
         try {
+          if (!(await outreach.claimBudget(user.telegram_id))) return;
+          claimed = true;
           const streakWarn = (user.streak || 0) > 0
             ? `\n\n⚠️ Your <b>${user.streak}-day streak</b> is at risk!` : '';
           await bot.telegram.sendMessage(
@@ -375,7 +396,10 @@ export default function startCrons(bot: any): void {
             { parse_mode: 'HTML' }
           );
           sent++;
-        } catch { /* blocked */ }
+        } catch (err) {
+          if (claimed) await outreach.refundBudget(user.telegram_id);
+          await outreach.noteSendFailure(user.telegram_id, err);
+        }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
@@ -390,7 +414,7 @@ export default function startCrons(bot: any): void {
     const { rows: users } = await db.query(
       `SELECT telegram_id, first_name, exam_type, subjects, id
        FROM users
-       WHERE notifications_enabled = TRUE
+       WHERE notifications_enabled = TRUE AND blocked_at IS NULL
          AND daily_reminder_hour = $1
          AND (last_active_date IS NULL OR last_active_date < $2)
          AND exam_type IS NOT NULL
@@ -462,7 +486,9 @@ export default function startCrons(bot: any): void {
           });
 
           sent++;
-        } catch { /* blocked */ }
+        } catch (err) {
+          await outreach.noteSendFailure(user.telegram_id, err);
+        }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
@@ -479,7 +505,7 @@ export default function startCrons(bot: any): void {
        FROM users u
        JOIN attempts a ON a.user_id = u.id
        WHERE a.attempted_at > NOW() - INTERVAL '7 days'
-         AND u.notifications_enabled = TRUE
+         AND u.notifications_enabled = TRUE AND blocked_at IS NULL
        GROUP BY u.id`
     );
 
@@ -488,7 +514,10 @@ export default function startCrons(bot: any): void {
     for (let i = 0; i < users.length; i += BATCH_SIZE) {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
+        let claimed = false;
         try {
+          if (!(await outreach.claimBudget(user.telegram_id))) return;
+          claimed = true;
           const attempts = parseInt(user.week_attempts || '0');
           const accuracy = parseFloat(user.week_accuracy || '0');
           const streakLine = (user.streak || 0) > 0
@@ -501,7 +530,10 @@ You've done <b>${attempts} questions</b> this week at <b>${accuracy}%</b> accura
 ${streakLine} → /practice`;
           await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
           sent++;
-        } catch { /* blocked or unavailable */ }
+        } catch (err) {
+          if (claimed) await outreach.refundBudget(user.telegram_id);
+          await outreach.noteSendFailure(user.telegram_id, err);
+        }
       }));
       if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
     }
@@ -550,7 +582,7 @@ ${streakLine} → /practice`;
 
     const { rows: users } = await db.query(
       `SELECT telegram_id, first_name, exam_type, subjects FROM users
-       WHERE notifications_enabled = TRUE AND exam_type IS NOT NULL`
+       WHERE notifications_enabled = TRUE AND blocked_at IS NULL AND exam_type IS NOT NULL`
     );
 
     let sent = 0;
@@ -570,7 +602,9 @@ ${streakLine} → /practice`;
 
         await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML', reply_markup: keyboard });
         sent++;
-      } catch { /* blocked or unavailable */ }
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
     }
     if (sent > 0) console.log(`[CRON] Exam-day companion sent to ${sent} users`);
   });
@@ -630,7 +664,7 @@ ${streakLine} → /practice`;
 
     const { rows: users } = await db.query(
       `SELECT id, telegram_id, first_name, exam_type, subjects FROM users
-       WHERE notifications_enabled = TRUE
+       WHERE notifications_enabled = TRUE AND blocked_at IS NULL
          AND exam_type IS NOT NULL`
     );
 
@@ -644,6 +678,7 @@ ${streakLine} → /practice`;
     // so a spike in real failures is visible instead of hiding inside routine attrition.
     let examDaySkip = 0;
     let alreadyAnswered = 0;
+    let capped = 0;
     let sendFailed = 0;
     const failReasons: Record<string, number> = {};
     const sentUserIds: number[] = [];
@@ -688,6 +723,9 @@ ${streakLine} → /practice`;
           ],
         };
 
+        // Already had today's share of unprompted messages — don't pile on.
+        if (!(await outreach.claimBudget(user.telegram_id))) { capped++; return; }
+
         try {
           const imageUrl = q.image_url?.startsWith('/')
             ? `${process.env.APP_URL || ''}${q.image_url}`
@@ -707,6 +745,8 @@ ${streakLine} → /practice`;
           if (personalizedQId) personalized++;
         } catch (err: any) {
           sendFailed++;
+          await outreach.refundBudget(user.telegram_id);
+          await outreach.noteSendFailure(user.telegram_id, err);
           // Telegraf surfaces the actual Telegram API rejection in err.response.description
           // (e.g. "Forbidden: bot was blocked by the user", "Bad Request: chat not found") —
           // bucket by that so the summary log shows a breakdown instead of one opaque count,
@@ -725,7 +765,7 @@ ${streakLine} → /practice`;
       .join(', ');
     console.log(
       `[CRON] QOTD sent to ${sent}/${users.length} users (${personalized} personalized) — ` +
-      `skipped: ${examDaySkip} exam-day, ${alreadyAnswered} already-answered, ${noQuestion} no-question — ` +
+      `skipped: ${examDaySkip} exam-day, ${alreadyAnswered} already-answered, ${capped} daily-cap, ${noQuestion} no-question — ` +
       `failed: ${sendFailed}${failBreakdown ? ` (${failBreakdown})` : ''}`
     );
 
@@ -776,7 +816,7 @@ ${streakLine} → /practice`;
 
     const { rows: users } = await db.query(
       `SELECT telegram_id, first_name, exam_type, subjects FROM users
-       WHERE notifications_enabled = TRUE AND exam_type IS NOT NULL`
+       WHERE notifications_enabled = TRUE AND blocked_at IS NULL AND exam_type IS NOT NULL`
     );
 
     let sent = 0;
@@ -808,7 +848,9 @@ ${streakLine} → /practice`;
         const msg = `⏰ <b>Exam Alert, ${fmt.escHtml(user.first_name)}!</b>\n\n${reminders.join('\n')}\n\n📚 <a href="t.me/exambuddiebot?start=practice">Practise now</a>`;
         await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML' });
         sent++;
-      } catch { /* blocked or unavailable */ }
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
     }
     if (sent > 0) console.log(`[CRON] Timetable reminders sent to ${sent} users`);
   });
@@ -981,10 +1023,13 @@ async function sendWeeklySummaries(users: any[], bot: any, waveName: string): Pr
         } else {
           msg = await buildFreeMsg(user);
         }
+        await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
         await bot.telegram.sendMessage(user.telegram_id, msg, { parse_mode: 'HTML', reply_markup: keyboard });
         sentIds.push(user.id);
         sent++;
-      } catch { /* blocked or unavailable */ }
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
     }));
     if (i + BATCH_SIZE < users.length) await new Promise(r => setTimeout(r, 1000));
   }

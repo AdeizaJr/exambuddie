@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import * as payments from '../services/payments';
 import * as db from '../db';
 import * as redis from '../services/redis';
+import * as outreach from '../services/outreach';
 import * as fmt from '../bot/formatter';
 import miniappRouter from './miniapp';
 import { comparePassword, hashPassword, signToken, verifyToken } from '../services/auth';
@@ -515,6 +516,7 @@ export default function createServer(bot: any) {
       SELECT
         (SELECT COUNT(*) FROM users) as total_users,
         (SELECT COUNT(*) FROM users WHERE plan = 'premium') as premium_users,
+        (SELECT COUNT(*) FROM users WHERE blocked_at IS NOT NULL) as blocked_users,
         (SELECT COUNT(*) FROM users WHERE joined_at > NOW() - INTERVAL '24 hours') as new_today,
         -- Challenge-room answers never hit the attempts table, only room_participants'
         -- per-player counter, so add them in. That counter has no per-answer timestamp;
@@ -1232,6 +1234,7 @@ export default function createServer(bot: any) {
         await bot.telegram.sendMessage(id, message, { parse_mode: 'HTML' });
       } catch (err: any) {
         console.error(`[DM] Failed to send to ${id}:`, err.message);
+        await outreach.noteSendFailure(id, err);
         failed.push({ telegram_id: id, error: err.message || 'Failed to send message' });
       }
     }
@@ -1255,7 +1258,7 @@ export default function createServer(bot: any) {
       return res.status(400).json({ error: `target must be one of: ${validTargets.join(', ')}` });
     }
 
-    let whereClause = 'WHERE notifications_enabled = true';
+    let whereClause = 'WHERE notifications_enabled = true AND blocked_at IS NULL';
     if (target === 'waec') whereClause += ` AND exam_type = 'WAEC'`;
     else if (target === 'jamb') whereClause += ` AND exam_type = 'JAMB'`;
     else if (target === 'neco') whereClause += ` AND exam_type = 'NECO'`;
@@ -1276,6 +1279,7 @@ export default function createServer(bot: any) {
         sent++;
       } catch (err: any) {
         console.error(`[Broadcast] Failed to send to ${user.telegram_id}:`, err.message);
+        await outreach.noteSendFailure(user.telegram_id, err);
         failed++;
       }
       // Rate limit: 50ms delay between sends

@@ -47,10 +47,31 @@ bot.use(async (ctx, next) => {
 bot.use(async (ctx, next) => {
   const id = ctx.from?.id;
   if (id) {
-    const isBurst = await redis.checkBurst(id).catch(() => false);
-    if (isBurst) return; // silently drop burst messages
+    const burst = await redis.checkBurst(id).catch(() => 'ok' as const);
+    if (burst !== 'ok') {
+      // Tell them once why nothing is happening — otherwise a dropped tap just looks
+      // like the bot froze. Later taps in the same window are dropped quietly.
+      if (burst === 'first_over') {
+        const note = 'Easy there, one tap at a time 🙂 Give it a second and try again.';
+        if (ctx.callbackQuery) await ctx.answerCbQuery(note, { show_alert: false }).catch(() => {});
+        else await ctx.reply(note).catch(() => {});
+      }
+      return;
+    }
   }
   return next();
+});
+
+// ── Block / unblock tracking ───────────────────────────────────────────────────
+// Telegram sends my_chat_member when a user blocks ("kicked") or unblocks ("member")
+// the bot in a private chat. Recording it lets the crons skip people who have left
+// and gives admin a real churn number.
+bot.on('my_chat_member', async (ctx: any) => {
+  const update = ctx.myChatMember;
+  if (update?.chat?.type !== 'private') return;
+  const status = update.new_chat_member?.status;
+  if (status === 'kicked') await db.markUserBlocked(update.chat.id).catch(() => {});
+  else if (status === 'member') await db.clearUserBlocked(update.chat.id).catch(() => {});
 });
 
 // ── Commands ───────────────────────────────────────────────────────────────────
@@ -322,6 +343,16 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('flag:reason:')) return stats.handleFlagReason(ctx, data.slice('flag:reason:'.length));
   if (data === 'flag:cancel') return stats.handleFlagCancel(ctx);
 
+  // "More" menu entries that have no callback route of their own
+  if (data === 'more:mock') return quiz.handleMockExam(ctx); // answers the query itself
+  if (data.startsWith('more:')) {
+    await ctx.answerCbQuery().catch(() => {});
+    if (data === 'more:leaderboard') return leaderboard.handleLeaderboard(ctx);
+    if (data === 'more:settings') return onboarding.handleSettings(ctx);
+    if (data === 'more:help') return ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' });
+    return;
+  }
+
   // Main menu
   if (data === 'menu:main') {
     await ctx.answerCbQuery();
@@ -406,6 +437,13 @@ bot.on('text', async (ctx: any) => {
   if (text === '🏆 Leaderboard') return leaderboard.handleLeaderboard(ctx);
   if (text === '🎯 Challenge') return challenge.handleChallenge(ctx);
   if (text === '📐 Formulas') return formula.handleFormula(ctx);
+  if (text === fmt.MORE_BUTTON) {
+    await ctx.reply('☰ <b>More</b>\n\nEverything else lives here:', {
+      parse_mode: 'HTML',
+      reply_markup: fmt.moreMenuKeyboard(user.plan === 'premium'),
+    });
+    return;
+  }
 
   const session = await redis.getSession(ctx.from.id);
 

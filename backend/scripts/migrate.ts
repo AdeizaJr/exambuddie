@@ -489,6 +489,10 @@ WHERE id = 116125`,
   // ── Onboarding nudge (one-time DM if a new user never finished picking exam_type) ──
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS onboarding_nudge_sent_at TIMESTAMPTZ DEFAULT NULL`,
 
+  // ── Set when the user blocks the bot or deletes their account, so crons stop
+  //    messaging them and admin can count churn. Cleared on unblock or /start. ──
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS blocked_at TIMESTAMPTZ DEFAULT NULL`,
+
   // ── In-house landing-page analytics (no third-party pixel/SDK) ────────────
   `CREATE TABLE IF NOT EXISTS page_views (
     id SERIAL PRIMARY KEY,

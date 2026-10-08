@@ -6,6 +6,7 @@ import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
 import * as achievements from './achievements';
 import { checkRankUp } from './achievements';
+import { maybeAskPhone } from './phone';
 import { User, Question } from '../../types';
 
 async function requireProfile(ctx: any): Promise<User | null> {
@@ -790,6 +791,9 @@ export async function handleStop(ctx: any): Promise<void> {
     parse_mode: 'HTML',
     reply_markup: fmt.sessionKeyboard(session.subject || '', session.year),
   });
+
+  // A finished session is a natural pause — the one place we ask for a phone number
+  await maybeAskPhone(ctx, await db.getUser(ctx.from.id));
 }
 
 // Switch to a different subject — preserves cumulative stats across subjects

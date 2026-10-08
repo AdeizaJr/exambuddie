@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp, Banknote, Flame } from "lucide-react";
+import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp, Banknote, Flame, UserX } from "lucide-react";
 import { getStats, getUsers, getGrowthAnalytics, getAlerts } from "../api";
 import type { Stats, User, GrowthAnalytics } from "../types";
 import StatCard from "../components/StatCard";
@@ -113,6 +113,9 @@ export default function Overview() {
   const premiumPct = stats && stats.total_users > 0
     ? Math.round((stats.premium_users / stats.total_users) * 100)
     : 0;
+  const blockedPct = stats && stats.total_users > 0
+    ? Math.round((Number(stats.blocked_users ?? 0) / stats.total_users) * 100)
+    : 0;
 
   const userSpark = growth?.userGrowth.slice(-14).map((d) => d.new_users) ?? [];
   const revSpark = growth?.revenueGrowth.slice(-14).map((d) => Number(d.revenue_ngn)) ?? [];
@@ -145,6 +148,13 @@ export default function Overview() {
           <StatCard label="Premium Users" value={stats.premium_users} sub={`${premiumPct}% of total`} icon={<Star size={18} />} accent trend="up" />
           <StatCard label="Questions Answered" value={Number(stats.total_attempts)} sub={`+${Number(stats.attempts_today).toLocaleString()} today`} icon={<PenLine size={18} />} trend="up" />
           <StatCard label="Pending Flags" value={stats.pending_flags} sub={`${stats.total_questions.toLocaleString()} questions`} icon={<Flag size={18} />} />
+          <StatCard
+            label="Blocked the Bot"
+            value={Number(stats.blocked_users ?? 0)}
+            sub={`${blockedPct}% of all users`}
+            icon={<UserX size={18} />}
+            trend={Number(stats.blocked_users ?? 0) > 0 ? "down" : "neutral"}
+          />
           <StatCard label="Active Alerts" value={activeAlerts} sub={activeAlerts > 0 ? "needs attention" : "all clear"} icon={<Bell size={18} />} trend={activeAlerts > 0 ? "down" : "neutral"} />
         </div>
       )}
