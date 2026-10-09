@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp, Banknote, Flame, UserX } from "lucide-react";
+import { Link } from "react-router";
+import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp, Banknote, Flame, UserX, Gift, User as UserIcon } from "lucide-react";
 import { getStats, getUsers, getGrowthAnalytics, getAlerts } from "../api";
 import type { Stats, User, GrowthAnalytics } from "../types";
 import StatCard from "../components/StatCard";
-import Badge from "../components/Badge";
+import TierBadge from "../components/TierBadge";
 import Spinner from "../components/Spinner";
 import DonutChart, { SERIES_COLORS, NEUTRAL_COLOR } from "../components/DonutChart";
 
@@ -110,14 +111,15 @@ export default function Overview() {
     );
   }
 
-  const premiumPct = stats && stats.total_users > 0
-    ? Math.round((stats.premium_users / stats.total_users) * 100)
-    : 0;
+  const pctOf = (n: number) =>
+    stats && stats.total_users > 0 ? Math.round((n / stats.total_users) * 100) : 0;
+  // Premium here means people who hold Premium outside the free trial
+  const premiumCount = stats ? Number(stats.paid_users ?? 0) + Number(stats.gifted_users ?? 0) : 0;
   const blockedPct = stats && stats.total_users > 0
     ? Math.round((Number(stats.blocked_users ?? 0) / stats.total_users) * 100)
     : 0;
 
-  const userSpark = growth?.userGrowth.slice(-14).map((d) => d.new_users) ?? [];
+  const userSpark = growth?.userGrowth.slice(-14).map((d) => Number(d.new_users)) ?? [];
   const revSpark = growth?.revenueGrowth.slice(-14).map((d) => Number(d.revenue_ngn)) ?? [];
   const totalExamUsers = growth?.examBreakdown.reduce((s, e) => s + Number(e.users), 0) ?? 1;
 
@@ -145,7 +147,31 @@ export default function Overview() {
       {stats && (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatCard label="Total Users" value={stats.total_users} sub={`+${stats.new_today} today`} icon={<Users size={18} />} trend="up" />
-          <StatCard label="Premium Users" value={stats.premium_users} sub={`${premiumPct}% of total`} icon={<Star size={18} />} accent trend="up" />
+          <Link to="/users?plan=premium" className="rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+            <StatCard
+              label="Premium"
+              value={premiumCount}
+              sub={`${Number(stats.paid_users ?? 0)} paying · ${Number(stats.gifted_users ?? 0)} gifted`}
+              icon={<Star size={18} />}
+              accent
+            />
+          </Link>
+          <Link to="/users?plan=trial" className="rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+            <StatCard
+              label="On Trial"
+              value={Number(stats.trial_users ?? 0)}
+              sub={`${pctOf(Number(stats.trial_users ?? 0))}% of users · 14-day welcome trial`}
+              icon={<Gift size={18} />}
+            />
+          </Link>
+          <Link to="/users?plan=free" className="rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+            <StatCard
+              label="Free"
+              value={Number(stats.free_users ?? 0)}
+              sub={`${pctOf(Number(stats.free_users ?? 0))}% of users`}
+              icon={<UserIcon size={18} />}
+            />
+          </Link>
           <StatCard label="Questions Answered" value={Number(stats.total_attempts)} sub={`+${Number(stats.attempts_today).toLocaleString()} today`} icon={<PenLine size={18} />} trend="up" />
           <StatCard label="Pending Flags" value={stats.pending_flags} sub={`${stats.total_questions.toLocaleString()} questions`} icon={<Flag size={18} />} />
           <StatCard
@@ -264,7 +290,7 @@ export default function Overview() {
                   </td>
                   <td className="px-5 py-3 font-mono text-xs text-muted">{u.exam_type || "—"}</td>
                   <td className="px-5 py-3">
-                    <Badge variant={u.plan === "premium" ? "green" : "gray"}>{u.plan}</Badge>
+                    <TierBadge user={u} />
                   </td>
                   <td className="px-5 py-3">
                     <span className="flex items-center gap-1 text-muted">

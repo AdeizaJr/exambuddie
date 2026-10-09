@@ -4,8 +4,19 @@ import { Flame } from "lucide-react";
 import { getUsers, updateUserPlan, deleteUsers, getUserActivity, exportUsersCSV } from "../api";
 import type { User, UserActivity, UserWeakTopic, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
-import Badge from "../components/Badge";
+import TierBadge, { tierOf } from "../components/TierBadge";
 import Modal from "../components/Modal";
+
+function daysLeft(dateStr: string): string {
+  const days = Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000);
+  if (days <= 0) return "ends today";
+  return days === 1 ? "1 day" : `${days} days`;
+}
+
+function trialLine(dateStr: string): string {
+  const left = daysLeft(dateStr);
+  return left === "ends today" ? "trial ends today" : `${left} left · ends ${formatDate(dateStr)}`;
+}
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "—";
@@ -54,6 +65,7 @@ export default function Users() {
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
 
   const [result, setResult] = useState<PaginatedResponse<User> | null>(null);
+  const tierCounts = result?.tierCounts;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [grantTarget, setGrantTarget] = useState<User | null>(null);
@@ -233,7 +245,7 @@ export default function Users() {
 
       {/* Plan filter tabs */}
       <div className="flex gap-1 rounded-lg border border-border bg-surface p-1 w-fit">
-        {(["all", "premium", "free", "trial"] as const).map((p) => (
+        {(["all", "premium", "trial", "free"] as const).map((p) => (
           <button
             key={p}
             onClick={() => setFilter("plan", p === "all" ? "" : p)}
@@ -244,6 +256,15 @@ export default function Users() {
             }`}
           >
             {p === "all" ? "All Users" : p === "trial" ? "Trial" : p === "premium" ? "Premium" : "Free"}
+            {tierCounts && (
+              <span className="ml-1.5 tabular-nums opacity-70">
+                {p === "all"
+                  ? tierCounts.free + tierCounts.trial + tierCounts.paid + tierCounts.gifted
+                  : p === "premium"
+                    ? tierCounts.paid + tierCounts.gifted
+                    : tierCounts[p]}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -425,10 +446,12 @@ export default function Users() {
                       </td>
                       <td className="px-4 py-3">
                         <div>
-                          <Badge variant={u.plan === "premium" ? "green" : "gray"}>{u.plan}</Badge>
+                          <TierBadge user={u} />
                           {u.plan === "premium" && u.plan_expires_at && (
                             <p className="mt-1 text-xs text-muted">
-                              exp. {formatDate(u.plan_expires_at)}
+                              {tierOf(u) === "trial"
+                                ? trialLine(u.plan_expires_at)
+                                : `exp. ${formatDate(u.plan_expires_at)}`}
                             </p>
                           )}
                         </div>

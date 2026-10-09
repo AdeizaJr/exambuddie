@@ -1,3 +1,5 @@
+export type UserTier = "free" | "trial" | "paid" | "gifted";
+
 export interface User {
   telegram_id: number;
   first_name: string;
@@ -5,6 +7,8 @@ export interface User {
   exam_type: "WAEC" | "JAMB" | "NECO" | "ALL" | "BOTH" | null;
   subjects: string[];
   plan: "free" | "premium";
+  // Real bucket: premium splits into paying, on the welcome trial, or admin-gifted
+  tier?: UserTier;
   plan_expires_at: string | null;
   streak: number;
   joined_at: string;
@@ -102,6 +106,10 @@ export interface Stats {
   total_users: number;
   premium_users: number;
   blocked_users?: number;
+  free_users?: number;
+  trial_users?: number;
+  paid_users?: number;
+  gifted_users?: number;
   new_today: number;
   attempts_today: number;
   total_attempts: number;
@@ -190,6 +198,8 @@ export interface PaginatedResponse<T> {
   page: number;
   limit: number;
   pages: number;
+  // Only on the users list: how many users sit in each tier overall
+  tierCounts?: Record<UserTier, number>;
 }
 
 export interface GrowthData {
