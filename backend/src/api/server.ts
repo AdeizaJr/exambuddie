@@ -507,6 +507,27 @@ export default function createServer(bot: any) {
     res.json(history);
   });
 
+  // Which bucket a user really belongs to. users.plan alone only says free/premium, and
+  // "premium" lumps together three very different people:
+  //   paid   — has a live, paid subscription
+  //   trial  — on the 14-day welcome trial (expiry still within 14 days of the grant)
+  //   gifted — premium set by an admin, no payment behind it
+  // Written against the bare `users` table name so it can be dropped into any query.
+  const USER_TIER_SQL = `
+    CASE
+      WHEN users.plan <> 'premium' THEN 'free'
+      WHEN EXISTS (
+        SELECT 1 FROM subscriptions s
+        WHERE s.user_id = users.id AND s.status = 'active' AND s.expires_at > NOW()
+      ) THEN 'paid'
+      WHEN EXISTS (
+        SELECT 1 FROM trial_grants t
+        WHERE t.telegram_id = users.telegram_id
+          AND users.plan_expires_at <= t.granted_at + INTERVAL '14 days 1 hour'
+      ) THEN 'trial'
+      ELSE 'gifted'
+    END`;
+
   // ── GET /api/admin/stats ────────────────────────────────────────────────────
   app.get('/api/admin/stats', adminAuth, async (_req: Request, res: Response) => {
     const cached = await redis.getCachedAdminStats();
@@ -516,6 +537,10 @@ export default function createServer(bot: any) {
       SELECT
         (SELECT COUNT(*) FROM users) as total_users,
         (SELECT COUNT(*) FROM users WHERE plan = 'premium') as premium_users,
+        (SELECT COUNT(*) FROM users WHERE ${USER_TIER_SQL} = 'free') as free_users,
+        (SELECT COUNT(*) FROM users WHERE ${USER_TIER_SQL} = 'trial') as trial_users,
+        (SELECT COUNT(*) FROM users WHERE ${USER_TIER_SQL} = 'paid') as paid_users,
+        (SELECT COUNT(*) FROM users WHERE ${USER_TIER_SQL} = 'gifted') as gifted_users,
         (SELECT COUNT(*) FROM users WHERE blocked_at IS NOT NULL) as blocked_users,
         (SELECT COUNT(*) FROM users WHERE joined_at > NOW() - INTERVAL '24 hours') as new_today,
         -- Challenge-room answers never hit the attempts table, only room_participants'
@@ -887,9 +912,11 @@ export default function createServer(bot: any) {
       );
     }
 
-    if (req.query.plan === 'premium') conditions.push(`plan = 'premium'`);
-    if (req.query.plan === 'free') conditions.push(`plan = 'free'`);
-    if (req.query.plan === 'trial') conditions.push(`(plan = 'premium' AND trial_used = TRUE AND plan_expires_at > NOW())`);
+    // The three tabs never overlap: Premium is paying + admin-gifted, Trial is the
+    // welcome trial only, Free is everyone else.
+    if (req.query.plan === 'premium') conditions.push(`(${USER_TIER_SQL}) IN ('paid', 'gifted')`);
+    if (req.query.plan === 'free') conditions.push(`(${USER_TIER_SQL}) = 'free'`);
+    if (req.query.plan === 'trial') conditions.push(`(${USER_TIER_SQL}) = 'trial'`);
 
     // Filter by who received QOTD / Did You Know on a given day (defaults to today,
     // client always sends an explicit date so "today" means the client's today).
@@ -922,7 +949,8 @@ export default function createServer(bot: any) {
     const { rows } = await db.query(
       `SELECT telegram_id, first_name, username, exam_type, subjects,
               plan, plan_expires_at, ${liveStreakExpr} AS streak, joined_at, daily_count,
-              last_active_date, phone_number, last_qotd_sent_at, last_dyk_sent_at
+              last_active_date, phone_number, last_qotd_sent_at, last_dyk_sent_at,
+              ${USER_TIER_SQL} AS tier
        FROM users ${where}
        ORDER BY ${orderBy}
        LIMIT $${params.length - 1} OFFSET $${params.length}`,
@@ -935,12 +963,20 @@ export default function createServer(bot: any) {
       countParams
     );
 
+    // Whole-user-base tier counts for the tab labels (not narrowed by the filters above)
+    const { rows: tierRows } = await db.query(
+      `SELECT tier, COUNT(*)::int AS n FROM (SELECT ${USER_TIER_SQL} AS tier FROM users) t GROUP BY tier`
+    );
+    const tierCounts = { free: 0, trial: 0, paid: 0, gifted: 0 } as Record<string, number>;
+    for (const r of tierRows) tierCounts[r.tier] = r.n;
+
     res.json({
       data: rows,
       total: parseInt(countRows[0].total),
       page,
       limit,
       pages: Math.ceil(parseInt(countRows[0].total) / limit),
+      tierCounts,
     });
   });
 
