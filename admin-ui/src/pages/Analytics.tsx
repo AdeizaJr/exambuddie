@@ -135,19 +135,19 @@ export default function AnalyticsPage() {
   const sourceColor = (source: string) =>
     sourceSlices.find((s) => s.label === source)?.color ?? NEUTRAL_COLOR;
 
-  const funnelPremium = Number(funnel?.premium_users ?? 0);
-  const funnelActiveFree = Number(funnel?.active_free ?? 0);
+  const fn = (k: keyof FunnelData) => Number(funnel?.[k] ?? 0);
   const funnelSlices = [
-    { label: "Premium", value: funnelPremium, color: "#25A865" },
-    { label: "Active free", value: funnelActiveFree, color: "#c98500" },
-    {
-      label: "Inactive",
-      value: Math.max(Number(funnel?.total_users ?? 0) - funnelPremium - funnelActiveFree, 0),
-      color: NEUTRAL_COLOR,
-    },
+    { label: "Paying", value: fn("paid_users"), color: "#25A865" },
+    { label: "On trial", value: fn("trial_users"), color: "#c98500" },
+    { label: "Gifted", value: fn("gifted_users"), color: "#3987e5" },
+    { label: "Free", value: fn("free_users"), color: NEUTRAL_COLOR },
   ];
 
-  const conversionRate = funnel ? Math.round((Number(funnel.premium_users) / Math.max(Number(funnel.total_users), 1)) * 100) : 0;
+  const pct = (part: number, whole: number) => (whole > 0 ? Math.round((part / whole) * 1000) / 10 : 0);
+  // Share of all users who are paying right now
+  const conversionRate = pct(fn("paid_users"), fn("total_users"));
+  // Of trials that have finished, how many of those students went on to pay
+  const trialToPaid = pct(fn("trials_converted"), fn("trials_ended"));
 
   return (
     <div className="space-y-6 p-6">
@@ -210,29 +210,55 @@ export default function AnalyticsPage() {
         <div className="rounded-xl border border-border bg-surface p-5">
           <div className="mb-4">
             <h2 className="text-sm font-semibold text-white">Conversion Funnel</h2>
-            <p className="mt-0.5 text-xs text-muted">Free → Premium conversion and churn</p>
+            <p className="mt-0.5 text-xs text-muted">
+              Who is actually paying. Students on the free 14-day trial are not counted as converted.
+            </p>
           </div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">
             <div>
               <p className="text-xs text-muted mb-1">Total Users</p>
-              <p className="font-display text-2xl font-bold text-white">{Number(funnel.total_users).toLocaleString()}</p>
+              <p className="font-display text-2xl font-bold text-white">{fn("total_users").toLocaleString()}</p>
+              <p className="text-xs text-muted mt-0.5">{fn("active_free").toLocaleString()} free users active this week</p>
             </div>
             <div>
-              <p className="text-xs text-muted mb-1">Active Free (7d)</p>
-              <p className="font-display text-2xl font-bold text-white">{Number(funnel.active_free).toLocaleString()}</p>
-              <p className="text-xs text-muted mt-0.5">potential converts</p>
+              <p className="text-xs text-muted mb-1">On Trial</p>
+              <p className="font-display text-2xl font-bold text-amber-400">{fn("trial_users").toLocaleString()}</p>
+              <p className="text-xs text-muted mt-0.5">still deciding</p>
             </div>
             <div>
-              <p className="text-xs text-muted mb-1">Premium</p>
-              <p className="font-display text-2xl font-bold text-accent">{Number(funnel.premium_users).toLocaleString()}</p>
-              <p className="text-xs text-muted mt-0.5">{conversionRate}% conversion</p>
+              <p className="text-xs text-muted mb-1">Paying</p>
+              <p className="font-display text-2xl font-bold text-success">{fn("paid_users").toLocaleString()}</p>
+              <p className="text-xs text-muted mt-0.5">
+                {conversionRate}% of all users{fn("gifted_users") > 0 ? ` · ${fn("gifted_users")} more gifted` : ""}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted mb-1">Trial → Paid</p>
+              <p className="font-display text-2xl font-bold text-white">{trialToPaid}%</p>
+              <p className="text-xs text-muted mt-0.5">
+                {fn("trials_converted").toLocaleString()} of {fn("trials_ended").toLocaleString()} finished trials
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted mb-1">MRR</p>
+              <p className="font-display text-2xl font-bold text-success">₦{fn("mrr").toLocaleString()}</p>
+              <p className="text-xs text-muted mt-0.5">
+                {fn("active_subs").toLocaleString()} live subscription{fn("active_subs") === 1 ? "" : "s"}, per month
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted mb-1">Left at Checkout</p>
+              <p className={`font-display text-2xl font-bold ${fn("checkout_abandoned") > 0 ? "text-amber-400" : "text-white"}`}>
+                {fn("checkout_abandoned").toLocaleString()}
+              </p>
+              <p className="text-xs text-muted mt-0.5">opened payment, never paid</p>
             </div>
             <div>
               <p className="text-xs text-muted mb-1">Churned (30d)</p>
-              <p className={`font-display text-2xl font-bold ${Number(funnel.churned_30d) > 0 ? "text-red-400" : "text-success"}`}>
-                {Number(funnel.churned_30d).toLocaleString()}
+              <p className={`font-display text-2xl font-bold ${fn("churned_30d") > 0 ? "text-red-400" : "text-success"}`}>
+                {fn("churned_30d").toLocaleString()}
               </p>
-              <p className="text-xs text-muted mt-0.5">MRR: ₦{Number(funnel.mrr).toLocaleString()}</p>
+              <p className="text-xs text-muted mt-0.5">lapsed and not renewed</p>
             </div>
           </div>
           <div className="mt-5 border-t border-border pt-5">

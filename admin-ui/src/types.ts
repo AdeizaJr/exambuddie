@@ -238,9 +238,17 @@ export interface RetentionData {
 
 export interface FunnelData {
   total_users: number;
+  // paying + gifted (trials are counted separately)
   premium_users: number;
+  paid_users?: number;
+  trial_users?: number;
+  gifted_users?: number;
+  free_users?: number;
   active_free: number;
   active_subs: number;
+  trials_ended?: number;
+  trials_converted?: number;
+  checkout_abandoned?: number;
   churned_30d: number;
   mrr: number;
 }

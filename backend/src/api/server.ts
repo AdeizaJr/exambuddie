@@ -1422,17 +1422,58 @@ export default function createServer(bot: any) {
 
   // ── GET /api/admin/analytics/funnel ────────────────────────────────────────
   app.get('/api/admin/analytics/funnel', adminAuth, async (_req: Request, res: Response) => {
+    // "Converted" means a live paid subscription. Counting plan = 'premium' here used to
+    // include everyone on the automatic 14-day trial, so conversion rose with signups
+    // even when nobody paid.
+    const LIVE_SUB = `s.status = 'active' AND s.expires_at > NOW()`;
     const { rows } = await db.query(`
+      WITH tiers AS (
+        SELECT users.id, users.telegram_id, users.last_active_date, ${USER_TIER_SQL} AS tier FROM users
+      )
       SELECT
-        COUNT(*) as total_users,
-        COUNT(CASE WHEN plan = 'premium' THEN 1 END) as premium_users,
-        COUNT(CASE WHEN plan = 'free' AND last_active_date >= CURRENT_DATE - 7 THEN 1 END) as active_free,
-        (SELECT COUNT(*) FROM subscriptions WHERE status = 'active') as active_subs,
-        (SELECT COUNT(*) FROM subscriptions
-          WHERE status = 'expired' AND expires_at >= NOW() - INTERVAL '30 days') as churned_30d,
-        (SELECT COALESCE(SUM(amount_ngn),0) FROM subscriptions
-          WHERE status = 'active') as mrr
-      FROM users
+        (SELECT COUNT(*) FROM tiers) AS total_users,
+        (SELECT COUNT(*) FROM tiers WHERE tier = 'paid') AS paid_users,
+        (SELECT COUNT(*) FROM tiers WHERE tier = 'trial') AS trial_users,
+        (SELECT COUNT(*) FROM tiers WHERE tier = 'gifted') AS gifted_users,
+        (SELECT COUNT(*) FROM tiers WHERE tier = 'free') AS free_users,
+        -- kept for older dashboards: paying + gifted, no longer includes trials
+        (SELECT COUNT(*) FROM tiers WHERE tier IN ('paid', 'gifted')) AS premium_users,
+        (SELECT COUNT(*) FROM tiers WHERE tier = 'free' AND last_active_date >= CURRENT_DATE - 7) AS active_free,
+        (SELECT COUNT(*) FROM subscriptions s WHERE ${LIVE_SUB}) AS active_subs,
+
+        -- Trial → paid: of the trials that have run their 14 days, how many of those
+        -- people have ever paid. The honest test of whether the trial sells the product.
+        (SELECT COUNT(*) FROM trial_grants t WHERE t.granted_at < NOW() - INTERVAL '14 days') AS trials_ended,
+        (SELECT COUNT(*) FROM trial_grants t
+          WHERE t.granted_at < NOW() - INTERVAL '14 days'
+            AND EXISTS (
+              SELECT 1 FROM users u JOIN subscriptions s ON s.user_id = u.id
+              WHERE u.telegram_id = t.telegram_id AND s.status IN ('active', 'expired')
+            )) AS trials_converted,
+
+        -- Opened a payment link but never completed any payment
+        (SELECT COUNT(DISTINCT s.user_id) FROM subscriptions s
+          WHERE s.status = 'pending'
+            AND NOT EXISTS (
+              SELECT 1 FROM subscriptions p WHERE p.user_id = s.user_id AND p.status IN ('active', 'expired')
+            )) AS checkout_abandoned,
+
+        -- A lapsed subscription only counts as churn if the user has not renewed
+        (SELECT COUNT(DISTINCT s.user_id) FROM subscriptions s
+          WHERE s.expires_at BETWEEN NOW() - INTERVAL '30 days' AND NOW()
+            AND s.status IN ('active', 'expired')
+            AND NOT EXISTS (
+              SELECT 1 FROM subscriptions r WHERE r.user_id = s.user_id AND r.status = 'active' AND r.expires_at > NOW()
+            )) AS churned_30d,
+
+        -- Monthly recurring revenue: each live subscription spread over the months it
+        -- covers, so a yearly plan counts as one twelfth per month, not the full amount.
+        (SELECT COALESCE(ROUND(SUM(
+            s.amount_ngn::numeric / GREATEST(1, COALESCE(
+              ROUND(EXTRACT(EPOCH FROM (s.expires_at - s.started_at)) / 2592000.0),
+              CASE s.plan WHEN 'yearly' THEN 12 WHEN 'term' THEN 3 ELSE 1 END
+            ))
+          )), 0) FROM subscriptions s WHERE ${LIVE_SUB}) AS mrr
     `);
     res.json(rows[0]);
   });
