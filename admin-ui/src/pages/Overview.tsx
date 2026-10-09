@@ -174,13 +174,15 @@ export default function Overview() {
           </Link>
           <StatCard label="Questions Answered" value={Number(stats.total_attempts)} sub={`+${Number(stats.attempts_today).toLocaleString()} today`} icon={<PenLine size={18} />} trend="up" />
           <StatCard label="Pending Flags" value={stats.pending_flags} sub={`${stats.total_questions.toLocaleString()} questions`} icon={<Flag size={18} />} />
-          <StatCard
-            label="Blocked the Bot"
-            value={Number(stats.blocked_users ?? 0)}
-            sub={`${blockedPct}% of all users`}
-            icon={<UserX size={18} />}
-            trend={Number(stats.blocked_users ?? 0) > 0 ? "down" : "neutral"}
-          />
+          <Link to="/users?blocked=1" className="rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+            <StatCard
+              label="Blocked the Bot"
+              value={Number(stats.blocked_users ?? 0)}
+              sub={`${blockedPct}% of all users`}
+              icon={<UserX size={18} />}
+              trend={Number(stats.blocked_users ?? 0) > 0 ? "down" : "neutral"}
+            />
+          </Link>
           <StatCard label="Active Alerts" value={activeAlerts} sub={activeAlerts > 0 ? "needs attention" : "all clear"} icon={<Bell size={18} />} trend={activeAlerts > 0 ? "down" : "neutral"} />
         </div>
       )}

@@ -231,6 +231,7 @@ export interface UsersFilter {
   sent?: 'qotd' | 'dyk';
   sentDate?: string;
   sort?: 'activity';
+  blocked?: '1';
 }
 
 export async function getUsers(filter: UsersFilter = {}): Promise<PaginatedResponse<User>> {

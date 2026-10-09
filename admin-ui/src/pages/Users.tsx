@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router";
-import { Flame } from "lucide-react";
+import { Flame, UserX } from "lucide-react";
 import { getUsers, updateUserPlan, deleteUsers, getUserActivity, exportUsersCSV } from "../api";
 import type { User, UserActivity, UserWeakTopic, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
@@ -62,6 +62,7 @@ export default function Users() {
   const planFilter = (searchParams.get("plan") ?? "all") as "all" | "premium" | "free" | "trial";
   const sentFilter = (searchParams.get("sent") ?? "") as "" | "qotd" | "dyk";
   const sentDate = searchParams.get("sentDate") || watToday();
+  const blockedOnly = searchParams.get("blocked") === "1";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
 
   const [result, setResult] = useState<PaginatedResponse<User> | null>(null);
@@ -115,6 +116,7 @@ export default function Users() {
         plan: planFilter === 'all' ? undefined : planFilter,
         sent: sentFilter || undefined,
         sentDate: sentFilter ? sentDate : undefined,
+        blocked: blockedOnly ? '1' : undefined,
       });
       setResult(data);
       setError(null);
@@ -125,7 +127,7 @@ export default function Users() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, planFilter, sentFilter, sentDate]);
+  }, [page, search, planFilter, sentFilter, sentDate, blockedOnly]);
 
   useEffect(() => {
     load();
@@ -271,6 +273,21 @@ export default function Users() {
 
       {/* Sent filter tabs — who received QOTD / Did You Know on a given day */}
       <div className="flex flex-wrap items-center gap-3">
+        <button
+          onClick={() => setFilter("blocked", blockedOnly ? "" : "1")}
+          aria-pressed={blockedOnly}
+          className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
+            blockedOnly
+              ? "border-red-500/40 bg-red-500/15 text-red-300"
+              : "border-border bg-surface text-muted hover:text-white"
+          }`}
+        >
+          <UserX size={13} />
+          Blocked the bot
+          {result?.blockedCount !== undefined && (
+            <span className="tabular-nums opacity-70">{result.blockedCount}</span>
+          )}
+        </button>
         <div className="flex gap-1 rounded-lg border border-border bg-surface p-1 w-fit">
           {(["", "qotd", "dyk"] as const).map((s) => (
             <button
@@ -432,7 +449,15 @@ export default function Users() {
                           className="cursor-pointer rounded border-border bg-surface2 text-accent focus:ring-accent focus:ring-offset-0"
                         />
                       </td>
-                      <td className="px-4 py-3 font-medium text-white">{u.first_name}</td>
+                      <td className="px-4 py-3 font-medium text-white">
+                        {u.first_name}
+                        {u.blocked_at && (
+                          <p className="mt-1 flex items-center gap-1 text-xs font-normal text-red-400" title="Blocked the bot or deleted their Telegram account. The bot no longer messages them.">
+                            <UserX size={11} />
+                            blocked {formatDate(u.blocked_at)}
+                          </p>
+                        )}
+                      </td>
                       <td className="px-4 py-3 text-xs text-muted">
                         {u.username ? `@${u.username}` : "—"}
                       </td>
