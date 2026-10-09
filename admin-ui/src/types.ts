@@ -17,6 +17,8 @@ export interface User {
   phone_number: string | null;
   last_qotd_sent_at: string | null;
   last_dyk_sent_at: string | null;
+  // When this user blocked the bot (or deleted their Telegram account); null if reachable
+  blocked_at?: string | null;
 }
 
 export interface Question {
@@ -200,6 +202,7 @@ export interface PaginatedResponse<T> {
   pages: number;
   // Only on the users list: how many users sit in each tier overall
   tierCounts?: Record<UserTier, number>;
+  blockedCount?: number;
 }
 
 export interface GrowthData {

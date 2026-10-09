@@ -918,6 +918,10 @@ export default function createServer(bot: any) {
     if (req.query.plan === 'free') conditions.push(`(${USER_TIER_SQL}) = 'free'`);
     if (req.query.plan === 'trial') conditions.push(`(${USER_TIER_SQL}) = 'trial'`);
 
+    // Only users who have blocked the bot (or deleted their Telegram account)
+    const blockedOnly = req.query.blocked === '1';
+    if (blockedOnly) conditions.push(`blocked_at IS NOT NULL`);
+
     // Filter by who received QOTD / Did You Know on a given day (defaults to today,
     // client always sends an explicit date so "today" means the client's today).
     if ((req.query.sent === 'qotd' || req.query.sent === 'dyk') && req.query.sentDate) {
@@ -929,7 +933,9 @@ export default function createServer(bot: any) {
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
     const orderBy = req.query.sort === 'activity'
       ? 'last_active_date DESC NULLS LAST'
-      : 'joined_at DESC';
+      : blockedOnly
+        ? 'blocked_at DESC' // most recent leavers first
+        : 'joined_at DESC';
 
     params.push(limit);
     params.push(offset);
@@ -949,7 +955,7 @@ export default function createServer(bot: any) {
     const { rows } = await db.query(
       `SELECT telegram_id, first_name, username, exam_type, subjects,
               plan, plan_expires_at, ${liveStreakExpr} AS streak, joined_at, daily_count,
-              last_active_date, phone_number, last_qotd_sent_at, last_dyk_sent_at,
+              last_active_date, phone_number, last_qotd_sent_at, last_dyk_sent_at, blocked_at,
               ${USER_TIER_SQL} AS tier
        FROM users ${where}
        ORDER BY ${orderBy}
@@ -969,6 +975,9 @@ export default function createServer(bot: any) {
     );
     const tierCounts = { free: 0, trial: 0, paid: 0, gifted: 0 } as Record<string, number>;
     for (const r of tierRows) tierCounts[r.tier] = r.n;
+    const { rows: blockedRows } = await db.query(
+      `SELECT COUNT(*)::int AS n FROM users WHERE blocked_at IS NOT NULL`
+    );
 
     res.json({
       data: rows,
@@ -977,6 +986,7 @@ export default function createServer(bot: any) {
       limit,
       pages: Math.ceil(parseInt(countRows[0].total) / limit),
       tierCounts,
+      blockedCount: blockedRows[0].n,
     });
   });
 
