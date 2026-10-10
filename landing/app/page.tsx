@@ -48,9 +48,14 @@ const secondaryFeatures = [
   { icon: BoltIcon, title: "Works in Telegram", desc: "No app download, ever" },
 ];
 
-// Bento layout for the "Also included" grid: these cards take half the row on
-// desktop, the rest take a third, giving rows of 2, 3, 2, 3, 2.
-const BENTO_WIDE = new Set([0, 1, 5, 6, 10, 11]);
+// "Also included" grid: three equal cards per row on desktop. The grid has six
+// columns and every card spans two, so a short last row can be centred by
+// nudging its first card over instead of leaving a gap on the right.
+function lastRowStart(i: number, total: number) {
+  const leftover = total % 3;
+  if (leftover === 0 || i !== total - leftover) return "";
+  return leftover === 2 ? "lg:col-start-2" : "lg:col-start-3";
+}
 
 const whyTelegram = [
   {
@@ -417,8 +422,8 @@ export default async function Home() {
               {secondaryFeatures.map(({ icon: Icon, title, desc }, i) => (
                 <div
                   key={title}
-                  className={`group rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-800 ${
-                    BENTO_WIDE.has(i) ? "lg:col-span-3" : "lg:col-span-2"
+                  className={`group rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-800 lg:col-span-2 ${
+                    lastRowStart(i, secondaryFeatures.length)
                   }`}
                 >
                   <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700 transition-colors group-hover:bg-blue-700 group-hover:text-white dark:bg-blue-950 dark:text-blue-300">
