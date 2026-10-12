@@ -8,6 +8,8 @@
 //
 // Usage:
 //   npx ts-node scripts/generateDailyFlyer.ts
+//   npx ts-node scripts/generateDailyFlyer.ts --subject math
+//   npx ts-node scripts/generateDailyFlyer.ts --fact sci_118   (re-render one fact)
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -375,16 +377,28 @@ async function main() {
   const subjectArgIdx = process.argv.indexOf('--subject');
   const subjectCode = subjectArgIdx !== -1 ? process.argv[subjectArgIdx + 1] : subjectForToday();
 
-  console.log(`Subject: ${subjectCode}`);
+  // --fact <external_id> re-renders one specific fact (e.g. after its wording was
+  // corrected) instead of picking the next one in the rotation.
+  const factArgIdx = process.argv.indexOf('--fact');
+  const factExternalId = factArgIdx !== -1 ? process.argv[factArgIdx + 1] : null;
 
-  const fact = await pool.query(
-    `SELECT id, external_id, subject, subject_code, topic, fact_text, difficulty
-     FROM did_you_know
-     WHERE subject_code = $1
-     ORDER BY last_used_at NULLS FIRST, sent_count ASC, RANDOM()
-     LIMIT 1`,
-    [subjectCode]
-  );
+  console.log(factExternalId ? `Fact id: ${factExternalId}` : `Subject: ${subjectCode}`);
+
+  const fact = factExternalId
+    ? await pool.query(
+        `SELECT id, external_id, subject, subject_code, topic, fact_text, difficulty
+         FROM did_you_know
+         WHERE external_id = $1`,
+        [factExternalId]
+      )
+    : await pool.query(
+        `SELECT id, external_id, subject, subject_code, topic, fact_text, difficulty
+         FROM did_you_know
+         WHERE subject_code = $1
+         ORDER BY last_used_at NULLS FIRST, sent_count ASC, RANDOM()
+         LIMIT 1`,
+        [subjectCode]
+      );
   const row = fact.rows[0];
   if (!row) {
     console.error('No facts in did_you_know table.');
@@ -394,7 +408,8 @@ async function main() {
 
   console.log(`Fact: [${row.subject}${row.topic ? ' · ' + row.topic : ''}] ${row.fact_text}`);
 
-  const outDir = path.join(process.cwd(), 'generated-flyers');
+  // Repo root, not backend/, so flyers sit beside the packages rather than inside one.
+  const outDir = path.resolve(__dirname, '../../generated-flyers');
   fs.mkdirSync(outDir, { recursive: true });
   const date = new Date().toISOString().slice(0, 10);
 
@@ -407,7 +422,10 @@ async function main() {
   await sharp(Buffer.from(squareSVG)).png().toFile(squarePath);
   await sharp(Buffer.from(storySVG)).png().toFile(storyPath);
 
-  await pool.query('UPDATE did_you_know SET sent_count = sent_count + 1, last_used_at = NOW() WHERE id = $1', [row.id]);
+  // A re-render is the same post going out again, not a new use of the fact.
+  if (!factExternalId) {
+    await pool.query('UPDATE did_you_know SET sent_count = sent_count + 1, last_used_at = NOW() WHERE id = $1', [row.id]);
+  }
 
   console.log(`Square: ${squarePath}`);
   console.log(`Story:  ${storyPath}`);
