@@ -1900,7 +1900,7 @@
       "id": "sci_118",
       "subject": "Mathematics",
       "topic": "Mensuration",
-      "fact": "The area of a circle is calculated using the formula pi multiplied by the radius squared.",
+      "fact": "The area of a circle is A = πr², which means pi multiplied by the radius squared.",
       "difficulty": "easy",
       "source": "general knowledge"
     },

@@ -5,7 +5,7 @@ backend/scraper/scraper
 backend/dist/
 backend/node_modules/
 backend/dump.rdb
-backend/generated-flyers/
+generated-flyers/
 
 # ── admin-ui ──────────────────────────────────────────────────────────────────
 admin-ui/dist/

@@ -74,6 +74,7 @@ export default function Questions() {
   const [result, setResult] = useState<PaginatedResponse<Question> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewTarget, setViewTarget] = useState<Question | null>(null);
   const [editTarget, setEditTarget] = useState<Question | null>(null);
   const [editState, setEditState] = useState<EditState | null>(null);
   const [saving, setSaving] = useState(false);
@@ -441,11 +442,16 @@ export default function Questions() {
                             🖼 diagram
                           </span>
                         )}
-                        <span title={q.question_text}>
+                        <button
+                          type="button"
+                          onClick={() => setViewTarget(q)}
+                          title="View full question"
+                          className="text-left hover:text-accent hover:underline"
+                        >
                           {q.question_text.length > 80
                             ? q.question_text.slice(0, 80) + "…"
                             : q.question_text}
-                        </span>
+                        </button>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-muted">{q.subject}</td>
                       <td className="px-4 py-3">
@@ -492,6 +498,12 @@ export default function Questions() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setViewTarget(q)}
+                            className="rounded border border-border bg-surface2 px-2.5 py-1 text-xs text-white transition-colors hover:bg-border"
+                          >
+                            View
+                          </button>
                           <button
                             onClick={() => openEdit(q)}
                             className="rounded border border-accent/20 bg-accent/10 px-2.5 py-1 text-xs text-accent transition-colors hover:bg-accent/20"
@@ -542,6 +554,85 @@ export default function Questions() {
           </>
         )}
       </div>
+
+      {/* View Modal */}
+      {viewTarget && (
+        <Modal title={`Question #${viewTarget.id}`} onClose={() => setViewTarget(null)} wide>
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+              <Badge variant={viewTarget.exam_type === "WAEC" ? "green" : viewTarget.exam_type === "JAMB" ? "blue" : "amber"}>
+                {viewTarget.exam_type}
+              </Badge>
+              <span>{viewTarget.subject}</span>
+              <span>·</span>
+              <span className="font-mono">{viewTarget.year}</span>
+              <span>·</span>
+              <span className={viewTarget.is_active ? "text-green-400" : "text-red-400"}>
+                {viewTarget.is_active ? "Active" : "Inactive"}
+              </span>
+              {viewTarget.flag_count > 0 && <Badge variant="red">{viewTarget.flag_count} flags</Badge>}
+            </div>
+
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-white">{viewTarget.question_text}</p>
+
+            {viewTarget.image_url && (
+              <img
+                src={viewTarget.image_url}
+                alt="diagram"
+                className="max-h-80 rounded border border-border bg-white object-contain"
+              />
+            )}
+
+            <div className="space-y-2">
+              {(["A", "B", "C", "D", "E"] as const).map((letter) => {
+                const text = viewTarget[`option_${letter.toLowerCase()}` as "option_a"];
+                if (!text) return null;
+                const correct = viewTarget.correct_option === letter;
+                return (
+                  <div
+                    key={letter}
+                    className={`flex gap-3 rounded-lg border px-3 py-2 text-sm ${
+                      correct
+                        ? "border-green-500/40 bg-green-500/10 text-green-300"
+                        : "border-border bg-bg text-white"
+                    }`}
+                  >
+                    <span className="font-bold">{letter}.</span>
+                    <span className="flex-1 whitespace-pre-wrap">{text}</span>
+                    {correct && <span className="text-xs font-medium">✓ Correct</span>}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div>
+              <p className="mb-1.5 text-xs font-medium uppercase tracking-wider text-muted">Explanation</p>
+              {viewTarget.explanation ? (
+                <p className="whitespace-pre-wrap rounded-lg border border-border bg-bg px-3 py-2 text-sm leading-relaxed text-white">
+                  {viewTarget.explanation}
+                </p>
+              ) : (
+                <p className="text-sm text-muted">No explanation yet.</p>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setViewTarget(null)}
+                className="rounded-lg border border-border bg-surface2 px-4 py-2 text-sm text-white transition-colors hover:bg-border"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => { const q = viewTarget; setViewTarget(null); openEdit(q); }}
+                className="rounded-lg bg-accent-dark px-4 py-2 text-sm text-white transition-colors hover:bg-accent-deep"
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* Edit Modal */}
       {editTarget && editState && (
