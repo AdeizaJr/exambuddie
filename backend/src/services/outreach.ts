@@ -6,7 +6,7 @@ import * as redis from './redis';
 // Most unprompted messages one user gets per WAT day. Messages the user asked for
 // (their own daily reminder, exam timetable alerts) or needs (subscription expiry,
 // exam-day note) are not counted against this.
-export const DAILY_UNPROMPTED_CAP = 2;
+export const DAILY_UNPROMPTED_CAP = 3;
 
 function watDate(): string {
   return new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0];
