@@ -578,6 +578,19 @@ WHERE id = 116125`,
   `ALTER TABLE flagged_explanations ADD COLUMN IF NOT EXISTS notified_at TIMESTAMPTZ`,
   `UPDATE bug_reports SET notified_at = NOW() WHERE resolved AND notified_at IS NULL`,
   `UPDATE flagged_explanations SET notified_at = NOW() WHERE resolved AND notified_at IS NULL`,
+
+  // ── Weekly rank of every user (not just the top 10 in leaderboard_snapshots) ──
+  // Ranked by correct answers, so users with 0 still get a place. sent_at gates the
+  // Sunday evening "where you stand" message so a catch-up run never sends it twice.
+  `CREATE TABLE IF NOT EXISTS weekly_ranks (
+    week_start DATE NOT NULL,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    rank INT NOT NULL,
+    correct INT NOT NULL,
+    total INT NOT NULL,
+    sent_at TIMESTAMPTZ,
+    PRIMARY KEY (week_start, user_id)
+  )`,
 ];
 
 async function migrate(): Promise<void> {
