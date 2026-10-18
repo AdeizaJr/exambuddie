@@ -246,6 +246,14 @@ export default function startCrons(bot: any): void {
     console.log(`[CRON] Leaderboard snapshot: ${saved} entries saved`);
   }, { timezone: 'UTC' } as any);
 
+  // ── Sunday 7pm UTC (8pm WAT) — tell every user where they stand this week ──
+  // Ranked by correct answers out of all users, so even someone who did nothing
+  // gets a place (and a nudge), with a few hours left before the midnight reset.
+  // The 9pm UTC run is a catch-up for anyone the first run missed (deploy restart,
+  // Telegram hiccup); it reuses the same ranks and weekly_ranks.sent_at stops repeats.
+  safeCron('0 19 * * 0', 'weekly-rank', () => sendWeeklyRanks(bot), { timezone: 'UTC' } as any);
+  safeCron('0 21 * * 0', 'weekly-rank-catchup', () => sendWeeklyRanks(bot), { timezone: 'UTC' } as any);
+
   // ── Sunday 8am UTC (9am WAT) — morning wave ──────────────────────────────
   safeCron('0 8 * * 0', 'weekly-summary-morning', async () => {
     console.log('[CRON] Weekly summaries — morning wave...');
@@ -283,11 +291,8 @@ export default function startCrons(bot: any): void {
     await sendWeeklySummaries(users, bot, 'evening');
   });
 
-  // ── 7am UTC (8am WAT), Mon-Thu + Sat — Did You Know ──────────────────────
-  // Skips Friday and Sunday: those days already carry the weekend nudge / weekly
-  // summary on top of QOTD, and the daily cap (outreach.DAILY_UNPROMPTED_CAP) would
-  // otherwise spend a slot on a fact and drop the more useful message later.
-  safeCron('0 7 * * 1-4,6', 'did-you-know', async () => {
+  // ── 7am UTC (8am WAT), every day — Did You Know ──────────────────────────
+  safeCron('0 7 * * *', 'did-you-know', async () => {
     console.log('[CRON] Sending Did You Know facts...');
 
     const { rows: users } = await db.query(
@@ -1036,4 +1041,110 @@ async function sendWeeklySummaries(users: any[], bot: any, waveName: string): Pr
 
   await db.markWeeklyReportSent(sentIds);
   console.log(`[CRON] Weekly summaries (${waveName}): sent ${sent}/${users.length}`);
+}
+
+function plural(n: number, word: string): string {
+  return `${n.toLocaleString('en-US')} ${word}${n === 1 ? '' : 's'}`;
+}
+
+// Everything about this week's ranking that's the same for every recipient, worked
+// out once so building each message doesn't rescan the whole user list.
+interface WeeklyRankContext {
+  outOf: string;
+  podium: string;
+  climbers: string;
+  rankAt10: number;
+  corrects: number[];                 // distinct correct counts, highest first
+  rankOf: Map<number, number>;        // correct count -> rank of that group
+  groupSize: Map<number, number>;     // correct count -> users with that count
+}
+
+function buildWeeklyRankContext(ranks: db.WeeklyRankRow[]): WeeklyRankContext {
+  const medals = ['🥇', '🥈', '🥉'];
+  const rankOf = new Map<number, number>();
+  const groupSize = new Map<number, number>();
+  for (const r of ranks) {
+    if (!rankOf.has(r.correct)) rankOf.set(r.correct, r.rank);
+    groupSize.set(r.correct, (groupSize.get(r.correct) || 0) + 1);
+  }
+  return {
+    outOf: ranks.length.toLocaleString('en-US'),
+    podium: ranks.filter(r => r.correct > 0).slice(0, 3)
+      .map(r => `${medals[r.rank - 1] || `#${r.rank}`} ${fmt.escHtml(r.first_name || 'A student')} · ${r.correct} correct`)
+      .join('\n'),
+    climbers: ranks.filter(r => r.correct > 0).length.toLocaleString('en-US'),
+    rankAt10: 1 + ranks.filter(r => r.correct > 10).length,
+    corrects: [...rankOf.keys()],
+    rankOf,
+    groupSize,
+  };
+}
+
+function buildWeeklyRankMsg(user: db.WeeklyRankRow, ctx: WeeklyRankContext): string {
+  const header = `🏆 <b>Weekly leaderboard, ${fmt.escHtml(user.first_name || 'there')}!</b>`;
+
+  if (user.correct === 0) {
+    return `${header}
+
+${ctx.climbers} students have got questions right this week. You're at <b>#${user.rank}</b> out of ${ctx.outOf}, tied with everyone who hasn't got one right yet.
+
+${ctx.podium}
+
+Just 10 correct answers before midnight would put you at <b>#${ctx.rankAt10}</b> 👉 /practice`;
+  }
+
+  const tied = (ctx.groupSize.get(user.correct) || 1) - 1;
+  const tiedNote = tied > 0 ? ` (tied with ${plural(tied, 'other')})` : '';
+
+  let nextStep: string;
+  if (user.rank === 1) {
+    nextStep = `👑 You're top of the whole leaderboard. Hold on until midnight!`;
+  } else {
+    // The group just above: matching their count would have tied you at their rank.
+    const above = ctx.corrects[ctx.corrects.indexOf(user.correct) - 1];
+    const gap = above - user.correct;
+    nextStep = `📈 ${plural(gap, 'more correct answer')} before midnight would move you up to #${ctx.rankOf.get(above)}.`;
+  }
+
+  return `${header}
+
+You're <b>#${user.rank}</b> out of ${ctx.outOf} students this week${tiedNote}.
+✅ ${plural(user.correct, 'correct answer')} (${plural(user.total, 'question')})
+
+${ctx.podium}
+
+${nextStep}
+
+The board resets at midnight 👉 /practice`;
+}
+
+export async function sendWeeklyRanks(bot: any): Promise<void> {
+  const weekStart = await db.rankThisWeek();
+  const ranks = await db.getWeeklyRanks(weekStart);
+  // Nobody practised at all: a podium of nobody isn't worth a message.
+  if (!ranks.some(r => r.correct > 0)) return;
+
+  const ctx = buildWeeklyRankContext(ranks);
+  const pending = ranks.filter(r => r.sendable && !r.sent);
+  const BATCH_SIZE = 20;
+  let sent = 0;
+  const sentIds: number[] = [];
+
+  for (let i = 0; i < pending.length; i += BATCH_SIZE) {
+    const batch = pending.slice(i, i + BATCH_SIZE);
+    await Promise.allSettled(batch.map(async (user) => {
+      try {
+        await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
+        await bot.telegram.sendMessage(user.telegram_id, buildWeeklyRankMsg(user, ctx), { parse_mode: 'HTML' });
+        sentIds.push(user.user_id);
+        sent++;
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
+    }));
+    if (i + BATCH_SIZE < pending.length) await new Promise(r => setTimeout(r, 1000));
+  }
+
+  await db.markWeeklyRanksSent(weekStart, sentIds);
+  console.log(`[CRON] Weekly rank (${weekStart}): sent ${sent}/${pending.length}`);
 }

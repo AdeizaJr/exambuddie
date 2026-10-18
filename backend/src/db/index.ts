@@ -722,6 +722,82 @@ export async function getSnapshotWeeks(): Promise<string[]> {
   return rows.map(r => r.week_start);
 }
 
+export interface WeeklyRankRow {
+  user_id: number;
+  rank: number;
+  correct: number;
+  total: number;
+  telegram_id: number;
+  first_name: string | null;
+  sendable: boolean;
+  sent: boolean;
+}
+
+// Ranks every user by correct answers so far this WAT week (Mon-Sun). Users who
+// answered nothing tie at the bottom. Runs once per week: returns this week's start
+// date, computing the rows only if none exist yet, so a later run reuses them.
+export async function rankThisWeek(): Promise<string> {
+  const { rows } = await pool.query(
+    `SELECT date_trunc('week', now() at time zone 'Africa/Lagos')::date::text AS week_start`
+  );
+  const weekStart: string = rows[0].week_start;
+
+  const { rows: existing } = await pool.query(
+    `SELECT 1 FROM weekly_ranks WHERE week_start = $1 LIMIT 1`, [weekStart]
+  );
+  if (existing.length > 0) return weekStart;
+
+  await pool.query(
+    `INSERT INTO weekly_ranks (week_start, user_id, rank, correct, total)
+     SELECT $1::date, u.id,
+            RANK() OVER (ORDER BY COALESCE(s.correct, 0) DESC),
+            COALESCE(s.correct, 0), COALESCE(s.total, 0)
+     FROM users u
+     LEFT JOIN (
+       SELECT user_id, COUNT(*) AS total, COUNT(*) FILTER (WHERE is_correct) AS correct
+       FROM attempts
+       WHERE attempted_at >= ${WAT_WEEK_START}
+       GROUP BY user_id
+     ) s ON s.user_id = u.id
+     ON CONFLICT (week_start, user_id) DO NOTHING`,
+    [weekStart]
+  );
+  return weekStart;
+}
+
+// Every ranked user for the week, best first. `sendable` mirrors the other broadcast
+// crons: onboarded, notifications on, hasn't blocked the bot.
+export async function getWeeklyRanks(weekStart: string): Promise<WeeklyRankRow[]> {
+  const { rows } = await pool.query(
+    `SELECT wr.user_id, wr.rank, wr.correct, wr.total, u.telegram_id, u.first_name,
+            (u.exam_type IS NOT NULL AND u.notifications_enabled = TRUE AND u.blocked_at IS NULL) AS sendable,
+            wr.sent_at IS NOT NULL AS sent
+     FROM weekly_ranks wr
+     JOIN users u ON u.id = wr.user_id
+     WHERE wr.week_start = $1
+     ORDER BY wr.rank ASC, wr.total ASC`,
+    [weekStart]
+  );
+  return rows.map(r => ({
+    user_id: r.user_id,
+    rank: parseInt(r.rank),
+    correct: parseInt(r.correct),
+    total: parseInt(r.total),
+    telegram_id: parseInt(r.telegram_id),
+    first_name: r.first_name,
+    sendable: r.sendable,
+    sent: r.sent,
+  }));
+}
+
+export async function markWeeklyRanksSent(weekStart: string, userIds: number[]): Promise<void> {
+  if (!userIds.length) return;
+  await pool.query(
+    `UPDATE weekly_ranks SET sent_at = NOW() WHERE week_start = $1 AND user_id = ANY($2)`,
+    [weekStart, userIds]
+  );
+}
+
 export interface SubscriptionHistoryEntry {
   plan: string;
   amount_ngn: number;
