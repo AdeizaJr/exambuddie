@@ -163,6 +163,14 @@ export default function startCrons(bot: any): void {
     }
   });
 
+  // Shared footer for the two "stalled new user" nudges below: someone stuck at
+  // signup or at their first question may be stuck on a bug, so tell them where
+  // to get help.
+  const helpFooter =
+    `\n\nStuck or something not working? Just reach out, we'd love to help 💙\n` +
+    `📧 <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a>\n` +
+    `📱 @exambuddiebot on Instagram, TikTok and X`;
+
   // ── Daily 9am UTC (10am WAT) — nudge new users stuck at zero attempts ──────
   // One-shot: activation_nudge_sent_at gates re-sends, so the >20h window doesn't
   // need to be exact — a user only ever gets this once regardless of when the
@@ -181,7 +189,7 @@ export default function startCrons(bot: any): void {
         await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou joined ExamBuddie but haven't answered your first question yet. It only takes 30 seconds — tap below and give one a shot 👇`,
+          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nWelcome to ExamBuddie! You're all set up, but you haven't tried your first question yet. It takes less than a minute, so tap below and give it a go 👇${helpFooter}`,
           {
             parse_mode: 'HTML',
             reply_markup: { inline_keyboard: [[{ text: '📚 Try a Question', callback_data: 'practice:pick' }]] },
@@ -220,7 +228,7 @@ export default function startCrons(bot: any): void {
         await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou started signing up for ExamBuddie but never finished picking your exam. Takes 10 seconds to wrap up, then you're straight into practice 👇`,
+          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nLooks like you didn't finish setting up ExamBuddie. Just pick your exam and you're ready to start practising. It only takes a few seconds 👇${helpFooter}`,
           {
             parse_mode: 'HTML',
             reply_markup: { inline_keyboard: [[{ text: '✅ Finish Setup', callback_data: 'onboard:resume' }]] },
