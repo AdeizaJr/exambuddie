@@ -51,7 +51,7 @@ export async function handleSupportData(ctx: any): Promise<void> {
 export async function handleSupportOther(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   await ctx.reply(
-    '💬 <b>Get in Touch</b>\n\nFor any other questions or feedback:\n\n• DM <b>@ExamBuddiSupport</b> on Telegram\n• Email <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a>\n\nWe usually reply within 24–48 hours.',
+    '💬 <b>Get in Touch</b>\n\nFor any other questions or feedback:\n\n• Email <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a>\n• DM <b>@exambuddiebot</b> on Instagram, TikTok or X\n\nWe usually reply within 24–48 hours.',
     {
       parse_mode: 'HTML',
       reply_markup: { inline_keyboard: [[{ text: '← Back', callback_data: 'support:menu' }]] },
