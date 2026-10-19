@@ -489,6 +489,24 @@ WHERE id = 116125`,
   // ── Onboarding nudge (one-time DM if a new user never finished picking exam_type) ──
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS onboarding_nudge_sent_at TIMESTAMPTZ DEFAULT NULL`,
 
+  // ── When the user first picked an exam, so activation-nudge can wait 10 minutes
+  //    from finishing signup rather than from joining. Set by trigger so the bot,
+  //    mini app and admin paths all stamp it. Existing users backfill to joined_at. ──
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS onboarded_at TIMESTAMPTZ DEFAULT NULL`,
+  `UPDATE users SET onboarded_at = joined_at WHERE exam_type IS NOT NULL AND onboarded_at IS NULL`,
+  `CREATE OR REPLACE FUNCTION users_stamp_onboarded_at() RETURNS TRIGGER AS $$
+   BEGIN
+     IF NEW.exam_type IS NOT NULL AND NEW.onboarded_at IS NULL THEN
+       NEW.onboarded_at := NOW();
+     END IF;
+     RETURN NEW;
+   END;
+   $$ LANGUAGE plpgsql`,
+  `DROP TRIGGER IF EXISTS trg_users_stamp_onboarded_at ON users`,
+  `CREATE TRIGGER trg_users_stamp_onboarded_at
+   BEFORE INSERT OR UPDATE OF exam_type ON users
+   FOR EACH ROW EXECUTE FUNCTION users_stamp_onboarded_at()`,
+
   // ── Set when the user blocks the bot or deletes their account, so crons stop
   //    messaging them and admin can count churn. Cleared on unblock or /start. ──
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS blocked_at TIMESTAMPTZ DEFAULT NULL`,

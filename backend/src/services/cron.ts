@@ -171,17 +171,19 @@ export default function startCrons(bot: any): void {
     `📧 <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a>\n` +
     `📱 @exambuddiebot on Instagram, TikTok and X`;
 
-  // ── Daily 9am UTC (10am WAT) — nudge new users stuck at zero attempts ──────
-  // One-shot: activation_nudge_sent_at gates re-sends, so the >20h window doesn't
-  // need to be exact — a user only ever gets this once regardless of when the
-  // daily run catches them.
-  safeCron('0 9 * * *', 'activation-nudge', async () => {
+  // ── Every minute — nudge onboarded users stuck at zero attempts ────────────
+  // Fires 10 minutes after finishing signup (onboarded_at, stamped by a DB trigger
+  // when exam_type is first set). One-shot: the UPDATE ... RETURNING claims each
+  // row before sending, so a slow run overlapping the next tick can't double-send.
+  // Mid-signup users have no onboarded_at and are left to onboarding-nudge below.
+  safeCron('* * * * *', 'activation-nudge', async () => {
     const { rows } = await db.query(
-      `SELECT telegram_id, first_name FROM users u
-       WHERE joined_at < NOW() - INTERVAL '20 hours'
+      `UPDATE users u SET activation_nudge_sent_at = NOW()
+       WHERE onboarded_at < NOW() - INTERVAL '10 minutes'
          AND activation_nudge_sent_at IS NULL
          AND notifications_enabled = TRUE AND blocked_at IS NULL
-         AND NOT EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)`
+         AND NOT EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)
+       RETURNING telegram_id, first_name`
     );
 
     for (const user of rows) {
@@ -200,27 +202,24 @@ export default function startCrons(bot: any): void {
       }
     }
     if (rows.length > 0) {
-      await db.query(
-        `UPDATE users SET activation_nudge_sent_at = NOW() WHERE telegram_id = ANY($1)`,
-        [rows.map((u: any) => u.telegram_id)]
-      );
       console.log(`[CRON] Sent activation nudge to ${rows.length} stalled new users`);
     }
   });
 
-  // ── Daily 11am UTC (12pm WAT) — nudge users who never finished onboarding ──
+  // ── Every minute — nudge users who never finished onboarding ───────────────
   // A user without exam_type is excluded from every other broadcast cron (QOTD,
   // weekly summary, did-you-know all filter on `exam_type IS NOT NULL`), so unlike
   // activation-nudge (stalled at zero attempts, but still onboarded) this catches
   // people who dropped mid-signup and would otherwise never hear from the bot again.
-  // One-shot: onboarding_nudge_sent_at gates re-sends.
-  safeCron('0 11 * * *', 'onboarding-nudge', async () => {
+  // Fires 10 minutes after joining. One-shot, claimed the same way as activation-nudge.
+  safeCron('* * * * *', 'onboarding-nudge', async () => {
     const { rows } = await db.query(
-      `SELECT telegram_id, first_name FROM users u
-       WHERE joined_at < NOW() - INTERVAL '20 hours'
+      `UPDATE users SET onboarding_nudge_sent_at = NOW()
+       WHERE joined_at < NOW() - INTERVAL '10 minutes'
          AND exam_type IS NULL
          AND onboarding_nudge_sent_at IS NULL
-         AND notifications_enabled = TRUE AND blocked_at IS NULL`
+         AND notifications_enabled = TRUE AND blocked_at IS NULL
+       RETURNING telegram_id, first_name`
     );
 
     for (const user of rows) {
@@ -239,10 +238,6 @@ export default function startCrons(bot: any): void {
       }
     }
     if (rows.length > 0) {
-      await db.query(
-        `UPDATE users SET onboarding_nudge_sent_at = NOW() WHERE telegram_id = ANY($1)`,
-        [rows.map((u: any) => u.telegram_id)]
-      );
       console.log(`[CRON] Sent onboarding nudge to ${rows.length} incomplete signups`);
     }
   });
