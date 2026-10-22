@@ -15,7 +15,7 @@ function tryKatex(expr: string, display: boolean): string {
 }
 
 // Regex that matches bare LaTeX math sequences (no delimiters)
-const BARE_LATEX = /(?:\\(?:frac|sqrt|sum|prod|int|partial|lim|infty|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|lambda|mu|nu|xi|pi|rho|sigma|tau|phi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|times|div|pm|geq|leq|neq|approx|equiv|cdot|angle|parallel|perp|rightarrow|leftarrow|sin|cos|tan|log|ln|vec|hat|overline)(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?)+(?:\s*[+\-=\/()\[\]a-zA-Z0-9.,]*(?:\\[a-zA-Z]+(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?|(?:\^|_)(?:\{[^{}]+\}|[a-zA-Z0-9]))*)*/g;
+const BARE_LATEX = /(?:\\(?:frac|sqrt|sum|prod|int|partial|lim|infty|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|lambda|mu|nu|xi|pi|rho|sigma|tau|phi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|times|div|pm|geq|leq|neq|approx|equiv|cdot|angle|parallel|perp|rightarrow|leftarrow|sin|cos|tan|log|ln|vec|hat|overline)(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?)+(?:\s*[+\-=/()[\]a-zA-Z0-9.,]*(?:\\[a-zA-Z]+(?:\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})?|(?:\^|_)(?:\{[^{}]+\}|[a-zA-Z0-9]))*)*/g;
 
 const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
 const SUB = '₀₁₂₃₄₅₆₇₈₉';
@@ -33,7 +33,7 @@ function preMath(text: string): string {
     // space between digit and fraction glyph: 1⅞ → 1 ⅞
     .replace(/(\d)([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])/g, '$1 $2')
     // plain numeric fractions (digits only denominator): 15/16 → 15⁄16, 2/5x → ⅖x
-    .replace(/(?<![a-zA-Z0-9\/:.])(\d+)\/(\d+)/g, (_, n, d) => FRAC_GLYPHS[`${n}/${d}`] ?? `${n}⁄${d}`)
+    .replace(/(?<![a-zA-Z0-9/:.])(\d+)\/(\d+)/g, (_, n, d) => FRAC_GLYPHS[`${n}/${d}`] ?? `${n}⁄${d}`)
     // trig squared: sin2θ → sin²θ
     .replace(/\b(sin|cos|tan|sec|csc|cot)([2-9])(?![0-9])/g, (_, fn, d) => fn + SUP[parseInt(d)])
     // log base: log2 → log₂
@@ -59,7 +59,7 @@ function renderMath(text: string): string {
 
   // Inline mode: $...$ and \(...\)
   result = result
-    .replace(/\$([^\$\n]+?)\$/g, (_, e) => tryKatex(e, false))
+    .replace(/\$([^$\n]+?)\$/g, (_, e) => tryKatex(e, false))
     .replace(/\\\(([\s\S]+?)\\\)/g, (_, e) => tryKatex(e, false));
 
   // Bare LaTeX commands (e.g. \frac{1}{2} without delimiters)
