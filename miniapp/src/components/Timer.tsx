@@ -9,19 +9,27 @@ interface Props {
 
 function Timer({ totalSecs, onExpire, label, size = 'sm' }: Props) {
   const [secs, setSecs] = useState(totalSecs);
+  const [prevTotal, setPrevTotal] = useState(totalSecs);
+  if (totalSecs !== prevTotal) {
+    setPrevTotal(totalSecs);
+    setSecs(totalSecs);
+  }
+
   const onExpireRef = useRef(onExpire);
-  onExpireRef.current = onExpire;
+  useEffect(() => { onExpireRef.current = onExpire; });
+
+  const done = secs <= 0;
 
   useEffect(() => {
-    setSecs(totalSecs);
-    const id = setInterval(() => {
-      setSecs(prev => {
-        if (prev <= 1) { clearInterval(id); onExpireRef.current(); return 0; }
-        return prev - 1;
-      });
-    }, 1000);
+    if (done) return;
+    const id = setInterval(() => setSecs(prev => Math.max(0, prev - 1)), 1000);
     return () => clearInterval(id);
-  }, [totalSecs]);
+  }, [totalSecs, done]);
+
+  // Fire outside the setSecs updater: StrictMode runs updaters twice in dev
+  useEffect(() => {
+    if (secs === 0) onExpireRef.current();
+  }, [secs]);
 
   const pct = Math.max(0, secs / totalSecs);
   const urgent = secs <= 10;
