@@ -34,6 +34,7 @@ export interface Question {
   option_e: string | null;
   correct_option: "A" | "B" | "C" | "D" | "E";
   explanation: string | null;
+  explanation_html?: string | null;
   explanation_reviewed: boolean;
   flag_count: number;
   source_id: string | null;

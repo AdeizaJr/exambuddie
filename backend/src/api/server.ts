@@ -750,7 +750,11 @@ export default function createServer(bot: any) {
     );
 
     res.json({
-      data: rows,
+      // Same server-formatted HTML the mini app shows students, so the admin view matches.
+      data: rows.map((r: any) => ({
+        ...r,
+        explanation_html: r.explanation ? fmt.formatExplanation(r.explanation, r.subject) : null,
+      })),
       total: parseInt(countRows[0].total),
       page,
       limit,

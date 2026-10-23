@@ -5,6 +5,7 @@ import type { Question, PaginatedResponse, BulkImportResult } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
 import Badge from "../components/Badge";
+import MathText, { sanitizeExplanationHtml } from "../components/MathText";
 
 const ALL_SUBJECTS: { code: string; label: string }[] = [
   { code: "accounts",         label: "Accounts" },
@@ -573,7 +574,7 @@ export default function Questions() {
               {viewTarget.flag_count > 0 && <Badge variant="red">{viewTarget.flag_count} flags</Badge>}
             </div>
 
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-white">{viewTarget.question_text}</p>
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-white"><MathText text={viewTarget.question_text} /></p>
 
             {viewTarget.image_url && (
               <img
@@ -598,7 +599,7 @@ export default function Questions() {
                     }`}
                   >
                     <span className="font-bold">{letter}.</span>
-                    <span className="flex-1 whitespace-pre-wrap">{text}</span>
+                    <MathText text={text} className="flex-1 whitespace-pre-wrap" />
                     {correct && <span className="text-xs font-medium">✓ Correct</span>}
                   </div>
                 );
@@ -608,9 +609,16 @@ export default function Questions() {
             <div>
               <p className="mb-1.5 text-xs font-medium uppercase tracking-wider text-muted">Explanation</p>
               {viewTarget.explanation ? (
-                <p className="whitespace-pre-wrap rounded-lg border border-border bg-bg px-3 py-2 text-sm leading-relaxed text-white">
-                  {viewTarget.explanation}
-                </p>
+                viewTarget.explanation_html ? (
+                  <p
+                    className="whitespace-pre-line break-words rounded-lg border border-border bg-bg px-3 py-2 text-sm leading-relaxed text-white"
+                    dangerouslySetInnerHTML={{ __html: sanitizeExplanationHtml(viewTarget.explanation_html) }}
+                  />
+                ) : (
+                  <p className="whitespace-pre-wrap rounded-lg border border-border bg-bg px-3 py-2 text-sm leading-relaxed text-white">
+                    {viewTarget.explanation}
+                  </p>
+                )
               ) : (
                 <p className="text-sm text-muted">No explanation yet.</p>
               )}
