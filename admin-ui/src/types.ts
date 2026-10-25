@@ -265,14 +265,37 @@ export interface PageViewAnalytics {
   daily: { date: string; views: number; uniques: number }[];
 }
 
-export interface BroadcastLog {
+export interface AdminMessageRecipient {
+  telegram_id: number;
+  first_name: string | null;
+  username: string | null;
+  ok: boolean;
+  error: string | null;
+}
+
+export interface AdminMessage {
   id: number;
+  kind: "broadcast" | "dm";
   message: string;
-  target: string;
+  target: string | null;
+  sent_by: string | null;
   sent: number;
   failed: number;
   total: number;
   sent_at: string;
+  // DMs only; broadcasts carry counts
+  recipients: AdminMessageRecipient[] | null;
+}
+
+export interface UserAdminMessage {
+  id: number;
+  kind: "broadcast" | "dm";
+  message: string;
+  target: string | null;
+  sent_by: string | null;
+  sent_at: string;
+  ok: boolean;
+  error: string | null;
 }
 
 export interface BulkImportResult {

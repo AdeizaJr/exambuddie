@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router";
 import { Flame, UserX } from "lucide-react";
-import { getUsers, updateUserPlan, deleteUsers, getUserActivity, exportUsersCSV } from "../api";
-import type { User, UserActivity, UserWeakTopic, PaginatedResponse } from "../types";
+import { getUsers, updateUserPlan, deleteUsers, getUserActivity, getUserMessages, exportUsersCSV } from "../api";
+import type { User, UserActivity, UserWeakTopic, UserAdminMessage, PaginatedResponse } from "../types";
 import Spinner from "../components/Spinner";
 import TierBadge, { tierOf } from "../components/TierBadge";
 import Modal from "../components/Modal";
@@ -55,6 +55,41 @@ function TrashIcon() {
 
 type Toast = { msg: string; type: "success" | "error" };
 
+function UserMessages({ telegramId }: { telegramId: number }) {
+  const [messages, setMessages] = useState<UserAdminMessage[] | null>(null);
+
+  useEffect(() => {
+    getUserMessages(telegramId).then(setMessages).catch(() => setMessages([]));
+  }, [telegramId]);
+
+  if (!messages) return <div className="flex items-center justify-center py-12"><Spinner size="lg" /></div>;
+  if (!messages.length) return <p className="py-4 text-center text-sm text-muted">No messages sent to this user yet</p>;
+
+  return (
+    <div className="max-h-[60vh] space-y-2 overflow-y-auto pr-1">
+      {messages.map((m) => (
+        <div key={m.id} className="rounded-lg border border-border bg-surface2 p-3">
+          <div className="mb-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
+              m.kind === "dm" ? "border-purple-400/30 bg-purple-400/10 text-purple-300" : "border-accent/30 bg-accent/10 text-accent"
+            }`}>
+              {m.kind === "dm" ? "DM" : `Broadcast · ${m.target}`}
+            </span>
+            <span className={`text-xs ${m.ok ? "text-green-400" : "text-red-400"}`}>
+              {m.ok ? "✓ Delivered" : `✗ Failed${m.error ? `: ${m.error}` : ""}`}
+            </span>
+            <span className="ml-auto text-xs text-muted">
+              {m.sent_by ? `${m.sent_by} · ` : ""}
+              {new Date(m.sent_at).toLocaleString("en-NG", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+            </span>
+          </div>
+          <p className="whitespace-pre-wrap text-xs text-white">{m.message}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Users() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -83,6 +118,7 @@ export default function Users() {
   const [activityUser, setActivityUser] = useState<User | null>(null);
   const [activity, setActivity] = useState<UserActivity | null>(null);
   const [activityLoading, setActivityLoading] = useState(false);
+  const [activityTab, setActivityTab] = useState<"activity" | "messages">("activity");
 
   const [toast, setToast] = useState<Toast | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -136,6 +172,7 @@ export default function Users() {
   async function openActivity(user: User) {
     setActivityUser(user);
     setActivity(null);
+    setActivityTab("activity");
     setActivityLoading(true);
     try {
       const data = await getUserActivity(user.telegram_id);
@@ -578,7 +615,22 @@ export default function Users() {
           title={`User Activity — ${activityUser.first_name} (${activityUser.telegram_id})`}
           onClose={() => { setActivityUser(null); setActivity(null); }}
         >
-          {activityLoading || !activity ? (
+          <div className="mb-4 flex gap-1.5 border-b border-border pb-3">
+            {(["activity", "messages"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setActivityTab(t)}
+                className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
+                  activityTab === t ? "bg-accent/15 text-accent" : "text-muted hover:text-white"
+                }`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+          {activityTab === "messages" ? (
+            <UserMessages telegramId={activityUser.telegram_id} />
+          ) : activityLoading || !activity ? (
             <div className="flex items-center justify-center py-12"><Spinner size="lg" /></div>
           ) : (
             <div className="space-y-6">

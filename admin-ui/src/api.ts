@@ -12,7 +12,8 @@ import type {
   GrowthAnalytics,
   RetentionData,
   FunnelData,
-  BroadcastLog,
+  AdminMessage,
+  UserAdminMessage,
   BulkImportResult,
   PricingSettings,
   PricingHistoryEntry,
@@ -348,9 +349,17 @@ export async function getPageViewAnalytics(days = 30): Promise<PageViewAnalytics
   return cachedReq<PageViewAnalytics>("/analytics/pageviews", { days });
 }
 
-export async function getBroadcastHistory(): Promise<BroadcastLog[]> {
-  const data = await req<{ history: BroadcastLog[] }>("GET", "/broadcast/history");
-  return data.history;
+export async function getMessageHistory(params: {
+  kind?: "broadcast" | "dm";
+  search?: string;
+  page?: number;
+}): Promise<PaginatedResponse<AdminMessage>> {
+  return req<PaginatedResponse<AdminMessage>>("GET", "/messages", undefined, params);
+}
+
+export async function getUserMessages(telegramId: number): Promise<UserAdminMessage[]> {
+  const data = await req<{ messages: UserAdminMessage[] }>("GET", `/users/${telegramId}/messages`);
+  return data.messages;
 }
 
 export async function exportUsersCSV(): Promise<void> {
