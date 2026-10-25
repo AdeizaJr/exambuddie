@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { broadcast, getStats, searchUsers, sendDM, getBroadcastHistory, MAX_DM_RECIPIENTS } from "../api";
+import { broadcast, getStats, searchUsers, sendDM, getMessageHistory, MAX_DM_RECIPIENTS } from "../api";
 import type { BroadcastTarget, UserSearchResult } from "../api";
-import type { Stats, BroadcastLog } from "../types";
+import type { Stats, AdminMessage } from "../types";
 import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
 
@@ -28,7 +28,7 @@ function estimateReach(target: BroadcastTarget, stats: Stats | null): number | n
   return null; // can't estimate exam-type splits without extra data
 }
 
-function DirectMessage() {
+function DirectMessage({ onSent }: { onSent: () => void }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<UserSearchResult[]>([]);
   const [searching, setSearching] = useState(false);
@@ -78,6 +78,7 @@ function DirectMessage() {
       const failedIds = new Set(r.failed.map((f) => Number(f.telegram_id)));
       const stillFailed = selected.filter((s) => failedIds.has(Number(s.telegram_id)));
       setSentCount(r.sent);
+      onSent();
       setFailedNames(stillFailed.map((s) => s.first_name));
       // Keep failed recipients + message so the admin can retry just those
       setSelected(stillFailed);
@@ -210,33 +211,152 @@ function DirectMessage() {
   );
 }
 
-function BroadcastHistory() {
-  const [history, setHistory] = useState<BroadcastLog[]>([]);
-  const [loading, setLoading] = useState(true);
+type HistoryKind = "all" | "broadcast" | "dm";
+
+const HISTORY_TABS: { value: HistoryKind; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "broadcast", label: "Broadcasts" },
+  { value: "dm", label: "Direct Messages" },
+];
+
+function formatSentAt(d: string): string {
+  return new Date(d).toLocaleString("en-NG", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+function MessageHistory({ refreshKey }: { refreshKey: number }) {
+  const [kind, setKind] = useState<HistoryKind>("all");
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [rows, setRows] = useState<AdminMessage[]>([]);
+  const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<number | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Loading until the rows on screen belong to the current filters
+  const queryKey = `${kind}|${search}|${page}|${refreshKey}`;
+  const loading = loadedKey !== queryKey;
 
   useEffect(() => {
-    getBroadcastHistory().then(setHistory).catch(() => {}).finally(() => setLoading(false));
-  }, []);
+    getMessageHistory({ kind: kind === "all" ? undefined : kind, search: search || undefined, page })
+      .then((r) => { setRows(r.data); setPages(Math.max(1, r.pages)); setTotal(r.total); })
+      .catch(() => setRows([]))
+      .finally(() => setLoadedKey(queryKey));
+  }, [kind, search, page, refreshKey, queryKey]);
 
-  if (loading) return <div className="py-6 text-center"><Spinner size="sm" /></div>;
-  if (!history.length) return <p className="py-4 text-xs text-muted">No broadcasts sent yet.</p>;
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    const q = e.target.value;
+    setSearchInput(q);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => { setSearch(q.trim()); setPage(1); }, 300);
+  }
 
   return (
-    <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-      {history.map((b) => (
-        <div key={b.id} className="rounded-lg border border-border bg-surface2 p-3">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold uppercase text-accent">{b.target}</span>
-            <span className="text-xs text-muted">{new Date(b.sent_at).toLocaleString("en-NG", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
-          </div>
-          <p className="text-xs text-white line-clamp-2 mb-1.5">{b.message}</p>
-          <div className="flex gap-4 text-xs text-muted">
-            <span>✅ {b.sent}</span>
-            {b.failed > 0 && <span className="text-red-400">❌ {b.failed}</span>}
-            <span className="ml-auto">of {b.total}</span>
+    <div className="rounded-xl border border-border bg-surface p-5 space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-medium text-white">Message History</h2>
+          <p className="text-xs text-muted mt-0.5">Every broadcast and direct message sent from the admin panel</p>
+        </div>
+        <input
+          type="text"
+          value={searchInput}
+          onChange={handleSearch}
+          placeholder="Search message or recipient..."
+          className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-white placeholder-muted focus:border-accent focus:outline-none sm:w-64"
+        />
+      </div>
+
+      <div className="flex gap-1.5">
+        {HISTORY_TABS.map((t) => (
+          <button
+            key={t.value}
+            onClick={() => { setKind(t.value); setPage(1); }}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+              kind === t.value ? "bg-accent/15 text-accent" : "text-muted hover:text-white"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="py-6 text-center"><Spinner size="sm" /></div>
+      ) : !rows.length ? (
+        <p className="py-4 text-xs text-muted">{search ? "No messages match your search." : "No messages sent yet."}</p>
+      ) : (
+        <div className="space-y-2">
+          {rows.map((m) => {
+            const open = expanded === m.id;
+            return (
+              <div key={m.id} className="rounded-lg border border-border bg-surface2 p-3">
+                <button onClick={() => setExpanded(open ? null : m.id)} className="w-full text-left">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+                    <span className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
+                      m.kind === "dm" ? "border-purple-400/30 bg-purple-400/10 text-purple-300" : "border-accent/30 bg-accent/10 text-accent"
+                    }`}>
+                      {m.kind === "dm" ? "DM" : m.target}
+                    </span>
+                    {m.kind === "dm" && m.recipients && (
+                      <span className="text-xs text-white">
+                        To {m.recipients.map((r) => r.first_name ?? `#${r.telegram_id}`).join(", ")}
+                      </span>
+                    )}
+                    <span className="ml-auto text-xs text-muted">
+                      {m.sent_by ? `${m.sent_by} · ` : ""}{formatSentAt(m.sent_at)}
+                    </span>
+                  </div>
+                  <p className={`text-xs text-white mb-1.5 whitespace-pre-wrap ${open ? "" : "line-clamp-2"}`}>{m.message}</p>
+                  <div className="flex gap-4 text-xs text-muted">
+                    <span>✅ {m.sent.toLocaleString()}</span>
+                    {m.failed > 0 && <span className="text-red-400">❌ {m.failed.toLocaleString()}</span>}
+                    <span className="ml-auto">of {m.total.toLocaleString()}</span>
+                  </div>
+                </button>
+                {open && m.kind === "dm" && m.recipients && (
+                  <div className="mt-2 space-y-1 border-t border-border pt-2">
+                    {m.recipients.map((r) => (
+                      <div key={r.telegram_id} className="flex items-center gap-2 text-xs">
+                        <span className={r.ok ? "text-success" : "text-red-400"}>{r.ok ? "✓" : "✗"}</span>
+                        <span className="text-white">{r.first_name ?? "Deleted user"}</span>
+                        {r.username && <span className="text-muted">@{r.username}</span>}
+                        <span className="text-muted">{r.telegram_id}</span>
+                        {r.error && <span className="truncate text-red-400">{r.error}</span>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {pages > 1 && (
+        <div className="flex items-center justify-between text-xs text-muted">
+          <span>{total.toLocaleString()} messages</span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => p - 1)}
+              disabled={page <= 1}
+              className="rounded border border-border px-2 py-1 hover:text-white disabled:opacity-40"
+            >
+              Prev
+            </button>
+            <span>Page {page} of {pages}</span>
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              disabled={page >= pages}
+              className="rounded border border-border px-2 py-1 hover:text-white disabled:opacity-40"
+            >
+              Next
+            </button>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
@@ -250,7 +370,7 @@ export default function Broadcast() {
     null
   );
   const [stats, setStats] = useState<Stats | null>(null);
-  const [showHistory, setShowHistory] = useState(false);
+  const [historyKey, setHistoryKey] = useState(0);
 
   const loadStats = useCallback(async () => {
     try {
@@ -274,6 +394,7 @@ export default function Broadcast() {
       const r = await broadcast(message, target);
       setResult(r);
       setMessage("");
+      setHistoryKey((k) => k + 1);
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Broadcast failed");
     } finally {
@@ -287,24 +408,10 @@ export default function Broadcast() {
       <div className="flex flex-col gap-6 items-start lg:flex-row">
         {/* Left — bulk broadcast */}
         <div className="min-w-0 flex-1 max-w-2xl space-y-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="font-display text-xl font-bold text-white">Broadcast</h1>
-            <p className="mt-0.5 text-sm text-muted">Send a message to all or targeted users</p>
-          </div>
-          <button
-            onClick={() => setShowHistory((v) => !v)}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-white"
-          >
-            {showHistory ? "Hide" : "Show"} History
-          </button>
+        <div>
+          <h1 className="font-display text-xl font-bold text-white">Broadcast</h1>
+          <p className="mt-0.5 text-sm text-muted">Send a message to all or targeted users</p>
         </div>
-        {showHistory && (
-          <div className="rounded-xl border border-border bg-surface p-4">
-            <h2 className="text-sm font-semibold text-white mb-3">Broadcast History</h2>
-            <BroadcastHistory />
-          </div>
-        )}
 
       {result && (
         <div className="rounded-xl border border-success/30 bg-success/10 p-4">
@@ -456,8 +563,12 @@ export default function Broadcast() {
 
         {/* Right — direct message, sticky top */}
         <div className="w-full shrink-0 lg:w-80 lg:sticky lg:top-6">
-          <DirectMessage />
+          <DirectMessage onSent={() => setHistoryKey((k) => k + 1)} />
         </div>
+      </div>
+
+      <div className="mt-6">
+        <MessageHistory refreshKey={historyKey} />
       </div>
     </div>
   );

@@ -609,6 +609,39 @@ WHERE id = 116125`,
     sent_at TIMESTAMPTZ,
     PRIMARY KEY (week_start, user_id)
   )`,
+
+  // ── Admin message history (broadcasts + DMs) ──────────────────────────────
+  // Replaces broadcast_log as the record of what admins sent. One recipient row per
+  // user per message so the per-user history is exact, not guessed from today's
+  // exam_type/plan. Recipients keyed by telegram_id (no FK), cleared in deleteUser.
+  `CREATE TABLE IF NOT EXISTS admin_message_log (
+    id SERIAL PRIMARY KEY,
+    kind VARCHAR(10) NOT NULL CHECK (kind IN ('broadcast', 'dm')),
+    message TEXT NOT NULL,
+    target VARCHAR(20),
+    sent_by VARCHAR(100),
+    sent INT NOT NULL DEFAULT 0,
+    failed INT NOT NULL DEFAULT 0,
+    total INT NOT NULL DEFAULT 0,
+    sent_at TIMESTAMPTZ DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_admin_message_log_sent_at ON admin_message_log(sent_at DESC)`,
+  `CREATE TABLE IF NOT EXISTS admin_message_recipients (
+    message_id INT NOT NULL REFERENCES admin_message_log(id) ON DELETE CASCADE,
+    telegram_id BIGINT NOT NULL,
+    ok BOOLEAN NOT NULL,
+    error TEXT,
+    PRIMARY KEY (message_id, telegram_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_admin_message_recipients_tid ON admin_message_recipients(telegram_id)`,
+  // Carry over old broadcasts (counts only, recipients were never recorded)
+  `INSERT INTO admin_message_log (kind, message, target, sent, failed, total, sent_at)
+   SELECT 'broadcast', b.message, b.target, b.sent, b.failed, b.total, b.sent_at
+   FROM broadcast_log b
+   WHERE NOT EXISTS (
+     SELECT 1 FROM admin_message_log m
+     WHERE m.kind = 'broadcast' AND m.sent_at = b.sent_at AND m.message = b.message
+   )`,
 ];
 
 async function migrate(): Promise<void> {

@@ -1279,15 +1279,23 @@ export default function createServer(bot: any) {
     }
 
     const failed: { telegram_id: number; error: string }[] = [];
+    const results: db.AdminMessageResult[] = [];
     for (const id of ids) {
       try {
         await bot.telegram.sendMessage(id, message, { parse_mode: 'HTML' });
+        results.push({ telegram_id: id, ok: true });
       } catch (err: any) {
         console.error(`[DM] Failed to send to ${id}:`, err.message);
         await outreach.noteSendFailure(id, err);
         failed.push({ telegram_id: id, error: err.message || 'Failed to send message' });
+        results.push({ telegram_id: id, ok: false, error: err.message || 'Failed to send message' });
       }
     }
+
+    const admin = (req as any).admin.username;
+    // Messages are already out, so a logging failure must not turn this into an error response
+    await db.logAdminMessage('dm', message, admin, results).catch((err) => console.error('[DM] Failed to log message:', err.message));
+    await db.logAudit(admin, 'dm.send', { details: { recipients: ids, failed: failed.length }, ip: req.ip }).catch(() => {});
 
     const sent = ids.length - failed.length;
     if (sent === 0) {
@@ -1320,6 +1328,7 @@ export default function createServer(bot: any) {
     let sent = 0;
     let failed = 0;
     const total = users.length;
+    const results: db.AdminMessageResult[] = [];
 
     for (const user of users) {
       try {
@@ -1327,31 +1336,42 @@ export default function createServer(bot: any) {
           parse_mode: 'HTML',
         });
         sent++;
+        results.push({ telegram_id: user.telegram_id, ok: true });
       } catch (err: any) {
         console.error(`[Broadcast] Failed to send to ${user.telegram_id}:`, err.message);
         await outreach.noteSendFailure(user.telegram_id, err);
         failed++;
+        results.push({ telegram_id: user.telegram_id, ok: false, error: err.message });
       }
       // Rate limit: 50ms delay between sends
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
 
-    await db.query(
-      `INSERT INTO broadcast_log (message, target, sent, failed, total) VALUES ($1, $2, $3, $4, $5)`,
-      [message, target, sent, failed, total]
-    );
-    await db.logAudit((req as any).admin.username, 'broadcast.send', { details: { target, sent, failed, total }, ip: req.ip }).catch(() => {});
+    const admin = (req as any).admin.username;
+    await db.logAdminMessage('broadcast', message, admin, results, target).catch((err) => console.error('[Broadcast] Failed to log message:', err.message));
+    await db.logAudit(admin, 'broadcast.send', { details: { target, sent, failed, total }, ip: req.ip }).catch(() => {});
 
     res.json({ sent, failed, total });
   });
 
-  // ── GET /api/admin/broadcast/history ───────────────────────────────────────
-  app.get('/api/admin/broadcast/history', adminAuth, async (_req: Request, res: Response) => {
-    const { rows } = await db.query(
-      `SELECT id, message, target, sent, failed, total, sent_at
-       FROM broadcast_log ORDER BY sent_at DESC LIMIT 50`
-    );
-    res.json({ history: rows });
+  // ── GET /api/admin/messages ────────────────────────────────────────────────
+  // History of admin-sent broadcasts and DMs, newest first
+  app.get('/api/admin/messages', adminAuth, async (req: Request, res: Response) => {
+    const kind = req.query.kind === 'broadcast' || req.query.kind === 'dm' ? req.query.kind : undefined;
+    const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+    const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string, 10) || 20));
+    const { rows, total } = await db.getAdminMessages({ kind, search: search || undefined, limit, offset: (page - 1) * limit });
+    res.json({ data: rows, total, page, limit, pages: Math.ceil(total / limit) });
+  });
+
+  // ── GET /api/admin/users/:telegramId/messages ──────────────────────────────
+  app.get('/api/admin/users/:telegramId/messages', adminAuth, async (req: Request, res: Response) => {
+    const tid = Number(req.params.telegramId);
+    if (!Number.isSafeInteger(tid) || tid <= 0) {
+      return res.status(400).json({ error: 'Invalid telegram id' });
+    }
+    res.json({ messages: await db.getUserAdminMessages(tid) });
   });
 
   // ── GET /api/admin/analytics/growth ────────────────────────────────────────

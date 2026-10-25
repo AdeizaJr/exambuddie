@@ -1088,6 +1088,7 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   const userId = rows[0].id;
   // room_participants uses telegram_id directly (no FK), must delete manually
   await pool.query('DELETE FROM room_participants WHERE telegram_id = $1', [telegramId]);
+  await pool.query('DELETE FROM admin_message_recipients WHERE telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
@@ -1896,6 +1897,106 @@ export async function logAudit(
       opts.ip ?? null,
     ]
   );
+}
+
+// ── Admin message history (broadcasts + DMs) ────────────────────────────────
+
+export interface AdminMessageResult {
+  telegram_id: number | string;
+  ok: boolean;
+  error?: string;
+}
+
+export async function logAdminMessage(
+  kind: 'broadcast' | 'dm',
+  message: string,
+  sentBy: string,
+  results: AdminMessageResult[],
+  target: string | null = null
+): Promise<number> {
+  const sent = results.filter((r) => r.ok).length;
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const { rows } = await client.query(
+      `INSERT INTO admin_message_log (kind, message, target, sent_by, sent, failed, total)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+      [kind, message, target, sentBy, sent, results.length - sent, results.length]
+    );
+    const id = rows[0].id;
+    if (results.length) {
+      // unnest keeps a broadcast to every user down to one INSERT
+      await client.query(
+        `INSERT INTO admin_message_recipients (message_id, telegram_id, ok, error)
+         SELECT $1, * FROM unnest($2::bigint[], $3::boolean[], $4::text[])
+         ON CONFLICT DO NOTHING`,
+        [id, results.map((r) => r.telegram_id), results.map((r) => r.ok), results.map((r) => r.error ?? null)]
+      );
+    }
+    await client.query('COMMIT');
+    return id;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function getAdminMessages(opts: {
+  kind?: 'broadcast' | 'dm';
+  search?: string;
+  limit: number;
+  offset: number;
+}): Promise<{ rows: any[]; total: number }> {
+  const conditions: string[] = [];
+  const params: any[] = [];
+  if (opts.kind) {
+    params.push(opts.kind);
+    conditions.push(`m.kind = $${params.length}`);
+  }
+  if (opts.search) {
+    params.push(`%${opts.search}%`);
+    const p = `$${params.length}`;
+    // Matches the message text, or (for DMs) a recipient's name/username/id
+    conditions.push(`(m.message ILIKE ${p} OR (m.kind = 'dm' AND EXISTS (
+      SELECT 1 FROM admin_message_recipients r LEFT JOIN users u ON u.telegram_id = r.telegram_id
+      WHERE r.message_id = m.id
+        AND (u.first_name ILIKE ${p} OR u.username ILIKE ${p} OR CAST(r.telegram_id AS TEXT) ILIKE ${p})
+    )))`);
+  }
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  const { rows: countRows } = await pool.query(`SELECT COUNT(*)::int AS n FROM admin_message_log m ${where}`, params);
+  params.push(opts.limit, opts.offset);
+  const { rows } = await pool.query(
+    `SELECT m.id, m.kind, m.message, m.target, m.sent_by, m.sent, m.failed, m.total, m.sent_at,
+            CASE WHEN m.kind = 'dm' THEN (
+              SELECT COALESCE(json_agg(json_build_object(
+                'telegram_id', r.telegram_id, 'first_name', u.first_name, 'username', u.username,
+                'ok', r.ok, 'error', r.error
+              )), '[]'::json)
+              FROM admin_message_recipients r LEFT JOIN users u ON u.telegram_id = r.telegram_id
+              WHERE r.message_id = m.id
+            ) END AS recipients
+     FROM admin_message_log m ${where}
+     ORDER BY m.sent_at DESC, m.id DESC
+     LIMIT $${params.length - 1} OFFSET $${params.length}`,
+    params
+  );
+  return { rows, total: countRows[0].n };
+}
+
+export async function getUserAdminMessages(telegramId: number | string, limit = 100): Promise<any[]> {
+  const { rows } = await pool.query(
+    `SELECT m.id, m.kind, m.message, m.target, m.sent_by, m.sent_at, r.ok, r.error
+     FROM admin_message_recipients r
+     JOIN admin_message_log m ON m.id = r.message_id
+     WHERE r.telegram_id = $1
+     ORDER BY m.sent_at DESC, m.id DESC
+     LIMIT $2`,
+    [telegramId, limit]
+  );
+  return rows;
 }
 
 export async function getAuditLogs(limit = 100, offset = 0): Promise<any[]> {
