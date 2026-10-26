@@ -36,7 +36,7 @@ const secondaryFeatures = [
   { icon: BookmarkIcon, title: "Bookmark Questions", desc: "Save any question mid-practice and drill your bookmarks later" },
   { icon: ChartBarIcon, title: "Progress Stats", desc: "Daily target, accuracy by topic, and exam countdown (/stats)" },
   { icon: RulerIcon, title: "Formula Sheets", desc: "Instant formula reference for Physics, Chemistry, Maths, Economics, Government (/formula)" },
-  { icon: CalendarIcon, title: "Exam Timetable", desc: "2026 WAEC/NECO/JAMB subject dates with countdown (/timetable)" },
+  { icon: CalendarIcon, title: "Exam Timetable", desc: "WAEC/NECO/JAMB exam dates with countdown (/timetable)" },
   { icon: LayersIcon, title: "Multi-Subject", desc: "Mix subjects in one practice session (Premium)" },
   { icon: FlameIcon, title: "Study Streaks", desc: "Build a daily habit, freeze your streak once a week (Premium)" },
   { icon: RepeatIcon, title: "Spaced Repetition", desc: "Wrong answers resurface until you master them (/review)" },

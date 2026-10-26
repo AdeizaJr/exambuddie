@@ -1,60 +1,25 @@
-// src/bot/handlers/timetable.ts — 2026 exam timetable & subject-specific reminders
+// src/bot/handlers/timetable.ts — upcoming exam season timetable & subject-specific reminders
 import * as db from '../../db';
 import { SUBJECT_MAP, SUBJECT_EMOJI } from '../formatter';
 
-// Approximate 2026 dates — updated once official timetables are published
-export const WAEC_2026: Record<string, string> = {
-  english:          '2026-05-04',
-  accounts:         '2026-05-11',
-  math:             '2026-05-14',
-  commerce:         '2026-05-18',
-  biology:          '2026-05-21',
-  'home-economics': '2026-05-25',
-  chemistry:        '2026-05-28',
-  crk:              '2026-06-01',
-  irk:              '2026-06-01',
-  physics:          '2026-06-04',
-  economics:        '2026-06-08',
-  government:       '2026-06-11',
-  agric:            '2026-06-15',
-  geography:        '2026-06-16',
-  'further-math':   '2026-06-17',
-  literature:       '2026-06-22',
-  history:          '2026-06-23',
+// Fill these in only from the OFFICIAL timetables once WAEC/NECO/JAMB publish them.
+// Until then they stay empty: /timetable shows the expected window instead, and the
+// exam-day and countdown reminders stay silent rather than firing on guessed dates.
+export const EXAM_SEASON = {
+  year: 2027,
+  waec: {} as Record<string, string>, // subject slug → 'YYYY-MM-DD'
+  neco: {} as Record<string, string>,
+  jamb: null as string | null, // UTME start date
+  // Shown while the official dates above are missing. Based on the 2026 sittings.
+  expected: {
+    WAEC: 'April to June 2027',
+    NECO: 'mid-June to late July 2027',
+    JAMB: 'March to May 2027',
+  } as Record<string, string>,
 };
 
-export const NECO_2026: Record<string, string> = {
-  english:          '2026-05-18',
-  math:             '2026-05-27',
-  biology:          '2026-06-02',
-  chemistry:        '2026-06-09',
-  physics:          '2026-06-16',
-  economics:        '2026-06-22',
-  government:       '2026-06-25',
-  'further-math':   '2026-06-30',
-  literature:       '2026-07-06',
-  agric:            '2026-07-09',
-  geography:        '2026-07-13',
-  crk:              '2026-07-15',
-};
-
-// JAMB UTME: single unified exam date (all subjects same day)
-export const JAMB_2026 = '2026-04-14';
-
-// Re-stamps a 'YYYY-MM-DD' date onto a different year, keeping month/day.
-export function withYear(iso: string, year: number): string {
-  return `${year}${iso.slice(4)}`;
-}
-
-// This year's sitting if it hasn't happened yet, otherwise next year's — each subject
-// rolls forward independently, since a season spans ~2 months and some subjects will
-// already be written while later ones aren't (e.g. checking in mid-June: English/Math
-// are done, but Government/Agric are still ahead).
-export function nextOccurrence(iso: string): string {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const thisYear = withYear(iso, now.getFullYear());
-  return new Date(thisYear) < now ? withYear(iso, now.getFullYear() + 1) : thisYear;
+export function examTable(examType: string): Record<string, string> {
+  return examType === 'NECO' ? EXAM_SEASON.neco : EXAM_SEASON.waec;
 }
 
 function todayIso(): string {
@@ -67,9 +32,9 @@ function todayIso(): string {
 // enumerating every subject the user picked.
 export function todaysExamSubjects(examType: string, userSubjects: string[]): string[] {
   const today = todayIso();
-  if (examType === 'JAMB') return nextOccurrence(JAMB_2026) === today ? ['ALL'] : [];
-  const table = examType === 'NECO' ? NECO_2026 : WAEC_2026;
-  return userSubjects.filter(s => table[s] && nextOccurrence(table[s]) === today);
+  if (examType === 'JAMB') return EXAM_SEASON.jamb === today ? ['ALL'] : [];
+  const table = examTable(examType);
+  return userSubjects.filter(s => table[s] === today);
 }
 
 function daysUntil(date: Date): number {
@@ -105,19 +70,25 @@ export async function handleTimetable(ctx: any): Promise<void> {
     return;
   }
 
-  let text = `📅 <b>${examType} Timetable</b>\n`;
-  text += `<i>(Approximate dates — verify with official WAEC/JAMB/NECO site)</i>\n\n`;
+  // 'ALL'/'BOTH' users get the WAEC table, same as examTable() falls back to
+  const board = examType === 'JAMB' || examType === 'NECO' ? examType : 'WAEC';
+  const official = board === 'JAMB' ? EXAM_SEASON.jamb !== null : Object.keys(examTable(board)).length > 0;
+  const expected = EXAM_SEASON.expected[board];
 
-  if (examType === 'JAMB') {
-    const jambIso = nextOccurrence(JAMB_2026);
+  let text = `📅 <b>${board} ${EXAM_SEASON.year} Timetable</b>\n\n`;
+
+  if (!official) {
+    text += `The official ${board} ${EXAM_SEASON.year} timetable is not out yet.\n\n`;
+    if (expected) text += `🗓 <b>Expected:</b> ${expected}\n\n`;
+    text += `<i>Your exam dates will show here once ${board} publishes the official timetable. Until then, keep practising daily so you're ready whenever it starts.</i>`;
+  } else if (board === 'JAMB') {
+    const jambIso = EXAM_SEASON.jamb!;
     const days = daysUntil(new Date(jambIso));
     text += `🎯 <b>JAMB UTME:</b> ${formatDate(jambIso)} — <b>${urgencyLabel(days)}</b>\n`;
     text += `\n<i>JAMB CBT tests all your subjects on the same day.</i>`;
   } else {
-    const baseTimetable = examType === 'NECO' ? NECO_2026 : WAEC_2026;
-    const timetable = Object.fromEntries(
-      Object.entries(baseTimetable).map(([s, iso]) => [s, nextOccurrence(iso)])
-    );
+    text += `<i>Official dates. Confirm with your school before each paper.</i>\n\n`;
+    const timetable = examTable(board);
 
     // User's subjects first, sorted by date
     const userSubjectEntries = subjects
