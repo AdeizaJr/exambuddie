@@ -24,7 +24,7 @@ export async function generateMetadata({
     keywords: [
       `NECO ${s.displayName} past questions`,
       `NECO ${s.displayName} past questions with answers`,
-      `NECO ${s.displayName} 2026`,
+      `NECO ${s.displayName} 2027`,
       `${s.displayName} NECO revision`,
       `NECO ${s.displayName} topics`,
       `${s.displayName} past questions Nigeria`,

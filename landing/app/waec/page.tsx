@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   keywords: [
     "WAEC past questions",
     "WAEC practice questions",
-    "WAEC 2026 questions",
+    "WAEC 2027 questions",
     "WAEC past questions with answers",
     "WAEC mathematics past questions",
     "WAEC biology past questions",

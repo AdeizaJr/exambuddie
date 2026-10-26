@@ -24,7 +24,7 @@ export async function generateMetadata({
     keywords: [
       `WAEC ${s.displayName} past questions`,
       `WAEC ${s.displayName} past questions with answers`,
-      `WAEC ${s.displayName} 2026`,
+      `WAEC ${s.displayName} 2027`,
       `${s.displayName} WAEC revision`,
       `WAEC ${s.displayName} topics`,
       `${s.displayName} past questions Nigeria`,

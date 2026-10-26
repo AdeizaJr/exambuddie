@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   keywords: [
     "NECO past questions",
     "NECO practice questions",
-    "NECO 2026 questions",
+    "NECO 2027 questions",
     "NECO past questions with answers",
     "NECO mathematics past questions",
     "NECO biology past questions",
