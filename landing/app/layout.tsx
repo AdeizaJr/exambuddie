@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     "WAEC prep Telegram",
     "JAMB prep app",
     "exam preparation Nigeria",
-    "WAEC 2026",
-    "JAMB 2026",
+    "WAEC 2027",
+    "JAMB 2027",
     "secondary school exam questions Nigeria",
   ],
   alternates: {

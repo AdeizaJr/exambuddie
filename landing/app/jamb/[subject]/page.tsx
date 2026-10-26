@@ -24,7 +24,7 @@ export async function generateMetadata({
     keywords: [
       `JAMB ${s.displayName} past questions`,
       `JAMB ${s.displayName} past questions with answers`,
-      `JAMB ${s.displayName} 2026`,
+      `JAMB ${s.displayName} 2027`,
       `${s.displayName} JAMB UTME revision`,
       `JAMB ${s.displayName} topics`,
       `${s.displayName} past questions Nigeria`,

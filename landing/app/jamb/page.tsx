@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   keywords: [
     "JAMB past questions",
     "JAMB UTME practice questions",
-    "JAMB 2026 questions",
+    "JAMB 2027 questions",
     "JAMB past questions with answers",
     "JAMB mathematics past questions",
     "JAMB English past questions",

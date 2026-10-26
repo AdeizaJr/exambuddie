@@ -13,6 +13,7 @@ export type Post = {
   title: string;
   description: string;
   date: string;
+  updated?: string;
   readingMinutes: number;
   keywords: string[];
   blocks: Block[];
@@ -22,15 +23,16 @@ const BOT_URL = "https://t.me/ExamBuddieBot?start=from_blog";
 
 export const posts: Post[] = [
   {
-    slug: "how-to-score-300-in-jamb-utme-2026",
-    title: "How to Score 300+ in JAMB UTME 2026: A Complete Study Guide",
+    slug: "how-to-score-300-in-jamb-utme",
+    title: "How to Score 300+ in JAMB UTME 2027: A Complete Study Guide",
     description:
-      "Practical strategies to score 300 and above in the 2026 JAMB UTME. Past questions, time management, spaced repetition, and a week-by-week plan.",
+      "Practical strategies to score 300 and above in the 2027 JAMB UTME. Past questions, time management, weak-topic drilling, and how to plan your revision from now.",
     date: "2026-05-01",
+    updated: "2026-10-26",
     readingMinutes: 7,
     keywords: [
       "how to score 300 in JAMB",
-      "JAMB UTME 2026 study guide",
+      "JAMB UTME 2027 study guide",
       "JAMB preparation tips",
       "JAMB past questions strategy",
       "score 300 JAMB Nigeria",
@@ -38,12 +40,17 @@ export const posts: Post[] = [
     blocks: [
       {
         type: "p",
-        text: "Scoring 300 and above in JAMB UTME puts you in the top 5% of candidates. It is not luck: it is a repeatable process. This guide breaks down exactly what that process looks like, from your first week of revision to the morning of the exam.",
+        text: "Scoring 300 and above in JAMB UTME puts you among the top few percent of candidates. It is not luck: it is a repeatable process. This guide breaks down exactly what that process looks like, from your first week of revision to the morning of the exam.",
+      },
+      { type: "h2", text: "When Is JAMB 2027?" },
+      {
+        type: "p",
+        text: "JAMB has not announced the official 2027 UTME dates yet. Going by recent years, registration usually opens around January and the UTME itself is written between March and May. If you are reading this in late 2026, you have roughly 4 to 6 months. Confirm the dates on jamb.gov.ng and ignore unofficial flyers on WhatsApp.",
       },
       { type: "h2", text: "Understand What JAMB Actually Tests" },
       {
         type: "p",
-        text: "JAMB UTME is a 100-question, 120-minute Computer Based Test across your four chosen subjects. Each question is worth 2.5 marks: no negative marking. The exam does not test memory alone. It tests how quickly you can identify the right concept under time pressure.",
+        text: "JAMB UTME is a 2-hour Computer Based Test of 180 questions: 60 in Use of English and 40 in each of your three other subjects. Each subject is scored out of 100, for a total of 400, and there is no negative marking. The exam does not test memory alone. It tests how quickly you can identify the right concept under time pressure.",
       },
       {
         type: "p",
@@ -92,14 +99,14 @@ export const posts: Post[] = [
       { type: "h2", text: "Master JAMB Time Management" },
       {
         type: "p",
-        text: "120 minutes for 100 questions means 72 seconds per question. In practice, aim to spend 45–60 seconds on each question and use the remaining time to review flagged ones. Students who run out of time leave easy marks on the table.",
+        text: "120 minutes for 180 questions means 40 seconds per question. In practice, answer the quick questions in 20–30 seconds so you bank time for calculations and long comprehension passages. Students who run out of time leave easy marks on the table.",
       },
       {
         type: "ol",
         items: [
           "Answer questions you know immediately: do not overthink",
           "Skip and flag difficult questions: come back after finishing the rest",
-          "Never spend more than 2 minutes on a single question",
+          "Never spend more than 90 seconds on a single question",
           "With 15 minutes left, go back to all flagged questions",
           "If truly stuck, eliminate wrong options and guess, no penalty for wrong answers",
         ],
@@ -107,7 +114,7 @@ export const posts: Post[] = [
       { type: "h2", text: "Take Full Mock Exams Before the Real Thing" },
       {
         type: "p",
-        text: "Practising individual questions is not the same as sitting a full 100-question exam under time pressure. The mental fatigue, the clock counting down, the pressure of seeing your score: these need to feel familiar before the real exam, not new.",
+        text: "Practising individual questions is not the same as sitting a full 180-question exam under time pressure. The mental fatigue, the clock counting down, the pressure of seeing your score: these need to feel familiar before the real exam, not new.",
       },
       {
         type: "p",
@@ -142,15 +149,16 @@ export const posts: Post[] = [
     ],
   },
   {
-    slug: "waec-2026-how-to-prepare",
-    title: "WAEC 2026: What to Expect and How to Prepare",
+    slug: "how-to-prepare-for-waec",
+    title: "WAEC 2027: What to Expect and How to Prepare",
     description:
-      "Everything SS3 students need to know about WAEC 2026: exam structure, high-yield topics, past question strategy, and a realistic preparation plan.",
+      "Everything SS3 students need to know about WAEC 2027: exam structure, high-yield topics, past question strategy, and a realistic preparation plan.",
     date: "2026-05-10",
+    updated: "2026-10-26",
     readingMinutes: 6,
     keywords: [
-      "how to prepare for WAEC 2026",
-      "WAEC 2026 preparation guide",
+      "how to prepare for WAEC 2027",
+      "WAEC 2027 preparation guide",
       "WAEC past questions strategy",
       "WAEC study plan Nigeria",
       "WAEC tips for SS3 students",
@@ -158,7 +166,7 @@ export const posts: Post[] = [
     blocks: [
       {
         type: "p",
-        text: "The West African Senior School Certificate Examination (WAEC) remains the most important academic milestone for Nigerian secondary school students. Your WAEC result is what universities, polytechnics, and employers see first. Here is how to approach 2026.",
+        text: "The West African Senior School Certificate Examination (WAEC) remains the most important academic milestone for Nigerian secondary school students. Your WAEC result is what universities, polytechnics, and employers see first. Here is how to approach WAEC 2027.",
       },
       { type: "h2", text: "How WAEC Is Structured" },
       {
@@ -195,14 +203,14 @@ export const posts: Post[] = [
       { type: "h2", text: "A Realistic WAEC Study Plan" },
       {
         type: "p",
-        text: "If your WAEC starts in May, you have roughly 4 months from January. Here is a realistic weekly breakdown:",
+        text: "The 2026 WASSCE for school candidates ran from April to June. WAEC has not released the 2027 timetable yet, so plan as if your first paper is in mid-April 2027. Counting from November, that gives you about 5 months:",
       },
       {
         type: "ol",
         items: [
-          "January–February: Cover syllabus content for all subjects. Practice 10–15 past questions per subject per day.",
-          "March: Shift to 70% past question practice, 30% content review. Identify your 3 weakest topics per subject.",
-          "April: Drill weak topics intensively. Take two full timed mock exams per week.",
+          "November–December: Cover syllabus content for all subjects. Practice 10–15 past questions per subject per day.",
+          "January–February: Shift to 70% past question practice, 30% content review. Identify your 3 weakest topics per subject.",
+          "March: Drill weak topics intensively. Take two full timed mock exams per week.",
           "Final 2 weeks: Review only. No new material. Rest the day before each paper.",
         ],
       },
@@ -416,8 +424,8 @@ export const posts: Post[] = [
       {
         type: "related",
         items: [
-          { text: "How to Score 300+ in JAMB", href: "/blog/how-to-score-300-in-jamb-utme-2026" },
-          { text: "WAEC 2026 Preparation Guide", href: "/blog/waec-2026-how-to-prepare" },
+          { text: "How to Score 300+ in JAMB", href: "/blog/how-to-score-300-in-jamb-utme" },
+          { text: "WAEC 2027 Preparation Guide", href: "/blog/how-to-prepare-for-waec" },
           { text: "WAEC Mathematics Past Questions", href: "/waec/math" },
           { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
         ],
@@ -436,7 +444,7 @@ export const posts: Post[] = [
       "WAEC Biology topics",
       "WAEC Biology past questions with answers",
       "how to pass WAEC Biology",
-      "WAEC Biology 2026",
+      "WAEC Biology 2027",
       "Biology past questions Nigeria",
     ],
     blocks: [
@@ -530,7 +538,7 @@ export const posts: Post[] = [
       "JAMB Maths topics",
       "JAMB Mathematics past questions with answers",
       "how to pass JAMB Mathematics",
-      "JAMB Mathematics 2026",
+      "JAMB Mathematics 2027",
       "UTME Mathematics Nigeria",
     ],
     blocks: [
@@ -616,7 +624,7 @@ export const posts: Post[] = [
       "how to pass WAEC English",
       "WAEC English past questions with answers",
       "WAEC English comprehension tips",
-      "WAEC English 2026",
+      "WAEC English 2027",
       "English Language WAEC Nigeria",
     ],
     blocks: [
@@ -703,7 +711,7 @@ export const posts: Post[] = [
       "NECO Mathematics past questions",
       "NECO Maths past questions with answers",
       "how to pass NECO Mathematics",
-      "NECO Mathematics topics 2026",
+      "NECO Mathematics topics 2027",
       "NECO Maths guide Nigeria",
     ],
     blocks: [
@@ -776,7 +784,7 @@ export const posts: Post[] = [
           { text: "NECO Mathematics Past Questions", href: "/neco/math" },
           { text: "WAEC Mathematics Past Questions", href: "/waec/math" },
           { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
-          { text: "NECO 2026 Timetable", href: "/blog/neco-2026-timetable" },
+          { text: "NECO 2027 Timetable", href: "/blog/neco-timetable" },
           { text: "NECO vs WAEC Differences", href: "/blog/neco-vs-waec-differences-and-how-to-prepare" },
         ],
       },
@@ -786,73 +794,58 @@ export const posts: Post[] = [
   // ── New posts ────────────────────────────────────────────────────────────────
 
   {
-    slug: "waec-2026-timetable",
-    title: "WAEC 2026 Timetable: Complete Subject Dates and Exam Schedule",
+    slug: "waec-timetable",
+    title: "WAEC 2027 Timetable: Expected Dates and How to Plan Your Revision",
     description:
-      "Full WAEC May/June 2026 timetable with subject dates, paper times, and a subject-by-subject countdown. Start your targeted preparation today.",
+      "When is WAEC 2027? The expected exam window for the WASSCE school candidates' exam, when the official timetable comes out, and how to plan your revision around it.",
     date: "2026-06-01",
-    readingMinutes: 5,
+    updated: "2026-10-26",
+    readingMinutes: 4,
     keywords: [
-      "WAEC 2026 timetable",
-      "WAEC exam dates 2026",
-      "WAEC May June 2026 timetable",
-      "WAEC SSCE 2026 schedule",
-      "when is WAEC 2026",
+      "WAEC 2027 timetable",
+      "WAEC exam dates 2027",
+      "WAEC May June 2027 timetable",
+      "WASSCE 2027 timetable",
+      "when is WAEC 2027",
     ],
     blocks: [
       {
         type: "p",
-        text: "The WAEC May/June 2026 SSCE is scheduled to run from early May through late June 2026. Below is the approximate timetable for all core subjects. Note: always verify the final dates on the official WAEC portal (waecdirect.org) as minor adjustments can occur.",
+        text: "WAEC has not released the official 2027 WASSCE timetable for school candidates yet. It usually comes out a few weeks before the exam starts. In the meantime, here is what to expect based on recent years, and how to plan your revision so you are ready whatever the final dates are.",
       },
       {
         type: "callout",
-        text: "These dates are based on WAEC's historical scheduling pattern. The official 2026 timetable is released by WAEC usually 8–12 weeks before the exam starts.",
+        text: "Always confirm dates on WAEC's official website (waecnigeria.org) or with your school. Ignore timetables shared on WhatsApp before WAEC publishes the official one.",
       },
-      { type: "h2", text: "WAEC 2026 Timetable: Core Subjects" },
-      {
-        type: "ul",
-        items: [
-          "4 May 2026: English Language (Papers 1, 2 & 3)",
-          "11 May 2026: Financial Accounts / Book-Keeping",
-          "14 May 2026: Mathematics (Papers 1 & 2)",
-          "18 May 2026: Commerce",
-          "21 May 2026: Biology (Papers 1, 2 & 3)",
-          "25 May 2026: Home Economics",
-          "28 May 2026: Chemistry (Papers 1, 2 & 3)",
-          "1 June 2026: CRK / IRK",
-          "4 June 2026: Physics (Papers 1, 2 & 3)",
-          "8 June 2026: Economics",
-          "11 June 2026: Government",
-          "15 June 2026: Agricultural Science",
-          "16 June 2026: Geography",
-          "17 June 2026: Further Mathematics",
-          "22 June 2026: Literature in English",
-          "23 June 2026: History",
-        ],
-      },
-      { type: "h2", text: "How to Use the Timetable to Plan Your Study" },
+      { type: "h2", text: "When Will WAEC 2027 Start?" },
       {
         type: "p",
-        text: "The timetable tells you exactly how many days you have per subject from today. Work backwards from each subject's date to set weekly targets. Subjects with the earliest dates (English and Mathematics) need your immediate attention.",
+        text: "The 2026 WASSCE for school candidates ran from April to June 2026. WAEC has moved its school exam earlier in recent years, so expect WAEC 2027 to start in April or early May 2027 and finish around June. Plan your revision as if your first paper is in mid-April.",
       },
+      { type: "h2", text: "Which Papers Come First?" },
+      {
+        type: "p",
+        text: "WAEC spreads its papers over about eight weeks, and the order changes from year to year, so do not plan around the exact order from an old timetable. What stays the same: most subjects have an objective paper and a theory paper, the sciences add a practical paper, and English Language and Mathematics are written by every candidate.",
+      },
+      { type: "h2", text: "How to Plan Before the Timetable Is Out" },
       {
         type: "ol",
         items: [
-          "List your subjects in date order from the timetable above",
+          "Treat mid-April 2027 as the deadline for every subject, not just the first one",
+          "Put English and Mathematics in your daily practice now: every university needs a credit in both",
+          "Rotate your other subjects weekly so none is left untouched for long",
+          "When the official timetable is out, reorder your revision so the earliest papers get the most attention in the final weeks",
+        ],
+      },
+      { type: "h2", text: "Using the Timetable Once It Is Released" },
+      {
+        type: "ol",
+        items: [
+          "List your subjects in date order from the official timetable",
           "For each subject, count the weeks remaining and divide your unseen past questions across them",
           "Identify gap days between papers: use them to revise rather than start something new",
           "In the final week before each paper, stop learning new content and only review",
         ],
-      },
-      { type: "h2", text: "Prioritising Mathematics and English" },
-      {
-        type: "p",
-        text: "Mathematics (14 May) and English Language (4 May) are the earliest major papers and the most important for university admission. Every institution in Nigeria requires at least a credit in both. Start practicing these two subjects immediately and maintain daily sessions until their exam dates.",
-      },
-      { type: "h2", text: "Managing Science Subjects Back-to-Back" },
-      {
-        type: "p",
-        text: "Biology, Chemistry, and Physics are spread across 21 May, 28 May, and 4 June, giving you about a week gap between each. Use this structure: finish intensive Biology revision by 14 May, switch to Chemistry revision from 15 May, then pivot to Physics from 28 May. Keep daily practice for all three going throughout.",
       },
       {
         type: "callout",
@@ -865,67 +858,55 @@ export const posts: Post[] = [
       },
       {
         type: "cta",
-        text: "Practice WAEC 2026 past questions free on Telegram →",
+        text: "Practice WAEC past questions free on Telegram →",
         href: BOT_URL,
       },
       {
         type: "related",
         items: [
-          { text: "How to Prepare for WAEC 2026", href: "/blog/waec-2026-how-to-prepare" },
+          { text: "How to Prepare for WAEC 2027", href: "/blog/how-to-prepare-for-waec" },
+          { text: "NECO 2027 Timetable", href: "/blog/neco-timetable" },
           { text: "WAEC Mathematics Past Questions", href: "/waec/math" },
+          { text: "WAEC English Past Questions", href: "/waec/english" },
           { text: "WAEC Biology Past Questions", href: "/waec/biology" },
-          { text: "WAEC Chemistry Past Questions", href: "/waec/chemistry" },
-          { text: "WAEC Physics Past Questions", href: "/waec/physics" },
         ],
       },
     ],
   },
 
   {
-    slug: "neco-2026-timetable",
-    title: "NECO 2026 Timetable: All Subject Dates for SSCE Internal",
+    slug: "neco-timetable",
+    title: "NECO 2027 Timetable: Expected Dates for SSCE Internal",
     description:
-      "The complete NECO 2026 SSCE Internal timetable: subject dates from May through July, how to plan your revision, and what to expect in each paper.",
+      "When is NECO 2027? The expected dates for the June/July SSCE Internal, how NECO's timing compares with WAEC, and how to plan your revision for both.",
     date: "2026-06-02",
+    updated: "2026-10-26",
     readingMinutes: 4,
     keywords: [
-      "NECO 2026 timetable",
-      "NECO exam dates 2026",
-      "NECO SSCE timetable 2026",
-      "NECO internal exam 2026",
-      "when is NECO 2026",
+      "NECO 2027 timetable",
+      "NECO exam dates 2027",
+      "NECO SSCE timetable 2027",
+      "NECO internal exam 2027",
+      "when is NECO 2027",
     ],
     blocks: [
       {
         type: "p",
-        text: "The National Examinations Council (NECO) SSCE Internal 2026 typically runs from mid-May through mid-July. Below are the approximate dates based on NECO's historical scheduling pattern. Always confirm final dates at neco.gov.ng.",
+        text: "The National Examinations Council (NECO) has not released the 2027 SSCE Internal timetable yet. Here is what to expect based on recent years. Always confirm final dates at neco.gov.ng.",
       },
       {
         type: "callout",
-        text: "NECO usually starts 2–3 weeks after WAEC and continues 4–6 weeks longer. If you sat WAEC in May/June, use the gap to intensify NECO preparation.",
+        text: "In 2026, NECO SSCE Internal ran from mid-June to late July, starting around the time WAEC was finishing. Expect a similar window in 2027.",
       },
-      { type: "h2", text: "NECO 2026 Timetable: Core Subjects" },
+      { type: "h2", text: "When Will NECO 2027 Start?" },
       {
-        type: "ul",
-        items: [
-          "18 May 2026: English Language",
-          "27 May 2026: Mathematics",
-          "2 June 2026: Biology",
-          "9 June 2026: Chemistry",
-          "16 June 2026: Physics",
-          "22 June 2026: Economics",
-          "25 June 2026: Government",
-          "30 June 2026: Further Mathematics",
-          "6 July 2026: Literature in English",
-          "9 July 2026: Agricultural Science",
-          "13 July 2026: Geography",
-          "15 July 2026: CRK / IRK",
-        ],
+        type: "p",
+        text: "Going by 2026, expect NECO 2027 to start around mid-June and run into late July 2027. If you are sitting both WAEC and NECO, NECO comes second, so you get a few extra weeks of revision for it.",
       },
       { type: "h2", text: "How NECO Differs from WAEC" },
       {
         type: "p",
-        text: "NECO questions tend to be slightly more straightforward in phrasing than WAEC, but the syllabus is almost identical. Students who have thoroughly practiced WAEC past questions are well-prepared for NECO. The key difference is that NECO is set and marked in Nigeria (unlike WAEC, which is a regional exam), so results are often released faster.",
+        text: "NECO questions tend to be slightly more straightforward in phrasing than WAEC, but the syllabus is almost identical. Students who have thoroughly practiced WAEC past questions are well-prepared for NECO. The key difference is that NECO is set and marked in Nigeria, while WAEC is a regional exam written across West Africa.",
       },
       {
         type: "ul",
@@ -939,17 +920,17 @@ export const posts: Post[] = [
       { type: "h2", text: "Using the WAEC–NECO Gap" },
       {
         type: "p",
-        text: "For students sitting both exams, WAEC ends in late June and NECO continues through July. Use any exam-free days in this window for targeted NECO revision. Since NECO Mathematics falls on 27 May (before most WAEC science papers), prepare for it in parallel with WAEC English in May.",
+        text: "The subjects and syllabus for WAEC and NECO overlap almost completely, so everything you revise for WAEC counts for NECO too. After your last WAEC paper, switch to NECO past questions for the subjects you still have left, and keep your daily practice going instead of taking a long break.",
       },
       {
         type: "cta",
-        text: "Practice NECO 2026 past questions free on Telegram →",
+        text: "Practice NECO past questions free on Telegram →",
         href: BOT_URL,
       },
       {
         type: "related",
         items: [
-          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
+          { text: "WAEC 2027 Timetable", href: "/blog/waec-timetable" },
           { text: "NECO vs WAEC Differences", href: "/blog/neco-vs-waec-differences-and-how-to-prepare" },
           { text: "NECO Mathematics Past Questions", href: "/neco/math" },
           { text: "NECO Biology Past Questions", href: "/neco/biology" },
@@ -959,23 +940,24 @@ export const posts: Post[] = [
   },
 
   {
-    slug: "best-jamb-app-nigeria-2026",
-    title: "Best JAMB Preparation Apps in Nigeria 2026 (Tested and Ranked)",
+    slug: "best-jamb-app-nigeria",
+    title: "Best JAMB Preparation Apps in Nigeria 2027 (Tested and Ranked)",
     description:
-      "A straight comparison of the top JAMB prep apps and platforms in Nigeria in 2026: what each does well, what each lacks, and which is best for serious candidates.",
+      "A straight comparison of the top JAMB prep apps and platforms in Nigeria for 2027: what each does well, what each lacks, and which is best for serious candidates.",
     date: "2026-06-03",
+    updated: "2026-10-26",
     readingMinutes: 6,
     keywords: [
-      "best JAMB app Nigeria 2026",
+      "best JAMB app Nigeria 2027",
       "JAMB CBT practice app",
       "JAMB preparation app Nigeria",
-      "best app for JAMB 2026",
+      "best app for JAMB 2027",
       "JAMB past questions app",
     ],
     blocks: [
       {
         type: "p",
-        text: "Preparing for JAMB UTME without a good practice app in 2026 is like training for a sprint without ever running. The CBT format means you need to practice on a screen, under time pressure, with instant feedback. Here are the apps and platforms Nigerian students are actually using, and how they compare.",
+        text: "Preparing for JAMB UTME without a good practice app in 2027 is like training for a sprint without ever running. The CBT format means you need to practice on a screen, under time pressure, with instant feedback. Here are the apps and platforms Nigerian students are actually using, and how they compare.",
       },
       { type: "h2", text: "What to Look for in a JAMB Prep App" },
       {
@@ -1030,7 +1012,7 @@ export const posts: Post[] = [
         items: [
           "Practice at least 40 questions daily from now until your exam date",
           "Always read the explanation, even when you got the answer right",
-          "Simulate real exam conditions at least twice a week: 50 questions, 2 hours, no interruptions",
+          "Simulate real exam conditions at least twice a week: 180 questions, 2 hours, no interruptions",
           "Track your accuracy by subject and focus time on your weakest area",
           "In the final week, do only past questions, no new theory",
         ],
@@ -1043,8 +1025,8 @@ export const posts: Post[] = [
       {
         type: "related",
         items: [
-          { text: "How to Score 300+ in JAMB 2026", href: "/blog/how-to-score-300-in-jamb-utme-2026" },
-          { text: "JAMB Cut-Off Marks 2026", href: "/blog/jamb-score-university-admission-2026" },
+          { text: "How to Score 300+ in JAMB 2027", href: "/blog/how-to-score-300-in-jamb-utme" },
+          { text: "JAMB Cut-Off Marks 2027", href: "/blog/jamb-cut-off-marks" },
           { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
           { text: "JAMB English Past Questions", href: "/jamb/english" },
         ],
@@ -1061,7 +1043,7 @@ export const posts: Post[] = [
     readingMinutes: 6,
     keywords: [
       "WAEC chemistry past questions",
-      "WAEC chemistry topics 2026",
+      "WAEC chemistry topics 2027",
       "how to pass WAEC chemistry",
       "WAEC chemistry study guide",
       "WAEC chemistry objective questions",
@@ -1126,7 +1108,7 @@ export const posts: Post[] = [
         type: "related",
         items: [
           { text: "WAEC Chemistry Past Questions", href: "/waec/chemistry" },
-          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
+          { text: "WAEC 2027 Timetable", href: "/blog/waec-timetable" },
           { text: "WAEC Biology Past Questions", href: "/blog/waec-biology-past-questions-topics-and-tips" },
           { text: "WAEC Physics Past Questions", href: "/blog/waec-physics-past-questions" },
         ],
@@ -1143,7 +1125,7 @@ export const posts: Post[] = [
     readingMinutes: 6,
     keywords: [
       "WAEC physics past questions",
-      "WAEC physics topics 2026",
+      "WAEC physics topics 2027",
       "how to pass WAEC physics",
       "WAEC physics study guide",
       "WAEC physics objective questions",
@@ -1209,8 +1191,8 @@ export const posts: Post[] = [
         items: [
           { text: "WAEC Physics Past Questions", href: "/waec/physics" },
           { text: "WAEC Chemistry Past Questions", href: "/blog/waec-chemistry-past-questions" },
-          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
-          { text: "How to Prepare for WAEC 2026", href: "/blog/waec-2026-how-to-prepare" },
+          { text: "WAEC 2027 Timetable", href: "/blog/waec-timetable" },
+          { text: "How to Prepare for WAEC 2027", href: "/blog/how-to-prepare-for-waec" },
         ],
       },
     ],
@@ -1220,14 +1202,15 @@ export const posts: Post[] = [
     slug: "how-to-pass-waec-without-teacher",
     title: "How to Pass WAEC Without Attending Lesson (Complete Self-Study Guide)",
     description:
-      "A practical guide to passing WAEC 2026 without a private lesson teacher: the tools, schedule, and strategies that self-study students use to score A and B grades.",
+      "A practical guide to passing WAEC 2027 without a private lesson teacher: the tools, schedule, and strategies that self-study students use to score A and B grades.",
     date: "2026-06-08",
+    updated: "2026-10-26",
     readingMinutes: 7,
     keywords: [
       "how to pass WAEC without lesson",
       "WAEC self study guide",
       "pass WAEC at home Nigeria",
-      "WAEC home study 2026",
+      "WAEC home study 2027",
       "prepare for WAEC without teacher",
     ],
     blocks: [
@@ -1304,7 +1287,7 @@ export const posts: Post[] = [
         type: "related",
         items: [
           { text: "5 Study Habits of Top WAEC Students", href: "/blog/5-study-habits-top-waec-jamb-students" },
-          { text: "WAEC 2026 Timetable", href: "/blog/waec-2026-timetable" },
+          { text: "WAEC 2027 Timetable", href: "/blog/waec-timetable" },
           { text: "How to Pass WAEC English", href: "/blog/how-to-pass-waec-english-language" },
           { text: "WAEC Mathematics Past Questions", href: "/waec/math" },
         ],
@@ -1313,37 +1296,37 @@ export const posts: Post[] = [
   },
 
   {
-    slug: "jamb-score-university-admission-2026",
-    title: "JAMB Cut-Off Marks for Universities in Nigeria 2026",
+    slug: "jamb-cut-off-marks",
+    title: "JAMB Cut-Off Marks for 2027 Admission: What Score You Need",
     description:
-      "JAMB UTME cut-off scores for federal, state, and private universities in Nigeria 2026: what score you need per course, how aggregate is calculated, and how to boost your chances.",
+      "The latest JAMB minimum cut-off marks for universities, polytechnics and nursing colleges, what score competitive courses need, how aggregate is calculated, and what to expect for 2027.",
     date: "2026-06-10",
+    updated: "2026-10-26",
     readingMinutes: 6,
     keywords: [
+      "JAMB cut off mark 2027",
       "JAMB cut off mark 2026",
       "JAMB score for university admission Nigeria",
-      "JAMB aggregate score 2026",
       "JAMB score to study medicine Nigeria",
-      "university admission requirements Nigeria 2026",
+      "university admission requirements Nigeria 2027",
     ],
     blocks: [
       {
         type: "p",
-        text: "Getting a good JAMB score is only the first step: your score must meet both JAMB's minimum cut-off and your chosen institution's departmental cut-off. Here is what you need to know about cut-off marks, aggregate scores, and how to maximise your admission chances in 2026.",
+        text: "Getting a good JAMB score is only the first step: your score must meet both JAMB's minimum cut-off and your chosen institution's departmental cut-off. Here is what you need to know about cut-off marks, aggregate scores, and how to maximise your admission chances in 2027.",
       },
-      { type: "h2", text: "JAMB National Minimum Cut-Off Marks 2026" },
+      { type: "h2", text: "Current JAMB Minimum Cut-Off Marks" },
       {
         type: "p",
-        text: "JAMB sets a national minimum for each institution category. These are the floor: institutions can (and do) set higher departmental cut-offs.",
+        text: "JAMB fixes the national minimum scores at its yearly policy meeting on admissions. The 2027 cut-offs will be set at the 2027 meeting, usually held a few weeks after the UTME. Until then, the latest official figures are the ones agreed for 2026 admissions. These are the floor: institutions can (and do) set higher departmental cut-offs.",
       },
       {
         type: "ul",
         items: [
-          "Federal Universities: 140 (general minimum); competitive courses often require 200+",
-          "State Universities: 130",
-          "Private Universities: 100",
-          "Monotechnics / Colleges of Education: 100",
-          "Polytechnics: 100",
+          "Universities: 150",
+          "Colleges of Nursing: 150",
+          "Polytechnics and Monotechnics: 100",
+          "Colleges of Education: from 2026, NCE candidates no longer need to sit the UTME",
         ],
       },
       {
@@ -1351,6 +1334,10 @@ export const posts: Post[] = [
         text: "Important: the national minimum is not what you need to get in. For competitive courses at top institutions, you need 250–300+. The national minimum just makes you eligible to apply.",
       },
       { type: "h2", text: "What Score Do You Need by Course?" },
+      {
+        type: "p",
+        text: "These are rough ranges based on recent years. Every school sets its own departmental cut-off and it changes yearly, so check your chosen school's portal.",
+      },
       {
         type: "ul",
         items: [
@@ -1367,13 +1354,13 @@ export const posts: Post[] = [
       { type: "h2", text: "How Aggregate Score Is Calculated" },
       {
         type: "p",
-        text: "Most universities use an aggregate formula that combines your JAMB score, O'Level results, and Post-UTME score. The exact weighting varies by institution: UNILAG uses 60% Post-UTME + 40% O'Level, while UI and OAU have their own formulas. Your JAMB score is used to qualify you for Post-UTME, not directly in the aggregate.",
+        text: "Most universities do not admit on JAMB score alone. They combine your UTME score with a Post-UTME screening score, and some also add points for your O'Level grades. A common approach is to convert your UTME and Post-UTME scores to 50 marks each, for a total out of 100, but every school uses its own formula, so check yours.",
       },
       {
         type: "ul",
         items: [
           "Step 1: JAMB score must meet the institution's cut-off to be invited for Post-UTME",
-          "Step 2: Post-UTME score is combined with O'Level grades using the institution's formula",
+          "Step 2: Your UTME and Post-UTME scores (and sometimes O'Level grades) are combined using the institution's formula",
           "Step 3: Final aggregate score determines admission, not JAMB alone",
           "Result: You can score 280 in JAMB but not gain admission if your Post-UTME or O'Level is weak",
         ],
@@ -1402,8 +1389,8 @@ export const posts: Post[] = [
       {
         type: "related",
         items: [
-          { text: "How to Score 300+ in JAMB 2026", href: "/blog/how-to-score-300-in-jamb-utme-2026" },
-          { text: "Best JAMB Prep Apps 2026", href: "/blog/best-jamb-app-nigeria-2026" },
+          { text: "How to Score 300+ in JAMB 2027", href: "/blog/how-to-score-300-in-jamb-utme" },
+          { text: "Best JAMB Prep Apps 2027", href: "/blog/best-jamb-app-nigeria" },
           { text: "JAMB Mathematics Past Questions", href: "/jamb/math" },
           { text: "JAMB English Past Questions", href: "/jamb/english" },
         ],
@@ -1423,7 +1410,7 @@ export const posts: Post[] = [
       "WAEC Financial Accounting topics",
       "JAMB Principles of Accounts past questions",
       "how to pass WAEC Accounting",
-      "Financial Accounting 2026",
+      "Financial Accounting 2027",
       "Accounting past questions Nigeria",
     ],
     blocks: [

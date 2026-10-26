@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: `https://exambuddie.app/blog/${post.slug}`,
       siteName: "ExamBuddie",
       publishedTime: post.date,
+      modifiedTime: post.updated ?? post.date,
       images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
     },
     twitter: {
@@ -119,7 +120,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated ?? post.date,
     image: "https://exambuddie.app/opengraph-image",
     author: {
       "@type": "Organization",
@@ -168,6 +169,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           {/* Meta */}
           <div className="mb-4 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
             <time dateTime={post.date}>{formatDate(post.date)}</time>
+            {post.updated && (
+              <>
+                <span>·</span>
+                <span>
+                  Updated <time dateTime={post.updated}>{formatDate(post.updated)}</time>
+                </span>
+              </>
+            )}
             <span>·</span>
             <span>{post.readingMinutes} min read</span>
           </div>
