@@ -113,14 +113,6 @@ const websiteJsonLd = {
   url: "https://exambuddie.app",
   description: "WAEC, JAMB and NECO past question practice on Telegram.",
   inLanguage: "en-NG",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: "https://exambuddie.app/blog?q={search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
 };
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);}catch(e){}})();`;
