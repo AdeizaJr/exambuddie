@@ -296,7 +296,46 @@ export async function getLeaderboardSnapshot(week: string): Promise<{ entries: L
   return req<{ entries: LeaderboardEntry[] }>("GET", "/leaderboard/snapshot", undefined, { week });
 }
 
-export type BroadcastTarget = "all" | "waec" | "jamb" | "neco" | "premium" | "free";
+export interface ReferredUser {
+  telegram_id: number;
+  first_name: string;
+  username: string | null;
+  joined_at: string;
+  practiced: boolean;
+}
+
+export interface Referrer {
+  telegram_id: number;
+  first_name: string;
+  username: string | null;
+  referral_code: string | null;
+  reward_granted: boolean;
+  referred_count: number;
+  practiced_count: number;
+  last_referral_at: string;
+  referred: ReferredUser[];
+}
+
+export interface ReferralsResponse {
+  summary: { total_referred: number; total_practiced: number; referrers: number; rewards_granted: number };
+  referrers: Referrer[];
+}
+
+export async function getReferrals(): Promise<ReferralsResponse> {
+  return req<ReferralsResponse>("GET", "/referrals");
+}
+
+export interface AcquisitionRow {
+  source: string | null;
+  users: number;
+  last_7d: number;
+}
+
+export async function getAcquisition(): Promise<AcquisitionRow[]> {
+  return req<AcquisitionRow[]>("GET", "/acquisition");
+}
+
+export type BroadcastTarget ="all" | "waec" | "jamb" | "neco" | "premium" | "free";
 
 export async function broadcast(
   message: string,

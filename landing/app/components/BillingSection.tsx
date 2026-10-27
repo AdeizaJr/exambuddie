@@ -30,7 +30,7 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
         "Progress tracking & exam countdown",
       ],
       cta: "Start Free",
-      href: BOT_URL,
+      href: `${BOT_URL}?start=from_pricing`,
       highlight: false,
       badge: null,
     },
