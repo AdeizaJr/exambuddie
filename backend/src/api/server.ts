@@ -562,8 +562,10 @@ export default function createServer(bot: any) {
 
   // ── GET /api/admin/acquisition ───────────────────────────────────────────
   app.get('/api/admin/acquisition', adminAuth, async (_req: Request, res: Response) => {
+    // NULL source = joined before the bot recorded where users came from
     const { rows } = await db.query(`
-      SELECT COALESCE(source, 'organic') as source, COUNT(*) as users
+      SELECT source, COUNT(*)::int AS users,
+             COUNT(*) FILTER (WHERE joined_at > NOW() - INTERVAL '7 days')::int AS last_7d
       FROM users GROUP BY source ORDER BY users DESC
     `);
     res.json(rows);
@@ -1259,6 +1261,65 @@ export default function createServer(bot: any) {
     }
     const entries = await db.getLeaderboardSnapshot(week);
     res.json({ entries });
+  });
+
+  // ── GET /api/admin/referrals ────────────────────────────────────────────────
+  // Every user who joined through someone's invite link, grouped under their inviter.
+  // "Practiced" mirrors getConfirmedReferralCount: a referral only counts toward the
+  // reward once the invited user has answered at least one question.
+  app.get('/api/admin/referrals', adminAuth, async (_req: Request, res: Response) => {
+    const { rows } = await db.query(
+      `SELECT ref.telegram_id AS referrer_telegram_id, ref.first_name AS referrer_first_name,
+              ref.username AS referrer_username, ref.referral_code,
+              ref.referral_reward_granted AS reward_granted,
+              u.telegram_id, u.first_name, u.username, u.joined_at,
+              EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id) AS practiced
+       FROM users u
+       JOIN users ref ON ref.id = u.referred_by
+       ORDER BY u.joined_at DESC`
+    );
+
+    const byReferrer = new Map<string, any>();
+    for (const r of rows) {
+      const key = String(r.referrer_telegram_id);
+      let entry = byReferrer.get(key);
+      if (!entry) {
+        entry = {
+          telegram_id: r.referrer_telegram_id,
+          first_name: r.referrer_first_name,
+          username: r.referrer_username,
+          referral_code: r.referral_code,
+          reward_granted: r.reward_granted,
+          referred_count: 0,
+          practiced_count: 0,
+          last_referral_at: r.joined_at, // rows are newest first
+          referred: [],
+        };
+        byReferrer.set(key, entry);
+      }
+      entry.referred_count++;
+      if (r.practiced) entry.practiced_count++;
+      entry.referred.push({
+        telegram_id: r.telegram_id,
+        first_name: r.first_name,
+        username: r.username,
+        joined_at: r.joined_at,
+        practiced: r.practiced,
+      });
+    }
+
+    const referrers = [...byReferrer.values()].sort(
+      (a, b) => b.referred_count - a.referred_count || b.practiced_count - a.practiced_count
+    );
+    res.json({
+      summary: {
+        total_referred: rows.length,
+        total_practiced: rows.filter((r) => r.practiced).length,
+        referrers: referrers.length,
+        rewards_granted: referrers.filter((r) => r.reward_granted).length,
+      },
+      referrers,
+    });
   });
 
   // ── POST /api/admin/dm ──────────────────────────────────────────────────────

@@ -334,6 +334,8 @@ WHERE id = 116125`,
 
   // ── Acquisition source tracking ───────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS source VARCHAR(50) DEFAULT NULL`,
+  // Invites were tracked (referred_by) long before source covered them
+  `UPDATE users SET source = 'referral' WHERE source IS NULL AND referred_by IS NOT NULL`,
 
   // ── Weekly leaderboard snapshots ──────────────────────────────────────────
   `CREATE TABLE IF NOT EXISTS leaderboard_snapshots (

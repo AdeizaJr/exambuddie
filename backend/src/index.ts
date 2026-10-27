@@ -75,8 +75,21 @@ bot.on('my_chat_member', async (ctx: any) => {
 });
 
 // ── Commands ───────────────────────────────────────────────────────────────────
-bot.start(async (ctx: any) => {
-  const payload = ctx.startPayload as string | undefined;
+// Where a brand-new user came from, read off the /start deep-link payload. Landing
+// pages send from_<page> (from_landing, from_blog, from_waec_mathematics, ...).
+function joinSourceFromPayload(payload: string | undefined): string {
+  if (!payload) return 'direct';
+  if (payload.startsWith('ref_')) return 'referral';
+  if (payload.startsWith('room_')) return 'challenge';
+  if (payload.startsWith('subscribe_')) return 'pricing';
+  if (payload.startsWith('from_')) {
+    const page = payload.slice(5).toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 50);
+    if (page) return page;
+  }
+  return 'other';
+}
+
+async function handleStartPayload(ctx: any, payload: string | undefined) {
   if (payload?.startsWith('room_')) {
     const code = payload.slice(5);
     return challenge.handleChallengeJoin(ctx, code);
@@ -94,12 +107,15 @@ bot.start(async (ctx: any) => {
     const plan = payload.slice('subscribe_'.length); // 'monthly' | 'term' | 'yearly'
     return stats.handleSubscribeDeepLink(ctx, plan);
   }
-  if (payload === 'from_landing') {
-    const user = await db.upsertUser(ctx);
-    if (!user.source) await db.updateUser(ctx.from.id, { source: 'landing' } as any);
-    return onboarding.handleStart(ctx);
-  }
   return onboarding.handleStart(ctx);
+}
+
+bot.start(async (ctx: any) => {
+  const payload = ctx.startPayload as string | undefined;
+  await handleStartPayload(ctx, payload);
+  // After the handler so the user row exists. Only sticks for a just-created account,
+  // an existing user tapping a landing link later must not be re-attributed to it.
+  await db.tagJoinSourceIfNew(ctx.from.id, joinSourceFromPayload(payload)).catch(() => {});
 });
 bot.command('help', (ctx) => ctx.reply(fmt.helpMessage(), { parse_mode: 'HTML' }));
 bot.command('settings', onboarding.handleSettings);

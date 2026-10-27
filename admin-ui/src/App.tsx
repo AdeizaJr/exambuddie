@@ -14,6 +14,7 @@ import QOTDPage from "./pages/QOTD";
 import Pricing from "./pages/Pricing";
 import AuditLog from "./pages/AuditLog";
 import BugReports from "./pages/BugReports";
+import Signups from "./pages/Signups";
 import { getFlags, getAlerts, getBugReports, loginAdmin, LoginUnavailableError } from "./api";
 
 // ── Login page ──────────────────────────────────────────────────────────────
@@ -195,6 +196,7 @@ export default function App() {
         <Route path="/subscriptions" element={<Subscriptions />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/signups" element={<Signups />} />
         <Route path="/broadcast" element={<Broadcast />} />
         <Route path="/qotd" element={<QOTDPage />} />
         <Route path="/pricing" element={<Pricing />} />

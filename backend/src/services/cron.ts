@@ -807,10 +807,9 @@ ${streakLine} → /practice`;
   });
 
   // ── Daily 7am WAT (6am UTC) — Exam timetable reminders (1, 3, 7 days out) ──
-  // Each subject rolls to next year on its own once this year's sitting has passed
-  // (nextOccurrence) — no dependency on the user's stored target_year.
+  // Only fires for official dates in EXAM_SEASON; silent while the timetable is unpublished.
   safeCron('5 6 * * *', 'exam-timetable-reminders', async () => {
-    const { WAEC_2026, NECO_2026, JAMB_2026, nextOccurrence } = await import('../bot/handlers/timetable');
+    const { EXAM_SEASON, examTable } = await import('../bot/handlers/timetable');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -834,16 +833,16 @@ ${streakLine} → /practice`;
         const reminders: string[] = [];
 
         if (user.exam_type === 'JAMB') {
-          const days = daysUntil(nextOccurrence(JAMB_2026));
-          if (MILESTONES.includes(days)) {
+          const days = EXAM_SEASON.jamb ? daysUntil(EXAM_SEASON.jamb) : null;
+          if (days !== null && MILESTONES.includes(days)) {
             reminders.push(`🎯 <b>JAMB UTME</b> is in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);
           }
         } else {
-          const table = user.exam_type === 'NECO' ? NECO_2026 : WAEC_2026;
+          const table = examTable(user.exam_type);
           for (const subject of userSubjects) {
             const iso = table[subject];
             if (!iso) continue;
-            const days = daysUntil(nextOccurrence(iso));
+            const days = daysUntil(iso);
             if (MILESTONES.includes(days)) {
               const name = SUBJECT_MAP[subject] || subject;
               reminders.push(`${SUBJECT_EMOJI[subject] || '📖'} <b>${name}</b> in <b>${days} day${days !== 1 ? 's' : ''}!</b>`);

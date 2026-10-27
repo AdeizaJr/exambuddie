@@ -1322,6 +1322,16 @@ export async function setReferredBy(userId: number, referrerId: number): Promise
   );
 }
 
+// joined_at window instead of a separate "is new" flag: /start runs right after the row
+// is created, and the source IS NULL guard means the first tag always wins.
+export async function tagJoinSourceIfNew(telegramId: number, source: string): Promise<void> {
+  await pool.query(
+    `UPDATE users SET source = $2
+     WHERE telegram_id = $1 AND source IS NULL AND joined_at > NOW() - INTERVAL '10 minutes'`,
+    [telegramId, source]
+  );
+}
+
 export async function getConfirmedReferralCount(referrerId: number): Promise<number> {
   const { rows } = await pool.query(
     `SELECT COUNT(*) as c FROM users u

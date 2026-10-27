@@ -1,11 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "../theme-toggle";
 
-const BOT_URL = "https://t.me/ExamBuddieBot";
+// Tag the bot link with the section the visitor is in, so the bot can record where
+// new users joined from (blog, waec, jamb, neco, else the main landing page).
+function botUrlFor(pathname: string): string {
+  const section = pathname.split("/")[1];
+  const page = ["blog", "waec", "jamb", "neco"].includes(section) ? section : "landing";
+  return `https://t.me/ExamBuddieBot?start=from_${page}`;
+}
 
 export function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const BOT_URL = botUrlFor(usePathname() ?? "/");
 
   useEffect(() => {
     if (!menuOpen) return;
