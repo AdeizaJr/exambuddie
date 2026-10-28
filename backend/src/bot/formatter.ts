@@ -455,13 +455,48 @@ I'll give you 41,000+ real WAEC, JAMB &amp; NECO past questions, explain every a
 
 Before we start, please review our <a href="https://exambuddie.app/terms">Terms of Use</a> and <a href="https://exambuddie.app/privacy">Privacy Policy</a> — they cover what data we collect (your Telegram ID, exam preferences, quiz history) and how we use it.
 
-Tap below to agree and continue.`;
+<b>How old are you?</b>`;
+}
+
+// Shown to users who onboarded before the age question existed
+export function ageCheckPrompt(firstName: string): string {
+  return `📋 <b>Quick update, ${escHtml(firstName)}</b>
+
+We've updated our <a href="https://exambuddie.app/terms">Terms of Use</a> and <a href="https://exambuddie.app/privacy">Privacy Policy</a> to better protect students under 18.
+
+<b>How old are you?</b>`;
 }
 
 export function consentKeyboard() {
   return {
-    inline_keyboard: [[{ text: '✅ I Agree, Continue', callback_data: 'onboard:consent:agree' }]],
+    inline_keyboard: [
+      [{ text: "✅ I'm 18 or older, I agree", callback_data: 'onboard:consent:adult' }],
+      [{ text: "🧒 I'm under 18", callback_data: 'onboard:consent:under18' }],
+    ],
   };
+}
+
+export function guardianConsentPrompt(): string {
+  return `👨‍👩‍👧 <b>Ask your parent or guardian</b>
+
+Because you're under 18, Nigerian law (the Nigeria Data Protection Act) says a parent or guardian must agree before we store your quiz progress.
+
+Please show them this message and our <a href="https://exambuddie.app/privacy">Privacy Policy</a>. We only keep your Telegram name and ID, your exam choices and your quiz history. We never sell it or use it for ads.
+
+Has your parent or guardian agreed?`;
+}
+
+export function guardianConsentKeyboard() {
+  return {
+    inline_keyboard: [
+      [{ text: '✅ Yes, my parent/guardian agrees', callback_data: 'onboard:guardian:yes' }],
+      [{ text: '⏳ Not yet', callback_data: 'onboard:guardian:no' }],
+    ],
+  };
+}
+
+export function guardianNotYet(): string {
+  return `👍 No problem. Show your parent or guardian the message above, then send /start when they've agreed and we'll pick up from here.`;
 }
 
 export function welcome(): string {

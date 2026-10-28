@@ -23,7 +23,7 @@ export default function PrivacyPage() {
           </Link>
         </div>
         <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white">Privacy Policy</h1>
-        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: July 2026</p>
+        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: October 2026</p>
 
         <div className="space-y-8 text-slate-700 dark:text-slate-300 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_p]:leading-relaxed [&_ul]:ml-4 [&_ul]:list-disc [&_ul]:space-y-1">
           <section>
@@ -47,6 +47,8 @@ export default function PrivacyPage() {
               <li>Your quiz and practice history: questions answered, scores, time taken</li>
               <li>Your subscription status and payment reference numbers</li>
               <li>Your daily streak and progress statistics</li>
+              <li>Whether you are 18 or older or under 18, and, if under 18, the date your parent or guardian agreed (see section 9)</li>
+              <li>Which link you used to first open the bot (for example our website, a blog post, or a friend&apos;s invite), and who invited you if you joined through an invite link</li>
               <li>
                 Your phone number (<strong>optional</strong>), only if you choose to share it via
                 the bot. We use this to contact you about your subscription, account changes, or
@@ -54,6 +56,14 @@ export default function PrivacyPage() {
                 later via Settings.
               </li>
             </ul>
+            <p className="mt-3">
+              When you visit our website, we count page visits using our own first-party
+              tracker. It stores a random visitor ID in your browser and records the page you
+              viewed and the site that linked you to it. It does not record your IP address,
+              keystrokes or anything you type, and we use no third-party analytics or session
+              recording tools. Our website fonts are served from our own servers, not from
+              Google.
+            </p>
             <p className="mt-3">
               We do <strong>not</strong> collect your email address or any information beyond
               what is listed above.
@@ -95,8 +105,10 @@ export default function PrivacyPage() {
             </p>
             <p className="mt-2">
               <strong>Cross-border transfers:</strong> Your data is transferred from Nigeria to the United States (Railway infrastructure).
-              This transfer is covered by contractual data processing agreements with Railway, which provide equivalent protections to those required under the Nigeria Data Protection Act 2023.
-              By using ExamBuddie, you acknowledge this transfer.
+              We make this transfer under Part VIII of the Nigeria Data Protection Act 2023, relying on
+              Railway&apos;s data processing agreement, which contractually requires protections
+              equivalent to those under Nigerian law. We transfer only the data needed to run the
+              service, and the rights described in this policy apply wherever your data is stored.
             </p>
           </section>
 
@@ -171,12 +183,15 @@ export default function PrivacyPage() {
               ExamBuddie is designed for secondary school and university students. Our users
               commonly include students aged 15–17 preparing for WAEC and JAMB. We recognise
               that many users are under 18 and apply heightened care to their data as required
-              by the Nigeria Data Protection Act 2023:
+              by the Nigeria Data Protection Act 2023, which treats anyone under 18 as a child:
             </p>
             <ul>
+              <li>When you first start the bot, we ask whether you are 18 or older or under 18</li>
+              <li>If you are under 18, we ask you to confirm that your parent or guardian has read this policy and agrees before we store your progress. We record the date of that confirmation</li>
               <li>We collect only the minimum data needed to deliver the service</li>
-              <li>We do not share personal data of under-18 users with any third party for commercial purposes</li>
-              <li>Parental or guardian consent is required for users under 13. If you believe a child under 13 has used the service without parental consent, contact us and we will delete the account promptly</li>
+              <li>We do not share personal data of under-18 users with any third party for commercial purposes, and we never use it for advertising</li>
+              <li>A parent or guardian can ask us at any time to see, correct or delete their child&apos;s data, or withdraw their consent, using the contact details in section 8 or the <strong>/support</strong> command</li>
+              <li>If you believe a child has used ExamBuddie without their parent or guardian&apos;s agreement, contact us and we will delete the account promptly</li>
             </ul>
           </section>
 
