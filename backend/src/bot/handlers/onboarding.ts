@@ -8,6 +8,16 @@ import { maybeAskPhone } from './phone';
 export async function handleStart(ctx: any): Promise<void> {
   const user = await db.upsertUser(ctx);
 
+  // Onboarded before the age question existed (or an under-18 still waiting on a
+  // guardian): ask once before the normal greeting.
+  if (user.exam_type && user.subjects && user.subjects.length > 0 && !hasValidConsent(user)) {
+    await ctx.reply(fmt.ageCheckPrompt(user.first_name), {
+      parse_mode: 'HTML',
+      reply_markup: fmt.consentKeyboard(),
+    });
+    return;
+  }
+
   if (user.exam_type && user.subjects && user.subjects.length > 0) {
     await redis.clearSession(ctx.from.id);
     const stats = await db.getUserStats(user.id);
@@ -37,23 +47,79 @@ export async function handleStart(ctx: any): Promise<void> {
   });
 }
 
-// Step 0 — Consent agreed → move to year selection
-export async function handleOnboardConsent(ctx: any): Promise<void> {
-  await ctx.answerCbQuery();
+// NDPA s.31 treats anyone under 18 as a child, so their consent only counts once a
+// parent or guardian has agreed too.
+function hasValidConsent(user: any): boolean {
+  if (!user.consent_given_at) return false;
+  if (user.age_group === 'adult') return true;
+  return user.age_group === 'under18' && !!user.guardian_consent_at;
+}
 
-  await redis.updateSession(ctx.from.id, { step: 'year' });
-
-  // Record consent timestamp for NDPA compliance
-  db.updateUser(ctx.from.id, { consent_given_at: new Date().toISOString() } as any).catch(() => {});
-
+// After consent: existing users go back to their normal greeting, new users start setup
+async function continueAfterConsent(ctx: any): Promise<void> {
   await ctx.editMessageText('✅ <b>Thanks — you\'re all set.</b> You\'ve agreed to our Terms of Use and Privacy Policy.', {
     parse_mode: 'HTML',
   });
 
+  const user = await db.getUser(ctx.from.id);
+  if (user?.exam_type && user.subjects && user.subjects.length > 0) {
+    return handleStart(ctx);
+  }
+
+  await redis.updateSession(ctx.from.id, { step: 'year' });
   await ctx.reply(fmt.welcome(), {
     parse_mode: 'HTML',
     reply_markup: fmt.onboardYearKeyboard(),
   });
+}
+
+// Step 0 — Age answered on the consent screen
+export async function handleOnboardConsent(ctx: any): Promise<void> {
+  const choice = ctx.callbackQuery.data.split(':')[2]; // 'adult' | 'under18' | legacy 'agree'
+  await ctx.answerCbQuery();
+
+  if (choice === 'adult') {
+    // Awaited, not fire-and-forget: continueAfterConsent re-reads the user row
+    await db.updateUser(ctx.from.id, {
+      age_group: 'adult',
+      consent_given_at: new Date().toISOString(),
+    } as any);
+    return continueAfterConsent(ctx);
+  }
+
+  if (choice === 'under18') {
+    await db.updateUser(ctx.from.id, { age_group: 'under18' } as any);
+    await ctx.editMessageText(fmt.guardianConsentPrompt(), {
+      parse_mode: 'HTML',
+      reply_markup: fmt.guardianConsentKeyboard(),
+    });
+    return;
+  }
+
+  // Old single "I Agree" button still sitting in someone's chat: it never asked their
+  // age, so swap it for the current prompt instead of recording consent.
+  await ctx.editMessageText(fmt.consentPrompt(ctx.from.first_name || 'there'), {
+    parse_mode: 'HTML',
+    reply_markup: fmt.consentKeyboard(),
+  });
+}
+
+// Step 0b — Under-18: parent/guardian answer
+export async function handleGuardianConsent(ctx: any): Promise<void> {
+  const answer = ctx.callbackQuery.data.split(':')[2]; // 'yes' | 'no'
+  await ctx.answerCbQuery();
+
+  if (answer === 'yes') {
+    const now = new Date().toISOString();
+    await db.updateUser(ctx.from.id, {
+      age_group: 'under18',
+      consent_given_at: now,
+      guardian_consent_at: now,
+    } as any);
+    return continueAfterConsent(ctx);
+  }
+
+  await ctx.editMessageText(fmt.guardianNotYet(), { parse_mode: 'HTML' });
 }
 
 // Step 1 — Year selected → move to exam type

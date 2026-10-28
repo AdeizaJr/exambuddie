@@ -25,7 +25,7 @@ export default async function TermsPage() {
           </Link>
         </div>
         <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white">Terms of Use</h1>
-        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: July 2026</p>
+        <p className="mb-10 text-sm text-slate-500 dark:text-slate-400">Last updated: October 2026</p>
 
         <div className="space-y-8 text-slate-700 dark:text-slate-300 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_p]:leading-relaxed [&_ul]:ml-4 [&_ul]:list-disc [&_ul]:space-y-1">
           <section>
@@ -49,9 +49,11 @@ export default async function TermsPage() {
           <section>
             <h2>3. Eligibility</h2>
             <p>
-              You must be at least 13 years old to use ExamBuddie. By using the service, you
-              represent that you meet this requirement. Students under 18 should have parental
-              or guardian awareness of their subscription.
+              You must be at least 13 years old to use ExamBuddie. If you are under 18, your
+              parent or guardian must agree to these Terms and our Privacy Policy before you use
+              the service, and you will be asked to confirm this when you start the bot. A paid
+              subscription for a user under 18 must be made with the knowledge and agreement of
+              their parent or guardian.
             </p>
           </section>
 

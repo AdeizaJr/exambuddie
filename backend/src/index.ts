@@ -172,7 +172,8 @@ bot.on('callback_query', async (ctx: any) => {
   if (!data) return;
 
   // Onboarding
-  if (data === 'onboard:consent:agree') return onboarding.handleOnboardConsent(ctx);
+  if (data.startsWith('onboard:consent:')) return onboarding.handleOnboardConsent(ctx);
+  if (data.startsWith('onboard:guardian:')) return onboarding.handleGuardianConsent(ctx);
   if (data.startsWith('onboard:year:')) return onboarding.handleOnboardYear(ctx);
   if (data.startsWith('onboard:exam:')) return onboarding.handleExamType(ctx);
   if (data.startsWith('onboard:subject:')) return onboarding.handleSubjectToggle(ctx);

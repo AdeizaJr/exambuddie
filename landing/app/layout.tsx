@@ -122,7 +122,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-NG" className={`${geist.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#1D4ED8" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://t.me" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script

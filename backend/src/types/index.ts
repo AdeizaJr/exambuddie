@@ -23,6 +23,9 @@ export interface User {
   trial_used?: boolean;
   daily_reminder_hour?: number | null;
   source?: string | null;
+  consent_given_at?: string | null;
+  age_group?: 'adult' | 'under18' | null;
+  guardian_consent_at?: string | null;
   joined_at: string;
   updated_at: string;
 }

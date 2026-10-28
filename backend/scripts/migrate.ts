@@ -368,6 +368,10 @@ WHERE id = 116125`,
 
   // ── NDPA compliance: store consent timestamp ──────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS consent_given_at TIMESTAMPTZ DEFAULT NULL`,
+  // NDPA s.31: anyone under 18 is a child, processing needs a parent/guardian's consent.
+  // age_group is self-declared at the consent screen ('adult' | 'under18').
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS age_group VARCHAR(10) DEFAULT NULL`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS guardian_consent_at TIMESTAMPTZ DEFAULT NULL`,
 
   // ── Spaced repetition cards — per-(user, question) review intervals ────────
   `CREATE TABLE IF NOT EXISTS sr_cards (
