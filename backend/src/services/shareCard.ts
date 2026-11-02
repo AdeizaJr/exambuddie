@@ -17,6 +17,7 @@ import sharp from 'sharp';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as opentype from 'opentype.js';
+import { glyphPathData } from './svgPath';
 import { streakBadge } from '../bot/formatter';
 
 let regularFont: opentype.Font | null = null;
@@ -71,7 +72,7 @@ function textPath(
     const w = bbox.x2 - bbox.x1;
     const h = bbox.y2 - bbox.y1;
     if (!Number.isFinite(w) || !Number.isFinite(h) || w > fontSize * 2 || h > fontSize * 2) continue;
-    const d = gp.toPathData(2);
+    const d = glyphPathData(gp);
     if (d.includes('NaN') || d.includes('Infinity')) continue;
     parts.push(d);
   }
