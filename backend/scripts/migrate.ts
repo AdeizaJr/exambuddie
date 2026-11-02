@@ -648,6 +648,29 @@ WHERE id = 116125`,
      SELECT 1 FROM admin_message_log m
      WHERE m.kind = 'broadcast' AND m.sent_at = b.sent_at AND m.message = b.message
    )`,
+  // Per-user log of automatic bot messages (cron nudges, QOTD...), shown in admin Messages tab
+  `CREATE TABLE IF NOT EXISTS bot_message_log (
+    id BIGSERIAL PRIMARY KEY,
+    telegram_id BIGINT NOT NULL,
+    kind TEXT NOT NULL,
+    message TEXT NOT NULL,
+    ok BOOLEAN NOT NULL,
+    error TEXT,
+    sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_bot_message_log_tid ON bot_message_log(telegram_id, sent_at DESC)`,
+  `CREATE INDEX IF NOT EXISTS idx_bot_message_log_sent_at ON bot_message_log(sent_at)`,
+  // Inactivity nudge now matches a 3-10 day range instead of exactly 3 days. On first add,
+  // mark everyone already past day 3 as nudged so the switch doesn't re-nudge people who
+  // got the old day-3 message. Guarded so it only runs once, not on every deploy.
+  `DO $$ BEGIN
+     IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'users' AND column_name = 'inactivity_nudge_sent_at') THEN
+       ALTER TABLE users ADD COLUMN inactivity_nudge_sent_at TIMESTAMPTZ;
+       UPDATE users SET inactivity_nudge_sent_at = NOW()
+       WHERE last_active_date < (NOW() AT TIME ZONE 'Africa/Lagos')::date - 3;
+     END IF;
+   END $$`,
 ];
 
 async function migrate(): Promise<void> {

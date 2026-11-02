@@ -68,12 +68,14 @@ function UserMessages({ telegramId }: { telegramId: number }) {
   return (
     <div className="max-h-[60vh] space-y-2 overflow-y-auto pr-1">
       {messages.map((m) => (
-        <div key={m.id} className="rounded-lg border border-border bg-surface2 p-3">
+        <div key={`${m.kind}-${m.id}`} className="rounded-lg border border-border bg-surface2 p-3">
           <div className="mb-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
-              m.kind === "dm" ? "border-purple-400/30 bg-purple-400/10 text-purple-300" : "border-accent/30 bg-accent/10 text-accent"
+              m.kind === "dm" ? "border-purple-400/30 bg-purple-400/10 text-purple-300"
+                : m.kind === "auto" ? "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                : "border-accent/30 bg-accent/10 text-accent"
             }`}>
-              {m.kind === "dm" ? "DM" : `Broadcast · ${m.target}`}
+              {m.kind === "dm" ? "DM" : m.kind === "auto" ? `Auto · ${m.target}` : `Broadcast · ${m.target}`}
             </span>
             <span className={`text-xs ${m.ok ? "text-green-400" : "text-red-400"}`}>
               {m.ok ? "✓ Delivered" : `✗ Failed${m.error ? `: ${m.error}` : ""}`}

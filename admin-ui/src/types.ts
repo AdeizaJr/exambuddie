@@ -289,9 +289,9 @@ export interface AdminMessage {
 
 export interface UserAdminMessage {
   id: number;
-  kind: "broadcast" | "dm";
+  kind: "broadcast" | "dm" | "auto";
   message: string;
-  target: string | null;
+  target: string | null; // for "auto": the cron job that sent it
   sent_by: string | null;
   sent_at: string;
   ok: boolean;
