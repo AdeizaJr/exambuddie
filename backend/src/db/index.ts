@@ -1089,6 +1089,7 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   // room_participants uses telegram_id directly (no FK), must delete manually
   await pool.query('DELETE FROM room_participants WHERE telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM admin_message_recipients WHERE telegram_id = $1', [telegramId]);
+  await pool.query('DELETE FROM bot_message_log WHERE telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
@@ -1996,17 +1997,34 @@ export async function getAdminMessages(opts: {
   return { rows, total: countRows[0].n };
 }
 
+// Admin broadcasts/DMs plus automatic bot messages (cron nudges, QOTD, etc.) for one user.
+// Automatic ones come back as kind 'auto' with the cron job name in `target`.
 export async function getUserAdminMessages(telegramId: number | string, limit = 100): Promise<any[]> {
   const { rows } = await pool.query(
-    `SELECT m.id, m.kind, m.message, m.target, m.sent_by, m.sent_at, r.ok, r.error
-     FROM admin_message_recipients r
-     JOIN admin_message_log m ON m.id = r.message_id
-     WHERE r.telegram_id = $1
-     ORDER BY m.sent_at DESC, m.id DESC
+    `SELECT * FROM (
+       SELECT m.id, m.kind, m.message, m.target, m.sent_by, m.sent_at, r.ok, r.error
+       FROM admin_message_recipients r
+       JOIN admin_message_log m ON m.id = r.message_id
+       WHERE r.telegram_id = $1
+       UNION ALL
+       SELECT b.id::int, 'auto', b.message, b.kind, NULL, b.sent_at, b.ok, b.error
+       FROM bot_message_log b
+       WHERE b.telegram_id = $1
+     ) x
+     ORDER BY sent_at DESC, id DESC
      LIMIT $2`,
     [telegramId, limit]
   );
   return rows;
+}
+
+export async function logBotMessage(
+  telegramId: number | string, kind: string, message: string, ok: boolean, error: string | null
+): Promise<void> {
+  await pool.query(
+    'INSERT INTO bot_message_log (telegram_id, kind, message, ok, error) VALUES ($1, $2, $3, $4, $5)',
+    [telegramId, kind, message, ok, error]
+  );
 }
 
 export async function getAuditLogs(limit = 100, offset = 0): Promise<any[]> {

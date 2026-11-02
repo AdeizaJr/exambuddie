@@ -51,7 +51,7 @@ async function pickWeakTopicQuestion(
 function safeCron(pattern: string, name: string, task: () => Promise<void>, options?: any): void {
   cron.schedule(pattern, async () => {
     try {
-      await task();
+      await outreach.runAsJob(name, task);
     } catch (e: any) {
       console.error(`[CRON] ${name} error:`, e);
       await db.createAlert(`cron:${name}`, e?.message || String(e), 'warning').catch(() => {});
@@ -59,7 +59,11 @@ function safeCron(pattern: string, name: string, task: () => Promise<void>, opti
   }, options);
 }
 
-export default function startCrons(bot: any): void {
+export default function startCrons(rawBot: any): void {
+  // Same bot, but sends made inside a cron job are recorded per user (bot_message_log)
+  // so the admin "Messages" tab shows automatic nudges, not just admin broadcasts/DMs.
+  const bot = { telegram: outreach.withSendLogging(rawBot.telegram) };
+
   // ── Every 15s — manage challenge rooms ────────────────────────────────────
   // startRoom/endRoom are status-guarded so a re-processed room is a no-op even if this
   // tick does overlap — this flag is the cheap first line of defense so a slow tick
@@ -110,6 +114,8 @@ export default function startCrons(bot: any): void {
           )
       `);
       console.log(`[CRON] Broke streaks for ${rowCount} inactive users`);
+      // Keep the per-user automatic-message log small (admin view only needs recent history).
+      await db.query(`DELETE FROM bot_message_log WHERE sent_at < NOW() - INTERVAL '90 days'`);
     },
     { timezone: 'UTC' } as any
   );
@@ -375,16 +381,22 @@ export default function startCrons(bot: any): void {
   });
 
   // ── Daily 2pm UTC (3pm WAT) — 3-day inactivity nudge ────────────────────
+  // Anyone 3 to 10 days inactive who hasn't been nudged since they were last active.
+  // A range (not "exactly 3 days ago") so a skipped run (redeploy at 3pm, daily cap
+  // already used) is picked up the next day instead of losing the user for good.
+  // The 10-day ceiling stops it reaching long-dormant accounts.
   safeCron('0 14 * * *', 'inactivity-nudge', async () => {
     const watNow = new Date(Date.now() + 60 * 60 * 1000);
-    const threeDaysAgoWAT = new Date(watNow.getTime() - 3 * 86400000).toISOString().split('T')[0];
+    const daysAgoWAT = (n: number) => new Date(watNow.getTime() - n * 86400000).toISOString().split('T')[0];
 
     const { rows: users } = await db.query(
-      `SELECT telegram_id, first_name, streak
+      `SELECT telegram_id, first_name, streak, last_active_date::text AS last_active_date
        FROM users
        WHERE notifications_enabled = TRUE AND blocked_at IS NULL
-         AND last_active_date = $1`,
-      [threeDaysAgoWAT]
+         AND last_active_date BETWEEN $2 AND $1
+         AND (inactivity_nudge_sent_at IS NULL
+              OR (inactivity_nudge_sent_at AT TIME ZONE 'Africa/Lagos')::date <= last_active_date)`,
+      [daysAgoWAT(3), daysAgoWAT(10)]
     );
 
     let sent = 0;
@@ -396,13 +408,15 @@ export default function startCrons(bot: any): void {
         try {
           if (!(await outreach.claimBudget(user.telegram_id))) return;
           claimed = true;
+          const days = Math.round((Date.parse(watNow.toISOString().split('T')[0]) - Date.parse(user.last_active_date)) / 86400000);
           const streakWarn = (user.streak || 0) > 0
             ? `\n\n⚠️ Your <b>${user.streak}-day streak</b> is at risk!` : '';
           await bot.telegram.sendMessage(
             user.telegram_id,
-            `👋 <b>Miss us, ${fmt.escHtml(user.first_name)}?</b>\n\nYou haven't practised in 3 days. Even 5 questions today keeps you on track for your exam.${streakWarn}\n\n📚 /practice`,
+            `👋 <b>Miss us, ${fmt.escHtml(user.first_name)}?</b>\n\nYou haven't practised in ${days} days. Even 5 questions today keeps you on track for your exam.${streakWarn}\n\n📚 /practice`,
             { parse_mode: 'HTML' }
           );
+          await db.query('UPDATE users SET inactivity_nudge_sent_at = NOW() WHERE telegram_id = $1', [user.telegram_id]);
           sent++;
         } catch (err) {
           if (claimed) await outreach.refundBudget(user.telegram_id);
