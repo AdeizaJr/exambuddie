@@ -130,13 +130,15 @@ export default function startCrons(rawBot: any): void {
   safeCron('0 * * * *', 'expired-subscriptions', async () => {
     const expired = await payments.checkExpiredSubscriptions();
     for (const user of expired) {
-      if (!user.notifications_enabled) continue;
+      if (!user.notifications_enabled || user.blocked_at) continue;
       try {
-        await bot.telegram.sendMessage(
-          user.telegram_id,
-          `⏰ <b>Your ExamBuddie Premium has expired, ${fmt.escHtml(user.first_name)}!</b>\n\nYou're back on the free plan (5 questions/day). Renew to keep unlimited access.\n\n👇 Tap /subscribe to continue your exam prep.`,
-          { parse_mode: 'HTML' }
-        );
+        const text = user.was_trial
+          ? fmt.trialEndedMessage(user.first_name)
+          : `⏰ <b>Your ExamBuddie Premium has expired, ${fmt.escHtml(user.first_name)}!</b>\n\nYou're back on the free plan (${fmt.SUBJECT_Q_LIMIT} questions per subject every ${fmt.SUBJECT_WINDOW_HRS} hours). Renew to keep unlimited access 👇`;
+        await bot.telegram.sendMessage(user.telegram_id, text, {
+          parse_mode: 'HTML',
+          reply_markup: fmt.subscribeKeyboard(),
+        });
       } catch (err) {
         await outreach.noteSendFailure(user.telegram_id, err);
       }
@@ -146,13 +148,22 @@ export default function startCrons(rawBot: any): void {
   });
 
   // ── 3-day expiry reminders — runs daily at 9am WAT (8am UTC) ──────────────
+  // Skips welcome-trial users (they get the personal trial-ending recap below
+  // instead) and anyone on a live auto-renewing plan (nothing for them to do).
   safeCron('0 8 * * *', 'expiry-reminders', async () => {
     const { rows } = await db.query(
       `SELECT telegram_id, first_name, plan_expires_at
        FROM users
        WHERE plan = 'premium'
        AND plan_expires_at BETWEEN NOW() AND NOW() + INTERVAL '3 days'
-       AND notifications_enabled = true AND blocked_at IS NULL`
+       AND notifications_enabled = true AND blocked_at IS NULL
+       AND NOT (${db.ON_TRIAL_SQL})
+       AND NOT EXISTS (
+         SELECT 1 FROM subscriptions s
+         WHERE s.user_id = users.id AND s.status = 'active'
+           AND s.is_recurring = TRUE AND s.cancelled_at IS NULL
+           AND s.paystack_subscription_code IS NOT NULL
+       )`
     );
 
     for (const user of rows) {
@@ -167,6 +178,36 @@ export default function startCrons(rawBot: any): void {
         await outreach.noteSendFailure(user.telegram_id, err);
       }
     }
+  });
+
+  // ── Trial ending recap — daily at 10am WAT (9am UTC) ───────────────────────
+  // One message per welcome-trial user, when 1-2 days are left: what they did in
+  // the trial, what changes on the free plan, and the plan buttons. The 24-hour
+  // window on a daily job means each user lands in it exactly once.
+  safeCron('0 9 * * *', 'trial-ending', async () => {
+    const { rows } = await db.query(
+      `SELECT users.id, users.telegram_id, users.first_name, users.plan_expires_at, tg.granted_at
+       FROM users
+       JOIN trial_grants tg ON tg.telegram_id = users.telegram_id
+       WHERE users.plan = 'premium'
+         AND users.plan_expires_at > NOW() + INTERVAL '1 day'
+         AND users.plan_expires_at <= NOW() + INTERVAL '2 days'
+         AND users.notifications_enabled = true AND users.blocked_at IS NULL
+         AND ${db.ON_TRIAL_SQL}`
+    );
+    for (const user of rows) {
+      try {
+        const recap = await db.getTrialRecap(user.id, user.granted_at);
+        await bot.telegram.sendMessage(
+          user.telegram_id,
+          fmt.trialEndingMessage(user.first_name, user.plan_expires_at, recap),
+          { parse_mode: 'HTML', reply_markup: fmt.subscribeKeyboard() }
+        );
+      } catch (err) {
+        await outreach.noteSendFailure(user.telegram_id, err);
+      }
+    }
+    if (rows.length) console.log(`[CRON] trial-ending: messaged ${rows.length} users`);
   });
 
   // Shared footer for the two "stalled new user" nudges below: someone stuck at

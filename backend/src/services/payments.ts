@@ -356,7 +356,8 @@ export async function checkExpiredSubscriptions(): Promise<any[]> {
   const { rows } = await db.query(
     `UPDATE users SET plan = 'free'
      WHERE plan = 'premium' AND plan_expires_at < NOW()
-     RETURNING telegram_id, first_name, notifications_enabled`
+     RETURNING telegram_id, first_name, notifications_enabled, blocked_at,
+               (${db.ON_TRIAL_SQL}) AS was_trial`
   );
   return rows;
 }

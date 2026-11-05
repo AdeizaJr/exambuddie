@@ -1127,7 +1127,7 @@ export function statsFilterKeyboard() {
 export function statsMessage(user: User, stats: any, weakTopics?: any[], examType?: string, subjectStats?: any[], mistakePattern?: string | null): string {
   const plan = user.plan === 'premium'
     ? `⭐ Premium (expires ${user.plan_expires_at ? new Date(user.plan_expires_at).toLocaleDateString('en-NG') : 'N/A'})`
-    : '🆓 Free (5 questions/day)';
+    : `🆓 Free (${SUBJECT_Q_LIMIT} questions per subject every ${SUBJECT_WINDOW_HRS} hours)`;
 
   const weakSection = weakTopics && weakTopics.length > 0
     ? '\n⚠️ <b>Weak Topics (focus here!):</b>\n' +
@@ -1182,6 +1182,68 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 
 💳 <b>Plan:</b> ${plan}
 ${subjectSection}${weakSection}${drillTip}${mistakeTip}`;
+}
+
+// Sent once, 1-2 days before the 14-day welcome trial runs out. Built around what
+// the student actually did, so the choice is "keep this going" not "buy a thing".
+export function trialEndingMessage(
+  firstName: string,
+  expiresAt: Date | string,
+  r: { total: number; accuracy: number | null; daysActive: number; cbtCount: number;
+       bestSubject: { subject: string; accuracy: number } | null;
+       weakTopic: { subject: string; topic: string; accuracy: number } | null },
+): string {
+  const p = getPricing();
+  const perDay = Math.round(p.monthly_ngn / 30);
+  const ends = new Date(expiresAt).toLocaleDateString('en-NG', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Africa/Lagos' });
+  const name = escHtml(firstName || 'there');
+  const freeLine =
+    `On the free plan you get ${SUBJECT_Q_LIMIT} questions per subject every ${SUBJECT_WINDOW_HRS} hours, ` +
+    `and CBT mode, mock exams, topic drills and your review deck lock.`;
+  const priceLine = `Premium is ₦${p.monthly_ngn.toLocaleString()} a month, about ₦${perDay} a day.`;
+
+  if (r.total === 0) {
+    return `⏳ <b>${name}, your free Premium ends ${ends}</b>
+
+You haven't tried a question yet, so you still have time to see what it's like with no limits. Tap /practice and do 10 questions today, it takes about 5 minutes.
+
+${freeLine}
+
+${priceLine} Pick a plan below whenever you're ready 👇`;
+  }
+
+  const lines: string[] = [
+    `📝 <b>${r.total.toLocaleString()}</b> questions answered`,
+  ];
+  if (r.accuracy != null) lines.push(`🎯 <b>${r.accuracy}%</b> correct`);
+  if (r.daysActive > 1) lines.push(`📅 Studied on <b>${r.daysActive}</b> different days`);
+  if (r.cbtCount > 0) lines.push(`📋 <b>${r.cbtCount}</b> timed CBT exam${r.cbtCount === 1 ? '' : 's'} done`);
+  if (r.bestSubject) {
+    lines.push(`💪 Strongest: <b>${escHtml(SUBJECT_MAP[r.bestSubject.subject] || r.bestSubject.subject)}</b> (${r.bestSubject.accuracy}%)`);
+  }
+
+  const weak = r.weakTopic
+    ? `\n\nStill to fix: <b>${escHtml(r.weakTopic.topic)}</b> in ${escHtml(SUBJECT_MAP[r.weakTopic.subject] || r.weakTopic.subject)}, you're getting ${r.weakTopic.accuracy}% there. /drill is the fastest way to close that gap.`
+    : '';
+
+  return `⏳ <b>${name}, your free Premium ends ${ends}</b>
+
+Here's what you've done in your trial:
+${lines.join('\n')}${weak}
+
+${freeLine}
+
+${priceLine} Keep your momentum going 👇`;
+}
+
+// Sent when the welcome trial has just run out.
+export function trialEndedMessage(firstName: string): string {
+  const p = getPricing();
+  return `🔓 <b>Your free Premium has ended, ${escHtml(firstName || 'there')}</b>
+
+You're on the free plan now: ${SUBJECT_Q_LIMIT} questions per subject every ${SUBJECT_WINDOW_HRS} hours. Your stats, streak and bookmarks are all still here.
+
+Want unlimited practice, CBT mode and topic drills back? Premium starts at ₦${p.monthly_ngn.toLocaleString()} a month 👇`;
 }
 
 export function upgradeMessage(): string {

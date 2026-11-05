@@ -373,7 +373,12 @@ export async function handleQuizNext(ctx: any): Promise<void> {
 
   // Re-check premium on every step — revoked access ends the quiz immediately
   const user = await db.getUser(ctx.from.id);
-  if (!user || user.plan !== 'premium') {
+  // A plan that ran out on its own after this quiz began (trial or subscription
+  // ending mid-exam) lets the student finish; the 60-min deadline still applies.
+  // An admin revoke leaves plan_expires_at in the future or null, so it still ends.
+  const expiresMs = user?.plan_expires_at ? new Date(user.plan_expires_at).getTime() : NaN;
+  const lapsedMidQuiz = expiresMs > quizState.startTime && expiresMs <= Date.now();
+  if (!user || (user.plan !== 'premium' && !lapsedMidQuiz)) {
     await endQuiz(ctx, quizState, 'revoked');
     return;
   }
