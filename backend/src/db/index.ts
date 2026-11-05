@@ -1077,6 +1077,80 @@ export async function getWeakTopicsAllSubjects(
   }));
 }
 
+// ── Welcome-trial helpers ───────────────────────────────────────────────────
+// A user counts as "on the welcome trial" when they have a trial_grants row, no
+// live paid subscription, and an expiry no later than grant + 14 days (an admin
+// gift or a paid renewal pushes it past that). Same rule as the admin USER_TIER_SQL.
+export const ON_TRIAL_SQL = `
+  EXISTS (
+    SELECT 1 FROM trial_grants t
+    WHERE t.telegram_id = users.telegram_id
+      AND users.plan_expires_at <= t.granted_at + INTERVAL '14 days 1 hour'
+  )
+  AND NOT EXISTS (
+    SELECT 1 FROM subscriptions s
+    WHERE s.user_id = users.id AND s.status = 'active' AND s.expires_at > NOW()
+  )`;
+
+export interface TrialRecap {
+  total: number;
+  accuracy: number | null;
+  daysActive: number;
+  cbtCount: number;
+  bestSubject: { subject: string; accuracy: number } | null;
+  weakTopic: { subject: string; topic: string; accuracy: number } | null;
+}
+
+// What a user did since their trial started, for the "trial ending" message.
+export async function getTrialRecap(userId: number, since: Date | string): Promise<TrialRecap> {
+  const [totals, cbt, best, weak] = await Promise.all([
+    pool.query(
+      `SELECT COUNT(*) AS total,
+              ROUND(100.0 * SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0)) AS accuracy,
+              COUNT(DISTINCT (attempted_at AT TIME ZONE 'Africa/Lagos')::date) AS days_active
+       FROM attempts WHERE user_id = $1 AND attempted_at >= $2`,
+      [userId, since]
+    ),
+    pool.query(
+      `SELECT COUNT(*) AS n FROM sessions
+       WHERE user_id = $1 AND mode = 'quiz' AND ended_at IS NOT NULL AND started_at >= $2`,
+      [userId, since]
+    ),
+    pool.query(
+      `SELECT q.subject,
+              ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*)) AS accuracy
+       FROM attempts a JOIN questions q ON q.id = a.question_id
+       WHERE a.user_id = $1 AND a.attempted_at >= $2
+       GROUP BY q.subject HAVING COUNT(*) >= 10
+       ORDER BY accuracy DESC, COUNT(*) DESC LIMIT 1`,
+      [userId, since]
+    ),
+    pool.query(
+      `SELECT q.subject, q.topic,
+              ROUND(100.0 * SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) / COUNT(*)) AS accuracy
+       FROM attempts a JOIN questions q ON q.id = a.question_id
+       WHERE a.user_id = $1 AND a.attempted_at >= $2 AND q.topic IS NOT NULL
+       GROUP BY q.subject, q.topic HAVING COUNT(*) >= 3
+         AND SUM(CASE WHEN a.is_correct THEN 1 ELSE 0 END) < COUNT(*)
+       ORDER BY accuracy ASC, COUNT(*) DESC LIMIT 1`,
+      [userId, since]
+    ),
+  ]);
+  const t = totals.rows[0];
+  return {
+    total: parseInt(t.total, 10) || 0,
+    accuracy: t.accuracy == null ? null : parseFloat(t.accuracy),
+    daysActive: parseInt(t.days_active, 10) || 0,
+    cbtCount: parseInt(cbt.rows[0].n, 10) || 0,
+    bestSubject: best.rows[0]
+      ? { subject: best.rows[0].subject, accuracy: parseFloat(best.rows[0].accuracy) }
+      : null,
+    weakTopic: weak.rows[0]
+      ? { subject: weak.rows[0].subject, topic: weak.rows[0].topic, accuracy: parseFloat(weak.rows[0].accuracy) }
+      : null,
+  };
+}
+
 export async function markWeeklyReportSent(userIds: number[]): Promise<void> {
   if (!userIds.length) return;
   await pool.query(`UPDATE users SET last_report_sent_at = NOW() WHERE id = ANY($1)`, [userIds]);
