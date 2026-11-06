@@ -434,6 +434,21 @@ WHERE id = 116125`,
   )`,
   `CREATE INDEX IF NOT EXISTS idx_theory_subject_year ON theory_questions(subject, year, exam_type)`,
   `CREATE INDEX IF NOT EXISTS idx_theory_active ON theory_questions(is_active, subject)`,
+  // Theory review page in admin: theory vs practical paper, where the question came from
+  // (sitting + number), diagrams, and a "checked by a human" mark separate from is_active.
+  `ALTER TABLE theory_questions ALTER COLUMN source_id TYPE VARCHAR(80)`,
+  `ALTER TABLE theory_questions ADD COLUMN IF NOT EXISTS paper_type VARCHAR(12) NOT NULL DEFAULT 'theory'`,
+  `ALTER TABLE theory_questions ADD COLUMN IF NOT EXISTS sitting VARCHAR(60)`,
+  `ALTER TABLE theory_questions ADD COLUMN IF NOT EXISTS question_number INT`,
+  `ALTER TABLE theory_questions ADD COLUMN IF NOT EXISTS image_urls TEXT[] NOT NULL DEFAULT '{}'`,
+  `ALTER TABLE theory_questions ADD COLUMN IF NOT EXISTS reviewed BOOLEAN NOT NULL DEFAULT false`,
+  `ALTER TABLE theory_questions ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ`,
+  `DO $$ BEGIN
+     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'theory_questions_paper_type_check') THEN
+       ALTER TABLE theory_questions ADD CONSTRAINT theory_questions_paper_type_check
+         CHECK (paper_type IN ('theory', 'practical'));
+     END IF;
+   END $$`,
 
   // ── Theory attempts ───────────────────────────────────────────────────────
   `CREATE TABLE IF NOT EXISTS theory_attempts (

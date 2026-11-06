@@ -318,3 +318,26 @@ export interface PricingHistoryEntry {
   updated_by: string | null;
   updated_at: string;
 }
+
+export interface TheoryQuestion {
+  id: number;
+  source_id: string;
+  exam_type: "WAEC" | "NECO" | "JAMB";
+  subject: string;
+  year: number;
+  paper_type: "theory" | "practical";
+  sitting: string | null;
+  question_number: number | null;
+  question_text: string;
+  worked_solution: string | null;
+  image_urls: string[];
+  is_active: boolean;
+  reviewed: boolean;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface TheoryListResponse extends PaginatedResponse<TheoryQuestion> {
+  counts: { total: number; reviewed: number; active: number; missing_answer: number };
+  subjects: string[];
+}

@@ -1600,6 +1600,110 @@ export default function createServer(bot: any) {
     res.send(header + csv);
   });
 
+  // ── GET /api/admin/theory ───────────────────────────────────────────────────
+  // Theory + practical (essay) questions for review. Not shown to students yet; is_active
+  // and reviewed are both admin-only marks until the bot's theory feature ships.
+  app.get('/api/admin/theory', adminAuth, async (req: Request, res: Response) => {
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 50));
+    const offset = (page - 1) * limit;
+
+    const conditions: string[] = [];
+    const params: any[] = [];
+    const add = (sql: string, value: unknown) => { params.push(value); conditions.push(sql.replaceAll('?', `$${params.length}`)); };
+
+    if (req.query.subject) add('subject = ?', String(req.query.subject));
+    if (req.query.exam_type) add('exam_type = ?', String(req.query.exam_type));
+    if (req.query.year) add('year = ?', parseInt(req.query.year as string) || 0);
+    if (req.query.paper_type === 'theory' || req.query.paper_type === 'practical') add('paper_type = ?', req.query.paper_type);
+    if (req.query.reviewed === 'true' || req.query.reviewed === 'false') add('reviewed = ?', req.query.reviewed === 'true');
+    if (req.query.active === 'true' || req.query.active === 'false') add('is_active = ?', req.query.active === 'true');
+    if (req.query.missing_answer === 'true') conditions.push(`(worked_solution IS NULL OR worked_solution = '')`);
+    if (req.query.search) {
+      const search = String(req.query.search).trim();
+      if (/^\d+$/.test(search)) add('id = ?', parseInt(search, 10));
+      else add('(question_text ILIKE ? OR source_id ILIKE ?)', `%${search}%`);
+    }
+
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const filterParams = [...params];
+
+    const [{ rows }, { rows: countRows }, { rows: subjectRows }] = await Promise.all([
+      db.query(
+        `SELECT id, source_id, exam_type, subject, year, paper_type, sitting, question_number,
+                question_text, worked_solution, image_urls, is_active, reviewed, created_at, updated_at
+         FROM theory_questions ${where}
+         ORDER BY year DESC, subject, sitting NULLS LAST, question_number NULLS LAST, id
+         LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+        [...filterParams, limit, offset]
+      ),
+      db.query(
+        `SELECT COUNT(*)::int AS total,
+                COUNT(*) FILTER (WHERE reviewed)::int AS reviewed,
+                COUNT(*) FILTER (WHERE is_active)::int AS active,
+                COUNT(*) FILTER (WHERE worked_solution IS NULL OR worked_solution = '')::int AS missing_answer
+         FROM theory_questions ${where}`,
+        filterParams
+      ),
+      db.query(`SELECT DISTINCT subject FROM theory_questions ORDER BY subject`),
+    ]);
+
+    const total = countRows[0].total as number;
+    res.json({
+      data: rows,
+      total,
+      page,
+      limit,
+      pages: Math.ceil(total / limit),
+      counts: countRows[0],
+      subjects: subjectRows.map((r: any) => r.subject),
+    });
+  });
+
+  // ── PUT /api/admin/theory/:id ───────────────────────────────────────────────
+  app.put('/api/admin/theory/:id', adminAuth, requireNumericId, async (req: Request, res: Response) => {
+    const { question_text, worked_solution } = req.body ?? {};
+    if (question_text !== undefined && (typeof question_text !== 'string' || !question_text.trim())) {
+      return res.status(400).json({ error: 'question_text must be non-empty text' });
+    }
+    if (worked_solution !== undefined && worked_solution !== null && typeof worked_solution !== 'string') {
+      return res.status(400).json({ error: 'worked_solution must be text' });
+    }
+    const { rows } = await db.query(
+      `UPDATE theory_questions SET
+         question_text = COALESCE($1, question_text),
+         worked_solution = CASE WHEN $2::boolean THEN $3 ELSE worked_solution END,
+         updated_at = NOW()
+       WHERE id = $4
+       RETURNING *`,
+      [question_text ?? null, worked_solution !== undefined, worked_solution ?? null, req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'Theory question not found' });
+    await db.logAudit((req as any).admin.username, 'theory.edit', { targetType: 'theory_question', targetId: String(req.params.id), ip: req.ip }).catch(() => {});
+    res.json(rows[0]);
+  });
+
+  // ── PATCH /api/admin/theory/:id/flags ───────────────────────────────────────
+  // Body: { is_active?: boolean, reviewed?: boolean }
+  app.patch('/api/admin/theory/:id/flags', adminAuth, requireNumericId, async (req: Request, res: Response) => {
+    const { is_active, reviewed } = req.body ?? {};
+    if (is_active !== undefined && typeof is_active !== 'boolean') return res.status(400).json({ error: 'is_active must be boolean' });
+    if (reviewed !== undefined && typeof reviewed !== 'boolean') return res.status(400).json({ error: 'reviewed must be boolean' });
+    if (is_active === undefined && reviewed === undefined) return res.status(400).json({ error: 'Nothing to change' });
+    const { rows } = await db.query(
+      `UPDATE theory_questions SET
+         is_active = COALESCE($1, is_active),
+         reviewed = COALESCE($2, reviewed),
+         updated_at = NOW()
+       WHERE id = $3
+       RETURNING id, is_active, reviewed`,
+      [is_active ?? null, reviewed ?? null, req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'Theory question not found' });
+    await db.logAudit((req as any).admin.username, 'theory.flags', { targetType: 'theory_question', targetId: String(req.params.id), details: { is_active, reviewed }, ip: req.ip }).catch(() => {});
+    res.json(rows[0]);
+  });
+
   // ── POST /api/admin/questions/bulk-import ───────────────────────────────────
   app.post('/api/admin/questions/bulk-import', adminAuth, async (req: Request, res: Response) => {
     const { questions } = req.body as { questions: any[] };

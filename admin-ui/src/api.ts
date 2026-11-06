@@ -19,6 +19,8 @@ import type {
   PricingHistoryEntry,
   PageViewAnalytics,
   AuditLogEntry,
+  TheoryQuestion,
+  TheoryListResponse,
 } from "./types";
 
 const BASE = (import.meta.env.VITE_API_URL ?? "") + "/api/admin";
@@ -222,6 +224,37 @@ export async function toggleQuestionActive(id: number, is_active: boolean): Prom
 
 export async function generateExplanation(id: number): Promise<{ explanation: string }> {
   return req<{ explanation: string }>("POST", `/questions/${id}/generate-explanation`);
+}
+
+export interface TheoryFilter {
+  page?: number;
+  limit?: number;
+  subject?: string;
+  exam_type?: string;
+  year?: number;
+  paper_type?: string;
+  reviewed?: string;
+  active?: string;
+  missing_answer?: string;
+  search?: string;
+}
+
+export async function getTheoryQuestions(filter: TheoryFilter = {}): Promise<TheoryListResponse> {
+  return req<TheoryListResponse>("GET", "/theory", undefined, filter as Record<string, string | number | undefined>);
+}
+
+export async function updateTheoryQuestion(
+  id: number,
+  data: { question_text?: string; worked_solution?: string | null }
+): Promise<TheoryQuestion> {
+  return req<TheoryQuestion>("PUT", `/theory/${id}`, data);
+}
+
+export async function setTheoryFlags(
+  id: number,
+  flags: { is_active?: boolean; reviewed?: boolean }
+): Promise<{ id: number; is_active: boolean; reviewed: boolean }> {
+  return req<{ id: number; is_active: boolean; reviewed: boolean }>("PATCH", `/theory/${id}/flags`, flags);
 }
 
 export interface UsersFilter {
