@@ -43,7 +43,10 @@ const TABLES: TableSpec[] = [
   {
     table: 'theory_questions',
     key: 'source_id',
-    columns: ['exam_type', 'subject', 'year', 'question_text', 'worked_solution', 'is_active'],
+    columns: [
+      'exam_type', 'subject', 'year', 'question_text', 'worked_solution', 'is_active',
+      'paper_type', 'sitting', 'question_number', 'image_urls', 'reviewed',
+    ],
   },
   {
     table: 'did_you_know',

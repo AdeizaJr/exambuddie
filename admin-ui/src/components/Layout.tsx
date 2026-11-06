@@ -20,6 +20,7 @@ import {
   ScrollText,
   Bug,
   UserPlus,
+  FileText,
 } from "lucide-react";
 import Modal from "./Modal";
 import { changePassword } from "../api";
@@ -54,6 +55,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "Content",
     items: [
       { path: "/questions", label: "Questions", icon: <HelpCircle size={16} />   },
+      { path: "/theory",    label: "Theory",    icon: <FileText size={16} />     },
       { path: "/qotd",      label: "QOTD",      icon: <CalendarDays size={16} /> },
       { path: "/flags",     label: "Flags",     icon: <Flag size={16} />         },
     ],

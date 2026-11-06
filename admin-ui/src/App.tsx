@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate } from "react-router";
 import Layout from "./components/Layout";
 import Overview from "./pages/Overview";
 import Questions from "./pages/Questions";
+import Theory from "./pages/Theory";
 import Users from "./pages/Users";
 import Flags from "./pages/Flags";
 import Alerts from "./pages/Alerts";
@@ -189,6 +190,7 @@ export default function App() {
         <Route index element={<Navigate to="/overview" replace />} />
         <Route path="/overview" element={<Overview />} />
         <Route path="/questions" element={<Questions />} />
+        <Route path="/theory" element={<Theory />} />
         <Route path="/users" element={<Users />} />
         <Route path="/flags" element={<Flags onFlagsResolved={loadFlagCount} />} />
         <Route path="/alerts" element={<Alerts onAlertsResolved={loadAlertCount} />} />
