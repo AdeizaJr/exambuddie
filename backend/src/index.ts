@@ -228,6 +228,7 @@ bot.on('callback_query', async (ctx: any) => {
   // Theory
   if (data === 'theory:pick') return theory.handleTheory(ctx);
   if (data.startsWith('theory:subject:')) return theory.handleTheorySubject(ctx);
+  if (data.startsWith('theory:year:')) return theory.handleTheoryYear(ctx);
   if (data === 'theory:reveal') return theory.handleTheoryReveal(ctx);
   if (data === 'theory:next' || data === 'theory:skip') return theory.handleTheoryNext(ctx);
   if (data === 'theory:stop') return theory.handleTheoryStop(ctx);

@@ -59,11 +59,12 @@ function questionKeyboard() {
   };
 }
 
-function afterRevealKeyboard() {
+function afterRevealKeyboard(subject: string) {
   return {
     inline_keyboard: [
       [{ text: '➡️ Next question', callback_data: 'theory:next' }],
-      [{ text: '🔄 Change subject', callback_data: 'theory:pick' }, { text: '⏹ Stop', callback_data: 'theory:stop' }],
+      [{ text: '📅 Change year', callback_data: `theory:subject:${subject}` }, { text: '🔄 Change subject', callback_data: 'theory:pick' }],
+      [{ text: '⏹ Stop', callback_data: 'theory:stop' }],
     ],
   };
 }
@@ -101,12 +102,33 @@ export async function handleTheory(ctx: any): Promise<void> {
   );
 }
 
+// Subject picked (from /theory or the practice Objective / Theory choice): pick a year
 export async function handleTheorySubject(ctx: any): Promise<void> {
   await ctx.answerCbQuery().catch(() => {});
   const subject = ctx.callbackQuery.data.split(':')[2];
+  const years = await db.getTheoryYearCounts(subject);
+  if (!years.length) {
+    await ctx.reply(`No theory questions for ${fmt.SUBJECT_MAP[subject] || subject} yet.`);
+    return;
+  }
+  const total = years.reduce((n, y) => n + y.count, 0);
+  const rows: any[][] = [[{ text: `📅 Any Year (${total.toLocaleString()})`, callback_data: `theory:year:${subject}:any` }]];
+  const buttons = years.map(y => ({ text: `${y.year} (${y.count})`, callback_data: `theory:year:${subject}:${y.year}` }));
+  for (let i = 0; i < buttons.length; i += 3) rows.push(buttons.slice(i, i + 3));
+  rows.push([{ text: '← Back to Subjects', callback_data: 'theory:pick' }]);
+  await ctx.reply(
+    `📅 <b>${fmt.SUBJECT_MAP[subject] || subject} Theory</b>\n\nWhich year would you like to practise?`,
+    { parse_mode: 'HTML', reply_markup: { inline_keyboard: rows } }
+  );
+}
+
+export async function handleTheoryYear(ctx: any): Promise<void> {
+  await ctx.answerCbQuery().catch(() => {});
+  const [, , subject, yearStr] = ctx.callbackQuery.data.split(':');
+  const year = yearStr && yearStr !== 'any' ? parseInt(yearStr, 10) : null;
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
-  await redis.setSession(ctx.from.id, { mode: 'theory_attempt', subject, theorySeen: [], theoryDone: 0 });
+  await redis.setSession(ctx.from.id, { mode: 'theory_attempt', subject, theoryYear: year, theorySeen: [], theoryDone: 0 });
   await sendNextTheory(ctx, user, subject);
 }
 
@@ -124,9 +146,10 @@ async function sendNextTheory(ctx: any, user: User, subject: string): Promise<vo
 
   const session = (await redis.getSession(ctx.from.id)) || {};
   const seen: number[] = session.theorySeen || [];
-  const q = await db.getRandomTheoryQuestion(subject, user.id, seen.slice(-200));
+  const year: number | null = session.theoryYear ?? null;
+  const q = await db.getRandomTheoryQuestion(subject, user.id, seen.slice(-200), year);
   if (!q) {
-    await ctx.reply(`No theory questions for ${fmt.SUBJECT_MAP[subject] || subject} yet.`);
+    await ctx.reply(`No theory questions for ${fmt.SUBJECT_MAP[subject] || subject}${year ? ` ${year}` : ''} yet.`);
     return;
   }
 
@@ -177,7 +200,7 @@ async function reveal(ctx: any, answer: string | null): Promise<void> {
   const solution = q.worked_solution
     ? `📘 <b>Model answer</b>\n\n${fmt.escHtml(q.worked_solution)}`
     : '📘 No model answer is available for this question yet.';
-  await sendLong(ctx, `${intro}\n\n${solution}`, afterRevealKeyboard());
+  await sendLong(ctx, `${intro}\n\n${solution}`, afterRevealKeyboard(q.subject));
 }
 
 // Free text while a theory question is waiting for an answer
