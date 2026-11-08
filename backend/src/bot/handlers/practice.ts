@@ -7,6 +7,7 @@ import * as timerService from '../../services/timer';
 import * as achievements from './achievements';
 import { checkRankUp } from './achievements';
 import { maybeAskPhone } from './phone';
+import { practiceModeKeyboard } from './theory';
 import { User, Question } from '../../types';
 
 async function requireProfile(ctx: any): Promise<User | null> {
@@ -183,8 +184,27 @@ export async function handleSubjectPick(ctx: any): Promise<void> {
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
   await redis.updateSession(ctx.from.id, { pendingSubject: subject });
   const subjectName = fmt.SUBJECT_MAP[subject] || subject;
+  const theoryCounts = await db.getTheorySubjectCounts([subject]);
+  if (theoryCounts[subject] > 0) {
+    await ctx.reply(
+      `📚 <b>${subjectName}</b>\n\nObjective questions or theory questions?`,
+      { parse_mode: 'HTML', reply_markup: practiceModeKeyboard(subject) }
+    );
+    return;
+  }
   await ctx.reply(
     `📅 <b>${subjectName}</b>\n\nWhich year would you like to practise?`,
+    { parse_mode: 'HTML', reply_markup: fmt.yearPickerKeyboard(subject) }
+  );
+}
+
+// "Objective" picked from the Objective / Theory choice: continue to the year picker
+export async function handleObjectiveModePick(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  const subject = ctx.callbackQuery.data.split(':')[2];
+  await redis.updateSession(ctx.from.id, { pendingSubject: subject });
+  await ctx.reply(
+    `📅 <b>${fmt.SUBJECT_MAP[subject] || subject}</b>\n\nWhich year would you like to practise?`,
     { parse_mode: 'HTML', reply_markup: fmt.yearPickerKeyboard(subject) }
   );
 }
