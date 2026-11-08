@@ -10,6 +10,7 @@ import * as fmt from './bot/formatter';
 
 import * as onboarding from './bot/handlers/onboarding';
 import * as practice from './bot/handlers/practice';
+import * as theory from './bot/handlers/theory';
 import * as quiz from './bot/handlers/quiz';
 import * as stats from './bot/handlers/stats';
 import * as leaderboard from './bot/handlers/leaderboard';
@@ -123,6 +124,7 @@ bot.command('stats', stats.handleStats);
 bot.command('subscribe', stats.handleSubscribe);
 bot.command('billing', stats.handleBilling);
 bot.command('practice', practice.handlePractice);
+bot.command('theory', theory.handleTheory);
 bot.command('quiz', quiz.handleQuiz);
 bot.command('drill', (ctx) => practice.handleDrill(ctx));
 bot.command('leaderboard', leaderboard.handleLeaderboard);
@@ -158,6 +160,7 @@ bot.command('stop', async (ctx) => {
     await ctx.reply('No active session.');
     return;
   }
+  if (session.mode === 'theory_attempt') return theory.handleTheoryStop(ctx);
   if (session.mode === 'quiz') {
     const quizState = await redis.getQuizState(ctx.from.id);
     if (quizState) await quiz.endQuiz(ctx, quizState, 'stopped');
@@ -220,6 +223,14 @@ bot.on('callback_query', async (ctx: any) => {
     return practice.handleMultiSubjectToggle(ctx);
   if (data === 'practice:multisubject:start') return practice.handleMultiSubjectStart(ctx);
   if (data.startsWith('practice:subject:')) return practice.handleSubjectPick(ctx);
+  if (data.startsWith('practice:mode_obj:')) return practice.handleObjectiveModePick(ctx);
+
+  // Theory
+  if (data === 'theory:pick') return theory.handleTheory(ctx);
+  if (data.startsWith('theory:subject:')) return theory.handleTheorySubject(ctx);
+  if (data === 'theory:reveal') return theory.handleTheoryReveal(ctx);
+  if (data === 'theory:next' || data === 'theory:skip') return theory.handleTheoryNext(ctx);
+  if (data === 'theory:stop') return theory.handleTheoryStop(ctx);
   if (data.startsWith('practice:flow_year:')) return practice.handlePracticeFlowYear(ctx);
   if (data.startsWith('practice:year:')) return practice.handleYearPick(ctx);
   if (data.startsWith('practice:start:')) {
@@ -478,6 +489,14 @@ bot.on('text', async (ctx: any) => {
   if (text === 'Skip for now →' && (await redis.getPhonePending(ctx.from.id))) {
     return onboarding.handlePhoneSkip(ctx);
   }
+  // Theory question waiting for a typed answer. A main-menu button tap ends the
+  // theory session instead of being saved as the student's answer.
+  if (session?.mode === 'theory_attempt' && session.step === 'theory_answer') {
+    const menuButtons = ['📚 Practice', '📋 CBT', '📖 Review', '🎓 Mock Exam', '🏅 Badges'];
+    if (!menuButtons.includes(text) && !text.startsWith('/')) return theory.handleTheoryAnswer(ctx);
+    await redis.clearSession(ctx.from.id);
+  }
+
   const activeSession =
     session?.mode === 'practice' || session?.mode === 'quiz' || session?.mode === 'drill';
 

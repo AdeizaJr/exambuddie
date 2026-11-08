@@ -2200,3 +2200,64 @@ export async function getPageViewAnalytics(days = 30): Promise<PageViewAnalytics
     daily: daily.rows.map(r => ({ date: r.day, views: parseInt(r.views, 10), uniques: parseInt(r.uniques, 10) })),
   };
 }
+
+// ── Theory questions (WAEC Paper 2/3, typed answer then model answer) ─────────
+export interface TheoryQuestion {
+  id: number;
+  exam_type: string;
+  subject: string;
+  year: number;
+  paper_type: string;
+  question_number: number | null;
+  question_text: string;
+  worked_solution: string | null;
+  image_urls: string[];
+}
+
+export async function getTheorySubjectCounts(subjects?: string[]): Promise<Record<string, number>> {
+  const { rows } = await pool.query(
+    `SELECT subject, COUNT(*) AS count FROM theory_questions
+     WHERE is_active = TRUE AND ($1::text[] IS NULL OR subject = ANY($1))
+     GROUP BY subject`,
+    [subjects && subjects.length ? subjects : null]
+  );
+  const map: Record<string, number> = {};
+  for (const row of rows) map[row.subject] = parseInt(row.count, 10);
+  return map;
+}
+
+// Random active theory question the user has not attempted yet; falls back to any
+// active question once they have been through the whole subject.
+export async function getRandomTheoryQuestion(subject: string, userId: number, skipIds: number[] = []): Promise<TheoryQuestion | null> {
+  const cols = `id, exam_type, subject, year, paper_type, question_number, question_text, worked_solution, image_urls`;
+  const fresh = await pool.query<TheoryQuestion>(
+    `SELECT ${cols} FROM theory_questions q
+     WHERE q.is_active = TRUE AND q.subject = $1 AND NOT (q.id = ANY($3::int[]))
+       AND NOT EXISTS (SELECT 1 FROM theory_attempts a WHERE a.question_id = q.id AND a.user_id = $2)
+     ORDER BY RANDOM() LIMIT 1`,
+    [subject, userId, skipIds]
+  );
+  if (fresh.rows[0]) return fresh.rows[0];
+  const any = await pool.query<TheoryQuestion>(
+    `SELECT ${cols} FROM theory_questions WHERE is_active = TRUE AND subject = $1 AND NOT (id = ANY($2::int[]))
+     ORDER BY RANDOM() LIMIT 1`,
+    [subject, skipIds]
+  );
+  return any.rows[0] || null;
+}
+
+export async function getTheoryQuestion(id: number): Promise<TheoryQuestion | null> {
+  const { rows } = await pool.query<TheoryQuestion>(
+    `SELECT id, exam_type, subject, year, paper_type, question_number, question_text, worked_solution, image_urls
+     FROM theory_questions WHERE id = $1 AND is_active = TRUE`,
+    [id]
+  );
+  return rows[0] || null;
+}
+
+export async function logTheoryAttempt(userId: number, questionId: number, answer: string | null): Promise<void> {
+  await pool.query(
+    `INSERT INTO theory_attempts (user_id, question_id, user_answer) VALUES ($1, $2, $3)`,
+    [userId, questionId, answer]
+  );
+}

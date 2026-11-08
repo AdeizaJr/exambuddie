@@ -590,7 +590,10 @@ export function moreMenuKeyboard(isPremium: boolean) {
         { text: '⭐ Bookmarks', callback_data: 'bookmarks:show' },
       ],
       [
+        { text: '✍️ Theory', callback_data: 'theory:pick' },
         { text: '📐 Formulas', callback_data: 'formula:pick' },
+      ],
+      [
         { text: '🏅 Badges', callback_data: 'badges:show' },
       ],
       [
@@ -1358,6 +1361,7 @@ export function helpMessage(): string {
 
 <b>📚 Practice Mode</b>
 /practice — Answer questions one at a time, pick subject and year
+/theory — WAEC theory and practical questions: type your answer, then see the model answer
 <i>Best for daily revision and building topic confidence</i>
 
 <b>📋 CBT Mode</b>
