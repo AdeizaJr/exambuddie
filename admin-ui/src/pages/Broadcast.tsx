@@ -476,13 +476,13 @@ export default function Broadcast() {
       {/* Message */}
       <div>
         <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
-          Message <span className="font-normal normal-case text-muted">(Markdown supported)</span>
+          Message <span className="font-normal normal-case text-muted">(HTML: &lt;b&gt;, &lt;i&gt;, &lt;code&gt;, &lt;a href&gt;)</span>
         </label>
         <textarea
           rows={8}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Write your message here...&#10;&#10;*Bold*, _italic_, `code` and links work.&#10;&#10;Keep messages concise and clear."
+          placeholder={"Write your message here...\n\n<b>bold</b>, <i>italic</i>, <code>code</code> and <a href=\"...\">links</a> work.\n\nKeep messages concise and clear."}
           className="w-full resize-y rounded-lg border border-border bg-surface px-3 py-3 text-sm text-white placeholder-muted focus:border-accent focus:outline-none"
         />
         <p className="mt-1 text-xs text-muted">{message.length} characters</p>
