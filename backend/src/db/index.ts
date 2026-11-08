@@ -2228,22 +2228,33 @@ export async function getTheorySubjectCounts(subjects?: string[]): Promise<Recor
 
 // Random active theory question the user has not attempted yet; falls back to any
 // active question once they have been through the whole subject.
-export async function getRandomTheoryQuestion(subject: string, userId: number, skipIds: number[] = []): Promise<TheoryQuestion | null> {
+export async function getRandomTheoryQuestion(subject: string, userId: number, skipIds: number[] = [], year: number | null = null): Promise<TheoryQuestion | null> {
   const cols = `id, exam_type, subject, year, paper_type, question_number, question_text, worked_solution, image_urls`;
   const fresh = await pool.query<TheoryQuestion>(
     `SELECT ${cols} FROM theory_questions q
      WHERE q.is_active = TRUE AND q.subject = $1 AND NOT (q.id = ANY($3::int[]))
+       AND ($4::int IS NULL OR q.year = $4)
        AND NOT EXISTS (SELECT 1 FROM theory_attempts a WHERE a.question_id = q.id AND a.user_id = $2)
      ORDER BY RANDOM() LIMIT 1`,
-    [subject, userId, skipIds]
+    [subject, userId, skipIds, year]
   );
   if (fresh.rows[0]) return fresh.rows[0];
   const any = await pool.query<TheoryQuestion>(
     `SELECT ${cols} FROM theory_questions WHERE is_active = TRUE AND subject = $1 AND NOT (id = ANY($2::int[]))
+       AND ($3::int IS NULL OR year = $3)
      ORDER BY RANDOM() LIMIT 1`,
-    [subject, skipIds]
+    [subject, skipIds, year]
   );
   return any.rows[0] || null;
+}
+
+export async function getTheoryYearCounts(subject: string): Promise<{ year: number; count: number }[]> {
+  const { rows } = await pool.query(
+    `SELECT year, COUNT(*) AS count FROM theory_questions WHERE is_active = TRUE AND subject = $1
+     GROUP BY year ORDER BY year DESC`,
+    [subject]
+  );
+  return rows.map((r: any) => ({ year: r.year, count: parseInt(r.count, 10) }));
 }
 
 export async function getTheoryQuestion(id: number): Promise<TheoryQuestion | null> {
