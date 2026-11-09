@@ -7,8 +7,8 @@ import Modal from "../components/Modal";
 import Badge from "../components/Badge";
 import MathText from "../components/MathText";
 
-// Theory + practical (essay) questions. Students can't see these yet: the bot has no theory
-// feature. "Checked" marks a question a human has reviewed; "On" is what the feature will use.
+// Theory + practical (essay) questions, served to students by the bot's theory practice.
+// "Checked" marks a question a human has reviewed; only "On" questions are shown to students.
 
 const EXAM_TYPES = ["WAEC", "NECO"];
 const YEARS = Array.from({ length: 17 }, (_, i) => 2026 - i);
@@ -156,7 +156,7 @@ export default function Theory() {
       <div>
         <h1 className="font-display text-xl font-bold text-white">Theory</h1>
         <p className="mt-0.5 text-sm text-muted">
-          Theory and practical questions with model answers. Students can't see these yet.
+          Theory and practical questions with model answers. Live in the bot under Practice → Theory.
         </p>
       </div>
 

@@ -173,7 +173,7 @@ export default async function Home() {
           <dl className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:mt-20 md:grid-cols-4 dark:border-slate-800 dark:bg-slate-800">
             {[
               { value: "41,000+", label: "Past Questions" },
-              { value: "16", label: "Subjects Covered" },
+              { value: "34", label: "Subjects Covered" },
               { value: "3", label: "Exam Boards" },
               { value: "Free", label: "To Start" },
             ].map(({ value, label }) => (
