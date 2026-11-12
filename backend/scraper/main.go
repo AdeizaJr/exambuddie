@@ -531,12 +531,13 @@ func insertQuestion(ctx context.Context, pool *pgxpool.Pool, q *question) (bool,
 		INSERT INTO questions
 			(exam_type, subject, year, question_text,
 			 option_a, option_b, option_c, option_d, option_e,
-			 correct_option, explanation, source_id, image_url, has_diagram)
-		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+			 correct_option, explanation, source_id, image_url, has_diagram, is_active)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
 		ON CONFLICT (source_id) DO NOTHING`,
 		q.examType, q.subject, q.year, q.questionText,
 		q.optionA, q.optionB, q.optionC, q.optionD, optE,
 		q.correctOption, expl, q.sourceID, imgURL, imgURL != nil,
+		os.Getenv("INSERT_INACTIVE") != "1",
 	)
 	if err != nil {
 		return false, err
@@ -680,6 +681,8 @@ func main() {
 			}
 		}
 	}
+	// Optional filters: SCRAPE_EXAMS=jamb, SCRAPE_YEARS=2026, SCRAPE_SUBJECTS=mathematics,physics
+	combos = filterCombos(combos)
 	total := int64(len(combos))
 	log.Printf("\nStarting: %d subjects × %d exam types × %d years = %d combos\n",
 		len(subjects), len(examTypes), len(years), total)
@@ -724,4 +727,34 @@ func main() {
 	if ctx.Err() == nil {
 		RunTheoryScraper(ctx, pool)
 	}
+}
+
+// filterCombos narrows the run using comma-separated env vars. Unset = no filter.
+func filterCombos(in []combo) []combo {
+	set := func(name string) map[string]bool {
+		v := strings.TrimSpace(os.Getenv(name))
+		if v == "" {
+			return nil
+		}
+		m := map[string]bool{}
+		for _, p := range strings.Split(v, ",") {
+			m[strings.TrimSpace(p)] = true
+		}
+		return m
+	}
+	exams, years, subs := set("SCRAPE_EXAMS"), set("SCRAPE_YEARS"), set("SCRAPE_SUBJECTS")
+	out := in[:0]
+	for _, c := range in {
+		if exams != nil && !exams[c.examType] {
+			continue
+		}
+		if years != nil && !years[strconv.Itoa(c.year)] {
+			continue
+		}
+		if subs != nil && !subs[c.subject] {
+			continue
+		}
+		out = append(out, c)
+	}
+	return out
 }
