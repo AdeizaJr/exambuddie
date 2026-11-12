@@ -501,13 +501,21 @@ export async function handleStreakFreeze(ctx: any): Promise<void> {
     await ctx.answerCbQuery('No active streak to protect! Start practising first.', { show_alert: true });
     return;
   }
+  // All dates in WAT (UTC+1), matching last_active_date and the midnight-WAT cron.
+  const watDate = (offsetDays = 0) =>
+    new Date(Date.now() + 60 * 60 * 1000 + offsetDays * 86400000).toISOString().split('T')[0];
+  const today = watDate();
+  const lastActive = user.last_active_date ? String(user.last_active_date).slice(0, 10) : null;
+  if (lastActive === today) {
+    await ctx.answerCbQuery("You've already practised today, so your streak is safe. Save your freeze for a day you can't practise!", { show_alert: true });
+    return;
+  }
   // Once per 7 days
-  const sevenDaysAgo = new Date(Date.now() - 6 * 86400000).toISOString().split('T')[0];
-  if (user.streak_freeze_used_at && user.streak_freeze_used_at >= sevenDaysAgo) {
+  const freezeDate = user.streak_freeze_used_at ? String(user.streak_freeze_used_at).slice(0, 10) : null;
+  if (freezeDate && freezeDate >= watDate(-6)) {
     await ctx.answerCbQuery('You can only freeze your streak once per week!', { show_alert: true });
     return;
   }
-  const today = new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0]; // WAT today
   await db.updateUser(ctx.from.id, { streak_freeze_used_at: today as any });
   await ctx.answerCbQuery(
     `🛡️ Streak frozen! Your ${user.streak}-day streak is protected for today.`,
