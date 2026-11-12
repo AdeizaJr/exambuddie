@@ -870,7 +870,11 @@ export async function updateStreak(telegramId: number | string): Promise<{ strea
     ? new Date(new Date(user.last_active_date).getTime() + 60 * 60 * 1000).toISOString().split('T')[0]
     : null;
   if (lastActive === today) return { streak: user.streak, isFirstToday: false };
-  const newStreak = lastActive === yesterday ? user.streak + 1 : 1;
+  // A streak freeze covers exactly one missed day: if yesterday was frozen and the
+  // user was last active the day before, the streak carries on instead of restarting.
+  const freezeDate = user.streak_freeze_used_at ? String(user.streak_freeze_used_at).slice(0, 10) : null;
+  const bridgedByFreeze = freezeDate === yesterday && lastActive === watDateString(-2);
+  const newStreak = lastActive === yesterday || bridgedByFreeze ? user.streak + 1 : 1;
   await pool.query(`UPDATE users SET streak = $1, last_active_date = $2 WHERE telegram_id = $3`, [
     newStreak,
     today,

@@ -953,6 +953,8 @@ export default function createServer(bot: any) {
     const liveStreakExpr = `
       CASE
         WHEN plan = 'premium' AND streak_freeze_used_at = (NOW() + INTERVAL '1 hour')::date THEN streak
+        WHEN streak_freeze_used_at = ((NOW() + INTERVAL '1 hour')::date - 1)
+             AND last_active_date = ((NOW() + INTERVAL '1 hour')::date - 2) THEN streak
         WHEN last_active_date IS NULL THEN 0
         WHEN last_active_date < ((NOW() + INTERVAL '1 hour')::date - INTERVAL '1 day') THEN 0
         ELSE streak
@@ -1579,6 +1581,8 @@ export default function createServer(bot: any) {
       SELECT telegram_id, first_name, username, exam_type, plan,
              CASE
                WHEN plan = 'premium' AND streak_freeze_used_at = (NOW() + INTERVAL '1 hour')::date THEN streak
+               WHEN streak_freeze_used_at = ((NOW() + INTERVAL '1 hour')::date - 1)
+                    AND last_active_date = ((NOW() + INTERVAL '1 hour')::date - 2) THEN streak
                WHEN last_active_date IS NULL THEN 0
                WHEN last_active_date < ((NOW() + INTERVAL '1 hour')::date - INTERVAL '1 day') THEN 0
                ELSE streak
