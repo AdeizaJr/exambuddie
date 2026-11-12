@@ -181,7 +181,10 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('onboard:exam:')) return onboarding.handleExamType(ctx);
   if (data.startsWith('onboard:subject:')) return onboarding.handleSubjectToggle(ctx);
   if (data === 'onboard:subjects:done') return onboarding.handleSubjectsDone(ctx);
-  if (data === 'onboard:resume') return onboarding.handleStart(ctx);
+  if (data === 'onboard:resume') {
+    await ctx.answerCbQuery().catch(() => {});
+    return onboarding.handleStart(ctx);
+  }
 
   // Settings
   if (data === 'settings:exam') return onboarding.handleSettingsExam(ctx);

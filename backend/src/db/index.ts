@@ -109,6 +109,13 @@ export async function updateUser(
   return user;
 }
 
+// True once this telegram_id has ever been given the welcome trial (survives account
+// deletion, same as grantTrial's guard), so copy never promises a trial they can't get.
+export async function hasHadTrial(telegramId: number | string): Promise<boolean> {
+  const { rowCount } = await pool.query(`SELECT 1 FROM trial_grants WHERE telegram_id = $1`, [telegramId]);
+  return !!rowCount;
+}
+
 export async function grantTrial(telegramId: number | string): Promise<User | null> {
   // trial_grants is checked instead of relying on users.trial_used alone — that column
   // lives on the users row, which deleteUser() hard-deletes, so a delete-and-rejoin would

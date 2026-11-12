@@ -448,12 +448,15 @@ export const SUBJECT_EMOJI: Record<string, string> = {
   'book-keeping':   '📒',
 };
 
-export function consentPrompt(firstName: string): string {
+export function consentPrompt(firstName: string, trialAvailable = true): string {
+  const offer = trialAvailable
+    ? `🎁 Your <b>14 days of free Premium</b> is waiting: unlimited WAEC, JAMB &amp; NECO past questions, every answer explained.`
+    : `Real WAEC, JAMB &amp; NECO past questions, every answer explained.`;
   return `🎓 <b>Welcome to ExamBuddie, ${escHtml(firstName)}!</b>
 
-I'll give you 41,000+ real WAEC, JAMB &amp; NECO past questions, explain every answer, and track your progress.
+${offer}
 
-Before we start, please review our <a href="https://exambuddie.app/terms">Terms of Use</a> and <a href="https://exambuddie.app/privacy">Privacy Policy</a> — they cover what data we collect (your Telegram ID, exam preferences, quiz history) and how we use it.
+One quick question first (<a href="https://exambuddie.app/terms">Terms</a> · <a href="https://exambuddie.app/privacy">Privacy</a>):
 
 <b>How old are you?</b>`;
 }
@@ -471,7 +474,7 @@ export function consentKeyboard() {
   return {
     inline_keyboard: [
       [{ text: "✅ I'm 18 or older, I agree", callback_data: 'onboard:consent:adult' }],
-      [{ text: "🧒 I'm under 18", callback_data: 'onboard:consent:under18' }],
+      [{ text: "🧒 I'm under 18 (needs a parent's OK)", callback_data: 'onboard:consent:under18' }],
     ],
   };
 }

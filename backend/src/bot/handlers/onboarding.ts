@@ -41,7 +41,8 @@ export async function handleStart(ctx: any): Promise<void> {
 
   // New user — show consent screen before onboarding starts
   await redis.setSession(ctx.from.id, { step: 'consent', selectedSubjects: [] });
-  await ctx.reply(fmt.consentPrompt(user.first_name), {
+  const trialAvailable = !user.trial_used && !(await db.hasHadTrial(ctx.from.id));
+  await ctx.reply(fmt.consentPrompt(user.first_name, trialAvailable), {
     parse_mode: 'HTML',
     reply_markup: fmt.consentKeyboard(),
   });
@@ -277,11 +278,15 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
   let welcome = `✅ <b>You're in!</b>\n\nHere's your first question 👇`;
   if (!user.trial_used && user.plan === 'free') {
     const trialUser = await db.grantTrial(ctx.from.id);
-    if (trialUser) current = trialUser;
-    const expiryLine = trialUser?.plan_expires_at
-      ? ` (until <b>${new Date(trialUser.plan_expires_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</b>)`
-      : '';
-    welcome = `🎁 <b>Welcome gift: 14 days of Premium, free</b>${expiryLine}\n\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nHere's your first question 👇`;
+    // null means this telegram_id already had its one trial (e.g. deleted and rejoined):
+    // keep the plain welcome rather than announcing a gift they aren't getting.
+    if (trialUser) {
+      current = trialUser;
+      const expiryLine = trialUser.plan_expires_at
+        ? ` (until <b>${new Date(trialUser.plan_expires_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</b>)`
+        : '';
+      welcome = `🎁 <b>Welcome gift: 14 days of Premium, free</b>${expiryLine}\n\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nHere's your first question 👇`;
+    }
   }
   await ctx.reply(welcome, { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() });
 
