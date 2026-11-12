@@ -266,15 +266,19 @@ export default function startCrons(rawBot: any): void {
          AND exam_type IS NULL
          AND onboarding_nudge_sent_at IS NULL
          AND notifications_enabled = TRUE AND blocked_at IS NULL
-       RETURNING telegram_id, first_name`
+       RETURNING telegram_id, first_name,
+         (trial_used OR EXISTS (SELECT 1 FROM trial_grants t WHERE t.telegram_id = users.telegram_id)) AS had_trial`
     );
 
     for (const user of rows) {
       try {
         await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
+        const offer = user.had_trial
+          ? ''
+          : `\n\n🎁 Your <b>14 days of free Premium</b> starts as soon as you finish.`;
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nLooks like you didn't finish setting up ExamBuddie. Just pick your exam and you're ready to start practising. It only takes a few seconds 👇${helpFooter}`,
+          `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou're one minute away from your first question. Tap below to finish setting up ExamBuddie 👇${offer}${helpFooter}`,
           {
             parse_mode: 'HTML',
             reply_markup: { inline_keyboard: [[{ text: '✅ Finish Setup', callback_data: 'onboard:resume' }]] },
