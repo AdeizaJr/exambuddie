@@ -391,7 +391,7 @@ export default function Overview() {
         <GrantPremiumModal
           user={grantTarget}
           onClose={() => setGrantTarget(null)}
-          onGranted={() => { setGrantTarget(null); flash(`Premium granted to ${grantTarget.first_name}`); load(); }}
+          onGranted={(msg, ok) => { setGrantTarget(null); flash(msg, ok); load(); }}
         />
       )}
       {planMsg && (

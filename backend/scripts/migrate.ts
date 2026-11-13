@@ -686,6 +686,23 @@ WHERE id = 116125`,
        WHERE last_active_date < (NOW() AT TIME ZONE 'Africa/Lagos')::date - 3;
      END IF;
    END $$`,
+  // Referrals now pay 1 Premium day per invitee who practises, with no cap.
+  // referral_days_granted is the ledger: an inviter is owed (practising invitees - this).
+  // The old scheme paid 3 days once for 2 practising invitees, so on first add those
+  // inviters are marked as paid for up to 3 invitees (never more than have practised),
+  // which means no invitee is paid for twice and the next one always earns a day.
+  // Guarded so the backfill only runs once, not on every deploy.
+  `DO $$ BEGIN
+     IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'users' AND column_name = 'referral_days_granted') THEN
+       ALTER TABLE users ADD COLUMN referral_days_granted INT NOT NULL DEFAULT 0;
+       UPDATE users r SET referral_days_granted = LEAST(3, (
+         SELECT COUNT(*) FROM users u
+          WHERE u.referred_by = r.id
+            AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)))
+       WHERE r.referral_reward_granted = TRUE;
+     END IF;
+   END $$`,
 ];
 
 async function migrate(): Promise<void> {

@@ -321,12 +321,10 @@ export async function handleProgress(ctx: any): Promise<void> {
   }
 
   // Referral summary line
-  const needed = Math.max(0, 2 - referralCount);
-  const referralLine = user.referral_reward_granted
-    ? '\n🎁 Referral reward claimed!'
-    : referralCount > 0
-      ? `\n🔗 ${referralCount} friend${referralCount !== 1 ? 's' : ''} referred${needed > 0 ? ` — ${needed} more for reward` : ' — reward pending!'}`
-      : '\n🔗 Refer 2 friends → 3 days Premium free (/invite)';
+  const daysEarned = user.referral_days_granted ?? 0;
+  const referralLine = referralCount > 0
+    ? `\n🔗 ${referralCount} friend${referralCount !== 1 ? 's' : ''} practising · ${daysEarned} Premium day${daysEarned !== 1 ? 's' : ''} earned (/invite)`
+    : '\n🔗 Invite friends → 1 free Premium day each (/invite)';
 
   await ctx.reply(
     fmt.progressMessage(user, progress.totalAttempts, progress.accuracy, progress.subjectCoverage) + referralLine + studyPlanLine,

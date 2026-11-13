@@ -16,19 +16,15 @@ export async function handleInvite(ctx: any): Promise<void> {
 
   const link = `https://t.me/${BOT_USERNAME}?start=ref_${code}`;
   const confirmed = await db.getConfirmedReferralCount(user.id);
-  const needed = Math.max(0, 2 - confirmed);
-
-  const rewardLine = user.referral_reward_granted
-    ? '✅ You\'ve already claimed your referral reward!'
-    : confirmed >= 2
-      ? '🎁 Your reward is on the way!'
-      : `🎯 Invite <b>${needed} more friend${needed === 1 ? '' : 's'}</b> who answer at least 1 question → get <b>3 days Premium free</b>`;
+  const daysEarned = user.referral_days_granted ?? 0;
 
   await ctx.reply(
     `🔗 <b>Invite Friends to ExamBuddie</b>\n\n` +
     `Share your link:\n<code>${link}</code>\n\n` +
-    `${rewardLine}\n\n` +
-    `👥 Confirmed friends so far: <b>${confirmed}</b>`,
+    `🎁 For every friend who joins with your link and answers at least 1 question, you get <b>1 free day of Premium</b>. ` +
+    `No limit: 10 friends = 10 days!\n\n` +
+    `👥 Friends practising: <b>${confirmed}</b>\n` +
+    `💎 Premium days earned: <b>${daysEarned}</b>`,
     {
       parse_mode: 'HTML',
       reply_markup: {
@@ -67,7 +63,7 @@ export async function handleReferralLeaderboard(ctx: any): Promise<void> {
     const medal = medals[i] || `${i + 1}.`;
     text += `${medal} ${escHtml(r.first_name)} — ${r.referrals} friend${r.referrals !== 1 ? 's' : ''}\n`;
   }
-  text += '\n<i>Invite 2 active friends → earn 3 days Premium free! /invite</i>';
+  text += '\n<i>Every friend who practises = 1 free Premium day! /invite</i>';
 
   await ctx.reply(text, {
     parse_mode: 'HTML',

@@ -1428,56 +1428,70 @@ export async function getConfirmedReferralCount(referrerId: number): Promise<num
   return parseInt(rows[0].c);
 }
 
-export async function checkAndGrantReferralReward(
-  newUserId: number
-): Promise<{ granted: boolean; referrer: User | null }> {
-  // Only fires on first-ever attempt
-  const { rows: cntRows } = await pool.query(
-    'SELECT COUNT(*) as c FROM attempts WHERE user_id = $1',
-    [newUserId]
-  );
-  if (parseInt(cntRows[0].c) !== 1) return { granted: false, referrer: null };
-
-  const { rows: newUserRows } = await pool.query(
+// Pays the inviter of `userId` 1 Premium day per invitee who has answered at least one
+// question, with no cap. referral_days_granted is the ledger, so this grants whatever
+// is still owed (practising invitees - days already paid) and is safe to call on every
+// answer: a call that finds nothing owed is a no-op, and a trigger missed in one mode is
+// made good the next time any of that inviter's friends practise. The FOR UPDATE lock
+// serialises two invitees practising at once, so no invitee is ever paid for twice.
+export async function creditReferrer(
+  userId: number
+): Promise<{ referrer: User; daysAdded: number; confirmed: number } | null> {
+  const { rows: me } = await pool.query<{ referred_by: number | null }>(
     'SELECT referred_by FROM users WHERE id = $1',
-    [newUserId]
+    [userId]
   );
-  const referrerId = newUserRows[0]?.referred_by;
-  if (!referrerId) return { granted: false, referrer: null };
+  const referrerId = me[0]?.referred_by;
+  if (!referrerId) return null;
 
-  const confirmed = await getConfirmedReferralCount(referrerId);
-  if (confirmed < 2) return { granted: false, referrer: null };
-
-  const { rows: referrerRows } = await pool.query<User>(
-    'SELECT * FROM users WHERE id = $1',
-    [referrerId]
-  );
-  const referrer = referrerRows[0];
-  if (!referrer || referrer.referral_reward_granted) return { granted: false, referrer: null };
-
-  // Extend or start a 3-day Premium window. The WHERE guard (not just the read-check
-  // above) makes this atomic — two concurrent calls for the same referrer can both pass
-  // the read-check before either write lands, but only the first UPDATE actually matches
-  // a row; the second is a no-op instead of stacking another +3 days on top.
-  const { rowCount } = await pool.query(
-    `UPDATE users SET
-       plan = 'premium',
-       plan_expires_at = CASE
-         WHEN plan_expires_at IS NOT NULL AND plan_expires_at > NOW()
-           THEN plan_expires_at + INTERVAL '3 days'
-         ELSE NOW() + INTERVAL '3 days'
-       END,
-       referral_reward_granted = TRUE
-     WHERE id = $1 AND referral_reward_granted = FALSE`,
-    [referrerId]
-  );
-  if (!rowCount) return { granted: false, referrer: null };
-
-  const { rows: updatedRows } = await pool.query<User>(
-    'SELECT * FROM users WHERE id = $1',
-    [referrerId]
-  );
-  return { granted: true, referrer: updatedRows[0] };
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const { rows: locked } = await client.query<{ referral_days_granted: number }>(
+      'SELECT referral_days_granted FROM users WHERE id = $1 FOR UPDATE',
+      [referrerId]
+    );
+    if (!locked.length) {
+      await client.query('ROLLBACK');
+      return null;
+    }
+    // Counted after taking the lock, so it sees every attempt committed before us
+    const { rows: cnt } = await client.query<{ c: number }>(
+      `SELECT COUNT(*)::int AS c FROM users u
+        WHERE u.referred_by = $1
+          AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)`,
+      [referrerId]
+    );
+    const confirmed = cnt[0].c;
+    const daysAdded = confirmed - locked[0].referral_days_granted;
+    if (daysAdded <= 0) {
+      await client.query('ROLLBACK');
+      return null;
+    }
+    // Stacks on unexpired Premium, otherwise starts now. Premium with no end date
+    // (open-ended) stays open-ended rather than gaining an expiry.
+    const { rows: updated } = await client.query<User>(
+      `UPDATE users SET
+         plan_expires_at = CASE
+           WHEN plan = 'premium' AND plan_expires_at IS NULL THEN NULL
+           ELSE GREATEST(NOW(), CASE WHEN plan = 'premium' THEN plan_expires_at END)
+                + make_interval(days => $2)
+         END,
+         plan = 'premium',
+         referral_days_granted = $3,
+         updated_at = NOW()
+       WHERE id = $1
+       RETURNING *`,
+      [referrerId, daysAdded, confirmed]
+    );
+    await client.query('COMMIT');
+    return { referrer: updated[0], daysAdded, confirmed };
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
 }
 
 // ── Did You Know ──────────────────────────────────────────────────────────────

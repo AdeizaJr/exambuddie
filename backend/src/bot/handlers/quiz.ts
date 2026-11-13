@@ -1,6 +1,7 @@
 // src/bot/handlers/quiz.ts
 import { v4 as uuidv4 } from 'uuid';
 import * as db from '../../db';
+import * as referrals from '../../services/referrals';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
@@ -306,6 +307,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     isCorrect,
     sessionId: quizState.sessionId,
   });
+  referrals.rewardReferrer(user, ctx.telegram);
   const streakResult = await db.updateStreak(ctx.from.id);
 
   quizState.answers.push({ qId: q.id, selected, correct: q.correct_option, isCorrect });

@@ -44,10 +44,11 @@ export default function GrantPremiumModal({
 }: {
   user: User;
   onClose: () => void;
-  onGranted: () => void;
+  onGranted: (message: string, ok: boolean) => void;
 }) {
   const [unit, setUnit] = useState<Unit>("month");
   const [amount, setAmount] = useState(1);
+  const [notify, setNotify] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const existing = currentEnd(user);
@@ -57,8 +58,12 @@ export default function GrantPremiumModal({
     setSaving(true);
     setError(null);
     try {
-      await updateUserPlan(user.telegram_id, "premium", amount, unit);
-      onGranted();
+      const r = await updateUserPlan(user.telegram_id, "premium", amount, unit, notify);
+      if (r.notified === false) {
+        onGranted(`Premium granted to ${user.first_name}, but the Telegram message failed (they may have blocked the bot)`, false);
+      } else {
+        onGranted(`Premium granted to ${user.first_name}${r.notified ? " and they've been notified" : ""}`, true);
+      }
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to update plan");
     } finally {
@@ -110,6 +115,20 @@ export default function GrantPremiumModal({
           )}
           Premium will end on <span className="text-white">{endDate(existing, amount, unit)}</span>.
         </p>
+        <label className="flex cursor-pointer items-start gap-2.5">
+          <input
+            type="checkbox"
+            checked={notify}
+            onChange={(e) => setNotify(e.target.checked)}
+            className="mt-0.5 cursor-pointer rounded border-border bg-surface2 text-accent focus:ring-accent focus:ring-offset-0"
+          />
+          <span className="text-sm text-white">
+            Notify them on Telegram
+            <span className="mt-0.5 block text-xs text-muted">
+              Tells them about the gift and that every friend they invite earns 1 more Premium day.
+            </span>
+          </span>
+        </label>
         {error && <p className="text-xs text-red-400">{error}</p>}
         <div className="flex justify-end gap-3 pt-2">
           <button

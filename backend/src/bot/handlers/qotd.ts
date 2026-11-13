@@ -1,6 +1,7 @@
 // src/bot/handlers/qotd.ts — Question of the Day answer handler
 import * as db from '../../db';
 import * as redis from '../../services/redis';
+import * as referrals from '../../services/referrals';
 import { correctAnswer, formatStreakCard, qotdResultKeyboard } from '../formatter';
 
 // QOTD answer is handled outside a session — look up the question directly
@@ -39,7 +40,9 @@ export async function handleQOTDAnswer(ctx: any, questionId: string, option: str
     selectedOption: option,
     isCorrect,
     sessionId: `qotd_${date}`,
-  }).catch((err) => console.error('[handleQOTDAnswer] logAttempt persist error:', err));
+  })
+    .then(() => referrals.rewardReferrer(user, ctx.telegram))
+    .catch((err) => console.error('[handleQOTDAnswer] logAttempt persist error:', err));
   const streakPromise = db.updateStreak(ctx.from.id).catch((err) => {
     console.error('[handleQOTDAnswer] updateStreak error:', err);
     return undefined;
