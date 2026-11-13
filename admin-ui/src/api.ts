@@ -286,9 +286,10 @@ export async function deleteUsers(
 export async function updateUserPlan(
   telegramId: number,
   plan: "premium" | "free",
-  months?: number
+  duration?: number,
+  unit: "week" | "month" = "month"
 ): Promise<User> {
-  return req<User>("PUT", `/users/${telegramId}/plan`, { plan, months });
+  return req<User>("PUT", `/users/${telegramId}/plan`, { plan, duration, unit });
 }
 
 export async function getUserActivity(telegramId: number): Promise<UserActivity> {
