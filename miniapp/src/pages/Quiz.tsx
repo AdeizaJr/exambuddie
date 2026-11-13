@@ -36,6 +36,7 @@ export default function Quiz() {
   const [revealed, setRevealed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [startTime, setStartTime] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
   const overallRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -47,12 +48,33 @@ export default function Quiz() {
 
   useEffect(() => () => { if (overallRef.current) clearInterval(overallRef.current); }, []);
 
+  // Sends the answer ('' = timed out); the server grades it and returns the correct
+  // option and explanation, which get merged into the question for the reveal.
+  async function gradeAnswer(q: Question, opt: string): Promise<{ correct: string; isCorrect: boolean }> {
+    setSubmitting(true);
+    try {
+      const r = await api.submitAnswer({ questionId: q.id, selectedOption: opt || null, sessionId, timeTakenMs: 0 });
+      setQuestions(prev => prev.map(x => x.id === q.id
+        ? { ...x, correct_option: r.correct, explanation: r.explanation ?? undefined, explanation_html: r.explanation_html }
+        : x));
+      return { correct: r.correct, isCorrect: r.isCorrect };
+    } catch {
+      return { correct: '', isCorrect: false };
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   const handleQTimerExpire = useCallback(() => {
-    haptic('error');
     const q = questions[qIndex];
-    if (q) setAnswers(prev => [...prev, { qId: q.id, selected: '', correct: q.correct_option, isCorrect: false }]);
-    setRevealed(true);
-  }, [questions, qIndex]);
+    if (!q) return;
+    haptic('error');
+    gradeAnswer(q, '').then(r => {
+      setAnswers(prev => [...prev, { qId: q.id, selected: '', correct: r.correct, isCorrect: false }]);
+      setRevealed(true);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questions, qIndex, sessionId]);
 
   async function startQuiz(subj: string, et: string, ts: number) {
     setLoading(true);
@@ -90,8 +112,6 @@ export default function Quiz() {
     setAnswers(prev => {
       api.completeQuiz({
         sessionId: sid,
-        subject,
-        answers: prev,
         durationSecs: Math.round((endTime - startTime) / 1000),
       }).catch(() => {});
       return prev;
@@ -99,13 +119,14 @@ export default function Quiz() {
     setStage('results');
   }
 
-  function handleAnswer(opt: string) {
-    if (revealed || !questions[qIndex]) return;
-    haptic(opt === questions[qIndex].correct_option ? 'success' : 'error');
-    setSelected(opt);
-    setRevealed(true);
+  async function handleAnswer(opt: string) {
     const q = questions[qIndex];
-    setAnswers(prev => [...prev, { qId: q.id, selected: opt, correct: q.correct_option, isCorrect: opt === q.correct_option }]);
+    if (revealed || submitting || !q) return;
+    setSelected(opt);
+    const r = await gradeAnswer(q, opt);
+    haptic(r.isCorrect ? 'success' : 'error');
+    setAnswers(prev => [...prev, { qId: q.id, selected: opt, correct: r.correct, isCorrect: r.isCorrect }]);
+    setRevealed(true);
   }
 
   function handleNext() {
@@ -247,7 +268,7 @@ export default function Quiz() {
       </div>
 
       {/* Per-question timer — mounts per question, unmounts on reveal (auto-clears interval) */}
-      {timerSecs > 0 && !revealed && (
+      {timerSecs > 0 && !revealed && !submitting && (
         <div className="mb-4">
           <Timer key={qIndex} totalSecs={timerSecs} label="Question time:" onExpire={handleQTimerExpire} />
         </div>
@@ -261,7 +282,7 @@ export default function Quiz() {
           selected={selected}
           revealed={revealed}
           onSelect={handleAnswer}
-          disabled={revealed}
+          disabled={revealed || submitting}
         />
       )}
 

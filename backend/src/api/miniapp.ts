@@ -13,9 +13,27 @@ function withExplanationHtml<T extends { explanation?: string | null; subject?: 
   return { ...q, explanation_html: q.explanation ? formatExplanation(q.explanation, q.subject) : null };
 }
 
+// A question as handed to the mini app before it's answered: no correct option and no
+// explanation. Those only come back from POST /answer, after the server has graded it —
+// otherwise any client can read the answer key straight out of the response.
+function toUnansweredQuestion<T extends { correct_option?: unknown; explanation?: unknown }>(q: T): Omit<T, 'correct_option' | 'explanation'> {
+  const rest: Partial<T> = { ...q };
+  delete rest.correct_option;
+  delete rest.explanation;
+  return rest as Omit<T, 'correct_option' | 'explanation'>;
+}
+
+const VALID_OPTIONS = new Set(['A', 'B', 'C', 'D', 'E']);
+const MAX_EXCLUDE_IDS = 500;
+
 // ── Auth middleware ────────────────────────────────────────────────────────────
+// Telegram re-signs initData every time the mini app opens, so a day is plenty — this
+// just stops a copied initData string from working forever.
+const INIT_DATA_MAX_AGE_SECS = 24 * 60 * 60;
+
 function validateInitData(initData: string): { id: number } | null {
   const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
+  if (!BOT_TOKEN) return null; // fail closed: an empty key is a value anyone could reproduce
   try {
     const params = new URLSearchParams(initData);
     const hash = params.get('hash');
@@ -28,9 +46,12 @@ function validateInitData(initData: string): { id: number } | null {
       .join('\n');
 
     const secret = crypto.createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest();
-    const expected = crypto.createHmac('sha256', secret).update(checkString).digest('hex');
+    const expected = crypto.createHmac('sha256', secret).update(checkString).digest();
+    const given = Buffer.from(hash, 'hex');
+    if (given.length !== expected.length || !crypto.timingSafeEqual(given, expected)) return null;
 
-    if (expected !== hash) return null;
+    const authDate = Number(params.get('auth_date'));
+    if (!Number.isFinite(authDate) || Date.now() / 1000 - authDate > INIT_DATA_MAX_AGE_SECS) return null;
 
     const user = JSON.parse(params.get('user') || 'null');
     return user?.id ? { id: user.id } : null;
@@ -39,12 +60,16 @@ function validateInitData(initData: string): { id: number } | null {
   }
 }
 
+// Local-dev login shortcut. Needs BOTH a non-production NODE_ENV AND an explicit opt-in,
+// so a missing or mistyped NODE_ENV on a deployed server can't turn it on by itself
+// (it would let anyone act as any user just by sending a header).
+const DEV_AUTH_ENABLED = process.env.NODE_ENV !== 'production' && process.env.MINIAPP_DEV_AUTH === '1';
+
 async function requireAuth(req: Request, res: Response, next: NextFunction) {
   const auth = req.headers['authorization'] || '';
   const initData = auth.startsWith('tma ') ? auth.slice(4) : '';
 
-  // In dev mode, allow a fake initData with just user id
-  if (process.env.NODE_ENV !== 'production' && req.headers['x-dev-user-id']) {
+  if (DEV_AUTH_ENABLED && req.headers['x-dev-user-id']) {
     (req as any).telegramId = parseInt(req.headers['x-dev-user-id'] as string);
   } else {
     const parsed = validateInitData(initData);
@@ -96,8 +121,10 @@ router.get('/question', requireAuth, async (req: Request, res: Response) => {
   const check = await db.checkDailyLimit(user);
   if (!check.allowed) return res.status(429).json({ error: 'Daily limit reached', limit: check.limit });
 
+  // Capped so a huge list can't push the query past Postgres's bind-parameter limit.
+  // A real session never gets near this; the most recent ids matter most anyway.
   const excludeArr = excludeIds
-    ? String(excludeIds).split(',').map(Number).filter(Boolean)
+    ? String(excludeIds).split(',').map(Number).filter((n) => Number.isSafeInteger(n) && n > 0).slice(-MAX_EXCLUDE_IDS)
     : [];
 
   const q = await db.getRandomQuestion(
@@ -108,34 +135,72 @@ router.get('/question', requireAuth, async (req: Request, res: Response) => {
     topic && topic !== '__all__' ? String(topic) : null,
   );
 
-  res.json(q ? withExplanationHtml(q) : null);
+  if (!q) return res.json(null);
+  await redis.markMiniappServed((req as any).telegramId, [q.id]);
+  res.json(toUnansweredQuestion(q));
 });
 
 // ── POST /api/miniapp/answer ───────────────────────────────────────────────────
+// Body: { questionId, selectedOption ('A'-'E', or null/'' when the timer ran out),
+//         sessionId?, timeTakenMs? }
+// Grades server-side and only then reveals the correct option and explanation.
 router.post('/answer', requireAuth, async (req: Request, res: Response) => {
-  const { questionId, selectedOption, sessionId, timeTakenMs, subject } = req.body;
+  const { questionId, selectedOption, sessionId, timeTakenMs } = req.body ?? {};
   const user = (req as any).user;
+  const telegramId = (req as any).telegramId;
 
-  const { rows } = await db.query(`SELECT correct_option FROM questions WHERE id = $1`, [questionId]);
+  const qid = Number(questionId);
+  if (!Number.isSafeInteger(qid) || qid <= 0) return res.status(400).json({ error: 'questionId required' });
+  const selected = selectedOption == null || selectedOption === '' ? '' : String(selectedOption).toUpperCase();
+  if (selected && !VALID_OPTIONS.has(selected)) return res.status(400).json({ error: 'selectedOption must be A-E' });
+
+  const check = await db.checkDailyLimit(user);
+  if (!check.allowed) return res.status(429).json({ error: 'Daily limit reached', limit: check.limit });
+
+  // Only questions this user was actually served, and each one only once
+  if (!(await redis.claimMiniappServed(telegramId, qid))) {
+    return res.status(409).json({ error: 'This question has already been answered' });
+  }
+
+  const { rows } = await db.query(
+    `SELECT correct_option, explanation, subject FROM questions WHERE id = $1`,
+    [qid]
+  );
   if (!rows.length) return res.status(404).json({ error: 'Question not found' });
+  const q = rows[0];
+  const isCorrect = selected !== '' && selected === q.correct_option;
 
-  const isCorrect = selectedOption === rows[0].correct_option;
+  const quizSessionId = typeof sessionId === 'string' ? sessionId.slice(0, 50) : '';
+  const ms = Number(timeTakenMs);
 
   await db.logAttempt({
     userId: user.id,
-    questionId,
-    selectedOption,
+    questionId: qid,
+    selectedOption: selected,
     isCorrect,
-    sessionId: sessionId || uuidv4(),
-    timeTakenMs: timeTakenMs || 0,
+    sessionId: quizSessionId || uuidv4(),
+    timeTakenMs: Number.isFinite(ms) ? Math.min(Math.max(0, Math.round(ms)), 3_600_000) : 0,
   });
 
-  if (user.plan !== 'premium') {
-    await db.incrementDailyCount((req as any).telegramId);
-    if (subject) await redis.incrementSubjectUsage((req as any).telegramId, subject);
+  if (quizSessionId) {
+    const quiz = await redis.getMiniappQuiz(quizSessionId);
+    if (quiz && quiz.userId === user.id && quiz.questionIds.includes(qid)) {
+      await redis.recordMiniappQuizResult(quizSessionId, qid, isCorrect);
+    }
   }
 
-  res.json({ ok: true, isCorrect, correct: rows[0].correct_option });
+  if (user.plan !== 'premium') {
+    await db.incrementDailyCount(telegramId);
+    await redis.incrementSubjectUsage(telegramId, q.subject);
+  }
+
+  res.json({
+    ok: true,
+    isCorrect,
+    correct: q.correct_option,
+    explanation: q.explanation,
+    explanation_html: q.explanation ? formatExplanation(q.explanation, q.subject) : null,
+  });
 });
 
 // ── GET /api/miniapp/stats ─────────────────────────────────────────────────────
@@ -171,38 +236,36 @@ router.post('/quiz/start', requireAuth, async (req: Request, res: Response) => {
   if (questions.length < 5) return res.status(404).json({ error: 'Not enough questions available' });
 
   const sessionId = uuidv4();
+  const questionIds = questions.map((q) => q.id);
+  await redis.saveMiniappQuiz(sessionId, { userId: user.id, questionIds });
+  await redis.markMiniappServed((req as any).telegramId, questionIds);
   await db.updateStreak((req as any).telegramId);
 
-  res.json({ questions: questions.map(withExplanationHtml), sessionId });
+  res.json({ questions: questions.map(toUnansweredQuestion), sessionId });
 });
 
 // ── POST /api/miniapp/quiz/complete ───────────────────────────────────────────
+// Each answer was already graded and logged by POST /answer; this only totals the
+// server-side results. Anything the client sends about scores is ignored.
 router.post('/quiz/complete', requireAuth, async (req: Request, res: Response) => {
-  const { sessionId, answers, durationSecs } = req.body;
+  const { sessionId, durationSecs } = req.body ?? {};
   const user = (req as any).user;
+  if (typeof sessionId !== 'string' || !sessionId) return res.status(400).json({ error: 'sessionId required' });
 
-  // Bulk log attempts
-  if (Array.isArray(answers)) {
-    await Promise.all(
-      answers
-        .filter((a: any) => a.selected)
-        .map((a: any) =>
-          db.logAttempt({
-            userId: user.id,
-            questionId: a.qId,
-            selectedOption: a.selected,
-            isCorrect: a.isCorrect,
-            sessionId,
-          }).catch(() => {})
-        )
-    );
-  }
+  const quiz = await redis.getMiniappQuiz(sessionId);
+  if (!quiz || quiz.userId !== user.id) return res.status(404).json({ error: 'Quiz session not found' });
 
-  const correct = answers?.filter((a: any) => a.isCorrect).length || 0;
-  const total = answers?.length || 0;
+  const results = await redis.getMiniappQuizResults(sessionId);
+  // Unanswered quiz questions can't be answered for credit after the quiz ends
+  await redis.forfeitMiniappServed((req as any).telegramId, quiz.questionIds.filter((id) => !(String(id) in results)));
+
+  const values = Object.values(results);
+  const correct = values.filter(Boolean).length;
+  const total = values.length;
   const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const secs = Number(durationSecs);
 
-  res.json({ sessionId, correct, total, accuracy, durationSecs });
+  res.json({ sessionId, correct, total, accuracy, durationSecs: Number.isFinite(secs) ? Math.max(0, Math.round(secs)) : 0 });
 });
 
 // ── GET /api/miniapp/topics ────────────────────────────────────────────────────
@@ -230,13 +293,17 @@ router.get('/drill', requireAuth, async (req: Request, res: Response) => {
 
   const user = (req as any).user;
   const questions = await db.getQuestionsByTopic(user.exam_type || '', String(subject), String(topic), 10);
-  res.json(questions.map(withExplanationHtml));
+  await redis.markMiniappServed((req as any).telegramId, questions.map((q) => q.id));
+  res.json(questions.map(toUnansweredQuestion));
 });
 
 // ── GET /api/miniapp/bookmarks ────────────────────────────────────────────────
+// Bookmarks show the answer, so any bookmarked question still waiting to be answered
+// is forfeited first — otherwise bookmark-then-peek would leak the key for live questions.
 router.get('/bookmarks', requireAuth, async (req: Request, res: Response) => {
   const user = (req as any).user;
   const questions = await db.getUserBookmarks(user.id);
+  await redis.forfeitMiniappServed((req as any).telegramId, questions.map((q) => q.id));
   res.json(questions.map(withExplanationHtml));
 });
 
@@ -278,7 +345,8 @@ router.get('/leaderboard', requireAuth, async (req: Request, res: Response) => {
     db.getLeaderboard(),
     db.getLeaderboardRank(user.id),
   ]);
-  res.json({ entries, myRank });
+  // Other students' Telegram ids aren't needed to show a leaderboard, so don't hand them out
+  res.json({ entries: entries.map(({ telegram_id: _t, ...e }: any) => e), myRank });
 });
 
 export default router;

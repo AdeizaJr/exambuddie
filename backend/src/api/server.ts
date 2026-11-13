@@ -4,6 +4,7 @@ import fs from 'fs';
 import express, { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import * as payments from '../services/payments';
 import * as db from '../db';
 import * as redis from '../services/redis';
@@ -94,6 +95,25 @@ export default function createServer(bot: any) {
   // Railway's edge proxy sits in front of us (one hop). Without this, req.ip is the proxy's
   // address, so every user shares one rate-limit bucket and audit logs record Railway's IP.
   app.set('trust proxy', 1);
+
+  // Standard hardening headers (HSTS, nosniff, no X-Powered-By, ...). The ones left off
+  // would break real features: a strict CSP or X-Frame-Options would stop Telegram Web
+  // (web.telegram.org) showing the mini app in its iframe, and a same-origin
+  // Cross-Origin-Resource-Policy would stop admin-ui (another origin) loading diagrams.
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      frameguard: false,
+      crossOriginResourcePolicy: false,
+      crossOriginEmbedderPolicy: false,
+      crossOriginOpenerPolicy: false,
+    })
+  );
+  // Only Telegram (and ourselves) may frame our pages, which blocks clickjacking elsewhere.
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('Content-Security-Policy', "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org");
+    next();
+  });
 
   // CORS — allow admin-ui and miniapp origins
   const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
@@ -258,10 +278,10 @@ export default function createServer(bot: any) {
         const expiry = new Date(expiresAt).toLocaleDateString('en-NG');
         await bot.telegram.sendMessage(
           user.telegram_id,
-          `🎉 *Payment confirmed! Welcome to Premium, ${user.first_name}!*\n\n` +
+          `🎉 <b>Payment confirmed! Welcome to Premium, ${fmt.escHtml(user.first_name)}!</b>\n\n` +
             `✅ Plan: ${planType === 'yearly' ? 'Annual' : 'Monthly'}\n` +
             `📅 Expires: ${expiry}\n\n` +
-            `You now have *unlimited questions*, quiz mode, topic drills, and progress tracking.\n\n` +
+            `You now have <b>unlimited questions</b>, quiz mode, topic drills, and progress tracking.\n\n` +
             (resumeQuestion ? `Continuing your practice session below 👇` : `Start now: /practice`),
           { parse_mode: 'HTML' }
         );
@@ -384,26 +404,28 @@ export default function createServer(bot: any) {
 
   // ── POST /api/admin/login ───────────────────────────────────────────────────
   app.post('/api/admin/login', async (req: Request, res: Response) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { username, password } = req.body ?? {};
+    if (typeof username !== 'string' || typeof password !== 'string' || !username || !password) {
       return res.status(400).json({ error: 'username and password are required' });
+    }
+
+    if (await redis.isAdminLoginLocked(username)) {
+      await db.logAudit(username, 'admin.login_locked', { ip: req.ip }).catch(() => {});
+      return res.status(429).json({ error: 'Too many failed attempts. Try again in 15 minutes.' });
     }
 
     const { rows } = await db.query(
       'SELECT id, username, password_hash FROM admin_users WHERE username = $1',
       [username]
     );
-    if (rows.length === 0) {
-      await db.logAudit(username, 'admin.login_failed', { ip: req.ip }).catch(() => {});
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
     const admin = rows[0];
-    const valid = await comparePassword(password, admin.password_hash);
+    const valid = admin ? await comparePassword(password, admin.password_hash) : false;
     if (!valid) {
+      await redis.noteAdminLoginFailure(username).catch(() => {});
       await db.logAudit(username, 'admin.login_failed', { ip: req.ip }).catch(() => {});
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+    await redis.clearAdminLoginFailures(username).catch(() => {});
 
     await db.logAudit(admin.username, 'admin.login', { ip: req.ip }).catch(() => {});
     const token = signToken({ id: admin.id, username: admin.username });
@@ -431,7 +453,7 @@ export default function createServer(bot: any) {
     if (!currentPassword || !newPassword) {
       return res.status(400).json({ error: 'currentPassword and newPassword are required' });
     }
-    if (newPassword.length < 6) {
+    if (typeof newPassword !== 'string' || newPassword.length < 8) {
       return res.status(400).json({ error: 'New password must be at least 8 characters' });
     }
 
@@ -1591,10 +1613,18 @@ export default function createServer(bot: any) {
              last_qotd_sent_at, last_dyk_sent_at
       FROM users ORDER BY joined_at DESC
     `);
+    // Quote every text cell, and defuse cells starting with = + - @ (or tab/CR), which
+    // Excel and Google Sheets would otherwise run as formulas. Names come from Telegram,
+    // so any student controls what lands in them.
+    const csvCell = (v: unknown) => {
+      const s = v == null ? '' : String(v);
+      const safe = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s;
+      return `"${safe.replace(/"/g, '""')}"`;
+    };
     const header = 'telegram_id,first_name,username,exam_type,plan,streak,joined_at,last_active_date,daily_count,last_qotd_sent_at,last_dyk_sent_at\n';
     const csv = rows.map(r =>
-      [r.telegram_id, `"${(r.first_name||'').replace(/"/g,'""')}"`,
-       r.username||'', r.exam_type||'', r.plan, r.streak,
+      [r.telegram_id, csvCell(r.first_name),
+       csvCell(r.username), csvCell(r.exam_type), r.plan, r.streak,
        r.joined_at?.toISOString()||'', r.last_active_date||'', r.daily_count,
        r.last_qotd_sent_at?.toISOString()||'', r.last_dyk_sent_at?.toISOString()||''
       ].join(',')
