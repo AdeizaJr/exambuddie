@@ -16,9 +16,11 @@ export interface User {
   last_active_date: string | null;
   phone_number: string | null;
   notifications_enabled: boolean;
+  blocked_at?: string | null; // set when the user blocks the bot
   referral_code: string | null;
   referred_by: number | null;
-  referral_reward_granted: boolean;
+  referral_reward_granted: boolean; // legacy one-time reward flag, superseded by referral_days_granted
+  referral_days_granted: number;
   streak_freeze_used_at?: string | null;
   trial_used?: boolean;
   daily_reminder_hour?: number | null;

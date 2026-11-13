@@ -283,13 +283,16 @@ export async function deleteUsers(
   return req<{ ok: boolean; deleted: number }>("DELETE", "/users", payload);
 }
 
+// `notify` sends the user a Telegram message about the gift. `notified` in the reply is
+// true/false when a message was attempted, undefined when none was asked for.
 export async function updateUserPlan(
   telegramId: number,
   plan: "premium" | "free",
   duration?: number,
-  unit: "week" | "month" = "month"
-): Promise<User> {
-  return req<User>("PUT", `/users/${telegramId}/plan`, { plan, duration, unit });
+  unit: "week" | "month" = "month",
+  notify = false
+): Promise<User & { notified?: boolean }> {
+  return req<User & { notified?: boolean }>("PUT", `/users/${telegramId}/plan`, { plan, duration, unit, notify });
 }
 
 export async function getUserActivity(telegramId: number): Promise<UserActivity> {
@@ -343,7 +346,7 @@ export interface Referrer {
   first_name: string;
   username: string | null;
   referral_code: string | null;
-  reward_granted: boolean;
+  days_earned: number;
   referred_count: number;
   practiced_count: number;
   last_referral_at: string;
@@ -351,7 +354,7 @@ export interface Referrer {
 }
 
 export interface ReferralsResponse {
-  summary: { total_referred: number; total_practiced: number; referrers: number; rewards_granted: number };
+  summary: { total_referred: number; total_practiced: number; referrers: number; days_granted: number };
   referrers: Referrer[];
 }
 

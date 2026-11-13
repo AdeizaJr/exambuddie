@@ -568,7 +568,7 @@ export default function Users() {
         <GrantPremiumModal
           user={grantTarget}
           onClose={() => setGrantTarget(null)}
-          onGranted={() => { setGrantTarget(null); showToast(`Premium granted to ${grantTarget.first_name}`); load(); }}
+          onGranted={(msg, ok) => { setGrantTarget(null); showToast(msg, ok ? "success" : "error"); load(); }}
         />
       )}
 

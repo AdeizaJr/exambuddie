@@ -44,7 +44,7 @@ const secondaryFeatures = [
   { icon: MedalIcon, title: "Achievements & Ranks", desc: "Earn badges for streaks, accuracy, and milestones. Rise through 30 ranks, Rookie to Legend, based on questions answered." },
   { icon: ShareIcon, title: "Shareable Results", desc: "Share your quiz score card on WhatsApp after every CBT mock" },
   { icon: TargetIcon, title: "Challenge Mode", desc: "Compete with friends in real-time" },
-  { icon: LinkIcon, title: "Refer & Earn", desc: "Invite 2 friends → get 3 days Premium free + leaderboard" },
+  { icon: LinkIcon, title: "Refer & Earn", desc: "Earn 1 free Premium day for every friend who joins and practises + leaderboard" },
   { icon: BoltIcon, title: "Works in Telegram", desc: "No app download, ever" },
 ];
 

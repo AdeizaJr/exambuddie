@@ -4,6 +4,7 @@ import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as timerService from '../../services/timer';
+import * as referrals from '../../services/referrals';
 import * as achievements from './achievements';
 import { checkRankUp } from './achievements';
 import { maybeAskPhone } from './phone';
@@ -470,16 +471,9 @@ export async function handleAnswer(ctx: any): Promise<void> {
   // question late as a result: the count on question N only reflected questions 1..N-1.
   const totalAttemptsPromise = writesPromise.then(() => db.getTotalAttempts(user.id));
 
-  // Referral reward — already fire-and-forget
-  db.checkAndGrantReferralReward(user.id).then(({ granted, referrer }) => {
-    if (granted && referrer) {
-      ctx.telegram.sendMessage(
-        referrer.telegram_id,
-        `🎁 <b>Referral Reward Unlocked!</b>\n\nTwo of your invited friends just started practising on ExamBuddie. You've earned <b>3 days Premium free</b>! 🎉\n\nKeep sharing — /invite`,
-        { parse_mode: 'HTML' }
-      ).catch(() => {});
-    }
-  }).catch(() => {});
+  // Referral reward: pays the inviter 1 Premium day per practising friend. Chained after
+  // the writes so this answer's attempt row is committed and counted.
+  writesPromise.then(() => referrals.rewardReferrer(user, ctx.telegram));
 
   // ── REPLY — user sees this while DB writes are still in flight ──────────────
   const resultText = fmt.correctAnswer(q, selected);

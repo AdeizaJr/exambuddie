@@ -1252,6 +1252,62 @@ You're on the free plan now: ${SUBJECT_Q_LIMIT} questions per subject every ${SU
 Want unlimited practice, CBT mode and topic drills back? Premium starts at ₦${p.monthly_ngn.toLocaleString()} a month 👇`;
 }
 
+// "27 November 2026", in Nigerian time
+function longDate(d: Date | string): string {
+  return new Date(d).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Lagos' });
+}
+
+const REFERRAL_PITCH =
+  `Every friend who joins with your invite link and answers their first question gives you ` +
+  `<b>1 extra day of Premium</b>. Invite 5 friends, get 5 days. Invite 30, get 30 days. There's no limit.`;
+
+export function inviteLinkKeyboard() {
+  return { inline_keyboard: [[{ text: '🔗 Get my invite link', callback_data: 'invite:link' }]] };
+}
+
+// Sent when an admin gifts Premium and ticks "notify". expiresAt is the new end date
+// (gifts stack on unexpired Premium), or null for open-ended Premium.
+export function premiumGiftMessage(
+  firstName: string,
+  duration: number,
+  unit: 'week' | 'month',
+  expiresAt: Date | string | null,
+): string {
+  const length = `${duration} ${unit}${duration > 1 ? 's' : ''}`;
+  const until = expiresAt ? ` Your Premium runs until <b>${longDate(expiresAt)}</b>.` : '';
+  return `🎁 <b>You've been gifted ExamBuddie Premium!</b>
+
+Hi ${escHtml(firstName || 'there')}, you've got <b>${length} of Premium</b>, free.${until}
+
+That means unlimited questions in every subject, plus CBT mode, mock exams, topic drills and your review deck. Make the most of it! 📚
+
+👥 <b>Want more free Premium days?</b>
+${REFERRAL_PITCH}
+
+Tap the button below or send /invite to get your personal invite link.`;
+}
+
+// Sent to an inviter when friends they invited start practising.
+export function referralRewardMessage(
+  firstName: string,
+  daysAdded: number,
+  confirmed: number,
+  expiresAt: Date | string | null,
+): string {
+  const days = `${daysAdded} free day${daysAdded > 1 ? 's' : ''} of Premium`;
+  const why = daysAdded > 1
+    ? `Friends you invited have started practising on ExamBuddie, so you've earned <b>${days}</b>! 🎉`
+    : `A friend you invited just answered their first question on ExamBuddie, so you've earned <b>${days}</b>! 🎉`;
+  const until = expiresAt ? `\n💎 Premium now runs until <b>${longDate(expiresAt)}</b>` : '';
+  return `🎁 <b>+${daysAdded} Premium day${daysAdded > 1 ? 's' : ''}, ${escHtml(firstName || 'there')}!</b>
+
+${why}
+
+👥 Friends practising: <b>${confirmed}</b>${until}
+
+Keep inviting. Every friend who practises adds another day.`;
+}
+
 export function upgradeMessage(): string {
   const p = getPricing();
   const termSavings = p.monthly_ngn * 3 - p.term_ngn;
@@ -1388,7 +1444,7 @@ export function helpMessage(): string {
 <b>🏆 Social</b>
 /leaderboard — See how you rank against other users
 /challenge — Race friends in a live quiz room
-/invite — Get 3 days Premium free for 2 confirmed referrals
+/invite — Get 1 free Premium day for every friend who joins
 /badges — Your achievements
 
 <b>🛠 Extras</b>

@@ -5,8 +5,6 @@ import Spinner from "../components/Spinner";
 import Badge from "../components/Badge";
 import StatCard from "../components/StatCard";
 
-// Matches checkAndGrantReferralReward: 3 days of Premium once 2 invitees have practiced
-const REWARD_THRESHOLD = 2;
 
 // users.source is the /start payload minus "from_" (see joinSourceFromPayload in the
 // bot), so the first segment is the channel and the rest is the page within it.
@@ -190,7 +188,7 @@ export default function Signups() {
         <div>
           <h2 className="font-display text-lg font-bold text-white">Referrals</h2>
           <p className="mt-0.5 text-sm text-muted">
-            Who invited whom · reward unlocks once {REWARD_THRESHOLD} invitees answer a question
+            Who invited whom · each invitee who answers a question earns their inviter 1 Premium day
           </p>
         </div>
         <button
@@ -215,7 +213,7 @@ export default function Signups() {
             icon={<CheckCircle2 size={16} />}
           />
           <StatCard label="Active inviters" value={data.summary.referrers} icon={<Users size={16} />} />
-          <StatCard label="Rewards granted" value={data.summary.rewards_granted} icon={<Gift size={16} />} />
+          <StatCard label="Premium days earned" value={data.summary.days_granted} icon={<Gift size={16} />} />
         </div>
       )}
 
@@ -247,7 +245,7 @@ export default function Signups() {
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Telegram ID</th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Joined</th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Practiced</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Reward</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Days earned</th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Latest invite</th>
                 </tr>
               </thead>
@@ -269,13 +267,9 @@ export default function Signups() {
                         <td className="px-4 py-3 font-semibold text-white">{r.referred_count}</td>
                         <td className="px-4 py-3 text-white">{r.practiced_count}</td>
                         <td className="px-4 py-3">
-                          {r.reward_granted ? (
-                            <Badge variant="green">Granted</Badge>
-                          ) : (
-                            <Badge variant="gray">
-                              {Math.min(r.practiced_count, REWARD_THRESHOLD)}/{REWARD_THRESHOLD}
-                            </Badge>
-                          )}
+                          <Badge variant={r.days_earned > 0 ? "green" : "gray"}>
+                            {r.days_earned} day{r.days_earned === 1 ? "" : "s"}
+                          </Badge>
                         </td>
                         <td className="px-4 py-3 text-muted">{formatDate(r.last_referral_at)}</td>
                       </tr>

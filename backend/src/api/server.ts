@@ -146,6 +146,7 @@ export default function createServer(bot: any) {
   app.use('/api/admin/login', rateLimit({ windowMs: 60_000, max: 20, standardHeaders: true, legacyHeaders: false }));
 
   // Mini App API routes
+  app.locals.telegram = bot.telegram; // lets the mini app router message users (referral rewards)
   app.use('/api/miniapp', miniappRouter);
 
   // Serve question diagrams
@@ -1088,8 +1089,30 @@ export default function createServer(bot: any) {
           [req.params.telegramId]
         );
     if (rows.length === 0) return res.status(404).json({ error: 'User not found' });
-    await db.logAudit((req as any).admin.username, 'user.plan_change', { targetType: 'user', targetId: String(req.params.telegramId), details: plan === 'premium' ? { plan, duration: amount, unit } : { plan }, ip: req.ip }).catch(() => {});
-    res.json(rows[0]);
+    const admin = (req as any).admin.username;
+    await redis.clearCachedUser(rows[0].telegram_id).catch(() => {});
+    await db.logAudit(admin, 'user.plan_change', { targetType: 'user', targetId: String(req.params.telegramId), details: plan === 'premium' ? { plan, duration: amount, unit } : { plan }, ip: req.ip }).catch(() => {});
+
+    // Optional gift notice: tells the user what they got and how to earn more days by inviting.
+    // The grant already happened, so a failed send is reported back, not turned into an error.
+    let notified: boolean | undefined;
+    if (plan === 'premium' && req.body.notify === true) {
+      const u = rows[0];
+      const text = fmt.premiumGiftMessage(u.first_name, amount, unit, u.plan_expires_at);
+      let error: string | undefined;
+      try {
+        await bot.telegram.sendMessage(u.telegram_id, text, { parse_mode: 'HTML', reply_markup: fmt.inviteLinkKeyboard() });
+        notified = true;
+      } catch (err: any) {
+        console.error(`[Gift] Failed to notify ${u.telegram_id}:`, err.message);
+        await outreach.noteSendFailure(u.telegram_id, err);
+        notified = false;
+        error = err.message || 'Failed to send message';
+      }
+      await db.logAdminMessage('dm', text, admin, [{ telegram_id: Number(u.telegram_id), ok: notified, error }])
+        .catch((err) => console.error('[Gift] Failed to log message:', err.message));
+    }
+    res.json({ ...rows[0], notified });
   });
 
   // ── GET /api/admin/users/:telegramId/activity ──────────────────────────────
@@ -1302,13 +1325,13 @@ export default function createServer(bot: any) {
 
   // ── GET /api/admin/referrals ────────────────────────────────────────────────
   // Every user who joined through someone's invite link, grouped under their inviter.
-  // "Practiced" mirrors getConfirmedReferralCount: a referral only counts toward the
-  // reward once the invited user has answered at least one question.
+  // "Practiced" mirrors creditReferrer: an invitee earns their inviter 1 Premium day
+  // once they have answered at least one question.
   app.get('/api/admin/referrals', adminAuth, async (_req: Request, res: Response) => {
     const { rows } = await db.query(
       `SELECT ref.telegram_id AS referrer_telegram_id, ref.first_name AS referrer_first_name,
               ref.username AS referrer_username, ref.referral_code,
-              ref.referral_reward_granted AS reward_granted,
+              ref.referral_days_granted AS days_earned,
               u.telegram_id, u.first_name, u.username, u.joined_at,
               EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id) AS practiced
        FROM users u
@@ -1326,7 +1349,7 @@ export default function createServer(bot: any) {
           first_name: r.referrer_first_name,
           username: r.referrer_username,
           referral_code: r.referral_code,
-          reward_granted: r.reward_granted,
+          days_earned: r.days_earned,
           referred_count: 0,
           practiced_count: 0,
           last_referral_at: r.joined_at, // rows are newest first
@@ -1353,7 +1376,7 @@ export default function createServer(bot: any) {
         total_referred: rows.length,
         total_practiced: rows.filter((r) => r.practiced).length,
         referrers: referrers.length,
-        rewards_granted: referrers.filter((r) => r.reward_granted).length,
+        days_granted: referrers.reduce((sum, r) => sum + (r.days_earned || 0), 0),
       },
       referrers,
     });

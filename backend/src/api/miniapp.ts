@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import * as db from '../db';
 import * as redis from '../services/redis';
+import * as referrals from '../services/referrals';
 import { formatExplanation } from '../bot/formatter';
 
 const router = Router();
@@ -181,6 +182,9 @@ router.post('/answer', requireAuth, async (req: Request, res: Response) => {
     sessionId: quizSessionId || uuidv4(),
     timeTakenMs: Number.isFinite(ms) ? Math.min(Math.max(0, Math.round(ms)), 3_600_000) : 0,
   });
+  // Pays the inviter (if any) a Premium day once this user has practised. Fire-and-forget.
+  const telegram = req.app.locals.telegram;
+  if (telegram) referrals.rewardReferrer(user, telegram);
 
   if (quizSessionId) {
     const quiz = await redis.getMiniappQuiz(quizSessionId);
