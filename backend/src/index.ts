@@ -390,7 +390,7 @@ bot.on('callback_query', async (ctx: any) => {
     await ctx.answerCbQuery();
     const user = await db.getUser(ctx.from.id);
     if (!user) return;
-    await ctx.reply(`🏠 <b>Main Menu</b>\n\nWhat would you like to do, ${user.first_name}?`, {
+    await ctx.reply(`🏠 <b>Main Menu</b>\n\nWhat would you like to do, ${fmt.escHtml(user.first_name)}?`, {
       parse_mode: 'HTML',
       reply_markup: {
         inline_keyboard: [
@@ -527,7 +527,7 @@ bot.on('text', async (ctx: any) => {
   if (text === '🎓 Mock Exam') return quiz.handleMockExam(ctx);
   if (text === '🏅 Badges') return achievements.handleBadges(ctx);
 
-  await ctx.reply(`${fmt.timeGreeting()}, ${user.first_name}! What would you like to do?`, {
+  await ctx.reply(`${fmt.timeGreeting()}, ${fmt.escHtml(user.first_name)}! What would you like to do?`, {
     parse_mode: 'HTML',
     reply_markup: fmt.persistentMenuKeyboard(),
   });

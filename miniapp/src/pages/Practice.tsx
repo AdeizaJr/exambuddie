@@ -47,17 +47,38 @@ export default function Practice() {
   const [drillQuestions, setDrillQuestions] = useState<Question[]>([]);
   const [drillIndex, setDrillIndex] = useState(0);
   const [bookmarked, setBookmarked] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     api.getMe().then(setUser).catch(() => {});
   }, []);
 
+  // Sends the answer ('' = timed out) and merges the server's correct option and
+  // explanation into the question, which arrived without them. Returns whether it was right.
+  async function gradeAnswer(q: Question, opt: string): Promise<boolean> {
+    setSubmitting(true);
+    try {
+      const r = await api.submitAnswer({ questionId: q.id, selectedOption: opt || null, sessionId, timeTakenMs: 0 });
+      setQuestion(cur => cur && cur.id === q.id
+        ? { ...cur, correct_option: r.correct, explanation: r.explanation ?? undefined, explanation_html: r.explanation_html }
+        : cur);
+      return r.isCorrect;
+    } catch {
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   const handleTimerExpire = useCallback(() => {
+    if (!question) return;
     haptic('error');
     setSelected('');
     setTotal(t => t + 1);
-    setStage('revealed');
-  }, []);
+    setUsedIds(ids => [...ids, question.id]);
+    gradeAnswer(question, '').then(() => setStage('revealed'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question]);
 
   async function loadQuestion(subj: string, et: string, t: string | null = topic) {
     setLoading(true);
@@ -128,21 +149,14 @@ export default function Practice() {
   }
 
   async function handleAnswer(opt: string) {
-    if (stage !== 'question' || !question) return;
-    haptic(opt === question.correct_option ? 'success' : 'error');
+    if (stage !== 'question' || !question || submitting) return;
     setSelected(opt);
-    setStage('revealed');
-    const isCorrect = opt === question.correct_option;
+    const isCorrect = await gradeAnswer(question, opt);
+    haptic(isCorrect ? 'success' : 'error');
     if (isCorrect) setCorrect(c => c + 1);
     setTotal(t => t + 1);
     setUsedIds(ids => [...ids, question.id]);
-    await api.submitAnswer({
-      questionId: question.id,
-      selectedOption: opt,
-      sessionId,
-      timeTakenMs: 0,
-      subject,
-    }).catch(() => {});
+    setStage('revealed');
   }
 
   // Skip without answering — bookmarks the question for later review and moves on.
@@ -349,7 +363,7 @@ export default function Practice() {
   return (
     <div className="page px-4 pt-4">
       {/* Timer bar — mounts per question, unmounts on reveal (auto-clears interval) */}
-      {timerSecs > 0 && stage === 'question' && (
+      {timerSecs > 0 && stage === 'question' && !submitting && (
         <div className="mb-4">
           <Timer
             key={question?.id}
@@ -368,7 +382,7 @@ export default function Practice() {
           selected={selected}
           revealed={stage === 'revealed'}
           onSelect={handleAnswer}
-          disabled={stage === 'revealed'}
+          disabled={stage === 'revealed' || submitting}
         />
       )}
 

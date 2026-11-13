@@ -1,10 +1,17 @@
 import { tg } from './telegram';
 import type { User, Question, Stats, QuizResult } from './types';
 
+export interface AnswerResult {
+  ok: boolean;
+  isCorrect: boolean;
+  correct: string;
+  explanation: string | null;
+  explanation_html: string | null;
+}
+
 export interface LeaderboardEntry {
   rank: number;
   first_name: string;
-  telegram_id: number;
   correct: number;
   total: number;
   accuracy: number;
@@ -13,7 +20,8 @@ export interface LeaderboardEntry {
 const BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/miniapp';
 
 // In dev mode, send x-dev-user-id so the backend bypasses initData validation.
-// Set VITE_DEV_USER_ID in miniapp/.env.local to your Telegram user ID.
+// Set VITE_DEV_USER_ID in miniapp/.env.local to your Telegram user ID, and
+// MINIAPP_DEV_AUTH=1 in backend/.env (the backend ignores the header otherwise).
 const DEV_USER_ID = import.meta.env.VITE_DEV_USER_ID;
 
 // Session-scoped TTL cache — avoids redundant fetches across page mounts
@@ -88,13 +96,14 @@ export const api = {
     return req<Question | null>('GET', `/question?${qs}`);
   },
 
+  // selectedOption null = the per-question timer ran out. The response is the only
+  // place the correct option and explanation come from.
   submitAnswer: (body: {
     questionId: number;
-    selectedOption: string;
+    selectedOption: string | null;
     sessionId: string;
     timeTakenMs: number;
-    subject: string;
-  }) => req<{ ok: boolean }>('POST', '/answer', body),
+  }) => req<AnswerResult>('POST', '/answer', body),
 
   getStats: (examType?: string) => {
     const qs = examType ? `?examType=${examType}` : '';
@@ -104,12 +113,9 @@ export const api = {
   startQuiz: (body: { subject: string; examType: string }) =>
     req<{ questions: Question[]; sessionId: string }>('POST', '/quiz/start', body),
 
-  completeQuiz: (body: {
-    sessionId: string;
-    subject: string;
-    answers: { qId: number; selected: string; correct: string; isCorrect: boolean }[];
-    durationSecs: number;
-  }) => req<QuizResult>('POST', '/quiz/complete', body),
+  // The server totals the score from the answers it graded; nothing score-related is sent.
+  completeQuiz: (body: { sessionId: string; durationSecs: number }) =>
+    req<Omit<QuizResult, 'answers'>>('POST', '/quiz/complete', body),
 
   getWeakTopics: (subject: string) => {
     const key = `weak:${subject}`;

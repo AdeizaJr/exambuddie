@@ -55,7 +55,7 @@ export default function Leaderboard() {
         <div className="px-4 flex flex-col gap-2">
           {entries.map(e => (
             <div
-              key={e.telegram_id}
+              key={e.rank}
               className="flex items-center gap-3 px-4 py-3 rounded-2xl"
               style={{ background: 'var(--tg-bg)', border: '1px solid rgba(0,0,0,0.07)' }}
             >

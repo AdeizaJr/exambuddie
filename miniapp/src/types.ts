@@ -21,7 +21,9 @@ export interface Question {
   option_c: string;
   option_d: string;
   option_e?: string;
-  correct_option: string;
+  // Absent until the question is answered: the server only reveals the correct option
+  // and explanation in its response to POST /answer (bookmarks include them up front).
+  correct_option?: string;
   explanation?: string;
   // Server-formatted copy of `explanation` (same output the bot sends). Safe subset of
   // HTML: only <b>, <i>, <u>, <code>, with line breaks as \n.

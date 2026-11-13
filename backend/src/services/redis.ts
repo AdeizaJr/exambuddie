@@ -169,6 +169,85 @@ export const claimOnce = async (key: string, ttlSeconds: number): Promise<boolea
   return (await client.set(key, '1', { NX: true, EX: ttlSeconds })) === 'OK';
 };
 
+// ── Admin login lockout ─────────────────────────────────────────────────────────
+// Per-username, on top of the per-IP rate limit, so a password guesser spreading
+// attempts across many IPs still gets stopped. Counter resets on a successful login.
+const ADMIN_LOGIN_MAX_FAILS = 10;
+const ADMIN_LOGIN_LOCK_SECS = 15 * 60;
+const adminLoginKey = (username: string) => `admin_login_fails:${username.toLowerCase()}`;
+
+export const isAdminLoginLocked = async (username: string): Promise<boolean> => {
+  return Number(await client.get(adminLoginKey(username))) >= ADMIN_LOGIN_MAX_FAILS;
+};
+
+export const noteAdminLoginFailure = async (username: string): Promise<void> => {
+  const key = adminLoginKey(username);
+  const n = await client.incr(key);
+  if (n === 1) await client.expire(key, ADMIN_LOGIN_LOCK_SECS);
+};
+
+export const clearAdminLoginFailures = async (username: string): Promise<void> => {
+  await client.del(adminLoginKey(username));
+};
+
+// ── Mini app answer tracking ────────────────────────────────────────────────────
+// The mini app never receives a question's correct option up front. Each question the
+// server hands out is recorded here, and an answer is only accepted (and graded
+// server-side) for a question that is still on this list. Claiming removes it, so each
+// served question can be answered exactly once — no replays, no double-taps, no
+// attempts on questions the user was never shown.
+const MINIAPP_SERVED_TTL = 24 * 60 * 60;
+const miniappServedKey = (telegramId: number | string) => `miniapp:served:${telegramId}`;
+
+export const markMiniappServed = async (telegramId: number | string, questionIds: number[]): Promise<void> => {
+  if (!questionIds.length) return;
+  const key = miniappServedKey(telegramId);
+  await client.sAdd(key, questionIds.map(String));
+  await client.expire(key, MINIAPP_SERVED_TTL);
+};
+
+export const claimMiniappServed = async (telegramId: number | string, questionId: number): Promise<boolean> => {
+  return (await client.sRem(miniappServedKey(telegramId), String(questionId))) === 1;
+};
+
+// Drops any of these ids from the served list (e.g. once the bookmarks view has shown
+// their answers, they can no longer be answered for credit).
+export const forfeitMiniappServed = async (telegramId: number | string, questionIds: number[]): Promise<void> => {
+  if (!questionIds.length) return;
+  await client.sRem(miniappServedKey(telegramId), questionIds.map(String));
+};
+
+// Quiz sessions: which questions belong to the quiz (JSON), plus the server-graded
+// result of each one answered so far (a hash, so concurrent answers can't overwrite
+// each other). /quiz/complete scores from these, never from anything the client sends.
+export interface MiniappQuizSession {
+  userId: number;
+  questionIds: number[];
+}
+const miniappQuizKey = (sessionId: string) => `miniapp:quiz:${sessionId}`;
+const miniappQuizResultsKey = (sessionId: string) => `miniapp:quiz:${sessionId}:results`;
+
+export const saveMiniappQuiz = async (sessionId: string, data: MiniappQuizSession): Promise<void> => {
+  await setJson(miniappQuizKey(sessionId), data, SESSION_TTL_SECS);
+};
+
+export const getMiniappQuiz = async (sessionId: string): Promise<MiniappQuizSession | null> => {
+  return getJson<MiniappQuizSession>(miniappQuizKey(sessionId));
+};
+
+export const recordMiniappQuizResult = async (sessionId: string, questionId: number, isCorrect: boolean): Promise<void> => {
+  const key = miniappQuizResultsKey(sessionId);
+  await client.hSet(key, String(questionId), isCorrect ? '1' : '0');
+  await client.expire(key, SESSION_TTL_SECS);
+};
+
+export const getMiniappQuizResults = async (sessionId: string): Promise<Record<string, boolean>> => {
+  const raw = await client.hGetAll(miniappQuizResultsKey(sessionId));
+  const out: Record<string, boolean> = {};
+  for (const [k, v] of Object.entries(raw)) out[k] = v === '1';
+  return out;
+};
+
 const QUIZ_RESULT_TTL = 60 * 60; // 1 hour
 
 export interface QuizResultSummary {

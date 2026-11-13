@@ -916,7 +916,7 @@ export async function handleDuelOpponentInput(ctx: any): Promise<void> {
   });
 
   await ctx.reply(
-    `⚔️ <b>Duel vs ${opponent.first_name}</b>\n\nPick a subject:`,
+    `⚔️ <b>Duel vs ${fmt.escHtml(opponent.first_name)}</b>\n\nPick a subject:`,
     { parse_mode: 'HTML', reply_markup: challengeSubjectKeyboard(Object.keys(fmt.SUBJECT_MAP)) }
   );
 }
