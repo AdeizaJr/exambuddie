@@ -5,13 +5,18 @@ import type { User, UserActivity, UserWeakTopic, UserAdminMessage } from "../typ
 import Spinner from "./Spinner";
 import Modal from "./Modal";
 
-function formatDate(dateStr: string | null): string {
+// "13 Nov 2026, 5:55 pm WAT": Nigerian time regardless of where the admin is browsing from
+function formatDateTime(dateStr: string | null): string {
   if (!dateStr) return "—";
-  return new Date(dateStr).toLocaleDateString("en-NG", {
+  const d = new Date(dateStr).toLocaleString("en-NG", {
     day: "numeric",
     month: "short",
     year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "Africa/Lagos",
   });
+  return `${d} WAT`;
 }
 
 function UserMessages({ telegramId }: { telegramId: number }) {
@@ -98,7 +103,7 @@ export default function UserActivityModal({ user, onClose }: { user: User; onClo
               <div className="flex flex-wrap gap-4 text-xs text-muted">
                 <span>📱 <span className="text-white">{activityUser.phone_number ?? "Not provided"}</span></span>
                 <span className="inline-flex items-center gap-1"><Flame size={13} className="text-orange-400" /> <span className="text-white">{activityUser.streak}-day streak</span></span>
-                <span>📅 Joined <span className="text-white">{formatDate(activityUser.joined_at)}</span></span>
+                <span>📅 Joined <span className="text-white">{formatDateTime(activityUser.joined_at)}</span></span>
               </div>
               {/* Summary stats */}
               <div className="grid grid-cols-3 gap-3">
