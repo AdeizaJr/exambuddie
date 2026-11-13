@@ -1061,21 +1061,34 @@ export default function createServer(bot: any) {
       return res.status(400).json({ error: 'plan must be premium or free' });
     }
 
-    let expiresAt: string | null = null;
-    if (plan === 'premium') {
-      const m = parseInt(months) || 1;
-      const d = new Date();
-      d.setMonth(d.getMonth() + m);
-      expiresAt = d.toISOString();
+    // Grant length: `{ duration, unit }` (unit 'week' | 'month'), or legacy `{ months }`.
+    const unit: 'week' | 'month' = req.body.unit === 'week' ? 'week' : 'month';
+    const amount = parseInt(req.body.duration ?? months, 10) || 1;
+    const maxAmount = unit === 'week' ? 52 : 24;
+    if (plan === 'premium' && (amount < 1 || amount > maxAmount)) {
+      return res.status(400).json({ error: `duration must be 1-${maxAmount} ${unit}s` });
     }
 
-    const { rows } = await db.query(
-      `UPDATE users SET plan = $1, plan_expires_at = $2, updated_at = NOW()
-       WHERE telegram_id = $3 RETURNING telegram_id, first_name, plan, plan_expires_at`,
-      [plan, expiresAt, req.params.telegramId]
-    );
+    // Premium grants stack: count from the user's current end date if they already
+    // hold Premium that hasn't run out, otherwise from now. GREATEST skips NULLs.
+    const { rows } = plan === 'premium'
+      ? await db.query(
+          `UPDATE users
+              SET plan = 'premium',
+                  plan_expires_at = GREATEST(NOW(), CASE WHEN plan = 'premium' THEN plan_expires_at END)
+                                    + make_interval(weeks => $1, months => $2),
+                  updated_at = NOW()
+            WHERE telegram_id = $3
+        RETURNING telegram_id, first_name, plan, plan_expires_at`,
+          [unit === 'week' ? amount : 0, unit === 'month' ? amount : 0, req.params.telegramId]
+        )
+      : await db.query(
+          `UPDATE users SET plan = 'free', plan_expires_at = NULL, updated_at = NOW()
+            WHERE telegram_id = $1 RETURNING telegram_id, first_name, plan, plan_expires_at`,
+          [req.params.telegramId]
+        );
     if (rows.length === 0) return res.status(404).json({ error: 'User not found' });
-    await db.logAudit((req as any).admin.username, 'user.plan_change', { targetType: 'user', targetId: String(req.params.telegramId), details: { plan, months }, ip: req.ip }).catch(() => {});
+    await db.logAudit((req as any).admin.username, 'user.plan_change', { targetType: 'user', targetId: String(req.params.telegramId), details: plan === 'premium' ? { plan, duration: amount, unit } : { plan }, ip: req.ip }).catch(() => {});
     res.json(rows[0]);
   });
 

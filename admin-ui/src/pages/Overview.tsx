@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router";
 import { Users, Star, PenLine, Flag, Bell, RefreshCw, TrendingUp, Banknote, Flame, UserX, Gift, User as UserIcon } from "lucide-react";
-import { getStats, getUsers, getGrowthAnalytics, getAlerts } from "../api";
+import { getStats, getUsers, getGrowthAnalytics, getAlerts, updateUserPlan } from "../api";
 import type { Stats, User, GrowthAnalytics } from "../types";
 import StatCard from "../components/StatCard";
 import TierBadge from "../components/TierBadge";
 import Spinner from "../components/Spinner";
+import UserActivityModal from "../components/UserActivityModal";
+import GrantPremiumModal from "../components/GrantPremiumModal";
 import DonutChart, { SERIES_COLORS, NEUTRAL_COLOR } from "../components/DonutChart";
 
 function formatDate(dateStr: string): string {
@@ -69,6 +71,9 @@ export default function Overview() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [activityUser, setActivityUser] = useState<User | null>(null);
+  const [grantTarget, setGrantTarget] = useState<User | null>(null);
+  const [planMsg, setPlanMsg] = useState<{ text: string; ok: boolean } | null>(null);
 
   const load = useCallback(async (manual = false) => {
     if (manual) setRefreshing(true);
@@ -92,6 +97,21 @@ export default function Overview() {
       setRefreshing(false);
     }
   }, []);
+
+  function flash(text: string, ok = true) {
+    setPlanMsg({ text, ok });
+    setTimeout(() => setPlanMsg(null), 3500);
+  }
+
+  async function revoke(u: User) {
+    try {
+      await updateUserPlan(u.telegram_id, "free");
+      flash(`Premium revoked for ${u.first_name}`);
+      load();
+    } catch (e: unknown) {
+      flash(e instanceof Error ? e.message : "Failed to update plan", false);
+    }
+  }
 
   useEffect(() => {
     load();
@@ -273,7 +293,7 @@ export default function Overview() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-surface2/50">
-                {["Name", "Exam", "Plan", "Streak", "Last Active"].map((h) => (
+                {["Name", "Exam", "Plan", "Streak", "Last Active", "Actions"].map((h) => (
                   <th key={h} className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted">{h}</th>
                 ))}
               </tr>
@@ -303,6 +323,39 @@ export default function Overview() {
                   <td className="px-5 py-3 text-xs text-muted">
                     {u.last_active_date ? formatDate(u.last_active_date) : "—"}
                   </td>
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setActivityUser(u)}
+                        className="whitespace-nowrap rounded border border-border bg-surface2 px-2.5 py-1 text-xs text-muted transition-colors hover:border-accent/30 hover:bg-accent/10 hover:text-accent"
+                      >
+                        Activity
+                      </button>
+                      {u.plan === "free" ? (
+                        <button
+                          onClick={() => setGrantTarget(u)}
+                          className="whitespace-nowrap rounded border border-accent/20 bg-accent/10 px-2.5 py-1 text-xs text-accent transition-colors hover:bg-accent/20"
+                        >
+                          Grant Premium
+                        </button>
+                      ) : (
+                        <>
+                        <button
+                          onClick={() => setGrantTarget(u)}
+                          className="whitespace-nowrap rounded border border-accent/20 bg-accent/10 px-2.5 py-1 text-xs text-accent transition-colors hover:bg-accent/20"
+                        >
+                          Extend
+                        </button>
+                        <button
+                          onClick={() => revoke(u)}
+                          className="rounded border border-border bg-surface2 px-2.5 py-1 text-xs text-muted transition-colors hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+                        >
+                          Revoke
+                        </button>
+                      </>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -328,6 +381,22 @@ export default function Overview() {
               ₦{Number(stats.total_revenue_ngn).toLocaleString()}
             </p>
           </div>
+        </div>
+      )}
+
+      {activityUser && (
+        <UserActivityModal user={activityUser} onClose={() => setActivityUser(null)} />
+      )}
+      {grantTarget && (
+        <GrantPremiumModal
+          user={grantTarget}
+          onClose={() => setGrantTarget(null)}
+          onGranted={() => { setGrantTarget(null); flash(`Premium granted to ${grantTarget.first_name}`); load(); }}
+        />
+      )}
+      {planMsg && (
+        <div className={`fixed bottom-6 right-6 z-50 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg ${planMsg.ok ? "bg-green-600" : "bg-red-600"}`}>
+          {planMsg.text}
         </div>
       )}
     </div>
