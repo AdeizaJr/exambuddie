@@ -115,6 +115,8 @@ const RULES: Record<string, Rule[]> = {
   ],
 
   economics: [
+    // Before Demand & Supply: "free market economy" questions mention price but are about economic systems.
+    [/scarcity|scale of preference|opportunity cost|production possibilit|basic economic problem|what to produce|how to produce|for whom to produce|economic system|capitalis|socialis|mixed economy|command economy|free market economy|planned economy|definition of economics/i, 'Basic Economic Concepts'],
     [/demand|supply|price|quantity (demanded|supplied)|law of demand|law of supply|elastic|inelastic|market equilibrium|excess (demand|supply)|price ceiling|price floor/i, 'Demand & Supply'],
     [/national income|GDP|GNP|GNI|NNP|NNI|circular flow|macroeconomics|aggregate (demand|supply)|multiplier|consumption|investment/i, 'National Income'],
     [/money|currency|barter|functions of money|money supply|inflation|deflation|monetary policy|Central Bank|commercial bank|interest rate|credit creation/i, 'Money & Banking'],
@@ -166,6 +168,9 @@ const RULES: Record<string, Rule[]> = {
   ],
 
   accounts: [
+    // Specific areas first: their wording ("ledger", "account", "debit") would otherwise hit Book-keeping Principles.
+    [/control account|sales ledger control|purchases? ledger control|bought ledger control|debtors.? control|creditors.? control|total debtors|total creditors|suspense account|correction of error|error of (omission|commission|principle|original entry)|compensating error|complete reversal|agreement of (the|a) trial balance|set.?off/i, 'Control Accounts & Errors'],
+    [/branch (stock|account|adjustment|current)|goods sent to (the )?branch|head office|departmental|department(al)? account|inter.?department/i, 'Branch & Departmental Accounts'],
     [/trial balance|ledger|journal|double entry|debit|credit|posting|account|bookkeeping|accounting equation/i, 'Book-keeping Principles'],
     [/trading account|profit and loss|income statement|gross profit|net profit|revenue|expense|cost of sales/i, 'Trading & Profit/Loss Account'],
     [/balance sheet|assets|liabilities|capital|net worth|current asset|fixed asset|current liab|long.term/i, 'Balance Sheet'],
@@ -173,7 +178,6 @@ const RULES: Record<string, Rule[]> = {
     [/depreciation|accumulated depreciation|straight line|reducing balance|provision for depreciation|disposal|asset account/i, 'Depreciation'],
     [/partnership|partners|capital account|current account|appropriation|goodwill|dissolution|admission|retirement/i, 'Partnership Accounts'],
     [/company|limited|share|shareholder|dividend|debenture|public limited|private limited|share capital|profit and loss appropriation/i, 'Company Accounts'],
-    [/control account|debtors control|creditors control|sales ledger|purchase ledger|reconciliation/i, 'Control Accounts'],
     [/incomplete records|single entry|statement of affairs|net worth method/i, 'Incomplete Records'],
     [/club|non-profit|receipts and payments|income and expenditure|subscription|accumulated fund/i, 'Non-Profit Accounts'],
     [/manufacturing account|work in progress|factory overhead|prime cost|cost of production/i, 'Manufacturing Accounts'],
