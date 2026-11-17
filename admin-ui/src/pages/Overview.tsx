@@ -180,7 +180,7 @@ export default function Overview() {
             <StatCard
               label="On Trial"
               value={Number(stats.trial_users ?? 0)}
-              sub={`${pctOf(Number(stats.trial_users ?? 0))}% of users · 14-day welcome trial`}
+              sub={`${pctOf(Number(stats.trial_users ?? 0))}% of users · welcome trial`}
               icon={<Gift size={18} />}
             />
           </Link>

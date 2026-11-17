@@ -318,7 +318,7 @@ WHERE id = 116125`,
   // ── Streak freeze (premium: once/week) ────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS streak_freeze_used_at DATE DEFAULT NULL`,
 
-  // ── Trial period flag (14-day free Premium on first onboarding) ──────────
+  // ── Trial period flag (free Premium welcome trial on first onboarding) ──────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_used BOOLEAN DEFAULT FALSE`,
 
   // ── Daily reminder opt-in (WAT hour 0–23, NULL = off) ─────────────────────
@@ -706,6 +706,11 @@ WHERE id = 116125`,
 
   // ── Typed note on "Other" question flags: the reason alone ("🤷 Other") says nothing ──
   `ALTER TABLE flagged_explanations ADD COLUMN IF NOT EXISTS note TEXT`,
+
+  // ── Welcome trial length per grant (shortened 14 → 5 days, 2026-11-17) ──
+  // Existing grants keep the 14 days they were promised (the DEFAULT backfills them);
+  // grantTrial() always writes the current TRIAL_DAYS explicitly.
+  `ALTER TABLE trial_grants ADD COLUMN IF NOT EXISTS trial_days INT NOT NULL DEFAULT 14`,
 ];
 
 async function migrate(): Promise<void> {

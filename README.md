@@ -169,7 +169,7 @@ If `API_URL` is unset, the pricing section and Terms page fall back to hardcoded
 
 | Feature | Free | Premium |
 |---------|------|---------|
-| 14-day Premium trial on first signup | ✅ | — |
+| 5-day Premium trial on first signup | ✅ | — |
 | Questions per day | 5 (configurable) | Unlimited |
 | Practice mode (with year picker 2010–2026) | ✅ | ✅ |
 | Multi-subject practice session | ❌ | ✅ |

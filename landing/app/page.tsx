@@ -160,7 +160,7 @@ export default async function Home() {
                 </a>
               </div>
               <p className="mt-5 text-xs text-slate-500 sm:mt-6 sm:text-sm dark:text-slate-400">
-                14 days Premium free · No credit card · No download required
+                5 days Premium free · No credit card · No download required
               </p>
             </div>
 
@@ -588,7 +588,7 @@ export default async function Home() {
                   ["Works on any phone", true, false, true],
                   ["Works inside Telegram (no new app)", true, false, false],
                   ["Weak-topic targeting", true, false, false],
-                  ["14-day free trial on signup", true, false, false],
+                  ["5-day free trial on signup", true, false, false],
                   ["Free to start", true, false, true],
                 ].map(([feature, eb, tb, yt]) => (
                   <tr key={String(feature)} className="hover:bg-slate-50 dark:hover:bg-slate-900 dark:bg-slate-950">
@@ -712,7 +712,7 @@ export default async function Home() {
               Ready to improve your exam score?
             </h2>
             <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">
-              Start free today, 14 days Premium included, no card needed.
+              Start free today, 5 days Premium included, no card needed.
             </p>
             <a
               href={BOT_URL_LANDING}

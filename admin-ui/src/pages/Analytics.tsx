@@ -211,7 +211,7 @@ export default function AnalyticsPage() {
           <div className="mb-4">
             <h2 className="text-sm font-semibold text-white">Conversion Funnel</h2>
             <p className="mt-0.5 text-xs text-muted">
-              Who is actually paying. Students on the free 14-day trial are not counted as converted.
+              Who is actually paying. Students on the free welcome trial are not counted as converted.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">

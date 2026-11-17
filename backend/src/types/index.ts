@@ -134,4 +134,6 @@ export interface QuizState {
   questionTimerSecs?: number;
   questionDeadline?: number;
   isMock?: boolean;
+  // First-session check-up: 10 untimed questions across topics, ends with a topic breakdown
+  isDiagnostic?: boolean;
 }

@@ -1,6 +1,7 @@
 // src/bot/formatter.ts — All message templates
 import { Question, User } from '../types';
 import { getPricing } from '../services/pricing';
+import { TRIAL_LABEL } from '../services/trial';
 
 const RANKS = [
   { tier: 'Rookie',    level: 'I',   min: 0    },
@@ -450,7 +451,7 @@ export const SUBJECT_EMOJI: Record<string, string> = {
 
 export function consentPrompt(firstName: string, trialAvailable = true): string {
   const offer = trialAvailable
-    ? `🎁 Your <b>14 days of free Premium</b> is waiting: unlimited WAEC, JAMB &amp; NECO past questions, every answer explained.`
+    ? `🎁 Your <b>${TRIAL_LABEL} of free Premium</b> is waiting: unlimited WAEC, JAMB &amp; NECO past questions, every answer explained.`
     : `Real WAEC, JAMB &amp; NECO past questions, every answer explained.`;
   return `🎓 <b>Welcome to ExamBuddie, ${escHtml(firstName)}!</b>
 
@@ -1002,13 +1003,13 @@ export function qotdResultKeyboard(questionId: number, hasUnderline: boolean) {
 }
 
 export function afterAnswerKeyboard(mode?: string, hasUnderline = false, questionId?: number, hasExplanation = false) {
-  if (mode === 'quiz') {
+  if (mode === 'quiz' || mode === 'diagnostic') {
     const rows: any[] = [
       [
         { text: '➡️  Next Question', callback_data: 'quiz:next' },
         { text: '🚩 Flag', callback_data: 'flag:question' },
       ],
-      [{ text: '⏹ End CBT', callback_data: 'quiz:stop' }],
+      [{ text: mode === 'diagnostic' ? '⏹ End check-up' : '⏹ End CBT', callback_data: 'quiz:stop' }],
     ];
     if (hasUnderline) rows.splice(1, 0, [{ text: '🔤 Wrong Underline?', callback_data: 'flag:underline' }]);
     if (questionId) rows.push([{ text: '⭐ Save Question', callback_data: `bookmark:toggle:${questionId}` }]);
@@ -1200,7 +1201,7 @@ export function statsMessage(user: User, stats: any, weakTopics?: any[], examTyp
 ${subjectSection}${weakSection}${drillTip}${mistakeTip}`;
 }
 
-// Sent once, 1-2 days before the 14-day welcome trial runs out. Built around what
+// Sent once, 1-2 days before the welcome trial runs out. Built around what
 // the student actually did, so the choice is "keep this going" not "buy a thing".
 export function trialEndingMessage(
   firstName: string,
@@ -1250,6 +1251,45 @@ ${lines.join('\n')}${weak}
 ${freeLine}
 
 ${priceLine} Keep your momentum going 👇`;
+}
+
+// ── First-session check-up ────────────────────────────────────────────────────
+export const DIAGNOSTIC_QUESTIONS = 10;
+
+export function diagnosticIntro(subject: string, count: number): string {
+  const name = escHtml(SUBJECT_MAP[subject] || subject);
+  return `🩺 <b>Quick ${name} check-up</b>
+
+${count} questions from different topics, no timer. At the end you'll see your score and which topics you already know.
+
+After each answer you get the full explanation, so you learn as you go 👇`;
+}
+
+export function diagnosticResult(
+  subject: string,
+  correct: number,
+  answered: number,
+  strongTopics: string[],
+  weakTopics: string[],
+  stoppedEarly: boolean,
+): string {
+  const name = escHtml(SUBJECT_MAP[subject] || subject);
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  const verdict =
+    pct >= 80 ? 'Strong start. Daily practice will keep it sharp.' :
+    pct >= 50 ? 'Good base. A few topics need work, and that is where the extra marks are.' :
+    'Plenty of room to grow, and that is what ExamBuddie is for. Start with the first topic below.';
+  const list = (ts: string[]) => ts.slice(0, 3).map(escHtml).join(', ');
+  const strong = strongTopics.length ? `\n💪 You know: ${list(strongTopics)}` : '';
+  const weak = weakTopics.length ? `\n📌 Work on: ${list(weakTopics)}` : '';
+  const next = weakTopics.length
+    ? `\n\nNext step: practise <b>${escHtml(weakTopics[0])}</b> 👇`
+    : `\n\nNext step: keep practising ${name} 👇`;
+  return `🩺 <b>Your ${name} check-up${stoppedEarly ? ' (ended early)' : ''}</b>
+
+✅ Score: <b>${correct}/${answered}</b> (${pct}%)
+${verdict}
+${strong}${weak}${next}`;
 }
 
 // Sent when the welcome trial has just run out.
