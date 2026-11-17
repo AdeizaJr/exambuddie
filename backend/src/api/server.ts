@@ -616,7 +616,7 @@ export default function createServer(bot: any) {
       : 'unresolved';
     const whereClause = status === 'all' ? '' : status === 'resolved' ? 'WHERE f.resolved = true' : 'WHERE f.resolved = false';
     const { rows } = await db.query(`
-      SELECT f.id, f.flagged_at, f.reason, f.resolved,
+      SELECT f.id, f.flagged_at, f.reason, f.note, f.resolved,
              q.id as question_id, q.subject, q.question_text,
              q.correct_option, q.explanation, q.flag_count,
              u.first_name as user_first_name, u.telegram_id as user_telegram_id

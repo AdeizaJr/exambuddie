@@ -164,6 +164,18 @@ export const getSupportStep = async (telegramId: number | string): Promise<strin
 export const clearSupportStep = async (telegramId: number | string): Promise<void> => {
   await client.del(`support_step:${telegramId}`);
 };
+// A student who flagged a question as "Other" gets one chance to type what's wrong. The
+// value is the flagged_explanations row id their next text message is saved against.
+export const setFlagNotePending = async (telegramId: number | string, flagId: number): Promise<void> => {
+  await client.set(`flag_note:${telegramId}`, String(flagId), { EX: 600 });
+};
+export const getFlagNotePending = async (telegramId: number | string): Promise<number | null> => {
+  const v = await client.get(`flag_note:${telegramId}`);
+  return v ? Number(v) : null;
+};
+export const clearFlagNotePending = async (telegramId: number | string): Promise<void> => {
+  await client.del(`flag_note:${telegramId}`);
+};
 // True only for the first caller per key within ttl — e.g. reply once per photo album.
 export const claimOnce = async (key: string, ttlSeconds: number): Promise<boolean> => {
   return (await client.set(key, '1', { NX: true, EX: ttlSeconds })) === 'OK';

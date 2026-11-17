@@ -374,6 +374,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('flag:qotd_underline:')) return stats.handleFlagUnderline(ctx, data.slice('flag:qotd_underline:'.length));
   if (data.startsWith('flag:reason:')) return stats.handleFlagReason(ctx, data.slice('flag:reason:'.length));
   if (data === 'flag:cancel') return stats.handleFlagCancel(ctx);
+  if (data === 'flag:note_skip') return stats.handleFlagNoteSkip(ctx);
 
   // "More" menu entries that have no callback route of their own
   if (data === 'more:mock') return quiz.handleMockExam(ctx); // answers the query itself
@@ -462,6 +463,11 @@ bot.on('text', async (ctx: any) => {
   const user = await db.getUser(ctx.from.id);
 
   if (!user?.exam_type) return onboarding.handleStart(ctx);
+
+  // Typed note for a question just flagged as "Other". Checked before the menu buttons
+  // and the mid-session ignore below, since flags usually happen during practice.
+  const flagNoteId = await redis.getFlagNotePending(ctx.from.id);
+  if (flagNoteId && (await stats.handleFlagNote(ctx, flagNoteId))) return;
 
   // Stats, Settings, and Leaderboard always work, even mid-session
   if (text === '📊 My Stats') return stats.handleStats(ctx);

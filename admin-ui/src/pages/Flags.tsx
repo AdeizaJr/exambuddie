@@ -105,6 +105,11 @@ function FlagCard({ flag, onResolved }: FlagCardProps) {
           <p className="text-xs text-amber-400">
             <strong>Flag reason:</strong> {flag.reason}
           </p>
+          {flag.note && (
+            <p className="mt-1 whitespace-pre-wrap break-words text-xs text-amber-200">
+              <strong>Student's note:</strong> {flag.note}
+            </p>
+          )}
         </div>
       )}
 

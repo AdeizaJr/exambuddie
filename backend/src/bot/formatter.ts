@@ -565,6 +565,16 @@ export const MORE_BUTTON = '☰ More';
 // one door to everything else, so it doesn't swallow half a small phone screen.
 // (Older 10-button keyboards still on people's phones keep working: the text handler
 // in index.ts still recognises every old label.)
+// Reply-keyboard labels the free-text handler treats as commands, so a pending "type
+// something" step (e.g. a flag note) never swallows a menu tap as the student's text.
+const MENU_BUTTON_TEXTS = new Set([
+  '📚 Practice', '📋 CBT', '📖 Review', MORE_BUTTON, '📊 My Stats', '⚙️ Settings',
+  '🏆 Leaderboard', '🎯 Challenge', '📐 Formulas', '🎓 Mock Exam', '🏅 Badges', 'Skip for now →',
+]);
+export function isMenuButtonText(text: string): boolean {
+  return MENU_BUTTON_TEXTS.has(text);
+}
+
 export function persistentMenuKeyboard() {
   return {
     keyboard: [
