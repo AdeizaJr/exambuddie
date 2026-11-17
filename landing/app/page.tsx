@@ -150,7 +150,7 @@ export default async function Home() {
                   rel="noopener noreferrer"
                   className="rounded-full bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl hover:shadow-blue-600/30 sm:px-8 sm:py-4 sm:text-lg dark:shadow-none"
                 >
-                  Start Free · 14 Days Premium →
+                  Start Free · 5 Days Premium →
                 </a>
                 <a
                   href="#features"
