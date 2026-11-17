@@ -274,16 +274,63 @@ export async function handleFlagReason(ctx: any, reasonPayload: string): Promise
   const user = await db.getUser(ctx.from.id);
   if (!user) { await ctx.reply('Something went wrong. Please try /start.'); return; }
 
-  await ctx.answerCbQuery('🚩 Flagged — we\'ll review it. Thanks!', { show_alert: true });
-
-  await db.query(
+  const { rows } = await db.query(
     `INSERT INTO flagged_explanations (question_id, user_id, reason)
-     VALUES ($1, $2, $3)`,
+     VALUES ($1, $2, $3) RETURNING id`,
     [q.id, user.id, reasonLabel]
   );
 
   await db.query(`UPDATE questions SET flag_count = flag_count + 1 WHERE id = $1`, [q.id]);
 
+  // "Other" on its own tells the reviewer nothing, so ask for a short typed note.
+  if (reasonCode === 'other') {
+    await ctx.answerCbQuery();
+    await redis.setFlagNotePending(ctx.from.id, rows[0].id);
+    await ctx.editMessageText(
+      '🚩 Flagged. What\'s wrong with it? Type a short note so we can fix it.',
+      { reply_markup: { inline_keyboard: [[{ text: 'Skip', callback_data: 'flag:note_skip' }]] } }
+    ).catch(() => {});
+    return;
+  }
+
+  await ctx.answerCbQuery('🚩 Flagged — we\'ll review it. Thanks!', { show_alert: true });
+  await ctx.editMessageText('✅ Thanks — flagged for review.').catch(() => {});
+}
+
+const FLAG_NOTE_MAX = 500;
+
+// Saves the student's typed note against their "Other" flag. Returns false (and drops the
+// pending state) when the text is a menu button or command, so normal handling continues.
+export async function handleFlagNote(ctx: any, flagId: number): Promise<boolean> {
+  const text: string = ctx.message?.text?.trim() || '';
+  await redis.clearFlagNotePending(ctx.from.id);
+  if (!text || text.startsWith('/') || fmt.isMenuButtonText(text)) return false;
+  // Another step is waiting for typed input (a theory answer, a room code, a bug report):
+  // that text belongs to it, not to the flag.
+  const [session, supportStep] = await Promise.all([
+    redis.getSession(ctx.from.id),
+    redis.getSupportStep(ctx.from.id),
+  ]);
+  if (
+    supportStep === 'bug' ||
+    session?.step === 'theory_answer' ||
+    session?.step === 'challenge_enter_code' ||
+    session?.step === 'duel_opponent'
+  ) return false;
+
+  const user = await db.getUser(ctx.from.id);
+  if (!user) return false;
+  await db.query(
+    `UPDATE flagged_explanations SET note = $1 WHERE id = $2 AND user_id = $3`,
+    [text.slice(0, FLAG_NOTE_MAX), flagId, user.id]
+  );
+  await ctx.reply('✅ Thanks, noted. We\'ll review the question.');
+  return true;
+}
+
+export async function handleFlagNoteSkip(ctx: any): Promise<void> {
+  await ctx.answerCbQuery();
+  await redis.clearFlagNotePending(ctx.from.id);
   await ctx.editMessageText('✅ Thanks — flagged for review.').catch(() => {});
 }
 

@@ -48,6 +48,7 @@ export interface Flag {
   id: number;
   flagged_at: string;
   reason: string;
+  note: string | null;
   resolved: boolean;
   question_id: number;
   subject: string;

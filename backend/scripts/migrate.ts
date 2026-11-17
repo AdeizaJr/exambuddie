@@ -703,6 +703,9 @@ WHERE id = 116125`,
        WHERE r.referral_reward_granted = TRUE;
      END IF;
    END $$`,
+
+  // ── Typed note on "Other" question flags: the reason alone ("🤷 Other") says nothing ──
+  `ALTER TABLE flagged_explanations ADD COLUMN IF NOT EXISTS note TEXT`,
 ];
 
 async function migrate(): Promise<void> {
