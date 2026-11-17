@@ -3,7 +3,9 @@ import * as db from '../../db';
 import * as redis from '../../services/redis';
 import * as fmt from '../formatter';
 import * as practice from './practice';
+import * as quiz from './quiz';
 import { maybeAskPhone } from './phone';
+import { TRIAL_LABEL } from '../../services/trial';
 
 export async function handleStart(ctx: any): Promise<void> {
   const user = await db.upsertUser(ctx);
@@ -208,7 +210,7 @@ export async function handleSubjectToggle(ctx: any): Promise<void> {
 
   // Premium subscribers get unlimited subjects — this is a paid benefit, not just a higher
   // number, so the cap has to be skipped entirely for them, not just raised. Also unlimited
-  // during fresh onboarding (session.step === 'subjects'): the 14-day Premium trial is
+  // during fresh onboarding (session.step === 'subjects'): the Premium welcome trial is
   // granted right after this step completes (handleSubjectsDone), so a brand-new user is
   // still on the free plan *during* this exact pick — capping them here would be enforcing
   // a free-plan limit on someone who's seconds away from Premium.
@@ -273,9 +275,9 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
   // after the welcome, and the phone ask waits until they have used the bot (phone.ts).
   await ctx.editMessageText(fmt.profileComplete(user, "Let's get you started 👇"), { parse_mode: 'HTML' });
 
-  // Grant 14-day Premium trial to new users completing onboarding for the first time
+  // Grant the Premium welcome trial to new users completing onboarding for the first time
   let current = user;
-  let welcome = `✅ <b>You're in!</b>\n\nHere's your first question 👇`;
+  let welcome = `✅ <b>You're in!</b>\n\nLet's see where you stand 👇`;
   if (!user.trial_used && user.plan === 'free') {
     const trialUser = await db.grantTrial(ctx.from.id);
     // null means this telegram_id already had its one trial (e.g. deleted and rejoined):
@@ -285,7 +287,7 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
       const expiryLine = trialUser.plan_expires_at
         ? ` (until <b>${new Date(trialUser.plan_expires_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</b>)`
         : '';
-      welcome = `🎁 <b>Welcome gift: 14 days of Premium, free</b>${expiryLine}\n\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nHere's your first question 👇`;
+      welcome = `🎁 <b>Welcome gift: ${TRIAL_LABEL} of Premium, free</b>${expiryLine}\n\n✅ Unlimited questions\n✅ Quiz mode &amp; topic drills\n✅ Progress tracking &amp; weekly reports\n\nLet's see where you stand 👇`;
     }
   }
   await ctx.reply(welcome, { parse_mode: 'HTML', reply_markup: fmt.persistentMenuKeyboard() });
@@ -293,10 +295,16 @@ export async function handleSubjectsDone(ctx: any): Promise<void> {
   await maybeSendBeatYourInviter(ctx, current);
 
   // Start with a subject they chose themselves where possible; English is always there
-  // as the fallback. Any year, no topic picker — nothing between them and question 1.
+  // as the fallback. A 10-question check-up across topics gives a brand-new student a
+  // result (score + topics to work on) in their first session; most students used to
+  // answer 2 or 3 questions and leave. Plain practice is the fallback when a subject
+  // has too few questions for a check-up.
   const firstSubject = subjects.find((sub) => sub !== 'english') || 'english';
   try {
-    await practice.startPractice(ctx, current, firstSubject, null, 0, current.exam_type || undefined, '__all__');
+    const started = await quiz.startDiagnostic(ctx, current, firstSubject);
+    if (!started) {
+      await practice.startPractice(ctx, current, firstSubject, null, 0, current.exam_type || undefined, '__all__');
+    }
   } catch (err) {
     console.error(`[onboarding] could not start first question for ${ctx.from.id}:`, (err as Error).message);
     await ctx.reply('Tap 📚 Practice below to answer your first question.').catch(() => {});

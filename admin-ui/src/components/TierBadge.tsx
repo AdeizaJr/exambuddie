@@ -5,7 +5,7 @@ import type { User, UserTier } from "../types";
 const TIERS: Record<UserTier, { label: string; variant: "green" | "amber" | "blue" | "gray"; hint: string }> = {
   paid:   { label: "Premium", variant: "green", hint: "Paying subscriber" },
   gifted: { label: "Premium · gifted", variant: "blue", hint: "Premium set by an admin, no payment" },
-  trial:  { label: "Trial", variant: "amber", hint: "On the 14-day welcome trial" },
+  trial:  { label: "Trial", variant: "amber", hint: "On the free welcome trial (5 days for new signups)" },
   free:   { label: "Free", variant: "gray", hint: "Free plan" },
 };
 

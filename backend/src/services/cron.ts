@@ -7,6 +7,7 @@ import * as redis from './redis';
 import * as payments from './payments';
 import * as outreach from './outreach';
 import { refreshPricing } from './pricing';
+import { TRIAL_LABEL } from './trial';
 import * as fmt from '../bot/formatter';
 import { SUBJECT_MAP, SUBJECT_EMOJI, examCountdown } from '../bot/formatter';
 import { endExpiredRoom } from '../bot/handlers/challenge';
@@ -275,7 +276,7 @@ export default function startCrons(rawBot: any): void {
         await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped
         const offer = user.had_trial
           ? ''
-          : `\n\n🎁 Your <b>14 days of free Premium</b> starts as soon as you finish.`;
+          : `\n\n🎁 Your <b>${TRIAL_LABEL} of free Premium</b> starts as soon as you finish.`;
         await bot.telegram.sendMessage(
           user.telegram_id,
           `👋 <b>Hey ${fmt.escHtml(user.first_name)}!</b>\n\nYou're one minute away from your first question. Tap below to finish setting up ExamBuddie 👇${offer}${helpFooter}`,

@@ -21,9 +21,9 @@ export function BillingSection({ pricing }: { pricing: PricingData }) {
       name: "Free",
       price: "Free",
       period: "",
-      description: "Start practising today: 14 days Premium free, no card needed.",
+      description: "Start practising today: 5 days Premium free, no card needed.",
       features: [
-        "14-day Premium trial on signup",
+        "5-day Premium trial on signup",
         "5 questions per subject every 6 hours",
         "All WAEC, JAMB & NECO subjects",
         "Instant answer explanations",

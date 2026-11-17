@@ -533,7 +533,7 @@ export default function createServer(bot: any) {
   // Which bucket a user really belongs to. users.plan alone only says free/premium, and
   // "premium" lumps together three very different people:
   //   paid   — has a live, paid subscription
-  //   trial  — on the 14-day welcome trial (expiry still within 14 days of the grant)
+  //   trial  — on the welcome trial (expiry still within that grant's trial_days)
   //   gifted — premium set by an admin, no payment behind it
   // Written against the bare `users` table name so it can be dropped into any query.
   const USER_TIER_SQL = `
@@ -546,7 +546,7 @@ export default function createServer(bot: any) {
       WHEN EXISTS (
         SELECT 1 FROM trial_grants t
         WHERE t.telegram_id = users.telegram_id
-          AND users.plan_expires_at <= t.granted_at + INTERVAL '14 days 1 hour'
+          AND users.plan_expires_at <= t.granted_at + make_interval(days => t.trial_days, hours => 1)
       ) THEN 'trial'
       ELSE 'gifted'
     END`;
@@ -1578,7 +1578,7 @@ export default function createServer(bot: any) {
   // ── GET /api/admin/analytics/funnel ────────────────────────────────────────
   app.get('/api/admin/analytics/funnel', adminAuth, async (_req: Request, res: Response) => {
     // "Converted" means a live paid subscription. Counting plan = 'premium' here used to
-    // include everyone on the automatic 14-day trial, so conversion rose with signups
+    // include everyone on the automatic welcome trial, so conversion rose with signups
     // even when nobody paid.
     const LIVE_SUB = `s.status = 'active' AND s.expires_at > NOW()`;
     const { rows } = await db.query(`
@@ -1596,11 +1596,11 @@ export default function createServer(bot: any) {
         (SELECT COUNT(*) FROM tiers WHERE tier = 'free' AND last_active_date >= CURRENT_DATE - 7) AS active_free,
         (SELECT COUNT(*) FROM subscriptions s WHERE ${LIVE_SUB}) AS active_subs,
 
-        -- Trial → paid: of the trials that have run their 14 days, how many of those
+        -- Trial → paid: of the trials that have run their full length, how many of those
         -- people have ever paid. The honest test of whether the trial sells the product.
-        (SELECT COUNT(*) FROM trial_grants t WHERE t.granted_at < NOW() - INTERVAL '14 days') AS trials_ended,
+        (SELECT COUNT(*) FROM trial_grants t WHERE t.granted_at + make_interval(days => t.trial_days) < NOW()) AS trials_ended,
         (SELECT COUNT(*) FROM trial_grants t
-          WHERE t.granted_at < NOW() - INTERVAL '14 days'
+          WHERE t.granted_at + make_interval(days => t.trial_days) < NOW()
             AND EXISTS (
               SELECT 1 FROM users u JOIN subscriptions s ON s.user_id = u.id
               WHERE u.telegram_id = t.telegram_id AND s.status IN ('active', 'expired')

@@ -115,7 +115,7 @@ export default function NecoPage() {
             </a>
           </div>
           <p className="mt-5 text-xs text-slate-500 sm:mt-6 sm:text-sm dark:text-slate-400">
-            14 days Premium free · No credit card · No download required
+            5 days Premium free · No credit card · No download required
           </p>
         </div>
       </section>
@@ -230,7 +230,7 @@ export default function NecoPage() {
             Start your NECO prep today
           </h2>
           <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">
-            Free for 14 days. No card. No download. Just Telegram.
+            Free for 5 days. No card. No download. Just Telegram.
           </p>
           <a
             href={BOT_URL_NECO}

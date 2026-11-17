@@ -147,6 +147,38 @@ export async function startQuiz(ctx: any, user: User | null, subject: string, ye
   await sendQuizQuestion(ctx, quizState);
 }
 
+// First-session check-up for a brand-new student: 10 untimed questions spread across
+// the subject's topics, ending with a score and a "you know / work on" topic split.
+// Returns false when the subject has too few questions, so the caller can fall back to
+// plain practice.
+export async function startDiagnostic(ctx: any, user: User, subject: string): Promise<boolean> {
+  const examType = user.exam_type || '';
+  const questions = await db.getDiagnosticQuestions(examType, subject, fmt.DIAGNOSTIC_QUESTIONS);
+  if (questions.length < 5) return false;
+
+  const sessionId = uuidv4();
+  const quizState: QuizState = {
+    mode: 'quiz',
+    subject,
+    sessionId,
+    questions,
+    qIndex: 0,
+    correct: 0,
+    total: questions.length,
+    startTime: Date.now(),
+    deadline: Date.now() + QUIZ_TIME_SECS * 1000,
+    answers: [],
+    questionTimerSecs: 0,
+    isDiagnostic: true,
+  };
+  await redis.saveQuizState(ctx.from.id, quizState);
+  await redis.setSession(ctx.from.id, { mode: 'quiz', subject, sessionId, questionTimerSecs: 0 });
+
+  await ctx.reply(fmt.diagnosticIntro(subject, questions.length), { parse_mode: 'HTML' });
+  await sendQuizQuestion(ctx, quizState);
+  return true;
+}
+
 export async function handleQuizExamTypePick(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   const examType = ctx.callbackQuery.data.split(':')[2];
@@ -198,7 +230,9 @@ export async function sendQuizQuestion(ctx: any, quizState: QuizState): Promise<
   const overallSecsLeft = Math.max(0, Math.floor((quizState.deadline - Date.now()) / 1000));
   const mins = Math.floor(overallSecsLeft / 60);
   const secs = overallSecsLeft % 60;
-  const overallTimeLine = `\n⏳ <b>${mins}:${secs.toString().padStart(2, '0')}</b> overall time left`;
+  const overallTimeLine = quizState.isDiagnostic
+    ? '' // the check-up is untimed; a countdown would only add pressure
+    : `\n⏳ <b>${mins}:${secs.toString().padStart(2, '0')}</b> overall time left`;
 
   const answeredCount = quizState.qIndex;
   const scoreLine = answeredCount > 0
@@ -317,7 +351,7 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
 
   await ctx.reply(fmt.correctAnswer(q, selected), {
     parse_mode: 'HTML',
-    reply_markup: fmt.afterAnswerKeyboard('quiz', q.question_text.includes('*'), q.id, !!q.explanation),
+    reply_markup: fmt.afterAnswerKeyboard(quizState.isDiagnostic ? 'diagnostic' : 'quiz', q.question_text.includes('*'), q.id, !!q.explanation),
   });
 
   if (!isCorrect) {
@@ -341,8 +375,9 @@ export async function handleQuizAnswer(ctx: any): Promise<void> {
     await ctx.reply(fmt.formatStreakCard(streakResult.streak, weekActivity), { parse_mode: 'HTML' });
   }
 
-  // One-time phone nudge for users who haven't shared their number
-  if (!user.phone_number && !(await redis.hasSeenPhoneNudge(ctx.from.id))) {
+  // One-time phone nudge for users who haven't shared their number. Never during the
+  // first-session check-up: it would cover the menu and break the flow of a new student.
+  if (!quizState.isDiagnostic && !user.phone_number && !(await redis.hasSeenPhoneNudge(ctx.from.id))) {
     await redis.markPhoneNudgeSent(ctx.from.id);
     await redis.setPhonePending(ctx.from.id);
     await ctx.reply(
@@ -380,7 +415,8 @@ export async function handleQuizNext(ctx: any): Promise<void> {
   // An admin revoke leaves plan_expires_at in the future or null, so it still ends.
   const expiresMs = user?.plan_expires_at ? new Date(user.plan_expires_at).getTime() : NaN;
   const lapsedMidQuiz = expiresMs > quizState.startTime && expiresMs <= Date.now();
-  if (!user || (user.plan !== 'premium' && !lapsedMidQuiz)) {
+  // The check-up is open to every new student, trial or not, so it never needs Premium.
+  if (!user || (user.plan !== 'premium' && !lapsedMidQuiz && !quizState.isDiagnostic)) {
     await endQuiz(ctx, quizState, 'revoked');
     return;
   }
@@ -480,6 +516,7 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
       correctCount: quizState.correct,
       startTime: quizState.startTime,
       endTime,
+      mode: quizState.isDiagnostic ? 'diagnostic' : 'quiz',
     }).catch(() => {});
   }
 
@@ -522,6 +559,11 @@ export async function endQuiz(ctx: any, quizState: QuizState, reason: string): P
       quizScore: { correct: quizState.correct, total: quizState.total },
     }).catch(() => {});
     checkRankUp(ctx.telegram, ctx.from.id, totalAttempts - quizState.total, totalAttempts).catch(() => {});
+  }
+
+  if (quizState.isDiagnostic) {
+    await sendDiagnosticResult(ctx, quizState, reason, wrongItems.length);
+    return;
   }
 
   const reasonNote = reason === 'timeout' ? '\n⏰ <i>Time ran out!</i>'
@@ -573,6 +615,57 @@ ${accuracy >= 80 ? '🔥 You\'re exam-ready! Keep it consistent.' : ''}`;
     parse_mode: 'HTML',
     reply_markup: { inline_keyboard: keyboard },
   });
+}
+
+// A topic name a student can act on; the catch-all "General" buckets say nothing.
+function namedTopic(topic: string | null | undefined): string | null {
+  const t = (topic || '').trim();
+  return t && !/^general/i.test(t) ? t : null;
+}
+
+async function sendDiagnosticResult(ctx: any, quizState: QuizState, reason: string, wrongCount: number): Promise<void> {
+  const answered = quizState.answers.filter((a) => a.selected !== '');
+  if (answered.length === 0) {
+    await ctx.reply('Check-up ended. Tap 📚 Practice whenever you are ready.', {
+      reply_markup: fmt.persistentMenuKeyboard(),
+    });
+    return;
+  }
+
+  // Topics answered right vs wrong. A topic that appears in both counts as "work on".
+  const right = new Set<string>();
+  const wrong = new Set<string>();
+  for (const a of answered) {
+    const topic = namedTopic(quizState.questions.find((q) => q.id === a.qId)?.topic);
+    if (!topic) continue;
+    (a.isCorrect ? right : wrong).add(topic);
+  }
+  for (const t of wrong) right.delete(t);
+  const strongTopics = [...right];
+  const weakTopics = [...wrong];
+
+  const subject = quizState.subject;
+  const keyboard: any[][] = [];
+  if (weakTopics.length) {
+    const drillData = `drill:topic:${subject}:${weakTopics[0]}`;
+    // Telegram rejects callback_data over 64 bytes; long topic names fall back to the
+    // weak-topic picker for the subject.
+    const callback = Buffer.byteLength(drillData) <= 64 ? drillData : `drill:auto:${subject}`;
+    const label = weakTopics[0].length > 30 ? `${weakTopics[0].slice(0, 29)}…` : weakTopics[0];
+    keyboard.push([{ text: `🎯 Practise ${label}`, callback_data: callback }]);
+  }
+  if (wrongCount > 0) {
+    keyboard.push([{ text: `📖 Review ${wrongCount} Wrong Answer${wrongCount > 1 ? 's' : ''}`, callback_data: 'quiz:review_wrong' }]);
+  }
+  keyboard.push(
+    [{ text: `📚 Keep Practising ${fmt.SUBJECT_MAP[subject] || subject}`, callback_data: `practice:start:${subject}:any` }],
+    [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
+  );
+
+  await ctx.reply(
+    fmt.diagnosticResult(subject, quizState.correct, answered.length, strongTopics, weakTopics, reason !== 'complete'),
+    { parse_mode: 'HTML', reply_markup: { inline_keyboard: keyboard } }
+  );
 }
 
 export async function handleQuizShare(ctx: any): Promise<void> {

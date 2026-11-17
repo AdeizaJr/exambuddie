@@ -3,6 +3,7 @@ import { Pool, types } from 'pg';
 import { User, Question, AttemptLog, UserStats, WeakTopic, SubjectStat } from '../types';
 import { getCachedUser, setCachedUser, clearCachedUser } from '../services/redis';
 import { getPricing } from '../services/pricing';
+import { TRIAL_DAYS } from '../services/trial';
 
 // Return DATE columns as plain strings (not JS Date objects) to avoid timezone shifts
 types.setTypeParser(1082, (val: string) => val);
@@ -127,8 +128,8 @@ export async function grantTrial(telegramId: number | string): Promise<User | nu
   try {
     await client.query('BEGIN');
     const { rowCount } = await client.query(
-      `INSERT INTO trial_grants (telegram_id) VALUES ($1) ON CONFLICT (telegram_id) DO NOTHING`,
-      [telegramId]
+      `INSERT INTO trial_grants (telegram_id, trial_days) VALUES ($1, $2) ON CONFLICT (telegram_id) DO NOTHING`,
+      [telegramId, TRIAL_DAYS]
     );
     if (!rowCount) {
       await client.query('ROLLBACK');
@@ -137,11 +138,11 @@ export async function grantTrial(telegramId: number | string): Promise<User | nu
     const { rows } = await client.query<User>(
       `UPDATE users SET
          plan = 'premium',
-         plan_expires_at = NOW() + INTERVAL '14 days',
+         plan_expires_at = NOW() + make_interval(days => $2),
          trial_used = TRUE
        WHERE telegram_id = $1 AND trial_used = FALSE
        RETURNING *`,
-      [telegramId]
+      [telegramId, TRIAL_DAYS]
     );
     await client.query('COMMIT');
     const user = rows[0];
@@ -376,6 +377,34 @@ export async function getQuizQuestions(
   return rows;
 }
 
+// Questions for the first-session check-up: one per topic where possible, so the result
+// can say which topics a new student already knows. Named topics come before the
+// catch-all "General" buckets; if a subject has fewer topics than `limit`, the rest are
+// filled with random questions.
+export async function getDiagnosticQuestions(
+  examType: string,
+  subject: string,
+  limit = 10
+): Promise<Question[]> {
+  const all = isAllExams(examType);
+  const params: any[] = all ? [subject, limit] : [subject, limit, examType];
+  const examFilter = all ? '' : 'AND exam_type = $3';
+  const { rows } = await pool.query<Question>(
+    `WITH ranked AS (
+       SELECT id,
+              (topic IS NULL OR topic = '' OR topic ILIKE 'general%') AS generic,
+              ROW_NUMBER() OVER (PARTITION BY COALESCE(NULLIF(topic, ''), 'General') ORDER BY RANDOM()) AS rn
+       FROM questions
+       WHERE subject = $1 ${examFilter} AND is_active = TRUE
+     ), picked AS (
+       SELECT id FROM ranked ORDER BY (rn = 1) DESC, generic ASC, RANDOM() LIMIT $2
+     )
+     SELECT q.* FROM questions q JOIN picked p ON p.id = q.id ORDER BY RANDOM()`,
+    params
+  );
+  return rows;
+}
+
 export async function getQuizQuestionsMulti(
   examType: string,
   subjects: string[],
@@ -440,6 +469,7 @@ export async function saveQuizSession({
   correctCount,
   startTime,
   endTime,
+  mode = 'quiz',
 }: {
   sessionId: string;
   userId: number;
@@ -448,12 +478,14 @@ export async function saveQuizSession({
   correctCount: number;
   startTime: number;
   endTime: number;
+  // 'diagnostic' for the first-session check-up, so it stays out of quiz history
+  mode?: 'quiz' | 'diagnostic';
 }): Promise<void> {
   await pool.query(
     `INSERT INTO sessions (id, user_id, mode, subject, total_questions, correct_count, started_at, ended_at, time_limit_secs)
-     VALUES ($1, $2, 'quiz', $3, $4, $5, to_timestamp($6 / 1000.0), to_timestamp($7 / 1000.0), 3000)
+     VALUES ($1, $2, $8, $3, $4, $5, to_timestamp($6 / 1000.0), to_timestamp($7 / 1000.0), 3000)
      ON CONFLICT (id) DO NOTHING`,
-    [sessionId, userId, subject, totalQuestions, correctCount, startTime, endTime]
+    [sessionId, userId, subject, totalQuestions, correctCount, startTime, endTime, mode]
   );
 }
 
@@ -1090,13 +1122,15 @@ export async function getWeakTopicsAllSubjects(
 
 // ── Welcome-trial helpers ───────────────────────────────────────────────────
 // A user counts as "on the welcome trial" when they have a trial_grants row, no
-// live paid subscription, and an expiry no later than grant + 14 days (an admin
-// gift or a paid renewal pushes it past that). Same rule as the admin USER_TIER_SQL.
+// live paid subscription, and an expiry no later than grant + that grant's own trial
+// length (an admin gift or a paid renewal pushes it past that). Same rule as the admin
+// USER_TIER_SQL. trial_days is per grant: 14 for students who joined before the trial
+// was shortened, TRIAL_DAYS for everyone after.
 export const ON_TRIAL_SQL = `
   EXISTS (
     SELECT 1 FROM trial_grants t
     WHERE t.telegram_id = users.telegram_id
-      AND users.plan_expires_at <= t.granted_at + INTERVAL '14 days 1 hour'
+      AND users.plan_expires_at <= t.granted_at + make_interval(days => t.trial_days, hours => 1)
   )
   AND NOT EXISTS (
     SELECT 1 FROM subscriptions s

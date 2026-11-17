@@ -104,7 +104,7 @@ export default async function NecoSubjectPage({
     },
     {
       q: `Is ExamBuddie free for NECO ${s.displayName} practice?`,
-      a: "Yes. ExamBuddie is free to start with 14 days of Premium access included. No credit card or app download required: practice directly inside Telegram.",
+      a: "Yes. ExamBuddie is free to start with 5 days of Premium access included. No credit card or app download required: practice directly inside Telegram.",
     },
     {
       q: `Which topics does NECO ${s.displayName} cover?`,
@@ -171,7 +171,7 @@ export default async function NecoSubjectPage({
             </a>
           </div>
           <p className="mt-5 text-xs text-slate-400 sm:mt-6 sm:text-sm dark:text-slate-500">
-            14 days Premium free · No credit card · No download required
+            5 days Premium free · No credit card · No download required
           </p>
         </div>
       </section>
@@ -323,7 +323,7 @@ export default async function NecoSubjectPage({
             Start NECO {s.displayName} practice today
           </h2>
           <p className="mb-8 text-base text-blue-100 sm:mb-10 sm:text-lg">
-            Free for 14 days. No card. No download. Just Telegram.
+            Free for 5 days. No card. No download. Just Telegram.
           </p>
           <a
             href={botUrl}
