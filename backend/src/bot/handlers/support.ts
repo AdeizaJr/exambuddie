@@ -40,10 +40,15 @@ export async function handleSupportBug(ctx: any): Promise<void> {
 export async function handleSupportData(ctx: any): Promise<void> {
   await ctx.answerCbQuery();
   await ctx.reply(
-    `📋 <b>Data Request</b>\n\nYou can request access to, correction of, export of, or deletion of your personal data under the Nigeria Data Protection Act 2023.\n\nEmail us at <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a> with:\n• Your name\n• Your Telegram username or ID (<code>${ctx.from.id}</code>)\n• What you want (access / correct / export / delete)\n\nWe will respond within <b>30 days</b>.`,
+    `📋 <b>Data Request</b>\n\nUnder the Nigeria Data Protection Act 2023 you can see, correct, export or delete your personal data.\n\n📦 <b>Get a copy now:</b> tap Download My Data below.\n🗑️ <b>Delete everything:</b> tap Delete My Account in the Support menu.\n\nTo correct something, email <a href="mailto:hello@exambuddie.app">hello@exambuddie.app</a> with your Telegram ID (<code>${ctx.from.id}</code>) and what to fix. We reply within <b>30 days</b>.`,
     {
       parse_mode: 'HTML',
-      reply_markup: { inline_keyboard: [[{ text: '← Back', callback_data: 'support:menu' }]] },
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '📦 Download My Data', callback_data: 'settings:export' }],
+          [{ text: '← Back', callback_data: 'support:menu' }],
+        ],
+      },
     }
   );
 }

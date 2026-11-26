@@ -370,6 +370,7 @@ function settingsKeyboard(notificationsEnabled: boolean, hasPhone: boolean, isPr
       [{ text: reminderLabel, callback_data: 'settings:reminder' }],
       [{ text: notifLabel, callback_data: 'settings:notifications' }],
       [{ text: '📄 Terms & Privacy', url: 'https://exambuddie.app/terms' }],
+      [{ text: '📦 Download My Data', callback_data: 'settings:export' }],
       [{ text: '🗑️ Delete Account', callback_data: 'settings:delete' }],
       [{ text: '❌ Cancel', callback_data: 'menu:main' }],
     ],
@@ -433,6 +434,40 @@ export async function handleSettingsNotifications(ctx: any): Promise<void> {
       : "Bot messages disabled 🔕",
     { show_alert: false }
   );
+}
+
+// Sends the student a JSON file of everything we store about them (NDPA right of access
+// and portability). Self-serve, so they don't have to email and wait up to 30 days.
+export async function handleDataExport(ctx: any): Promise<void> {
+  const telegramId = ctx.from.id;
+  if (!(await redis.claimDataExport(telegramId))) {
+    await ctx.answerCbQuery('You downloaded your data recently. Please try again in an hour.', { show_alert: true });
+    return;
+  }
+  await ctx.answerCbQuery('Preparing your data…');
+  try {
+    const data = await db.exportUserData(telegramId);
+    if (!data) {
+      await redis.releaseDataExport(telegramId);
+      await ctx.reply('Please use /start first.');
+      return;
+    }
+    const day = new Date().toISOString().slice(0, 10);
+    await ctx.replyWithDocument(
+      { source: Buffer.from(JSON.stringify(data, null, 2), 'utf8'), filename: `exambuddie-my-data-${day}.json` },
+      {
+        caption:
+          '📦 <b>Your ExamBuddie data</b>\n\nThis file has everything we store about you: your profile, every answer, ' +
+          'sessions, bookmarks, payments and messages we sent you.\n\n' +
+          'To correct something, use /support. To erase it all, use 🗑️ Delete Account in Settings.',
+        parse_mode: 'HTML',
+      }
+    );
+  } catch (err) {
+    await redis.releaseDataExport(telegramId).catch(() => {});
+    console.error(`[export] data export failed for ${telegramId}:`, (err as Error).message);
+    await ctx.reply('Sorry, we could not prepare your data just now. Please try again in a few minutes.').catch(() => {});
+  }
 }
 
 export async function handleSettingsDelete(ctx: any): Promise<void> {

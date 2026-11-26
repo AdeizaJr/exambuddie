@@ -193,6 +193,7 @@ bot.on('callback_query', async (ctx: any) => {
   if (data.startsWith('settings:year:')) return onboarding.handleSettingsYearPick(ctx);
   if (data === 'settings:phone') return onboarding.handleSettingsPhone(ctx);
   if (data === 'settings:notifications') return onboarding.handleSettingsNotifications(ctx);
+  if (data === 'settings:export') return onboarding.handleDataExport(ctx);
   if (data === 'settings:delete') return onboarding.handleSettingsDelete(ctx);
   if (data === 'settings:delete:confirm') return onboarding.handleSettingsDeleteConfirm(ctx);
   if (data === 'settings:back') return onboarding.handleSettingsBack(ctx);
