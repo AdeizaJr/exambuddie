@@ -64,6 +64,31 @@ function failureReason(err: any): string {
   return String(err?.response?.description || err?.description || err?.message || err).slice(0, 500);
 }
 
+// A dropped connection (ECONNRESET, timeout, DNS blip) never got an answer from
+// Telegram, so trying again is safe and usually works. An actual Telegram reply
+// (blocked, chat not found, bad request) carries err.response and is final.
+// On 26 Nov 2026, 3 of 79 QOTD sends died on ECONNRESET with no retry.
+const NETWORK_ERROR = /ECONNRESET|ETIMEDOUT|ECONNREFUSED|EAI_AGAIN|ENOTFOUND|EPIPE|socket hang up|network timeout/i;
+const RETRY_DELAYS_MS = [1000, 3000];
+
+export function isTransientNetworkError(err: any): boolean {
+  if (err?.response) return false;
+  const code = String(err?.code || err?.errno || '');
+  return NETWORK_ERROR.test(code) || NETWORK_ERROR.test(String(err?.message || ''))
+    || err?.type === 'system' || err?.type === 'request-timeout';
+}
+
+async function withNetworkRetry<R>(send: () => Promise<R>): Promise<R> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await send();
+    } catch (err) {
+      if (attempt >= RETRY_DELAYS_MS.length || !isTransientNetworkError(err)) throw err;
+      await new Promise(r => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+    }
+  }
+}
+
 export function withSendLogging<T extends object>(telegram: T): T {
   return new Proxy(telegram, {
     get(target: any, prop, _receiver) {
@@ -76,7 +101,7 @@ export function withSendLogging<T extends object>(telegram: T): T {
           ? toPlainText(payload)
           : `🖼 ${toPlainText(extra?.caption ?? '(photo)')}`;
         try {
-          const result = await value.call(target, chatId, payload, extra);
+          const result = await withNetworkRetry(() => value.call(target, chatId, payload, extra));
           if (job) db.logBotMessage(chatId, job, text, true, null).catch(() => {});
           return result;
         } catch (err) {
