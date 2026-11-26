@@ -164,6 +164,11 @@ export default function PrivacyPage() {
               <li><strong>Withdraw consent</strong>: turn off notifications or remove your phone number at any time via Settings in the bot, without affecting your ability to use the service</li>
             </ul>
             <p className="mt-3">
+              You can get a copy of your data yourself at any time: tap <strong>📦 Download My Data</strong> in
+              Settings in the ExamBuddie Telegram bot and it sends you a file with everything we store about you.
+              You can also delete your account yourself with <strong>🗑️ Delete Account</strong> in Settings.
+            </p>
+            <p className="mt-3">
               To exercise any of these rights, email us at{" "}
               <a href="mailto:hello@exambuddie.app" className="text-blue-600 hover:underline">hello@exambuddie.app</a>{" "}
               or use the <strong>/support</strong> command in the ExamBuddie Telegram bot and select <em>Data Request</em>. We will respond within 30 days.

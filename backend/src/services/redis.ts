@@ -379,6 +379,15 @@ export const addQOTDHistory = async (bucketKey: string, questionId: number): Pro
   await client.expire(key, QOTD_HISTORY_TTL);
 };
 
+// "Download my data" runs ~17 queries, so one export per student per hour is plenty.
+// Returns true when this call claimed the slot (SET NX), false when one ran recently.
+export const claimDataExport = async (telegramId: number | string): Promise<boolean> => {
+  return (await client.set(`data_export:${telegramId}`, '1', { NX: true, EX: 3600 })) === 'OK';
+};
+export const releaseDataExport = async (telegramId: number | string): Promise<void> => {
+  await client.del(`data_export:${telegramId}`);
+};
+
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
   const keys = await client.keys(`*${telegramId}*`);
   const toDelete = keys.filter(
@@ -391,6 +400,7 @@ export const deleteUserData = async (telegramId: number | string): Promise<void>
       key === `support_step:${telegramId}` ||
       key === `user_cache:${telegramId}` ||
       key === `quiz_review:${telegramId}` ||
+      key === `data_export:${telegramId}` ||
       key.startsWith(`sublimit:${telegramId}:`)
   );
   if (toDelete.length) await client.del(toDelete);

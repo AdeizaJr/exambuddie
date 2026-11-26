@@ -1201,6 +1201,84 @@ export async function markWeeklyReportSent(userIds: number[]): Promise<void> {
   await pool.query(`UPDATE users SET last_report_sent_at = NOW() WHERE id = ANY($1)`, [userIds]);
 }
 
+// Everything ExamBuddie stores about one student, for the "Download my data" button
+// (NDPA 2023 right of access and portability). Covers every table deleteUser() touches
+// plus the ones keyed by telegram_id. Internal row ids and the subscriptions.email_token
+// secret are left out; answers carry the question's subject/year/topic so the file makes
+// sense on its own. Returns null when the user doesn't exist.
+export async function exportUserData(telegramId: number | string): Promise<Record<string, unknown> | null> {
+  const { rows: userRows } = await pool.query('SELECT * FROM users WHERE telegram_id = $1', [telegramId]);
+  const user = userRows[0];
+  if (!user) return null;
+  const uid = user.id;
+  const tid = user.telegram_id;
+  const q = async (sql: string, params: unknown[]) => (await pool.query(sql, params)).rows;
+
+  const { id: _id, referred_by: _ref, ...profile } = user;
+  const [
+    answers, theoryAnswers, sessions, bookmarks, reviewCards, achievements, ratings, flags,
+    subscriptions, trial, weeklyRanks, leaderboard, challengeRooms, challengeEntries,
+    bugReports, botMessages, announcements,
+  ] = await Promise.all([
+    q(`SELECT q.exam_type, q.subject, q.year, q.topic, a.question_id, a.selected_option, a.is_correct,
+              a.time_taken_ms, a.attempted_at
+         FROM attempts a LEFT JOIN questions q ON q.id = a.question_id
+        WHERE a.user_id = $1 ORDER BY a.attempted_at`, [uid]),
+    q(`SELECT q.subject, q.year, t.question_id, t.user_answer, t.attempted_at
+         FROM theory_attempts t LEFT JOIN theory_questions q ON q.id = t.question_id
+        WHERE t.user_id = $1 ORDER BY t.attempted_at`, [uid]),
+    q(`SELECT mode, subject, topic, total_questions, correct_count, time_limit_secs, started_at, ended_at
+         FROM sessions WHERE user_id = $1 ORDER BY started_at`, [uid]),
+    q(`SELECT question_id, created_at FROM bookmarks WHERE user_id = $1 ORDER BY created_at`, [uid]),
+    q(`SELECT question_id, interval_days, ease, reps, next_review_at, created_at
+         FROM sr_cards WHERE user_id = $1 ORDER BY created_at`, [uid]),
+    q(`SELECT badge_code, unlocked_at FROM achievements WHERE user_id = $1 ORDER BY unlocked_at`, [uid]),
+    q(`SELECT question_id, rating, created_at FROM explanation_feedback WHERE user_id = $1 ORDER BY created_at`, [uid]),
+    q(`SELECT question_id, reason, note, resolved, flagged_at FROM flagged_explanations
+        WHERE user_id = $1 ORDER BY flagged_at`, [uid]),
+    q(`SELECT plan, amount_ngn, status, is_recurring, started_at, expires_at, cancelled_at, created_at,
+              COALESCE(paystack_tx_ref, flutterwave_tx_ref) AS payment_reference
+         FROM subscriptions WHERE user_id = $1 ORDER BY created_at`, [uid]),
+    q(`SELECT granted_at, trial_days FROM trial_grants WHERE telegram_id = $1`, [tid]),
+    q(`SELECT week_start, rank, correct, total, sent_at FROM weekly_ranks WHERE user_id = $1 ORDER BY week_start`, [uid]),
+    q(`SELECT week_start, rank, first_name, correct, total, accuracy FROM leaderboard_snapshots
+        WHERE telegram_id = $1 ORDER BY week_start`, [tid]),
+    q(`SELECT code, subject, exam_type, year, num_questions, status, created_at, ended_at
+         FROM practice_rooms WHERE creator_telegram_id = $1 ORDER BY created_at`, [tid]),
+    q(`SELECT r.code AS room_code, p.first_name, p.correct, p.total_answered, p.finished, p.joined_at, p.finished_at
+         FROM room_participants p LEFT JOIN practice_rooms r ON r.id = p.room_id
+        WHERE p.telegram_id = $1 ORDER BY p.joined_at`, [tid]),
+    q(`SELECT name, message, resolved, created_at FROM bug_reports WHERE telegram_id = $1 ORDER BY created_at`, [tid]),
+    q(`SELECT kind, message, ok, sent_at FROM bot_message_log WHERE telegram_id = $1 ORDER BY sent_at`, [tid]),
+    q(`SELECT l.kind, l.message, l.sent_at, r.ok FROM admin_message_recipients r
+         JOIN admin_message_log l ON l.id = r.message_id
+        WHERE r.telegram_id = $1 ORDER BY l.sent_at`, [tid]),
+  ]);
+
+  return {
+    exported_at: new Date().toISOString(),
+    about: 'Everything ExamBuddie stores about you, under the Nigeria Data Protection Act 2023. Questions are referenced by id; subject, year and topic are included for context.',
+    profile,
+    answers,
+    theory_answers: theoryAnswers,
+    sessions,
+    bookmarks,
+    review_cards: reviewCards,
+    achievements,
+    explanation_ratings: ratings,
+    question_reports: flags,
+    subscriptions,
+    welcome_trial: trial[0] || null,
+    weekly_ranks: weeklyRanks,
+    leaderboard_entries: leaderboard,
+    challenge_rooms_created: challengeRooms,
+    challenge_rooms_joined: challengeEntries,
+    bug_reports: bugReports,
+    messages_from_bot: botMessages,
+    announcements_received: announcements,
+  };
+}
+
 export async function deleteUser(telegramId: number | string): Promise<void> {
   const { rows } = await pool.query('SELECT id FROM users WHERE telegram_id = $1', [telegramId]);
   if (!rows[0]) return;
@@ -1209,6 +1287,13 @@ export async function deleteUser(telegramId: number | string): Promise<void> {
   await pool.query('DELETE FROM room_participants WHERE telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM admin_message_recipients WHERE telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM bot_message_log WHERE telegram_id = $1', [telegramId]);
+  // Bug reports and weekly leaderboard snapshots hold the student's name keyed by
+  // telegram_id (no FK), so they used to survive "delete everything".
+  await pool.query('DELETE FROM bug_reports WHERE telegram_id = $1', [telegramId]);
+  await pool.query('DELETE FROM leaderboard_snapshots WHERE telegram_id = $1', [telegramId]);
+  // Challenge rooms they created are shared with other players (room_participants
+  // cascades from the room), so keep the room and blank out who made it.
+  await pool.query('UPDATE practice_rooms SET creator_telegram_id = 0 WHERE creator_telegram_id = $1', [telegramId]);
   await pool.query('DELETE FROM flagged_explanations WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM attempts WHERE user_id = $1', [userId]);
   await pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
