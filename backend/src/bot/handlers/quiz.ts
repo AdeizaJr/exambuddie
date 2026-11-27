@@ -665,9 +665,37 @@ function namedTopic(topic: string | null | undefined): string | null {
   return t && !/^general/i.test(t) ? t : null;
 }
 
+// Moves the daily challenge to the hour the student is studying now (clamped to 7am to
+// 9pm WAT) instead of the blanket 6pm default, so day two arrives at a time they've shown
+// they're free. The check-up runs straight after onboarding, so there's no hour of their
+// own choosing to overwrite. An hour of NULL means they turned it off, and stays off.
+// Saves the weakest topic so the first challenges open on it. Returns the hour in effect.
+async function scheduleDailyChallenge(telegramId: number, subject: string, weakTopic: string | null): Promise<number | null> {
+  try {
+    const user = await db.getUser(telegramId);
+    if (!user) return null;
+    const fields: Partial<User> = {};
+    if (weakTopic) { fields.focus_subject = subject; fields.focus_topic = weakTopic; }
+    let hour = user.daily_reminder_hour ?? null;
+    if (hour != null && user.notifications_enabled !== false) {
+      const watHour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
+      hour = Math.min(21, Math.max(7, watHour));
+      fields.daily_reminder_hour = hour;
+    } else if (user.notifications_enabled === false) {
+      hour = null;
+    }
+    if (Object.keys(fields).length) await db.updateUser(telegramId, fields);
+    return hour;
+  } catch (err) {
+    console.error('[quiz] could not schedule daily challenge:', (err as Error).message);
+    return null;
+  }
+}
+
 async function sendDiagnosticResult(ctx: any, quizState: QuizState, reason: string, wrongCount: number): Promise<void> {
   const answered = quizState.answers.filter((a) => a.selected !== '');
   if (answered.length === 0) {
+    await scheduleDailyChallenge(ctx.from.id, quizState.subject, null);
     await ctx.reply('Check-up ended. Tap 📚 Practice whenever you are ready.', {
       reply_markup: fmt.persistentMenuKeyboard(),
     });
@@ -687,6 +715,7 @@ async function sendDiagnosticResult(ctx: any, quizState: QuizState, reason: stri
   const weakTopics = [...wrong];
 
   const subject = quizState.subject;
+  const reminderHour = await scheduleDailyChallenge(ctx.from.id, subject, weakTopics[0] || null);
   const keyboard: any[][] = [];
   if (weakTopics.length) {
     const drillData = `drill:topic:${subject}:${weakTopics[0]}`;
@@ -705,7 +734,8 @@ async function sendDiagnosticResult(ctx: any, quizState: QuizState, reason: stri
   );
 
   await ctx.reply(
-    fmt.diagnosticResult(subject, quizState.correct, answered.length, strongTopics, weakTopics, reason !== 'complete'),
+    fmt.diagnosticResult(subject, quizState.correct, answered.length, strongTopics, weakTopics, reason !== 'complete')
+      + (reminderHour != null ? fmt.dailyChallengeNote(reminderHour, weakTopics[0] || null) : ''),
     { parse_mode: 'HTML', reply_markup: { inline_keyboard: keyboard } }
   );
 }

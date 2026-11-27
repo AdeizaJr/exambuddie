@@ -88,6 +88,7 @@ const USER_UPDATABLE_COLUMNS = new Set<string>([
   'last_active_date', 'phone_number', 'notifications_enabled',
   'streak_freeze_used_at', 'trial_used', 'daily_reminder_hour', 'source',
   'consent_given_at', 'age_group', 'guardian_consent_at',
+  'focus_subject', 'focus_topic',
 ]);
 
 export async function updateUser(

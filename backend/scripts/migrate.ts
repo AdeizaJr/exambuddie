@@ -329,8 +329,10 @@ WHERE id = 116125`,
   // hourly auto-challenge cron never matched anyone. Defaulting new signups to 18
   // (WAT) and backfilling existing users who never touched the setting turns it on
   // for everyone unless they explicitly change/disable it in Settings.
+  // The one-off backfill (UPDATE ... SET 18 WHERE NULL) ran in 2026-08 and was removed
+  // 2026-11-27: migrations run on every deploy, so it kept switching back on the reminder
+  // of anyone who had turned it off (NULL = off). The column default covers new signups.
   `ALTER TABLE users ALTER COLUMN daily_reminder_hour SET DEFAULT 18`,
-  `UPDATE users SET daily_reminder_hour = 18 WHERE daily_reminder_hour IS NULL`,
 
   // ── Acquisition source tracking ───────────────────────────────────────────
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS source VARCHAR(50) DEFAULT NULL`,
@@ -711,6 +713,11 @@ WHERE id = 116125`,
   // Existing grants keep the 14 days they were promised (the DEFAULT backfills them);
   // grantTrial() always writes the current TRIAL_DAYS explicitly.
   `ALTER TABLE trial_grants ADD COLUMN IF NOT EXISTS trial_days INT NOT NULL DEFAULT 14`,
+
+  // ── Day-two habit (2026-11-27): the first-session check-up's weakest topic, so the
+  // daily challenge can open on it. One attempt per topic is too thin for getWeakTopics.
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS focus_subject TEXT DEFAULT NULL`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS focus_topic TEXT DEFAULT NULL`,
 ];
 
 async function migrate(): Promise<void> {

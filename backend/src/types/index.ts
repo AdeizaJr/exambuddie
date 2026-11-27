@@ -24,6 +24,8 @@ export interface User {
   streak_freeze_used_at?: string | null;
   trial_used?: boolean;
   daily_reminder_hour?: number | null;
+  focus_subject?: string | null;
+  focus_topic?: string | null;
   source?: string | null;
   consent_given_at?: string | null;
   age_group?: 'adult' | 'under18' | null;

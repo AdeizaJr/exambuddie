@@ -1292,6 +1292,13 @@ ${verdict}
 ${strong}${weak}${next}`;
 }
 
+// Appended to the check-up result: tells the student a daily challenge is coming.
+export function dailyChallengeNote(hour: number, topic: string | null): string {
+  const time = `${hour % 12 || 12}${hour < 12 ? 'am' : 'pm'}`;
+  const what = topic ? `5 questions on <b>${escHtml(topic)}</b>` : '5 quick questions';
+  return `\n\n⏰ Tomorrow at <b>${time}</b> I'll send you ${what}. Same time every day, skipped on days you've already practised. Change the time in /settings.`;
+}
+
 // Sent when the welcome trial has just run out.
 export function trialEndedMessage(firstName: string): string {
   const p = getPricing();

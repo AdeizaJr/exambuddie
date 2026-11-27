@@ -479,16 +479,26 @@ export default function startCrons(rawBot: any): void {
     const watHour = new Date(Date.now() + 60 * 60 * 1000).getUTCHours();
     const watToday = new Date(Date.now() + 60 * 60 * 1000).toISOString().split('T')[0];
 
+    // Skips anyone who already practised today. Stops after 14 quiet days (or 14 days
+    // after joining for someone who never practised) so a student who has left is not
+    // messaged every day forever; the 3-day inactivity nudge covers that window too.
     const { rows: users } = await db.query(
-      `SELECT telegram_id, first_name, exam_type, subjects, id
+      `SELECT telegram_id, first_name, exam_type, subjects, id, target_year, joined_at,
+              focus_subject, focus_topic
        FROM users
        WHERE notifications_enabled = TRUE AND blocked_at IS NULL
          AND daily_reminder_hour = $1
          AND (last_active_date IS NULL OR last_active_date < $2)
+         AND (last_active_date >= ($2::date - 14) OR (last_active_date IS NULL AND joined_at > NOW() - INTERVAL '14 days'))
          AND exam_type IS NOT NULL
          AND array_length(subjects, 1) > 0`,
       [watHour, watToday]
     );
+
+    const namedTopic = (t: string | null | undefined) => {
+      const v = (t || '').trim();
+      return v && !/^general/i.test(v) ? v : null;
+    };
 
     let sent = 0;
     const BATCH_SIZE = 20;
@@ -496,26 +506,43 @@ export default function startCrons(rawBot: any): void {
       const batch = users.slice(i, i + BATCH_SIZE);
       await Promise.allSettled(batch.map(async (user) => {
         try {
-          // Pick a random subject from the user's subjects
           const subjects: string[] = user.subjects || [];
-          const subject = subjects[Math.floor(Math.random() * subjects.length)];
           const examType = user.exam_type;
+          // First week: stay on the check-up subject so the plan it gave is what arrives.
+          // After that, rotate through all their subjects.
+          const firstWeek = Date.now() - new Date(user.joined_at).getTime() < 7 * 86400000;
+          const subject = firstWeek && user.focus_subject && subjects.includes(user.focus_subject)
+            ? user.focus_subject
+            : subjects[Math.floor(Math.random() * subjects.length)];
 
-          // Try to get a challenge question
-          const q = await db.getRandomQuestion(examType, subject, [], null, null, user.id);
+          // Weakest topic from their history; the check-up's saved topic until there is enough history.
+          const weak = await db.getWeakTopics(user.id, subject, examType).catch(() => []);
+          let topic: string | null = weak.map((w: any) => namedTopic(w.topic)).find(Boolean) || null;
+          if (!topic && user.focus_subject === subject) topic = namedTopic(user.focus_topic);
+
+          let q = topic ? await db.getRandomQuestion(examType, subject, [], null, topic, user.id) : null;
+          if (!q) { topic = null; q = await db.getRandomQuestion(examType, subject, [], null, null, user.id); }
+
+          await outreach.claimBudget(user.telegram_id); // counts toward the daily cap, never skipped: the student's own reminder
+
+          const countdown = fmt.examCountdown(examType, user.target_year ?? null);
+          const focusLine = topic
+            ? `Today: 5 questions on <b>${fmt.escHtml(topic)}</b> (${fmt.escHtml(SUBJECT_MAP[subject] || subject)}).`
+            : `Today: 5 quick ${fmt.escHtml(SUBJECT_MAP[subject] || subject)} questions.`;
+          const header = `⏰ <b>Daily Challenge, ${fmt.escHtml(user.first_name)}!</b>\n${focusLine}${countdown ? `\n${countdown}` : ''}\n\n`;
 
           if (!q) {
             // Fall back to plain text reminder
             await bot.telegram.sendMessage(
               user.telegram_id,
-              `⏰ <b>Daily Challenge, ${fmt.escHtml(user.first_name)}!</b>\n\nTime to practise! Even 5 questions keeps the momentum going.\n\n📚 /practice`,
+              `${header}Time to practise! Even 5 questions keeps the momentum going.\n\n📚 /practice`,
               { parse_mode: 'HTML' }
             );
             sent++;
             return;
           }
 
-          const msgText = `⏰ <b>Daily Challenge, ${fmt.escHtml(user.first_name)}!</b>\n\n`
+          const msgText = header
             + fmt.formatQuestion(q, 1, 5, 'practice')
             + fmt.answerOptions(q);
 
@@ -537,7 +564,7 @@ export default function startCrons(rawBot: any): void {
             });
           }
 
-          // Store session so the user can answer and continue
+          // Store session so the user can answer and continue (same topic for all 5)
           await redis.setSession(user.telegram_id, {
             mode: 'practice',
             subject,
@@ -549,6 +576,7 @@ export default function startCrons(rawBot: any): void {
             currentQuestion: q,
             startTime: Date.now(),
             usedIds: [q.id],
+            topic: topic || undefined,
             autoChallenge: true,
             autoTotal: 5,
           });
