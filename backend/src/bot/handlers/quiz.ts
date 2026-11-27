@@ -611,10 +611,52 @@ ${accuracy >= 80 ? '🔥 You\'re exam-ready! Keep it consistent.' : ''}`;
     [{ text: '🏠 Main Menu', callback_data: 'menu:main' }],
   );
 
+  if (quizState.isMock && quizState.answers.length > 0) {
+    try {
+      const subjects = mockSubjectBreakdown(quizState);
+      const examType = user?.exam_type || quizState.questions[0]?.exam_type || 'Mock';
+      const { renderMockResultCard } = await import('../../services/shareCard');
+      const image = await renderMockResultCard({
+        firstName: ctx.from.first_name || 'Student',
+        examType,
+        correct: quizState.correct,
+        total: quizState.total,
+        subjects,
+        joinHandle: `@${process.env.BOT_USERNAME || 'ExamBuddieBot'}`,
+      });
+      await ctx.replyWithPhoto({ source: image }, {
+        caption: summary,
+        parse_mode: 'HTML',
+        reply_markup: { inline_keyboard: keyboard },
+      });
+      return;
+    } catch (err) {
+      // Render failure: fall through to the plain text summary so the student still sees their score
+      console.error('[quiz] mock result card render failed:', (err as Error).message);
+    }
+  }
+
   await ctx.reply(summary, {
     parse_mode: 'HTML',
     reply_markup: { inline_keyboard: keyboard },
   });
+}
+
+// Correct/served per subject, in the order subjects first appear in the mock. Counts
+// every question served (unanswered ones count as wrong, like the real exam).
+function mockSubjectBreakdown(quizState: QuizState): { name: string; correct: number; total: number }[] {
+  const bySubject = new Map<string, { correct: number; total: number }>();
+  const correctIds = new Set(quizState.answers.filter(a => a.isCorrect).map(a => a.qId));
+  for (const q of quizState.questions) {
+    const s = bySubject.get(q.subject) || { correct: 0, total: 0 };
+    s.total++;
+    if (correctIds.has(q.id)) s.correct++;
+    bySubject.set(q.subject, s);
+  }
+  return [...bySubject.entries()].map(([subject, s]) => ({
+    name: fmt.SUBJECT_MAP[subject] || subject,
+    ...s,
+  }));
 }
 
 // A topic name a student can act on; the catch-all "General" buckets say nothing.
