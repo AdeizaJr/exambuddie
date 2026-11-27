@@ -304,3 +304,152 @@ export async function renderProgressCard(data: ShareCardData): Promise<Buffer> {
 
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
+
+// ── Mock exam result card ─────────────────────────────────────────────────────
+
+export interface MockSubjectResult {
+  name: string;
+  correct: number;
+  total: number;
+}
+
+export interface MockResultCardData {
+  firstName: string;
+  examType: string;
+  correct: number;
+  total: number;
+  subjects: MockSubjectResult[];
+  joinHandle: string;
+}
+
+// Per-subject accent colours, in order. Distinct hues so the dot, the score and the
+// bar of one subject read as a set against the next row.
+const SUBJECT_COLORS = ['#2dd4bf', '#facc15', '#f472b6', '#4ade80', '#60a5fa', '#fb923c', '#a78bfa'];
+
+function textWidth(text: string, fontSize: number, bold = false): number {
+  const { regular, bold: b } = getFonts();
+  return (bold ? b : regular).getAdvanceWidth(text, fontSize);
+}
+
+// Cuts a label down with an ellipsis until it fits the given width.
+function fitText(text: string, fontSize: number, maxW: number, bold = false): string {
+  if (textWidth(text, fontSize, bold) <= maxW) return text;
+  let t = text;
+  while (t.length > 1 && textWidth(`${t}…`, fontSize, bold) > maxW) t = t.slice(0, -1);
+  return `${t.trimEnd()}…`;
+}
+
+export function mockGrade(pct: number): string {
+  return pct >= 80 ? 'Outstanding' : pct >= 65 ? 'Excellent' : pct >= 50 ? 'Good effort' : 'Keep practising';
+}
+
+// JAMB scores each subject out of 100 and adds them up (4 subjects = /400). Each
+// subject's share is its own accuracy, so a subject with fewer questions served
+// still counts for a full 100 like in the real exam.
+export function jambEstimate(subjects: MockSubjectResult[]): { score: number; max: number } {
+  const scored = subjects.filter(s => s.total > 0);
+  const score = Math.round(scored.reduce((sum, s) => sum + (s.correct / s.total) * 100, 0));
+  return { score, max: scored.length * 100 };
+}
+
+export async function renderMockResultCard(data: MockResultCardData): Promise<Buffer> {
+  const W = 1080;
+  const pct = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
+  const accColor = accuracyColor(pct);
+  const isJamb = data.examType === 'JAMB' && data.subjects.length > 1;
+  const est = jambEstimate(data.subjects);
+  const ringValue = isJamb ? String(est.score) : `${pct}%`;
+  const ringSub = isJamb ? `/ ${est.max}` : 'score';
+  const ringFrac = isJamb ? (est.max > 0 ? est.score / est.max : 0) : pct / 100;
+
+  // Ring
+  const ringCx = W / 2;
+  const ringCy = 330;
+  const ringR = 160;
+  const circ = 2 * Math.PI * ringR;
+  const arc = ringFrac > 0
+    ? `<circle cx="${ringCx}" cy="${ringCy}" r="${ringR}" fill="none" stroke="${accColor}" stroke-width="22"
+        stroke-linecap="round" stroke-dasharray="${(circ * ringFrac).toFixed(1)} ${circ.toFixed(1)}"
+        transform="rotate(-90 ${ringCx} ${ringCy})"/>`
+    : '';
+
+  // Grade pill
+  const grade = mockGrade(pct);
+  const pillW = textWidth(grade, 32, true) + 64;
+  const pillY = 680;
+
+  // Subject rows
+  const rowX = 60;
+  const rowW = W - 120;
+  const rowH = 160;
+  const rowGap = 24;
+  const rowsTop = 920;
+  const rows = data.subjects.map((s, i) => {
+    const y = rowsTop + i * (rowH + rowGap);
+    const color = SUBJECT_COLORS[i % SUBJECT_COLORS.length];
+    const sPct = s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0;
+    const scoreText = `${s.correct}/${s.total}`;
+    const scoreW = textWidth(scoreText, 40, true);
+    const name = fitText(s.name, 38, rowW - 80 - scoreW - 60, true);
+    const barX = rowX + 40;
+    const barW = rowW - 80;
+    const fillW = Math.max(0, Math.min(barW, barW * (sPct / 100)));
+    return `
+  <rect x="${rowX}" y="${y}" width="${rowW}" height="${rowH}" rx="28" fill="#0f1a33" stroke="#1e2b4a" stroke-width="2"/>
+  <circle cx="${rowX + 52}" cy="${y + 52}" r="11" fill="${color}"/>
+  ${textPath(name, rowX + 80, y + 65, 38, '#f8fafc', { bold: true })}
+  ${textPath(scoreText, rowX + rowW - 40, y + 65, 40, color, { bold: true, anchor: 'end' })}
+  <rect x="${barX}" y="${y + 92}" width="${barW}" height="14" rx="7" fill="#1e2b4a"/>
+  ${fillW > 0 ? `<rect x="${barX}" y="${y + 92}" width="${fillW.toFixed(1)}" height="14" rx="7" fill="${color}"/>` : ''}
+  ${textPath(`${sPct}% correct`, barX, y + 142, 28, '#94a3b8')}`;
+  }).join('');
+
+  const rowsBottom = rowsTop + data.subjects.length * (rowH + rowGap) - rowGap;
+  const footerY = rowsBottom + 70;
+  const H = footerY + 170;
+
+  const subLine = `${data.correct} / ${data.total} correct  ·  ${pct}%`;
+  const tagline = isJamb ? 'Estimated JAMB score from this mock.' : `${data.examType} mock exam result.`;
+
+  const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1630"/>
+      <stop offset="100%" stop-color="#050a1a"/>
+    </linearGradient>
+    <linearGradient id="topBar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2678b6"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="${W}" height="${H}" fill="url(#bg)"/>
+  <rect width="${W}" height="10" fill="url(#topBar)"/>
+
+  ${textPath(`${data.firstName} · ExamBuddie`, 60, 100, 32, '#94a3b8', { bold: true })}
+  ${textPath(`${data.examType} Mock`, W - 60, 100, 32, '#60a5fa', { bold: true, anchor: 'end' })}
+
+  <circle cx="${ringCx}" cy="${ringCy}" r="${ringR}" fill="none" stroke="#1e2b4a" stroke-width="22"/>
+  ${arc}
+  ${textPath(ringValue, ringCx, ringCy + 30, 104, accColor, { bold: true, anchor: 'middle' })}
+  ${textPath(ringSub, ringCx, ringCy + 90, 36, '#94a3b8', { anchor: 'middle' })}
+
+  ${textPath('Mock Exam Complete', W / 2, 590, 60, '#f8fafc', { bold: true, anchor: 'middle' })}
+  ${textPath(subLine, W / 2, 645, 34, '#94a3b8', { anchor: 'middle' })}
+
+  <rect x="${(W - pillW) / 2}" y="${pillY}" width="${pillW}" height="60" rx="30" fill="${accColor}" fill-opacity="0.14" stroke="${accColor}" stroke-opacity="0.6" stroke-width="2"/>
+  ${textPath(grade, W / 2, pillY + 41, 32, accColor, { bold: true, anchor: 'middle' })}
+
+  ${textPath(tagline, W / 2, 790, 30, '#94a3b8', { anchor: 'middle' })}
+
+  ${textPath('Subject Breakdown', rowX, rowsTop - 30, 40, '#f8fafc', { bold: true })}
+  ${rows}
+
+  <rect x="0" y="${footerY}" width="${W}" height="170" fill="#2678b6"/>
+  ${textPath('Studying smarter for WAEC / JAMB / NECO', W / 2, footerY + 72, 38, '#ffffff', { bold: true, anchor: 'middle' })}
+  ${textPath(`Join me → ${data.joinHandle}`, W / 2, footerY + 128, 34, '#dbeafe', { anchor: 'middle' })}
+</svg>`;
+
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
