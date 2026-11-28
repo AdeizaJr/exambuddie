@@ -125,8 +125,11 @@ export class LoginUnavailableError extends Error {
 export async function changePassword(
   currentPassword: string,
   newPassword: string
-): Promise<{ ok: boolean }> {
-  return req<{ ok: boolean }>("PUT", "/password", { currentPassword, newPassword });
+): Promise<{ ok: boolean; token?: string }> {
+  const res = await req<{ ok: boolean; token?: string }>("PUT", "/password", { currentPassword, newPassword });
+  // The change revokes every older token, this tab's included, so swap in the fresh one.
+  if (res.token) localStorage.setItem("admin_token", res.token);
+  return res;
 }
 
 export async function getStats(): Promise<Stats> {
