@@ -434,18 +434,47 @@ export default function createServer(bot: any) {
   });
 
   // ── Admin auth middleware ────────────────────────────────────────────────────
-  const adminAuth = (req: Request, res: Response, next: NextFunction) => {
+  // A signed token alone isn't enough: it must also belong to an admin that still exists
+  // and be issued after that admin's last password change, so changing the password
+  // logs out every other session (e.g. a stolen token) instead of leaving it valid for
+  // up to 8h. The lookup is cached for 30s per admin to keep it off every request;
+  // the password endpoint clears its own entry so the change takes effect at once.
+  const ADMIN_STATE_TTL_MS = 30_000;
+  const adminStateCache = new Map<number, { exists: boolean; changedAtSec: number; fetchedAt: number }>();
+  async function getAdminState(id: number) {
+    const hit = adminStateCache.get(id);
+    if (hit && Date.now() - hit.fetchedAt < ADMIN_STATE_TTL_MS) return hit;
+    const { rows } = await db.query(
+      `SELECT FLOOR(EXTRACT(EPOCH FROM password_changed_at))::bigint AS changed FROM admin_users WHERE id = $1`,
+      [id]
+    );
+    const state = { exists: rows.length > 0, changedAtSec: Number(rows[0]?.changed ?? 0), fetchedAt: Date.now() };
+    adminStateCache.set(id, state);
+    return state;
+  }
+
+  const adminAuth = async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
     if (!token) return res.status(401).json({ error: 'No token provided' });
+    let payload: ReturnType<typeof verifyToken> & { iat?: number };
     try {
-      const payload = verifyToken(token);
-      (req as any).admin = payload;
-      next();
+      payload = verifyToken(token);
     } catch (err: any) {
       const expired = err.name === 'TokenExpiredError';
       return res.status(401).json({ error: expired ? 'Token expired' : 'Invalid token' });
     }
+    try {
+      const state = await getAdminState(payload.id);
+      if (!state.exists || (payload.iat ?? 0) < state.changedAtSec) {
+        return res.status(401).json({ error: 'Session ended, please log in again' });
+      }
+    } catch (err: any) {
+      console.error('[adminAuth] admin lookup failed:', err.message);
+      return res.status(503).json({ error: 'Auth check unavailable, try again' });
+    }
+    (req as any).admin = payload;
+    next();
   };
 
   // ── PUT /api/admin/password ─────────────────────────────────────────────────
@@ -468,10 +497,17 @@ export default function createServer(bot: any) {
     if (!valid) return res.status(401).json({ error: 'Current password is incorrect' });
 
     const newHash = await hashPassword(newPassword);
-    await db.query('UPDATE admin_users SET password_hash = $1 WHERE id = $2', [newHash, adminId]);
+    await db.query(
+      'UPDATE admin_users SET password_hash = $1, password_changed_at = NOW() WHERE id = $2',
+      [newHash, adminId]
+    );
+    adminStateCache.delete(adminId);
 
     await db.logAudit((req as any).admin.username, 'admin.password_change', { ip: req.ip }).catch(() => {});
-    res.json({ ok: true });
+    // Every token issued before now is revoked, including this one, so hand back a fresh
+    // token for the session that made the change.
+    const token = signToken({ id: adminId, username: (req as any).admin.username });
+    res.json({ ok: true, token });
   });
 
   // ── GET /api/admin/pricing ──────────────────────────────────────────────────

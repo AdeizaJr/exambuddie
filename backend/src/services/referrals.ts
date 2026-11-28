@@ -23,6 +23,7 @@ export async function rewardReferrer(
 
     const { referrer, daysAdded, confirmed } = result;
     await redis.clearCachedUser(referrer.telegram_id).catch(() => {});
+    await flagFastReferrer(referrer, daysAdded);
     if (referrer.blocked_at) return;
     try {
       await telegram.sendMessage(
@@ -35,5 +36,28 @@ export async function rewardReferrer(
     }
   } catch (err: any) {
     console.error('[referrals] credit failed:', err.message);
+  }
+}
+
+// Referral days have no cap, so a burst of practising invitees in one week is the sign
+// of fake accounts being farmed for Premium. Raises an admin alert each time an inviter
+// crosses another multiple of REFERRAL_ALERT_WEEKLY in the last 7 days. Never throws.
+export const REFERRAL_ALERT_WEEKLY = 10;
+
+async function flagFastReferrer(
+  referrer: { id: number; telegram_id: number; first_name: string },
+  daysAdded: number
+): Promise<void> {
+  try {
+    const weekly = await db.getRecentConfirmedReferralCount(referrer.id);
+    const before = Math.max(0, weekly - daysAdded);
+    if (Math.floor(weekly / REFERRAL_ALERT_WEEKLY) <= Math.floor(before / REFERRAL_ALERT_WEEKLY)) return;
+    await db.createAlert(
+      'referrals',
+      `${referrer.first_name} (telegram_id ${referrer.telegram_id}) has ${weekly} invitees who joined and practised in the last 7 days. Check for fake accounts before more Premium days stack up.`,
+      'warning'
+    );
+  } catch (err: any) {
+    console.error('[referrals] fast-referrer check failed:', err.message);
   }
 }

@@ -388,20 +388,28 @@ export const releaseDataExport = async (telegramId: number | string): Promise<vo
   await client.del(`data_export:${telegramId}`);
 };
 
+// Deletes the student's Redis state on account deletion. Exact key names, plus a SCAN
+// for the per-subject limit counters. This used to be KEYS *<id>*, which walks (and
+// blocks) the whole keyspace on every deletion. Short-lived counters keyed by date
+// (outreach caps, QOTD answered) are left to expire on their own.
 export const deleteUserData = async (telegramId: number | string): Promise<void> => {
-  const keys = await client.keys(`*${telegramId}*`);
-  const toDelete = keys.filter(
-    (key) =>
-      key === `session:${telegramId}` ||
-      key === `quiz:${telegramId}` ||
-      key === `burst:${telegramId}` ||
-      key === `phone_nudge:${telegramId}` ||
-      key === `phone_pending:${telegramId}` ||
-      key === `support_step:${telegramId}` ||
-      key === `user_cache:${telegramId}` ||
-      key === `quiz_review:${telegramId}` ||
-      key === `data_export:${telegramId}` ||
-      key.startsWith(`sublimit:${telegramId}:`)
-  );
-  if (toDelete.length) await client.del(toDelete);
+  const toDelete = [
+    `session:${telegramId}`,
+    `quiz:${telegramId}`,
+    `burst:${telegramId}`,
+    `phone_nudge:${telegramId}`,
+    `phone_pending:${telegramId}`,
+    `support_step:${telegramId}`,
+    `user_cache:${telegramId}`,
+    `quiz_review:${telegramId}`,
+    `quiz_result:${telegramId}`,
+    `challenge_result:${telegramId}`,
+    `flag_note:${telegramId}`,
+    `data_export:${telegramId}`,
+    miniappServedKey(telegramId),
+  ];
+  for await (const key of client.scanIterator({ MATCH: `sublimit:${telegramId}:*`, COUNT: 500 })) {
+    toDelete.push(key);
+  }
+  await client.del(toDelete);
 };

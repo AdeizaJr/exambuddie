@@ -1521,11 +1521,30 @@ export async function getUserByReferralCode(code: string): Promise<User | null> 
   return rows[0] || null;
 }
 
+// Only a brand-new account can be attributed to an inviter: joined in the last 10 minutes
+// and no answers yet. Without this, any existing student who had never been referred
+// could tap someone's link and earn them a Premium day (or two friends could swap taps).
+// Since the inviter must be older than the invitee, this also rules out A↔B cycles.
 export async function setReferredBy(userId: number, referrerId: number): Promise<void> {
   await pool.query(
-    'UPDATE users SET referred_by = $2 WHERE id = $1 AND referred_by IS NULL',
+    `UPDATE users SET referred_by = $2
+      WHERE id = $1 AND id <> $2 AND referred_by IS NULL
+        AND joined_at > NOW() - INTERVAL '10 minutes'
+        AND NOT EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = $1)`,
     [userId, referrerId]
   );
+}
+
+// Invitees who joined in the last 7 days and have practised: the inviter's referral
+// pace, used to alert the admin to likely fake-account farming.
+export async function getRecentConfirmedReferralCount(referrerId: number): Promise<number> {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*)::int AS c FROM users u
+      WHERE u.referred_by = $1 AND u.joined_at > NOW() - INTERVAL '7 days'
+        AND EXISTS (SELECT 1 FROM attempts a WHERE a.user_id = u.id)`,
+    [referrerId]
+  );
+  return rows[0].c;
 }
 
 // joined_at window instead of a separate "is new" flag: /start runs right after the row

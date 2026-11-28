@@ -718,6 +718,10 @@ WHERE id = 116125`,
   // daily challenge can open on it. One attempt per topic is too thin for getWeakTopics.
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS focus_subject TEXT DEFAULT NULL`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS focus_topic TEXT DEFAULT NULL`,
+
+  // ── Admin session revocation (2026-11-28): admin tokens issued before this time are
+  // rejected, so a password change logs out every other session. NULL = never changed.
+  `ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS password_changed_at TIMESTAMPTZ DEFAULT NULL`,
 ];
 
 async function migrate(): Promise<void> {
